@@ -22,5 +22,5 @@ If the application was successfully deployed the Workload Orchestration Agent re
 - The Workload Orchestration Software updates the Device Configuration Repository with the new Desired State.
 - The Workload Orchestration Agent, while polling the WOS for Device updates, notices a new Desired state associated to it's enrolled Device.
 - The Agent then pulls down the Desired state.
-- During the installation, the Decice is pointed to the associated Application Repository referenced within the Desired state. This is the location where the Helm chart or Docker compose file is located. 
+- During the installation, the Device is pointed to the associated Application Repository referenced within the Desired state. This is the location where the Helm chart or Docker compose file is located. 
 - Once the install attempt completes the Workload Orchestration Agent reports back either a success or failure as the Install State.
