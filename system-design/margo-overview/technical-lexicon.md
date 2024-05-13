@@ -15,7 +15,7 @@ Supported Device roles are shown below:
 
 **Workload Orchestration Software**  
 
-Workload Orchestration software is the service that enables End Users to configure, deploy, and manage edge applications. Interfaces with Margo compliant App and Device registry and repositories. Complies with all Margo Functional/Non-Functional requirements for workload management. Interfaces with Margo compliant Edge device/nodes. 
+Workload Orchestration Software (WOS) is the service that enables End Users to configure, deploy, and manage edge applications. Interfaces with Margo compliant App and Device registry and repositories. Complies with all Margo Functional/Non-Functional requirements for workload management. Interfaces with Margo compliant Edge device/nodes. 
 
 **Workload Orchestration Agent** 
 
