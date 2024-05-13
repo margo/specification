@@ -15,7 +15,7 @@ The following information is required to be present:
 - Number of vCPUs
 - Memory Capacity
 - Storage Capacity
-- Device interfaces or periferals(i.e. Graphics card V. X.X.X)
+- Device interfaces or peripherals(i.e. Graphics card V. X.X.X)
 - Network interfaces(wifi/eth/cellular)
 - Container Runtime(Kubernetes / Docker compose)
 

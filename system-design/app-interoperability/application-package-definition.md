@@ -47,7 +47,7 @@ kind: application
 metadata: 
   name: my-helm-nginx-margo-app 
   version: 0.1.0 
-  description: Example of packaging nginx as an Margo application. 
+  description: Example of packaging nginx as a Margo application.
   icon: "./resources/nginx-logo-s.png" 
   author: John Smith 
   organization: App Devs Inc. 
