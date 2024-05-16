@@ -48,7 +48,7 @@ extra:
   generator: true
   homepage: https://margo.org
   copyright: Copyright &copy; 2024 Margo
-  branchname: !ENV [GITHUB_REPOSITORY, 'pre-draft']
+  reponame: !ENV [GITHUB_REPOSITORY, 'margo/specification']
   commit: !ENV [GITHUB_SHA, '<unknown>']
   social:
     - icon: fontawesome/brands/github
