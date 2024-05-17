@@ -1,0 +1,32 @@
+---
+name: Enhancement request
+description: Request an enhancement to the Margo Specification
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before requesting: search [existing issues](https://github.com/margo/specification/labels/enhancement).
+
+  - type: textarea
+    attributes:
+      label: "Description"
+      description: "Describe the enhancement you're requesting."
+      placeholder: "This enhancement adds ..."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Motivation"
+      description: "Describe additional context helping in understanding the enhancement request."
+      placeholder: "This enhancement provides ..."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Proposed Solution (optional)"
+      description: "..."
+    validations:
+      required: false
