@@ -1,0 +1,1537 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../margo-overview/technical-lexicon/">
+      
+      
+        <link rel="next" href="../device-capability-discovery/">
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+    
+    
+      
+        <title>Application Package Definition - System Design</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.804a7bde.css">
+        <style>:root{--md-text-font:"IBM Plex Sans";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/margo.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="margo" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#application-package-definition" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://margo.org" title="System Design" class="md-header__button md-logo" aria-label="System Design" data-md-component="logo">
+      
+  <img src="../../assets/margo_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            System Design
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Application Package Definition
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://margo.org" title="System Design" class="md-nav__button md-logo" aria-label="System Design" data-md-component="logo">
+      
+  <img src="../../assets/margo_white.svg" alt="logo">
+
+    </a>
+    System Design
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-overview/introduction-system-design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Envisioned System Design
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-overview/personas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Personas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-overview/technical-lexicon/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Technical Lexicon
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    App Interoperability
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            App Interoperability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Application Package Definition
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Application Package Definition
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#application-package-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Package Structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-description" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Description
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Manifests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-configurable-application-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining configurable application variables
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../device-capability-discovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Device Capability Discovery
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workload-orchestration-software/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workload Orchestration Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workload-orch-to-app-reg-interaction/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workload Orchestration to App Registry Interactions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../orchestator-app-config-deploy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workload Orchestrator App Configuration and Deployment
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workload-orchestration-agent/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Workload Orchestration Agent
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Observability
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Device Interoperability
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Device Interoperability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../device-interoperability/device-requirements/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Device Requirements
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="application-package-definition">Application Package Definition</h1>
+<p>This section addresses how an application is packaged by the “App Developer” who has implemented the application and aims to provide it to Margo-conformant systems. An application aggregates one or multiple <a href="https://github.com/opencontainers">OCI Containers</a>. The <strong>application package</strong> is made available in an <a href="../workload-orch-to-app-reg-interaction/">application registry</a>.  </p>
+<p>The application package comprises (a) the <strong>application description</strong> file <code>margo.yaml</code>, which contains informative contents and metadata (e.g., for application discovery purposes), (b) the <strong>application manifests</strong> (<a href="https://helm.sh/docs/">Helm Chart</a> and <a href="https://github.com/compose-spec/compose-spec/blob/master/03-compose-file.md">Docker Compose</a>) containing deployment instructions, and optionally (3) <strong>application resources</strong> (e.g., container binaries), which are necessary to enable the lifecycle of the application.</p>
+<p>The application manifest SHALL be defined as a Helm Chart AND/OR a Docker Compose. If either one cannot be implemented it MAY be omitted.  </p>
+<p>Margo RECOMMENDS defining both (Helm Chart <strong>AND</strong> Docker Compose) for strengthening interoperability and applicability.  </p>
+<p>A device that runs the application can only actively run either Docker Compose or Helm Chart.</p>
+<h2 id="application-package-structure">Application Package Structure</h2>
+<p>The application package has the following folder structure:</p>
+<pre><code class="language-yaml">/                            # REQUIRED top-level directory 
+└── margo.yaml               # REQUIRED application description file in YAML Format 
+└── resources                # OPTIONAL folder with e.g., container binaries 
+└── manifest                 # REQUIRED folder containing the application manifest 
+    ├── helm-chart           # OPTIONAL: Helm chart (or reference to it) goes in this folder  
+        ├── Chart.yaml 
+        ├── charts 
+        │   └── ... 
+        ├── templates 
+        │   └── ... 
+        └── values.yaml 
+    └── docker-compose       # OPTIONAL: Docker Compose file goes in this folder 
+        └── compose.yaml
+</code></pre>
+<h2 id="application-description">Application Description</h2>
+<p>The <code>margo.yaml</code> file is the application description. The purpose of this file is to present the application on an <a href="../workload-orch-to-app-reg-interaction/">application registry</a> or marketplace from where an end user selects the application to hand it over to the Workload Orchestration Software, which configures it and makes it available on the “app repo” for installation on the edge device (see Section <a href="../workload-orchestration-agent/">Workload Orchestration Agent</a>).</p>
+<blockquote>
+<p><strong>Note</strong>
+The format of the application description is <em>inspired by</em> the <a href="https://github.com/oam-dev/spec">Open Application Model</a> (OAM), however, the format defined here is a <em>narrow subset</em>, which is sufficient for the goals of the Margo specification at this point.</p>
+</blockquote>
+<p><strong>Application Description Example</strong></p>
+<p>An example of an <code>margo.yaml</code> file is shown below:</p>
+<pre><code class="language-yaml">apiVersion: margo.dev/v1 
+kind: application 
+metadata: 
+  name: my-helm-nginx-margo-app 
+  version: 0.1.0 
+  description: Example of packaging nginx as an Margo application. 
+  icon: &quot;./resources/nginx-logo-s.png&quot; 
+  author: John Smith 
+  organization: App Devs Inc. 
+  organization-site: https://app-devs.com 
+  app-tagline: My cool example app. 
+  description-long: Long description of my cool app ... 
+  license-file: &quot;./resources/LICENCE.txt&quot; 
+  app-site: https://my-cool-app.com 
+spec: 
+  helm-chart: 
+    repoType: local
+    url: &quot;./manifest/helm-chart&quot; 
+  docker-compose: 
+    repoType: local 
+    url: &quot;./manifest/docker-compose/compose.yaml&quot; 
+</code></pre>
+<p><strong>Top-level Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apiVersion</td>
+<td>string</td>
+<td>Y</td>
+<td>Identifier of the version of the API the object definition follows.</td>
+</tr>
+<tr>
+<td>kind</td>
+<td>string</td>
+<td>Y</td>
+<td>Must be <code>application</code>.</td>
+</tr>
+<tr>
+<td>metadata</td>
+<td>Metadata</td>
+<td>Y</td>
+<td>Metadata element specifying characteristics about the application. See the <a href="#metadata-attributes">Metadata</a> section below.</td>
+</tr>
+<tr>
+<td>spec</td>
+<td>Spec</td>
+<td>Y</td>
+<td>Spec element that defines components of the application. See the <a href="#spec-attributes">Spec</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Metadata Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the name of the application.</td>
+</tr>
+<tr>
+<td>version</td>
+<td>string</td>
+<td>Y</td>
+<td>Version of the application.</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>Y</td>
+<td>Short application description summary.</td>
+</tr>
+<tr>
+<td>release-notes</td>
+<td>string</td>
+<td>N</td>
+<td>Statement about changes of this release of the application.</td>
+</tr>
+<tr>
+<td>icon</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the icon file (e.g., in PNG format).</td>
+</tr>
+<tr>
+<td>author</td>
+<td>string</td>
+<td>N</td>
+<td>Person who created the application.</td>
+</tr>
+<tr>
+<td>author-email</td>
+<td>string</td>
+<td>N</td>
+<td>Email address of person who created the application.</td>
+</tr>
+<tr>
+<td>organization</td>
+<td>string</td>
+<td>Y</td>
+<td>Organization that is responsible for the application development.</td>
+</tr>
+<tr>
+<td>organization-site</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the organization website.</td>
+</tr>
+<tr>
+<td>app-tagline</td>
+<td>string</td>
+<td>N</td>
+<td>A brief statement about the application.</td>
+</tr>
+<tr>
+<td>description-long</td>
+<td>string</td>
+<td>N</td>
+<td>A long description about the application.</td>
+</tr>
+<tr>
+<td>license-file</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the file that details the license of the application.</td>
+</tr>
+<tr>
+<td>app-site</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the application website.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Spec Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>helm-chart</td>
+<td>DeploymentDef</td>
+<td>Y</td>
+<td>Details on the Helm Chart deployment definition of the application. See the <a href="#deploymentdef-attributes">DeploymentDef</a> section below.</td>
+</tr>
+<tr>
+<td>docker-compose</td>
+<td>DeploymentDef</td>
+<td>Y</td>
+<td>Details on the Docker Compose deployment definition of the application. See the <a href="#deploymentdef-attributes">DeploymentDef</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>DeploymentDef Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repoType</td>
+<td>string</td>
+<td>Y</td>
+<td>The type of repository where the deployment definition can be found. Options are: http, git, local.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>Y</td>
+<td>The URL to the deployment definition. In case of 'docker-compose', the URL points at the <code>compose.yaml</code> file.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note</strong><br />
+Missing in the current specification are ways to define the compatibility information (resources required to run, application dependencies) as well as required infrastructure  services  such as storage, message queues/bus, reverse proxy, or authentication/authorization/accounting.</p>
+<p><strong>Note</strong><br />
+Application Marketplaces are out of scope for Margo. The exact requirements of the Marketing Material shall be defined by the Application Marketplace beyond outlined mandatory content.</p>
+</blockquote>
+<h2 id="application-manifests">Application Manifests</h2>
+<p>The purpose of the application manifests is to provide all metadata to enable the lifecycle of the application within the edge device via the <a href="../workload-orchestration-agent/">Workload Orchestration Agent</a>. An application manifest is either defined as a (<a href="#application-manifest-using-helm-helm-chart">Helm Chart</a> or a <a href="#application-manifest-using-docker-compose">Docker Compose</a>):</p>
+<p><strong>Application Manifest using Docker Compose</strong></p>
+<p>In this case, the Margo application comprises a deployment definition that is defined by <a href="https://github.com/compose-spec/compose-spec/blob/master/03-compose-file.md">Docker Compose</a>. Therefore, the application description file, <code>margo.yaml</code>, contains a <code>docker-compose</code> deployment definition in which a Docker Compose configuration file is referenced. Its filename SHOULD be “compose.yaml”, but MAY be any other file name as well. The example <a href="#application-description-example">application description file</a> illustrates this.</p>
+<p>The referenced <code>./manifest/docker-compose/compose.yaml</code> file in the <a href="#application-description-example">example</a> looks like this:  </p>
+<pre><code class="language-yaml">version: 2.4 
+services: 
+  db: 
+    image: mariadb:10.6.4-focal 
+    command: '--default-authentication-plugin=mysql_native_password' 
+    volumes: 
+      - db_data:/var/lib/mysql 
+    restart: always 
+    mem_limit: 350m 
+    environment: 
+      - MYSQL_ROOT_PASSWORD=somewordpress 
+      - MYSQL_DATABASE=wordpress 
+      - MYSQL_USER=wordpress 
+      - MYSQL_PASSWORD=wordpress 
+    expose: 
+      - 3306 
+      - 33060 
+  wordpress: 
+    image: wordpress:php8.3-fpm 
+    volumes: 
+      - wp_data:/var/www/html 
+    ports: 
+      - 80:80 
+    restart: always 
+    mem_limit: 500m 
+    environment: 
+      - WORDPRESS_DB_HOST=db 
+      - WORDPRESS_DB_USER=wordpress 
+      - WORDPRESS_DB_PASSWORD=wordpress 
+      - WORDPRESS_DB_NAME=wordpress 
+volumes: 
+  db_data: 
+  wp_data: 
+</code></pre>
+<p>The execution of this Margo application will entail (1) the copying of the referenced <code>compose.yaml</code> file into the local directory foreseen by the Workflow Orchestration Agent and (2) the following Docker Compose command:</p>
+<pre><code class="language-shell">$ docker compose up 
+</code></pre>
+<blockquote>
+<p><strong>Note</strong><br />
+The supported function set of docker compose might be limited by certain or all Margo-compliant implementations. For example, to reflect security policies, system dependencies or hardware related limitations. This could affect:
+- Supported Docker Compose version number (e.g. max version 2.4) 
+- Unavailability of certain configuration options (e.g. no volumes with absolute paths)
+- Definition range of configuration options (e.g. unavailability of some host port ranges)
+- Mandatory configuration keys (e.g. all services must specify mem_limit)
+- Naming rules (e.g. container names or network names in a specific format)</p>
+<p>Uncompliant Docker Compose configurations will be rejected by both the Workload Orchestration Service and the Workload Orchestration Agent.</p>
+</blockquote>
+<p><strong>Application Manifest using Helm</strong></p>
+<p>Below, the usage of Helm as an application manifest of an Margo application is defined. This can be chosen if the target edge device is running Kubernetes behind the workload orchestration agent. For a full documentation of Helm, we refer to its official <a href="https://helm.sh/docs/">website</a>.</p>
+<p>A Helm chart includes the following Helm-specific configuration files and Kubernetes manifest templates:</p>
+<ul>
+<li>Chart.yaml
+This file contains metadata about the chart such as name, version, description, and maintainers.</li>
+<li>values.yaml
+This file defines the configuration values for the templates. Using this template approach, only this file needs to be changed for deployments in different environments (e.g., development, staging or production).</li>
+<li>templates
+This directory contains all Kubernetes manifest files templated to be instantiated with values from the values.yaml file:</li>
+<li>deployment.yaml</li>
+<li>service.yaml</li>
+<li>configmap.yaml</li>
+<li>Secrets</li>
+<li>and other Kubernetes resources.</li>
+<li>charts
+This directory may include additional charts that are necessary for the parent chart to function.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong><br />
+This version of the Margo specification uses Helm version 3. For additional information refer to the Helm Documentation at <a href="https://helm.sh">https://helm.sh</a>.</p>
+</blockquote>
+<p>An example of a <code>Chart.yaml</code> is listed below:</p>
+<pre><code class="language-yaml">apiVersion: v2 
+name: my-nginx-0.1.0 
+version: 1.0.0 # Version of the chart 
+description: Example of packaging nginx as an Margo application. 
+type: application  
+home: https://my-cool-app.com 
+maintainers:   
+  - name: John Smith  
+    url: https://app-devs.com  
+icon: ./resources/nginx-logo-s.png     
+appVersion: 0.1.0 
+</code></pre>
+<p>An example of a <code>values.yaml</code> is listed below:</p>
+<pre><code class="language-yaml">replicaCount: 1 # only 1 pod will be instantiated 
+image: 
+  repository: nginx 
+  pullPolicy: IfNotPresent # will pull image if not already there 
+service: 
+  protocol: TCP  
+  type: ClusterIP # exposes the service on cluster-internal IP 
+  port: 80 
+resources: 
+  limits: # highest limits chart can receive 
+     cpu: 0.5   
+  requests: # maximum amount of resources chart requests 
+     cpu: 0.1 
+</code></pre>
+<p>An example of a <code>deployment.yaml</code> is listed below:</p>
+<pre><code class="language-yaml">apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: {{ .Release.Name }}-nginx 
+  labels: 
+    app: nginx 
+spec: 
+  replicas: {{ .Values.replicaCount }} 
+  selector: 
+    matchLabels: 
+      app: nginx 
+  template: 
+    metadata: 
+      labels: 
+        app: nginx 
+    spec: 
+      containers: 
+        - name: {{ .Chart.Name }} 
+          image: &quot;{{ .Values.image.repository }}:{{ .Values.image.tag }}&quot; 
+          imagePullPolicy: {{ .Values.image.pullPolicy }} 
+          resources: 
+            limits: 
+              cpu: &quot;{{ .Values.resources.limits.cpu }}&quot; 
+            requests: 
+              cpu: &quot;{{ .Values.resources.requests.cpu }}&quot; 
+          ports: 
+            - name: http 
+              containerPort: 80 
+              protocol: TCP 
+</code></pre>
+<p>An example of a <code>service.yaml</code> is listed below:</p>
+<pre><code class="language-yaml">apiVersion: v1 
+kind: Service 
+metadata: 
+  name: {{ .Release.Name }}-service 
+spec: 
+  selector: 
+    app.kubernetes.io/instance: {{ .Release.Name }} 
+  type: {{ .Values.service.type }} 
+  ports: 
+    - protocol: {{ .Values.service.protocol | default &quot;TCP&quot; }} 
+      port: {{ .Values.service.port }} 
+</code></pre>
+<p>An example of a <code>configmap.yaml</code> is listed below:</p>
+<pre><code class="language-yaml">apiVersion: v1 
+kind: ConfigMap 
+metadata: 
+  name: {{ .Release.Name }}-index-html-configmap 
+  namespace: default 
+data: 
+  index.html: | 
+    &lt;html&gt; 
+    &lt;h1&gt;Welcome&lt;/h1&gt; 
+    &lt;/br&gt; 
+    &lt;h1&gt;This is app is Margo-compliant and defined as a Helm Chart.&lt;/h1&gt; 
+    &lt;/html&gt; 
+</code></pre>
+<h2 id="defining-configurable-application-variables">Defining configurable application variables</h2>
+<p>To allow customers to provide configuration values when installing an application, the <code>margo.yaml</code> defines the parameters and configuration sections. This gives the application vendor control over what a custom can configure when installing an application. This also describes how the workload orchestration software vendor must display these parameters to the customer to allow them to specify the values. This also describes how the workload orchestration software vendor must validate the configuration values provided by the customer before the application is installed.</p>
+<p>An example of a parameters section in the <code>margo.yaml</code> follows here:</p>
+<pre><code class="language-yaml">parameters:  
+  sections:  
+    - name: General Settings  
+      settings:  
+        - Name: Greeting  
+          value: Hello  
+          targets:  
+            - key: env.APP_GREETING  
+              appliesTo: [“helm-chart”,”docker-compose”]
+          description: The greeting to use.  
+          schema: requireText  
+          dataType: string 
+        - name: Greeting Target  
+          value: World  
+          targets:  
+            - key: env.APP_TARGET  
+              appliesTo: [“helm-chart”,”docker-compose”]    
+          description: The target of the greeting.  
+          schema: requireText  
+          dataType: string 
+  schema:  
+    - name: requireText  
+      maxLength: 45  
+      allowEmpty: false  
+</code></pre>
+<p><strong>Parameters</strong></p>
+<p>This section defines parameters that must be displayed to the user as well as how the workload orchestration software vendor must validate the provided values.</p>
+<p>The parameters section is only required if the application requires customers to provide parameter value as part of the installation.</p>
+<p><strong>Parameters Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>section</td>
+<td>map[string]section</td>
+<td>Y</td>
+<td>Sections are used to group related parameters together, so it is possible to present a user interface with a logical grouping of the parameters in each section. See the <a href="#section-attributes">Section</a> section below.</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>map[string]schema</td>
+<td>N</td>
+<td>Schema is used to provide details about how to validate each of the parameter values. At a minimum, the parameter value must be validated to match the parameter’s data type. The schema indicates additional rules the provided value must satisfy to be considered valid input. Schemas only need to be defined for parameters that have additional validation rules other than validating against the data type. See the <a href="#schema-attributes">Schema</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Section Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the section. This may be used in the user interface to show the grouping of the associated parameters within the section.</td>
+</tr>
+<tr>
+<td>settings</td>
+<td>settings</td>
+<td>Y</td>
+<td>Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the customer. See the <a href="#settings-attributes">Settings</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Settings Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>setting</td>
+<td>map[string]setting</td>
+<td>Y</td>
+<td>Defines additional information about each of the parameters to be used in the user interfaces. See the <a href="#setting-attributes">Setting</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Setting Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the property to show in the user interface.</td>
+</tr>
+<tr>
+<td>value</td>
+<td>string</td>
+<td>N</td>
+<td>The property’s default value.  Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].</td>
+</tr>
+<tr>
+<td>targets</td>
+<td>map[string]target</td>
+<td>Y</td>
+<td>Used to indicate which component, and key, the value should be applied to. See the <a href="#target-attributes">Target</a> section below.</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>Y</td>
+<td>A short description of the property.</td>
+</tr>
+<tr>
+<td>datatype</td>
+<td>string</td>
+<td>Y</td>
+<td>Indicates the parameters data type. Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>string</td>
+<td>N</td>
+<td>The name of the schema definition to use when validating the property value if the property has additional validation rules. See the <a href="#schema-attributes">Schema</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Target Attributes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the parameter. For Helm, this is the dot notation for the matching element in the <code>values.yaml</code> files. For docker-compose, this is the name of the environment variable to set.</td>
+</tr>
+<tr>
+<td>appliesTo</td>
+<td>string</td>
+<td>N</td>
+<td>Indicates which deployment the parameter value applies to. The valid options are either <code>helm-chart</code>, <code>docker-compose</code> or both.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Schema Attributes</strong></p>
+<p>The schema indicates the rules each indicated parameter value must meet before using the value to install the application. At a minimum, the provided parameter value must match the parameter’s data type. The value must also be validated against any of the validation rules defined in the schema.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the parameter the configuration setting applies to.</td>
+</tr>
+<tr>
+<td>&lt;<code>validation rule options</code>&gt;</td>
+<td>&lt;<em>see below</em>&gt;</td>
+<td>Y</td>
+<td>This defines the validation rules to use. The rules are based on the selected input type.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Text Validation Rules</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>bool</td>
+<td>N</td>
+<td>If true, indicates a value must be provided. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>minLength</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the minimum number of characters the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>maxLength</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the maximum number of characters the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>regexMatch</td>
+<td>string</td>
+<td>N</td>
+<td>If set, indicates a regular expression to use to validate the value.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Boolean Validation Rules</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>bool</td>
+<td>N</td>
+<td>If true, indicates a value must be provided. Default is false if not provided.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Numeric Integer Validation Rules</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>bool</td>
+<td>N</td>
+<td>If true, indicates a value must be provided. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>minValue</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the minimum allowed integer value the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>maxValue</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the maximum allowed integer value the value must have to be considered valid.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Numeric Double Validation Rules</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>bool</td>
+<td>N</td>
+<td>If true, indicates a value must be provided. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>minValue</td>
+<td>double</td>
+<td>N</td>
+<td>If set, indicates the minimum allowed double value the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>maxValue</td>
+<td>double</td>
+<td>N</td>
+<td>If set, indicates the maximum allowed double value the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>minPrecision</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the minimum level of precision the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>maxPrecision</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the maximum level of precision the value must have to be considered valid.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Select Validation Rules</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>bool</td>
+<td>N</td>
+<td>If true, indicates a value must be provided. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>multiselect</td>
+<td>bool</td>
+<td>N</td>
+<td>If true, indicates multiple values can be selected. If multiple values can be selected the resulting value is an array of the selected values. The default is false if not provided.</td>
+</tr>
+<tr>
+<td>options</td>
+<td>array</td>
+<td>Y</td>
+<td>This provides the list of acceptable options the customer can select from. The data type for each option must match the parameter setting’s data type.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../margo-overview/technical-lexicon/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Technical Lexicon">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Technical Lexicon
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../device-capability-discovery/" class="md-footer__link md-footer__link--next" aria-label="Next: Device Capability Discovery">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Device Capability Discovery
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/margo" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/margo_project" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8l164.9-188.5L26.8 48h145.6l100.5 132.9L389.2 48zm-24.8 373.8h39.1L151.1 88h-42l255.3 333.8z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/margoproject/about/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.youtube.com/@Margoinitiative" target="_blank" rel="noopener" title="www.youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="http://chat.margo.org/" target="_blank" rel="noopener" title="chat.margo.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tracking", "navigation.footer", "toc.integrate", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotations", "content.code.copy"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.081f42fc.min.js"></script>
+      
+        <script src="../../assets/external/unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
