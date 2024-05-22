@@ -1,14 +1,25 @@
 # Application Package Definition
 
-This section addresses how an application is packaged by the “App Developer” who has implemented the application and aims to provide it to Margo-conformant systems. An application aggregates one or multiple [OCI Containers](https://github.com/opencontainers). The **application package** is made available in an [application registry](./workload-orch-to-app-reg-interaction.md).  
+This section addresses how an application is packaged by the “Application Developer” who has implemented the application and aims to provide it to Margo-conformant systems. An application aggregates one or more [OCI Containers](https://github.com/opencontainers). The **application package** is made available in an [application registry](./workload-orch-to-app-reg-interaction.md).  
 
-The application package comprises (a) the **application description** file `margo.yaml`, which contains informative contents and metadata (e.g., for application discovery purposes), (b) the **application manifests** ([Helm Chart](https://helm.sh/docs/) and [Docker Compose](https://github.com/compose-spec/compose-spec/blob/master/03-compose-file.md)) containing deployment instructions, and optionally (3) **application resources** (e.g., container binaries), which are necessary to enable the lifecycle of the application.
+The application package comprises:
 
-The application manifest SHALL be defined as a Helm Chart AND/OR a Docker Compose. If either one cannot be implemented it MAY be omitted.  
+- The **application description** file `margo.yaml`, which contains information about the application's marketing details (e.g., description, icon, release notes, license file, etc.), resource requirements, required input parameters, and application's installation packages (e.g,  Helm charts, docker-compose package) location.
+- The **application resources** which can be used to display additional information about the application in an application catalog or marketplace based on the application's defined metadata (e.g., description, icon, release notes, license file, etc.).
 
-Margo RECOMMENDS defining both (Helm Chart **AND** Docker Compose) for strengthening interoperability and applicability.  
+The application package sources SHALL be defined as Helm Charts AND/OR a Docker Compose packages.
 
-A device that runs the application can only actively run either Docker Compose or Helm Chart.
+- To target devices running Kubernetes applications must be packaged as helm charts using [Helm V3](https://helm.sh/).
+- To target devices deploying applications using Docker Compose files you must create a tarball file containing the application's docker-compose.yml file and any additional artifacts referenced by the docker compose file (e.g., configuration files, environment variable files, etc.). It is highly recommend to digitally sign this package. When digitally signing the package PGP MUST be used.
+
+> **Investigation Needed**: We plan to do a security review of this package definition later.
+> During this review we will revisit the way the docker compose tarball file should be signed.
+> We will also discuss how we should handle secure container registries that require a username and password.
+
+If either one cannot be implemented it MAY be omitted but Margo RECOMMENDS defining sources for both Helm Chart **AND** Docker Compose source packages to strengthen interoperability and applicability.
+
+> **Note**
+> A device running the application will only install the application using either Docker Compose files or Helm Charts but not both.
 
 ## Application Package Structure
 
@@ -17,98 +28,188 @@ The application package has the following folder structure:
 ```yaml
 /                            # REQUIRED top-level directory 
 └── margo.yaml               # REQUIRED application description file in YAML Format 
-└── resources                # OPTIONAL folder with e.g., container binaries 
-└── manifest                 # REQUIRED folder containing the application manifest 
-    ├── helm-chart           # OPTIONAL: Helm chart (or reference to it) goes in this folder  
-        ├── Chart.yaml 
-        ├── charts 
-        │   └── ... 
-        ├── templates 
-        │   └── ... 
-        └── values.yaml 
-    └── docker-compose       # OPTIONAL: Docker Compose file goes in this folder 
-        └── compose.yaml
+└── resources                # OPTIONAL folder with application catalog resources e.g., icon, license file, release notes 
 ```
 
 ## Application Description
 
-The `margo.yaml` file is the application description. The purpose of this file is to present the application on an [application registry](./workload-orch-to-app-reg-interaction.md) or marketplace from where an end user selects the application to hand it over to the Workload Orchestration Software, which configures it and makes it available on the “app repo” for installation on the edge device (see Section [Workload Orchestration Agent](./workload-orchestration-agent.md)).
-
-> **Note**
-> The format of the application description is *inspired by* the [Open Application Model](https://github.com/oam-dev/spec) (OAM), however, the format defined here is a *narrow subset*, which is sufficient for the goals of the Margo specification at this point.
+The `margo.yaml` file is the application description. The purpose of this file is to present the application on an application catalog or marketplace from where an end user selects the application to hand it over to the Workload Orchestration Software, which configures it and makes it available for installation on the edge device (see Section [Workload Orchestration Agent](./workload-orchestration-agent.md)).
 
 **Application Description Example**
 
-An example of an `margo.yaml` file is shown below:
+A simple hello-world example of an `margo.yaml` file is shown below:
 
 ```yaml
-apiVersion: margo.dev/v1 
-kind: application 
-metadata: 
-  name: my-helm-nginx-margo-app 
-  version: 0.1.0 
-  description: Example of packaging nginx as a Margo application.
-  icon: "./resources/nginx-logo-s.png" 
-  author: John Smith 
-  organization: App Devs Inc. 
-  organization-site: https://app-devs.com 
-  app-tagline: My cool example app. 
-  description-long: Long description of my cool app ... 
-  license-file: "./resources/LICENCE.txt" 
-  app-site: https://my-cool-app.com 
-spec: 
-  helm-chart: 
-    repoType: local
-    url: "./manifest/helm-chart" 
-  docker-compose: 
-    repoType: local 
-    url: "./manifest/docker-compose/compose.yaml" 
+apiVersion: margo.org/v1-alpha1
+kind: application
+metadata:
+  id: com.northstartida.hello.world
+  name: Hello World
+  description: A basic hello world application
+  version: 1.0
+  catalog:
+    application:
+      icon: ./resources/hw-logo.png
+      tagline: Northstar Industrial Application's hello world application.
+      descriptionFile: ./resources/description.md
+      releaseNotes: ./resources/release-notes.md
+      licenseFile: ./resources/license.pdf
+      site: http://www.northstar-ida.com
+    author:
+      - name: Roger Wilkershank
+        email: rpwilkershank@northstar-ida.com
+    organization:
+      - name: Northstar Industrial Applications
+        site: http://northstar-ida.com
+sources:
+  kubernetes:
+    - name: hello-world
+      type: helm.v3
+      properties:  
+        repository: oci://northstarida.azurecr.io/charts/hello-world
+        revision: 1.0.1
+        wait: true
+```
+
+An example of a `margo.yaml` file using multiple helm charts and a docker-compose file package is shown below.
+
+```yaml
+apiVersion: margo.org/v1-alpha1
+kind: application
+metadata:
+  id: com.northstartida.digitron.orchestrator
+  name: Digitron orchestrator
+  description: The Digitron orchestrator application
+  version: 1.2.1 
+  catalog:
+    application:
+      icon: ./resources/ndo-logo.png
+      tagline: Northstar Industrial Application's next-gen, AI driven, Digitron instrument orchestrator.
+      descriptionFile: ./resources/description.md
+      releaseNotes: ./resources/release-notes.md
+      licenseFile: ./resources/license.pdf
+      site: http://www.northstar-ida.com
+    author:
+      - name: Roger Wilkershank
+        email: rpwilkershank@northstar-ida.com
+    organization:
+      - name: Northstar Industrial Applications
+        site: http://northstar-ida.com
+sources:
+  kubernetes:
+    - name: digitron-orchestrator
+      type: helm.v3
+      properties:
+        repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
+        revision: 1.0.9
+        wait: true
+    - name: database-services
+      type: helm.v3
+      properties: 
+        repository: oci://quay.io/charts/realtime-database-services
+        revision: 2.3.7
+        wait: true
+  moby:
+    - name: digitron-orchestrator-docker
+      type: docker-compose
+      properties:
+        packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
+        keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
 ```
 
 **Top-level Attributes**
 
 | Attribute       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version of the API the object definition follows.|
-| kind            | string    | Y    | Must be `application`.|
-| metadata        | Metadata    | Y    | Metadata element specifying characteristics about the application. See the [Metadata](#metadata-attributes) section below. |
-| spec            | Spec    | Y    | Spec element that defines components of the application. See the [Spec](#spec-attributes) section below. |
+| apiVersion      | string          | Y               | Identifier of the version of the API the object definition follows.|
+| kind            | string          | Y               | Must be `application`.|
+| metadata        | Metadata        | Y               | Metadata element specifying marketing characteristics about the application. See the [Metadata](#metadata-attributes) section below.|
+| sources         | Source        | Y               | Source element specifying the software packages to install. See the [Source](#source-attributes) section below. |
 
 **Metadata Attributes**
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| name             | string          | Y    | The name of the name of the application.|
-| version          | string          | Y    | Version of the application.|
-| description      | string          | Y    | Short application description summary. |
-| release-notes    | string          | N    | Statement about changes of this release of the application.  |
-| icon             | string          | N    | Link to the icon file (e.g., in PNG format).  |
-| author           | string          | N    | Person who created the application. |
-| author-email     | string          | N    | Email address of person who created the application.  |
-| organization     | string          | Y    | Organization that is responsible for the application development. |
-| organization-site| string          | N    | Link to the organization website.  |
-| app-tagline      | string          | N    | A brief statement about the application.  |
-| description-long | string          | N    | A long description about the application.  |
-| license-file     | string          | N    | Link to the file that details the license of the application.|
-| app-site         | string          | N    | Link to the application website. |
+| id               | string          | Y    | An identifier for the application. The id is used to help create unique identifiers where required, such as namespaces. It must be in reverse domain name notation.|
+| name             | string          | Y    | The application's official name.|
+| version          | string          | Y    | The application's version.|
+| catalog          | Catalog         | Y    | Catalog element specifying the application catalog details used to display the application in an application catalog or marketplace. See the [Catalog](#catalog-attribute) section below.|
 
-**Spec Attributes**
+**Catalog Attributes**
 
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| helm-chart      | DeploymentDef       | Y    | Details on the Helm Chart deployment definition of the application. See the [DeploymentDef](#deploymentdef-attributes) section below.|
-| docker-compose  | DeploymentDef       | Y    | Details on the Docker Compose deployment definition of the application. See the [DeploymentDef](#deploymentdef-attributes) section below. |
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| application      | Application     | N               | Application element specifying the application specific metadata. See the [Application Metadata](#application-metadata-attributes) section below.|
+| author           | []Author          | N               | Author element specifying metadata about the application's author. See the [Author Metadata](#author-metadata-attributes) section below.|
+| organization     | []Organization    | Y               | Organization element specifying metadata about the organization/company providing the application. See the [Organization Metadata](#organization-metadata-attributes) section below.|
 
-**DeploymentDef Attributes**
+**Application Metadata Attributes**
 
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| repoType        | string          | Y               | The type of repository where the deployment definition can be found. Options are: http, git, local. |
-| url             | string          | Y               | The URL to the deployment definition. In case of 'docker-compose', the URL points at the `compose.yaml` file.|
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| descriptionFile  | string          | N               | Link to the file containing the application's full description. The file should be a markdown file.|
+| icon             | string          | N               | Link to the icon file (e.g., in PNG format).|
+| licenseFile      | string          | N               | Link to the file that details the application's license. The file should either be a plain text, markdown or PDF file.|
+| releaseNotes     | string          | N               | Statement about the changes for this application's release. The file should either be a markdown or PDF file.|
+| site             | string          | N               | Link to the application's website.|
+| tagline          | string          | N               | The application's slogan.|
+
+**Author Metadata Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| name             | string          | N               | The name of the application's creator.|
+| email            | string          | N               | Email address of the application's creator.|
+
+**Organization Metadata Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| name             | string          | Y               | Organization responsible for the application's development and distribution.|
+| site             | string          | N               | Link to the organization's website.|
+
+**Source Attributes**
+
+> **Investigation Needed**: We need to determine if "kubernetes" and "moby" are the appropriate terms here.
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| kubernetes       | []SourceType    | N               | Source type element for indicating the source for deploying the application on Kubernetes using Helm. See the [Organization Type](#source-type-attributes) section below. |
+| moby             | []SourceType    | N               | Source type element for indicating the source for deploying the application on Moby using Docker compose. See the [Organization Type](#source-type-attributes) section below. |
+
+**Source Type Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| name             | string          | Y               | A unique name used to identify the package source. For helm installations the name will be used as the chart name. |
+| type             | string          | Y               | Indicates the source's package format. The values are `helm.v3` to indicate the source's package format is Helm version 3 and `docker-compose` to indicate the source's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` sources, and only `helm.v3` sources, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` sources, and only `docker-compose` sources, will be provided to the device in the same order they are listed in the application description file. The device will install the sources in the same order they are listed in the application description file. Source types under `kubernetes` must use `helm.v3`. Source types under `moby` must use `docker-compose` |
+| properties      | SourceProperty | Y                | SourceProperty element specifying the details about the source package. See the [Source Property](#source-property-attributes) section below.|
+
+**Source Property Attributes**
+
+**Investigation Needed**: We need to determine what impact, if any, using 3rd party helm charts has on being Margo compliant.
+
+Properties for sources using `helm.v3`
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| repository       | string          | Y               | The URL indicating the helm chart's location.|
+| revision         | string          | Y               | The helm chart's full version.|
+| wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` sources are provided.|
+
+Properties for sources using `docker-compose`
+
+> **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| packageLocation  | string          | Y               | The URL indicating the Docker Compose package's location. |
+| keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
+| wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` sources are provided.|
 
 > **Note**  
 > Missing in the current specification are ways to define the compatibility information (resources required to run, application dependencies) as well as required infrastructure  services  such as storage, message queues/bus, reverse proxy, or authentication/authorization/accounting.
-
+>
 > **Note**  
 > Application Marketplaces are out of scope for Margo. The exact requirements of the Marketing Material shall be defined by the Application Marketplace beyond outlined mandatory content.
 
