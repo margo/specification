@@ -66,24 +66,24 @@ In order to allow for monitoring the chosen container platform's state the devic
 
 For devices running Kubernetes the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
-Cluster (both single or multiple node) observability data MUST be collected. It is recommended the Device Owner use the [Kubernetes Cluster Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-cluster-receiver) to collect this information but using this receiver is not required.
+Cluster (both single or multiple node) observability data MUST be collected. It is recommended the Device Owner use the [Kubernetes Cluster Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-cluster-receiver) with the default configuration to collect this information but using this receiver is not required.
 
 If the Device Owner chooses not to use the Kubernetes Cluster Receiver they MUST provide the same output as the Kubernetes Cluster Receiver's default configuration.
 > **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
 
-Cluster events observability data MUST be collected. It is recommended the Device Owner use either the [Kubernetes Objects Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-objects-receiver) or [Kubernetes Event Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/k8seventsreceiver/README.md) to collect this information but using either of these receivers is not required.
+Cluster events observability data MUST be collected. It is recommended the Device Owner use either the [Kubernetes Objects Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-objects-receiver) or [Kubernetes Event Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/k8seventsreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
 
 If the Device Owner chooses not to use either the Kubernetes Object Receiver or Kubernetes Event Receiver they MUST provide the same output as these Kubernetes Event Receiver's default configuration.
 > **Action:** Need to determine which namespaces should be included. All of them, or just the ones the device owner is responsible for creating.
 >
 > **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
 
-Node, Pod and Container observability data MUST be collected. It is recommended the Device Owner use the [Kubelet Stats Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubeletstats-receiver) to collect this information but using this receiver is not required.
+Node, Pod and Container observability data MUST be collected. It is recommended the Device Owner use the [Kubelet Stats Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubeletstats-receiver) with the default configuration to collect this information but using this receiver is not required.
 
 If the Device Owner chooses not to use the Kubelet Stats Receiver they MUST provide the same output as the Kubelet Stats Receiver's default configuration.
 > **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
 
-Metadata identifying the observability data's source MUST be added to the received observability data. It is recommend the Device Owner use the [Kubernetes Attributes Processor](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-attributes-processor) to enhance the observability data with this additional metadata but using this processor is not required.
+Metadata identifying the observability data's source MUST be added to the received observability data. It is recommend the Device Owner use the [Kubernetes Attributes Processor](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-attributes-processor) with the default configuration to enhance the observability data with this additional metadata but using this processor is not required.
 
 If the Device Owner chooses not to use the Kubernetes Attributes Processor they MUST provide the same metadata as the Kubernetes Attributes Processor's default configuration
 > **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
@@ -94,12 +94,12 @@ If the Device Owner chooses not to use the Kubernetes Attributes Processor they 
 
 For devices running non-clustered container platforms such as Docker or Podman the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
-Container observability data MUST be collected. It is recommended the Device Owner use the [Docker Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/dockerstatsreceiver/README.md) or [Podman Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/podmanreceiver/README.md) to collect this information but using either of these receivers is not required.
+Container observability data MUST be collected. It is recommended the Device Owner use the [Docker Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/dockerstatsreceiver/README.md) or [Podman Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/podmanreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
 
 If the Device Owner chooses not to use either receiver they MUST provide the same output as the receiver's default configuration.
 > **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
 
-Host observability data MUST be collected. It is recommended the Device Owner use the [Host Metrics Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/hostmetricsreceiver/README.md) to collect this information but using this receiver is not required.
+Host observability data MUST be collected. It is recommended the Device Owner use the [Host Metrics Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/hostmetricsreceiver/README.md) with the default configuration to collect this information but using this receiver is not required.
 
 If the Device Owner chooses not to use the Host Metrics Receiver they MUST provided the same output as the Host Metrics Receiver's default configuration.
 > **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
@@ -123,7 +123,7 @@ It is recommended the workload orchestration agent be deployed as a containerize
 
 If the device owner chooses not to deploy their workload orchestration agent as a containerized application they MUST ensure the following resource usage observability data is available from the OpenTelemetry collector for their agent.
 
-> **Action:** Need to do research to determine what this minimum set is. Might be able to point to some information above once we identify it, instead of duplicating.
+> **Action:** Need to do research to determine if this makes sense, or not, when the agent is not running as a containerized application. We may have to leave it up to what is covered through device observability for this case. If it is possible, and makes sense, we need to define what should be provided.
 
 In addition to the resource utilization data the workload orchestration agent MUST also send the following minimum set of application observability data to the open telemetry collector on the device/cluster. The device owner MAY choose to provided additional observability data if they wish.
 
@@ -156,12 +156,10 @@ In order for an application to publish its observability data to the collector o
 
 ## Exporting Observability Data
 
-Customers MAY export observability data from a device/cluster to collectors, or backends, onsite or in the cloud.
+Customers MUST be able to export observability data from a device/cluster to collectors, or backends, onsite or in the cloud if they wish to make the information available.
 
-> **Decision Needed:** This depends on the decisions about using OpenTelemetry instead of the management API approach. If OpenTelemetry is chosen then there would be some subset of data that MUST be exported to the workload orchestration service vendor.
-
-In order to export this data the Open Telemetry Collector(s) on the device/cluster MUST have their configuration updated.
-
+> **Decision Needed:** There is a dependency on the decisions about using OpenTelemetry instead of the management API approach. If OpenTelemetry is chosen then there would be some subset of data that MUST be exported to the workload orchestration service vendor.
+>
 > **Future Decision:**
 > For MVS1 we have decided the configuration is updated manually. We know this is not ideal because it is error prone and can result in changes being made that should not be made. The current thinking is that the device orchestration agent will be responsible for updating the configuration when the WOS vendor or customer needs to add exports but this is out of scope for MVS1.
 
