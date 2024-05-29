@@ -172,8 +172,8 @@ sources:
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| cluster          | []SourceType    | N               | Source type element for indicating the source for deploying the application on a cluster using Helm. See the [Organization Type](#source-type-attributes) section below. |
-| stand-alone      | []SourceType    | N               | Source type element for indicating the source for deploying the application on a stand-alone device using Docker compose. See the [Organization Type](#source-type-attributes) section below. |
+| cluster          | []SourceType    | N               | Source type element for indicating the source for deploying the application on a cluster using Helm. See the [Source Type](#source-type-attributes) section below. |
+| stand-alone      | []SourceType    | N               | Source type element for indicating the source for deploying the application on a stand-alone device using Docker compose. See the [Source Type](#source-type-attributes) section below. |
 
 **Source Type Attributes**
 
