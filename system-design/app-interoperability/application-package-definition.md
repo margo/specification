@@ -62,7 +62,7 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 sources:
-  kubernetes:
+  cluster:
     - name: hello-world
       type: helm.v3
       properties:  
@@ -96,7 +96,7 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 sources:
-  kubernetes:
+  cluster:
     - name: digitron-orchestrator
       type: helm.v3
       properties:
@@ -109,7 +109,7 @@ sources:
         repository: oci://quay.io/charts/realtime-database-services
         revision: 2.3.7
         wait: true
-  moby:
+  stand-alone:
     - name: digitron-orchestrator-docker
       type: docker-compose
       properties:
@@ -170,12 +170,10 @@ sources:
 
 **Source Attributes**
 
-> **Investigation Needed**: We need to determine if "kubernetes" and "moby" are the appropriate terms here.
-
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| kubernetes       | []SourceType    | N               | Source type element for indicating the source for deploying the application on Kubernetes using Helm. See the [Organization Type](#source-type-attributes) section below. |
-| moby             | []SourceType    | N               | Source type element for indicating the source for deploying the application on Moby using Docker compose. See the [Organization Type](#source-type-attributes) section below. |
+| cluster          | []SourceType    | N               | Source type element for indicating the source for deploying the application on a cluster using Helm. See the [Organization Type](#source-type-attributes) section below. |
+| stand-alone      | []SourceType    | N               | Source type element for indicating the source for deploying the application on a stand-alone device using Docker compose. See the [Organization Type](#source-type-attributes) section below. |
 
 **Source Type Attributes**
 
