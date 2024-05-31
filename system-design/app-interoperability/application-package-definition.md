@@ -109,7 +109,7 @@ sources:
         repository: oci://quay.io/charts/realtime-database-services
         revision: 2.3.7
         wait: true
-  stand-alone:
+  standAlone:
     - name: digitron-orchestrator-docker
       type: docker-compose
       properties:
@@ -173,14 +173,14 @@ sources:
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | cluster          | []SourceType    | N               | Source type element for indicating the source for deploying the application on a cluster using Helm. See the [Source Type](#source-type-attributes) section below. |
-| stand-alone      | []SourceType    | N               | Source type element for indicating the source for deploying the application on a stand-alone device using Docker compose. See the [Source Type](#source-type-attributes) section below. |
+| standAlone      | []SourceType    | N               | Source type element for indicating the source for deploying the application on a standAlone device using Docker compose. See the [Source Type](#source-type-attributes) section below. |
 
 **Source Type Attributes**
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | name             | string          | Y               | A unique name used to identify the package source. For helm installations the name will be used as the chart name. |
-| type             | string          | Y               | Indicates the source's package format. The values are `helm.v3` to indicate the source's package format is Helm version 3 and `docker-compose` to indicate the source's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` sources, and only `helm.v3` sources, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` sources, and only `docker-compose` sources, will be provided to the device in the same order they are listed in the application description file. The device will install the sources in the same order they are listed in the application description file. Source types under `cluster` must use `helm.v3`. Source types under `stand-alone` must use `docker-compose` |
+| type             | string          | Y               | Indicates the source's package format. The values are `helm.v3` to indicate the source's package format is Helm version 3 and `docker-compose` to indicate the source's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` sources, and only `helm.v3` sources, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` sources, and only `docker-compose` sources, will be provided to the device in the same order they are listed in the application description file. The device will install the sources in the same order they are listed in the application description file. Source types under `cluster` must use `helm.v3`. Source types under `standAlone` must use `docker-compose` |
 | properties      | SourceProperty | Y                | SourceProperty element specifying the details about the source package. See the [Source Property](#source-property-attributes) section below.|
 
 **Source Property Attributes**
