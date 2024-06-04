@@ -7,7 +7,7 @@ The application package comprises:
 - The **application description** file `margo.yaml`, which contains information about the application's marketing details (e.g., description, icon, release notes, license file, etc.), resource requirements, required input parameters, and application's installation packages (e.g,  Helm charts, docker-compose package) location.
 - The **application resources** which can be used to display additional information about the application in an application catalog or marketplace based on the application's defined metadata (e.g., description, icon, release notes, license file, etc.).
 
-The application package sources SHALL be defined as Helm Charts AND/OR a Docker Compose packages.
+The application package components SHALL be defined as Helm Charts AND/OR a Docker Compose packages.
 
 - To target devices running Kubernetes applications must be packaged as helm charts using [Helm V3](https://helm.sh/).
 - To target devices deploying applications using Docker Compose files you must create a tarball file containing the application's docker-compose.yml file and any additional artifacts referenced by the docker compose file (e.g., configuration files, environment variable files, etc.). It is highly recommend to digitally sign this package. When digitally signing the package PGP MUST be used.
@@ -16,7 +16,7 @@ The application package sources SHALL be defined as Helm Charts AND/OR a Docker 
 > During this review we will revisit the way the docker compose tarball file should be signed.
 > We will also discuss how we should handle secure container registries that require a username and password.
 
-If either one cannot be implemented it MAY be omitted but Margo RECOMMENDS defining sources for both Helm Chart **AND** Docker Compose source packages to strengthen interoperability and applicability.
+If either one cannot be implemented it MAY be omitted but Margo RECOMMENDS defining components for both Helm Chart **AND** Docker Compose packages to strengthen interoperability and applicability.
 
 > **Note**
 > A device running the application will only install the application using either Docker Compose files or Helm Charts but not both.
@@ -61,7 +61,7 @@ metadata:
     organization:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
-sources:
+components:
   cluster:
     - name: hello-world
       type: helm.v3
@@ -95,7 +95,7 @@ metadata:
     organization:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
-sources:
+components:
   cluster:
     - name: digitron-orchestrator
       type: helm.v3
@@ -124,7 +124,7 @@ sources:
 | apiVersion      | string          | Y               | Identifier of the version of the API the object definition follows.|
 | kind            | string          | Y               | Must be `application`.|
 | metadata        | Metadata        | Y               | Metadata element specifying marketing characteristics about the application. See the [Metadata](#metadata-attributes) section below.|
-| sources         | Source        | Y               | Source element specifying the software packages to install. See the [Source](#source-attributes) section below. |
+| components         | Component        | Y               | Component element specifying the software packages to install. See the [Component](#component-attributes) section below. |
 
 **Metadata Attributes**
 
@@ -168,34 +168,34 @@ sources:
 | name             | string          | Y               | Organization responsible for the application's development and distribution.|
 | site             | string          | N               | Link to the organization's website.|
 
-**Source Attributes**
+**Component Attributes**
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| cluster          | []SourceType    | N               | Source type element for indicating the source for deploying the application on a cluster using Helm. See the [Source Type](#source-type-attributes) section below. |
-| standalone      | []SourceType    | N               | Source type element for indicating the source for deploying the application on a standalone device using Docker compose. See the [Source Type](#source-type-attributes) section below. |
+| cluster          | []ComponentType    | N               | Component type element for indicating the component for deploying the application on a cluster using Helm. See the [Component Type](#component-type-attributes) section below. |
+| standalone      | []ComponentType    | N               | Component type element for indicating the component for deploying the application on a standalone device using Docker compose. See the [Component Type](#compnent-type-attributes) section below. |
 
-**Source Type Attributes**
+**Component Type Attributes**
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| name             | string          | Y               | A unique name used to identify the package source. For helm installations the name will be used as the chart name. |
-| type             | string          | Y               | Indicates the source's package format. The values are `helm.v3` to indicate the source's package format is Helm version 3 and `docker-compose` to indicate the source's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` sources, and only `helm.v3` sources, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` sources, and only `docker-compose` sources, will be provided to the device in the same order they are listed in the application description file. The device will install the sources in the same order they are listed in the application description file. Source types under `cluster` must use `helm.v3`. Source types under `standalone` must use `docker-compose` |
-| properties      | SourceProperty | Y                | SourceProperty element specifying the details about the source package. See the [Source Property](#source-property-attributes) section below.|
+| name             | string          | Y               | A unique name used to identify the component package. For helm installations the name will be used as the chart name. |
+| type             | string          | Y               | Indicates the components's package format. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file. Component types under `cluster` must use `helm.v3`. Component types under `standalone` must use `docker-compose` |
+| properties       | ComponentProperty | Y              | ComponentProperty element specifying the details about the component package. See the [Component Property](#component-property-attributes) section below.|
 
-**Source Property Attributes**
+**Component Property Attributes**
 
 **Investigation Needed**: We need to determine what impact, if any, using 3rd party helm charts has on being Margo compliant.
 
-Properties for sources using `helm.v3`
+Properties for components using `helm.v3`
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | repository       | string          | Y               | The URL indicating the helm chart's location.|
 | revision         | string          | Y               | The helm chart's full version.|
-| wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` sources are provided.|
+| wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
 
-Properties for sources using `docker-compose`
+Properties for components using `docker-compose`
 
 > **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
 
@@ -203,7 +203,7 @@ Properties for sources using `docker-compose`
 |------------------|-----------------|-----------------|-----------------|
 | packageLocation  | string          | Y               | The URL indicating the Docker Compose package's location. |
 | keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
-| wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` sources are provided.|
+| wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
 
 > **Note**  
 > Missing in the current specification are ways to define the compatibility information (resources required to run, application dependencies) as well as required infrastructure  services  such as storage, message queues/bus, reverse proxy, or authentication/authorization/accounting.
