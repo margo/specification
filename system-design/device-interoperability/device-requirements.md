@@ -9,6 +9,8 @@ Supported Device roles are shown below:
 - Standalone Device
 - Micro Device 
 
+**NOTE:** In Margo Version 1 only single vendor Kubernetes clusters are supported.  As such, the Cluster Worker requirements are to be managed by the vendor for Version 1.  In future versions, when multi-vendor clusters are included, the requirements of the Cluster Worker role will have to consider compatibility between the Cluster Leadar and the Cluster Worker.  This compatibility could be affected by the choosen Kubernetes distrobution, version, etc.
+
 ## Base Requirements for All Devices
 - TPM support
 - Secure Boot
@@ -20,13 +22,13 @@ The Cluster Leader Role within Margo describes devices that have the ability to 
 
 **Cluster Leader Functional Requirements:**
 
-- Enable control node functionality for in Kubernetes cluster 
-- Support minimum set of Kubernetes control node API for a cluster leader 
-- Support the "Workload Orchestration Agent" Interface for a Cluster leader 
-    1.	Ability to authenticate to a repo 
-- Support the telemetry API for a cluster leader 
-- Support the "Policy Agent" API for a cluster leader 
-- Support the "Device Orchestration Agent" API - out of scope for MVS1 
+- MUST enable control node functionality for in Kubernetes cluster 
+- MUST Support minimum set of Kubernetes control node API
+- MUST support Helm V3 chart(s) for application deployment.
+- MUST support the "Workload Orchestration Agent" Interface 
+- MUST support the telemetry API (OTEL)
+- MUST support the "Policy Agent" API
+- MUST support the "Device Orchestration Agent" API - out of scope for MVS1 
 
 
 ## Cluster Worker Role Details
@@ -36,8 +38,10 @@ The Cluster Worker Role within Margo describes devices that have a limited amoun
 
 - Enable Worker Node functionality within a Kubernetes Cluster
 - Host the following additional components:
-    - OCI Container Runtime 
-    - OTEL Collector 
+    - OCI Container Runtime
+    - OTEL Collector
+        - MUST - Leader, Stand-Alone-Cluster, or Stand-Alone-Device Nodes
+        - SHOULD - Worker Node       
     - Policy Agent
     - Host Device Orchestration Agent 
         - **Note:** Out of scope for MVS1
@@ -60,10 +64,15 @@ The Standalone Device role represents a device that can host Margo Compliant App
 
 - Host Margo Workload Orchestration Agent
     - This enables the device with the functionality outlined within the Workload Orchestration Agent section of the specification
+    - The Standalone Device MUST support Docker Compose file(s) for application deployment.
 - Host the following additional components:
     - OCI Container Runtime 
     - OTEL Collector 
     - Policy Agent
+    - Host Device Orchestration Agent 
+        - **Note:** Out of scope for MVS1
+
+
     - Host Device Orchestration Agent 
         - **Note:** Out of scope for MVS1
 
