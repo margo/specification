@@ -130,8 +130,8 @@ components:
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| id               | string          | Y    | An identifier for the application. The id is used to help create unique identifiers where required, such as namespaces. It must be in reverse domain name notation.|
-| name             | string          | Y    | The application's official name.|
+| id               | string          | Y    | An identifier for the application. The id is used to help create unique identifiers where required, such as namespaces. The id must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters. |
+| name             | string          | Y    | The application's official name. This name is for display purposes only and can container whitespace and special characters. |
 | version          | string          | Y    | The application's version.|
 | catalog          | Catalog         | Y    | Catalog element specifying the application catalog details used to display the application in an application catalog or marketplace. See the [Catalog](#catalog-attribute) section below.|
 
@@ -179,7 +179,7 @@ components:
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| name             | string          | Y               | A unique name used to identify the component package. For helm installations the name will be used as the chart name. |
+| name             | string          | Y               | A unique name used to identify the component package. For helm installations the name will be used as the chart name. The name must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. |
 | type             | string          | Y               | Indicates the components's package format. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file. Component types under `cluster` must use `helm.v3`. Component types under `standalone` must use `docker-compose` |
 | properties       | ComponentProperty | Y              | ComponentProperty element specifying the details about the component package. See the [Component Property](#component-property-attributes) section below.|
 
@@ -198,6 +198,8 @@ Properties for components using `helm.v3`
 Properties for components using `docker-compose`
 
 > **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
+> We also need to determine if there is a version of docker-compose that needs to be specified. The docker compose schema [version has been
+> deprecated](https://github.com/compose-spec/compose-spec/blob/master/spec.md#version-and-name-top-level-elements) so it's not clear what we would even use for this if we wanted to.
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
