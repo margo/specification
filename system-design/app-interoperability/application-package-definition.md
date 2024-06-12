@@ -4,10 +4,13 @@ This section addresses how an application is packaged by the “Application Deve
 
 The application package comprises:
 
-- The **application description** file `margo.yaml`, which contains information about the application's marketing details (e.g., description, icon, release notes, license file, etc.), resource requirements, required input parameters, and application's installation packages (e.g,  Helm charts, docker-compose package) location.
+- The **application description** file `margo.yaml`, which contains information about the application's marketing details (e.g., description, icon, release notes, license file, etc.), resource requirements, required input parameters, and application's supported deployment configurations (e.g,  Helm charts, docker-compose package).
 - The **application resources** which can be used to display additional information about the application in an application catalog or marketplace based on the application's defined metadata (e.g., description, icon, release notes, license file, etc.).
 
-The application package components SHALL be defined as Helm Charts AND/OR a Docker Compose packages.
+    > **Note**  
+    > Application Marketplaces are out of scope for Margo. The exact requirements of the Marketing Material shall be defined by the Application Marketplace beyond outlined mandatory content.
+
+The application package's deployment configuration SHALL be defined as Helm Charts AND/OR a Docker Compose packages.
 
 - To target devices running Kubernetes applications must be packaged as helm charts using [Helm V3](https://helm.sh/).
 - To target devices deploying applications using Docker Compose files you must create a tarball file containing the application's docker-compose.yml file and any additional artifacts referenced by the docker compose file (e.g., configuration files, environment variable files, etc.). It is highly recommend to digitally sign this package. When digitally signing the package PGP MUST be used.
@@ -15,6 +18,8 @@ The application package components SHALL be defined as Helm Charts AND/OR a Dock
 > **Investigation Needed**: We plan to do a security review of this package definition later.
 > During this review we will revisit the way the docker compose tarball file should be signed.
 > We will also discuss how we should handle secure container registries that require a username and password.
+>
+> **Investigation Needed**: We need to determine what impact, if any, using 3rd party helm charts has on being Margo compliant.
 
 If either one cannot be implemented it MAY be omitted but Margo RECOMMENDS defining components for both Helm Chart **AND** Docker Compose packages to strengthen interoperability and applicability.
 
@@ -55,20 +60,21 @@ metadata:
       releaseNotes: ./resources/release-notes.md
       licenseFile: ./resources/license.pdf
       site: http://www.northstar-ida.com
+      tags: ["monitoring"]
     author:
       - name: Roger Wilkershank
         email: rpwilkershank@northstar-ida.com
     organization:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
-components:
-  cluster:
-    - name: hello-world
-      type: helm.v3
-      properties:  
-        repository: oci://northstarida.azurecr.io/charts/hello-world
-        revision: 1.0.1
-        wait: true
+deployments:
+  - type: helm.v3
+    components:
+      - name: hello-world
+        properties:  
+          repository: oci://northstarida.azurecr.io/charts/hello-world
+          revision: 1.0.1
+          wait: true
 ```
 
 An example of a `margo.yaml` file using multiple helm charts and a docker-compose file package is shown below.
@@ -89,32 +95,32 @@ metadata:
       releaseNotes: ./resources/release-notes.md
       licenseFile: ./resources/license.pdf
       site: http://www.northstar-ida.com
+      tags: ["optimization", "instrumentation"]
     author:
       - name: Roger Wilkershank
         email: rpwilkershank@northstar-ida.com
     organization:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
-components:
-  cluster:
-    - name: digitron-orchestrator
-      type: helm.v3
-      properties:
-        repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
-        revision: 1.0.9
-        wait: true
-    - name: database-services
-      type: helm.v3
-      properties: 
-        repository: oci://quay.io/charts/realtime-database-services
-        revision: 2.3.7
-        wait: true
-  standalone:
-    - name: digitron-orchestrator-docker
-      type: docker-compose
-      properties:
-        packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
-        keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
+deployments:
+  - type: helm.v3
+    components:
+      - name: digitron-orchestrator
+        properties:
+          repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
+          revision: 1.0.9
+          wait: true
+      - name: database-services
+        properties: 
+          repository: oci://quay.io/charts/realtime-database-services
+          revision: 2.3.7
+          wait: true
+  - type: docker-compose
+    components:
+      - name: digitron-orchestrator-docker
+        properties:
+          packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
+          keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
 ```
 
 **Top-level Attributes**
@@ -124,7 +130,7 @@ components:
 | apiVersion      | string          | Y               | Identifier of the version of the API the object definition follows.|
 | kind            | string          | Y               | Must be `application`.|
 | metadata        | Metadata        | Y               | Metadata element specifying marketing characteristics about the application. See the [Metadata](#metadata-attributes) section below.|
-| components         | Component        | Y               | Component element specifying the software packages to install. See the [Component](#component-attributes) section below. |
+| deployments     | Deployment      | Y               | Deployment element specifying the types of deployments the application supports. See the [Deployment](#deployment-attributes) section below. |
 
 **Metadata Attributes**
 
@@ -153,6 +159,7 @@ components:
 | releaseNotes     | string          | N               | Statement about the changes for this application's release. The file should either be a markdown or PDF file.|
 | site             | string          | N               | Link to the application's website.|
 | tagline          | string          | N               | The application's slogan.|
+| tags             | []string        | N               | An array of strings that can be used to provide additional context for the application in a user interface to assist with task such as categorizing, searching, etc. |
 
 **Author Metadata Attributes**
 
@@ -168,236 +175,46 @@ components:
 | name             | string          | Y               | Organization responsible for the application's development and distribution.|
 | site             | string          | N               | Link to the organization's website.|
 
+**Deployment Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| type             | string          | Y               | Indicates the components's deployment configuration. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file. Component types under `cluster` must use `helm.v3`. Component types under `standalone` must use `docker-compose` |
+| components      | []Component    | N               | Component element indicating the components to deploy when installing the application. See the [Component](#compnent-attributes) section below. |
+
 **Component Attributes**
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
-| cluster          | []ComponentType    | N               | Component type element for indicating the component for deploying the application on a cluster using Helm. See the [Component Type](#component-type-attributes) section below. |
-| standalone      | []ComponentType    | N               | Component type element for indicating the component for deploying the application on a standalone device using Docker compose. See the [Component Type](#compnent-type-attributes) section below. |
-
-**Component Type Attributes**
-
-| Attribute        | Type            | Required?       | Description     |
-|------------------|-----------------|-----------------|-----------------|
 | name             | string          | Y               | A unique name used to identify the component package. For helm installations the name will be used as the chart name. The name must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. |
-| type             | string          | Y               | Indicates the components's package format. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file. Component types under `cluster` must use `helm.v3`. Component types under `standalone` must use `docker-compose` |
-| properties       | ComponentProperty | Y              | ComponentProperty element specifying the details about the component package. See the [Component Property](#component-property-attributes) section below.|
+| properties       | map[string][interface{}] | Y              | A dictionary element specifying the component packages's deployment details. See the [Component Properties](#component-properties) section below.|
 
-**Component Property Attributes**
+**Component Properties**
 
-**Investigation Needed**: We need to determine what impact, if any, using 3rd party helm charts has on being Margo compliant.
+The expected properties for the suppported deployment types are indicated below.
 
-Properties for components using `helm.v3`
+- Properties for `helm.v3` components
 
-| Attribute        | Type            | Required?       | Description     |
-|------------------|-----------------|-----------------|-----------------|
-| repository       | string          | Y               | The URL indicating the helm chart's location.|
-| revision         | string          | Y               | The helm chart's full version.|
-| wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
+    | Attribute        | Type            | Required?       | Description     |
+    |------------------|-----------------|-----------------|-----------------|
+    | repository       | string          | Y               | The URL indicating the helm chart's location.|
+    | revision         | string          | Y               | The helm chart's full version.|
+    | wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
 
-Properties for components using `docker-compose`
+- Properties for `docker-compose` components
 
-> **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
-> We also need to determine if there is a version of docker-compose that needs to be specified. The docker compose schema [version has been
-> deprecated](https://github.com/compose-spec/compose-spec/blob/master/spec.md#version-and-name-top-level-elements) so it's not clear what we would even use for this if we wanted to.
+    > **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
+    > We also need to determine if there is a version of docker-compose that needs to be specified. The docker compose schema [version has been
+    > deprecated](https://github.com/compose-spec/compose-spec/blob/master/spec.md#version-and-name-top-level-elements) so it's not clear what we would even use for this if we wanted to.
 
-| Attribute        | Type            | Required?       | Description     |
-|------------------|-----------------|-----------------|-----------------|
-| packageLocation  | string          | Y               | The URL indicating the Docker Compose package's location. |
-| keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
-| wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
+    | Attribute        | Type            | Required?       | Description     |
+    |------------------|-----------------|-----------------|-----------------|
+    | packageLocation  | string          | Y               | The URL indicating the Docker Compose package's location. |
+    | keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
+    | wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
 
 > **Note**  
 > Missing in the current specification are ways to define the compatibility information (resources required to run, application dependencies) as well as required infrastructure  services  such as storage, message queues/bus, reverse proxy, or authentication/authorization/accounting.
->
-> **Note**  
-> Application Marketplaces are out of scope for Margo. The exact requirements of the Marketing Material shall be defined by the Application Marketplace beyond outlined mandatory content.
-
-## Application Manifests  
-
-The purpose of the application manifests is to provide all metadata to enable the lifecycle of the application within the edge device via the [Workload Orchestration Agent](./workload-orchestration-agent.md). An application manifest is either defined as a ([Helm Chart](#application-manifest-using-helm-helm-chart) or a [Docker Compose](#application-manifest-using-docker-compose)):
-
-**Application Manifest using Docker Compose**
-
-In this case, the Margo application comprises a deployment definition that is defined by [Docker Compose](https://github.com/compose-spec/compose-spec/blob/master/03-compose-file.md). Therefore, the application description file, `margo.yaml`, contains a `docker-compose` deployment definition in which a Docker Compose configuration file is referenced. Its filename SHOULD be “compose.yaml”, but MAY be any other file name as well. The example [application description file](#application-description-example) illustrates this.
-
-The referenced `./manifest/docker-compose/compose.yaml` file in the [example](#application-description-example) looks like this:  
-
-```yaml
-version: 2.4 
-services: 
-  db: 
-    image: mariadb:10.6.4-focal 
-    command: '--default-authentication-plugin=mysql_native_password' 
-    volumes: 
-      - db_data:/var/lib/mysql 
-    restart: always 
-    mem_limit: 350m 
-    environment: 
-      - MYSQL_ROOT_PASSWORD=somewordpress 
-      - MYSQL_DATABASE=wordpress 
-      - MYSQL_USER=wordpress 
-      - MYSQL_PASSWORD=wordpress 
-    expose: 
-      - 3306 
-      - 33060 
-  wordpress: 
-    image: wordpress:php8.3-fpm 
-    volumes: 
-      - wp_data:/var/www/html 
-    ports: 
-      - 80:80 
-    restart: always 
-    mem_limit: 500m 
-    environment: 
-      - WORDPRESS_DB_HOST=db 
-      - WORDPRESS_DB_USER=wordpress 
-      - WORDPRESS_DB_PASSWORD=wordpress 
-      - WORDPRESS_DB_NAME=wordpress 
-volumes: 
-  db_data: 
-  wp_data: 
-```
-
-The execution of this Margo application will entail (1) the copying of the referenced `compose.yaml` file into the local directory foreseen by the Workflow Orchestration Agent and (2) the following Docker Compose command:
-
-```shell
-$ docker compose up 
-```
-
-> **Note**  
-> The supported function set of docker compose might be limited by certain or all Margo-compliant implementations. For example, to reflect security policies, system dependencies or hardware related limitations. This could affect:
-> - Supported Docker Compose version number (e.g. max version 2.4) 
-> - Unavailability of certain configuration options (e.g. no volumes with absolute paths)
-> - Definition range of configuration options (e.g. unavailability of some host port ranges)
-> - Mandatory configuration keys (e.g. all services must specify mem_limit)
-> - Naming rules (e.g. container names or network names in a specific format)
->
-> Uncompliant Docker Compose configurations will be rejected by both the Workload Orchestration Service and the Workload Orchestration Agent.
-
-**Application Manifest using Helm**
-
-Below, the usage of Helm as an application manifest of an Margo application is defined. This can be chosen if the target edge device is running Kubernetes behind the workload orchestration agent. For a full documentation of Helm, we refer to its official [website](https://helm.sh/docs/).
-
-A Helm chart includes the following Helm-specific configuration files and Kubernetes manifest templates:
-
-- Chart.yaml
-This file contains metadata about the chart such as name, version, description, and maintainers.
-- values.yaml
-This file defines the configuration values for the templates. Using this template approach, only this file needs to be changed for deployments in different environments (e.g., development, staging or production).
-- templates
-This directory contains all Kubernetes manifest files templated to be instantiated with values from the values.yaml file:
-  - deployment.yaml
-  - service.yaml
-  - configmap.yaml
-  - Secrets
-  - and other Kubernetes resources.
-- charts
-This directory may include additional charts that are necessary for the parent chart to function.
-
-> **Note**  
-> This version of the Margo specification uses Helm version 3. For additional information refer to the Helm Documentation at [https://helm.sh](https://helm.sh).
-
-An example of a `Chart.yaml` is listed below:
-
-```yaml
-apiVersion: v2 
-name: my-nginx-0.1.0 
-version: 1.0.0 # Version of the chart 
-description: Example of packaging nginx as an Margo application. 
-type: application  
-home: https://my-cool-app.com 
-maintainers:   
-  - name: John Smith  
-    url: https://app-devs.com  
-icon: ./resources/nginx-logo-s.png     
-appVersion: 0.1.0 
-```
-
-An example of a `values.yaml` is listed below:
-
-```yaml
-replicaCount: 1 # only 1 pod will be instantiated 
-image: 
-  repository: nginx 
-  pullPolicy: IfNotPresent # will pull image if not already there 
-service: 
-  protocol: TCP  
-  type: ClusterIP # exposes the service on cluster-internal IP 
-  port: 80 
-resources: 
-  limits: # highest limits chart can receive 
-     cpu: 0.5   
-  requests: # maximum amount of resources chart requests 
-     cpu: 0.1 
-```
-
-An example of a `deployment.yaml` is listed below:
-
-```yaml
-apiVersion: apps/v1 
-kind: Deployment 
-metadata: 
-  name: {{ .Release.Name }}-nginx 
-  labels: 
-    app: nginx 
-spec: 
-  replicas: {{ .Values.replicaCount }} 
-  selector: 
-    matchLabels: 
-      app: nginx 
-  template: 
-    metadata: 
-      labels: 
-        app: nginx 
-    spec: 
-      containers: 
-        - name: {{ .Chart.Name }} 
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}" 
-          imagePullPolicy: {{ .Values.image.pullPolicy }} 
-          resources: 
-            limits: 
-              cpu: "{{ .Values.resources.limits.cpu }}" 
-            requests: 
-              cpu: "{{ .Values.resources.requests.cpu }}" 
-          ports: 
-            - name: http 
-              containerPort: 80 
-              protocol: TCP 
-```
-
-An example of a `service.yaml` is listed below:
-
-```yaml
-apiVersion: v1 
-kind: Service 
-metadata: 
-  name: {{ .Release.Name }}-service 
-spec: 
-  selector: 
-    app.kubernetes.io/instance: {{ .Release.Name }} 
-  type: {{ .Values.service.type }} 
-  ports: 
-    - protocol: {{ .Values.service.protocol | default "TCP" }} 
-      port: {{ .Values.service.port }} 
-```
-
-An example of a `configmap.yaml` is listed below:
-
-```yaml
-apiVersion: v1 
-kind: ConfigMap 
-metadata: 
-  name: {{ .Release.Name }}-index-html-configmap 
-  namespace: default 
-data: 
-  index.html: | 
-    <html> 
-    <h1>Welcome</h1> 
-    </br> 
-    <h1>This is app is Margo-compliant and defined as a Helm Chart.</h1> 
-    </html> 
-```
 
 ## Defining configurable application variables
 
