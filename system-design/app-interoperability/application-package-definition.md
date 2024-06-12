@@ -180,7 +180,7 @@ deployments:
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | type             | string          | Y               | Indicates the components's deployment configuration. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file. Component types under `cluster` must use `helm.v3`. Component types under `standalone` must use `docker-compose` |
-| components      | []Component    | N               | Component element indicating the components to deploy when installing the application. See the [Component](#compnent-attributes) section below. |
+| components      | []Component    | N               | Component element indicating the components to deploy when installing the application. See the [Component](#component-attributes) section below. |
 
 **Component Attributes**
 
