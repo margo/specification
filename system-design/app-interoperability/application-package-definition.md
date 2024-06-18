@@ -48,7 +48,7 @@ A simple hello-world example of an `margo.yaml` file is shown below:
 apiVersion: margo.org/v1-alpha1
 kind: application
 metadata:
-  id: com.northstartida.hello.world
+  id: com-northstartida-hello-world
   name: Hello World
   description: A basic hello world application
   version: 1.0
@@ -83,7 +83,7 @@ An example of a `margo.yaml` file using multiple helm charts and a docker-compos
 apiVersion: margo.org/v1-alpha1
 kind: application
 metadata:
-  id: com.northstartida.digitron.orchestrator
+  id: com-northstartida-digitron-orchestrator
   name: Digitron orchestrator
   description: The Digitron orchestrator application
   version: 1.2.1 
