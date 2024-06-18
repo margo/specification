@@ -67,7 +67,7 @@ metadata:
     organization:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
-deployments:
+deploymentProfiles:
   - type: helm.v3
     components:
       - name: hello-world
@@ -102,7 +102,7 @@ metadata:
     organization:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
-deployments:
+deploymentProfiles:
   - type: helm.v3
     components:
       - name: digitron-orchestrator
@@ -130,7 +130,7 @@ deployments:
 | apiVersion      | string          | Y               | Identifier of the version of the API the object definition follows.|
 | kind            | string          | Y               | Must be `application`.|
 | metadata        | Metadata        | Y               | Metadata element specifying marketing characteristics about the application. See the [Metadata](#metadata-attributes) section below.|
-| deployments     | Deployment      | Y               | Deployment element specifying the types of deployments the application supports. See the [Deployment](#deployment-attributes) section below. |
+| deploymentProfiles     | Deployment      | Y               | Deployment profiles element specifying the types of deployments the application supports. See the [Deployment](#deployment-profiles-attributes) section below. |
 
 **Metadata Attributes**
 
@@ -175,7 +175,7 @@ deployments:
 | name             | string          | Y               | Organization responsible for the application's development and distribution.|
 | site             | string          | N               | Link to the organization's website.|
 
-**Deployment Attributes**
+**Deployment Profiles Attributes**
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
