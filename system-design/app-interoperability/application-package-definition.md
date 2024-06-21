@@ -20,6 +20,8 @@ The application package's deployment configuration SHALL be defined as Helm Char
 > We will also discuss how we should handle secure container registries that require a username and password.
 >
 > **Investigation Needed**: We need to determine what impact, if any, using 3rd party helm charts has on being Margo compliant.
+>
+> **Investigation Needed**: Missing in the current specification are ways to define the compatibility information (resources required to run, application dependencies) as well as required infrastructure  services  such as storage, message queues/bus, reverse proxy, or authentication/authorization/accounting.
 
 If either one cannot be implemented it MAY be omitted but Margo RECOMMENDS defining components for both Helm Chart **AND** Docker Compose packages to strengthen interoperability and applicability.
 
@@ -75,6 +77,34 @@ deploymentProfiles:
           repository: oci://northstarida.azurecr.io/charts/hello-world
           revision: 1.0.1
           wait: true
+parameters:
+  greeting:
+    value: Hello
+    targets:
+    - pointer: global.config.appGreeting
+      components: ["hello-world"]
+  greetingTarget:
+    value: World
+    targets:
+    - pointer: global.config.appGreetingTarget
+      components: ["hello-world"]
+configuration:
+  sections:
+    - name: General Settings
+      settings:
+        - parameter: greeting
+          name: Greeting
+          description: The greeting to use.
+          schema: requireText
+        - parameter: greetingTarget
+          name: Greeting Target
+          description: The target of the greeting.
+          schema: requireText
+  schema:
+    - name: requireText
+      dataType: string
+      maxLength: 45
+      allowEmpty: false
 ```
 
 An example of a `margo.yaml` file using multiple helm charts and a docker-compose file package is shown below.
@@ -121,16 +151,165 @@ deploymentProfiles:
         properties:
           packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
           keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
+parameters:
+  idpName:
+    targets:
+      - pointer: idp.name
+        components: ["digitron-orchestrator"]
+      - pointer: ENV.IDP_NAME
+        components: ["digitron-orchestrator-docker"]
+  idpProvider:
+    targets:
+      - pointer: idp.provider
+        components: ["digitron-orchestrator"]
+      - pointer: ENV.IDP_PROVIDER
+        components: ["digitron-orchestrator-docker"]
+  idpClientId:
+    targets:
+      - pointer: idp.clientId
+        components: ["digitron-orchestrator"]
+      - pointer: ENV.IDP_CLIENT_ID
+        components: ["digitron-orchestrator-docker"]
+  idpUrl:
+    targets:
+      - pointer: idp.providerUrl
+        components: ["digitron-orchestrator"]
+      - pointer: idp.providerMetadata
+        components: ["digitron-orchestrator"]
+      - pointer: ENV.IDP_URL
+        components: ["digitron-orchestrator-docker"]
+  adminName:
+    targets:
+      - pointer: administrator.name
+        components: ["digitron-orchestrator"]
+      - pointer: ENV.ADMIN_NAME
+        components: ["digitron-orchestrator-docker"]
+  adminPrincipalName:
+    targets:
+      - pointer: administrator.userPrincipalName
+        components: ["digitron-orchestrator"]
+      - pointer: ENV.ADMIN_PRINCIPALNAME
+        components: ["digitron-orchestrator-docker"]
+  pollFrequency:
+    value: 30
+    targets: 
+      - pointer: settings.pollFrequency
+        components: ["digitron-orchestrator", "database-services"]
+      - pointer: ENV.POLL_FREQUENCY
+        components: ["digitron-orchestrator-docker"]
+  siteId:
+    targets:
+      - pointer: settings.siteId
+        components: ["digitron-orchestrator", "database-services"]
+      - pointer: ENV.SITE_ID
+        components: ["digitron-orchestrator-docker"]
+  cpuLimit:
+    value: 1 
+    targets:
+      - pointer: settings.limits.cpu
+        components: ["digitron-orchestrator"]
+  memoryLimit:
+    value: 16384
+    targets:
+      - pointer: settings.limits.memory
+        components: ["digitron-orchestrator"]
+configuration:
+  sections:
+    - name: General
+      settings:
+        - parameter: pollFrequency
+          name: Poll Frequency
+          description: How often the service polls for updated data in seconds
+          schema: pollRange
+        - parameter: siteId
+          name: Site Id
+          description: Special identifier for the site (optional)
+          schema: optionalText
+    - name: Identity Provider
+      settings:
+        - parameter: idpName
+          name: Name
+          description: The name of the Identity Provider to use
+          immutable: true
+          schema: requiredText
+        - parameter: idpProvider
+          name: Provider
+          description: Provider something something
+          immutable: true
+          schema: requiredText
+        - parameter: idpClientId
+          name: Client ID
+          description: The client id
+          immutable: true
+          schema: requiredText
+        - parameter: idpUrl
+          name: Provider URL
+          description: The url of the Identity Provider
+          immutable: true
+          schema: url
+    - name: Administrator
+      settings:
+        - parameter: adminName
+          name: Presentation Name
+          description: The presentation name of the administrator
+          schema: requiredText
+        - parameter: adminPrincipalName
+          name: Principal Name
+          description: The principal name of the administrator
+          schema: email
+    - name: Resource Limits
+      settings:
+        - parameter: cpuLimit
+          name: CPU Limit
+          description: Maximum number of CPU cores to allow the application to consume
+          schema: cpuRange
+        - parameter: memoryLimit
+          name: Memory Limit
+          description: Maximum number of memory to allow the application to consume
+          schema: memoryRange
+  schema:
+    - name: requiredText
+      dataType: string
+      maxLength: 45
+      allowEmpty: false
+    - name: email
+      dataType: string
+      allowEmpty: false
+      regexMatch: .*@[a-z0-9.-]*
+    - name: url
+      dataType: string
+      allowEmpty: false
+      regexMatch: ^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$
+    - name: pollRange
+      dataType: integer
+      minValue: 30
+      maxValue: 360
+      allowEmpty: false
+    - name: optionalText
+      dataType: string  
+      minLength: 5
+      allowEmpty: true
+    - name: cpuRange
+      dataType: double
+      minValue: 0.5
+      maxPrecision: 1
+      allowEmpty: false
+    - name: memoryRange
+      dataType: integer
+      minValue: 16384
+      allowEmpty: false
 ```
 
 **Top-level Attributes**
 
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string          | Y               | Identifier of the version of the API the object definition follows.|
-| kind            | string          | Y               | Must be `application`.|
-| metadata        | Metadata        | Y               | Metadata element specifying marketing characteristics about the application. See the [Metadata](#metadata-attributes) section below.|
-| deploymentProfiles     | Deployment      | Y               | Deployment profiles element specifying the types of deployments the application supports. See the [Deployment](#deployment-profiles-attributes) section below. |
+| Attribute          | Type                   | Required?       | Description     |
+|--------------------|------------------------|-----------------|-----------------|
+| apiVersion         | string                 | Y               | Identifier of the version of the API the object definition follows.|
+| kind               | string                 | Y               | Must be `application`.|
+| metadata           | Metadata               | Y               | Metadata element specifying marketing characteristics about the application. See the [Metadata](#metadata-attributes) section below.|
+| deploymentProfiles | Deployment             | Y               | Deployment profiles element specifying the types of deployments the application supports. See the [Deployment](#deployment-profiles-attributes) section below. |
+| parameters         | map[string][Parameter] | N               | Parameters element specifying the parameters users are able to provide values for when installing, or updating, the application. See the [Parameter](#parameter-attributes) section below. |
+| configuration      | Configuration          | N               | Configuration element specifying how parameters should be displayed to the user and validated. See the [Configuration](#configuration-attributes) section below. |
 
 **Metadata Attributes**
 
@@ -213,132 +392,99 @@ The expected properties for the suppported deployment types are indicated below.
     | keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
     | wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
 
-> **Note**  
-> Missing in the current specification are ways to define the compatibility information (resources required to run, application dependencies) as well as required infrastructure  services  such as storage, message queues/bus, reverse proxy, or authentication/authorization/accounting.
+## Defining configurable application parameters
 
-## Defining configurable application variables
+To allow users to provide configuration values when installing an application, the `margo.yaml` defines the parameters and configuration sections giving the application vendor control over what a user can configure when installing, or updating, an application. The [configuration](#configuration-attributes) section describes how the workload orchestration software vendor must display these parameters to the user to allow them to specify the values. The [schema](#schema-attributes) section describes how the workload orchestration software vendor must validate the configuration values provided by the user before the application is installed or updated.
 
-To allow customers to provide configuration values when installing an application, the `margo.yaml` defines the parameters and configuration sections. This gives the application vendor control over what a custom can configure when installing an application. This also describes how the workload orchestration software vendor must display these parameters to the customer to allow them to specify the values. This also describes how the workload orchestration software vendor must validate the configuration values provided by the customer before the application is installed.
+> **Note:** At this point the specification only deals with parameter values provided by the user as part of installing, or updating, the application. We anticipate parameter values to come from other sources, such as the device, in the future and not only from the user.
 
-An example of a parameters section in the `margo.yaml` follows here:
+**Parameter Attributes**
 
-```yaml
-parameters:  
-  sections:  
-    - name: General Settings  
-      settings:  
-        - Name: Greeting  
-          value: Hello  
-          targets:  
-            - key: env.APP_GREETING  
-              appliesTo: [“helm-chart”,”docker-compose”]
-          description: The greeting to use.  
-          schema: requireText  
-          dataType: string 
-        - name: Greeting Target  
-          value: World  
-          targets:  
-            - key: env.APP_TARGET  
-              appliesTo: [“helm-chart”,”docker-compose”]    
-          description: The target of the greeting.  
-          schema: requireText  
-          dataType: string 
-  schema:  
-    - name: requireText  
-      maxLength: 45  
-      allowEmpty: false  
-```
-
-**Parameters**
-
-This section defines parameters that must be displayed to the user as well as how the workload orchestration software vendor must validate the provided values.
-
-The parameters section is only required if the application requires customers to provide parameter value as part of the installation.
-
-**Parameters Attributes**
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| section        | map[string]section    | Y | Sections are used to group related parameters together, so it is possible to present a user interface with a logical grouping of the parameters in each section. See the [Section](#section-attributes) section below.|
-| schema         | map[string]schema     | N | Schema is used to provide details about how to validate each of the parameter values. At a minimum, the parameter value must be validated to match the parameter’s data type. The schema indicates additional rules the provided value must satisfy to be considered valid input. Schemas only need to be defined for parameters that have additional validation rules other than validating against the data type. See the [Schema](#schema-attributes) section below.|
-
-**Section Attributes**
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| name            | string     | Y | The name of the section. This may be used in the user interface to show the grouping of the associated parameters within the section. |  
-| settings        | settings   | Y | Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the customer. See the [Settings](#settings-attributes) section below.  |  
-
-**Settings Attributes**
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| setting         | map[string]setting    | Y | Defines additional information about each of the parameters to be used in the user interfaces. See the [Setting](#setting-attributes) section below. |  
-
-**Setting Attributes**
-
-| Attribute       | Type              | Required?       | Description     |
-|-----------------|-------------------|-----------------|-----------------|
-| name            | string             | Y | The name of the property to show in the user interface. |  
-| value           | string             | N | The property’s default value.  Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean]. |
-| targets          | map[string]target | Y | Used to indicate which component, and key, the value should be applied to. See the [Target](#target-attributes) section below. |
-| description     | string             | Y | A short description of the property. |
-| datatype        | string             | Y | Indicates the parameters data type. Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean]. |
-| schema          | string             | N | The name of the schema definition to use when validating the property value if the property has additional validation rules. See the [Schema](#schema-attributes) section below.|
+| Attribute       | Type                    | Required?       | Description     |
+|-----------------|-------------------------|-----------------|-----------------|
+| value           |  <*see description*>    | N               | The parameter’s default value. Accepted data types are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].|
+| targets         | []Target                | Y               | Used to indicate which component the value should be applied to when installing or updating the application. See the [Target](#target-attributes) section below.|
 
 **Target Attributes**
 
 | Attribute       | Type              | Required?       | Description     |
 |-----------------|-------------------|-----------------|-----------------|
-| key             | string            | Y | The name of the parameter. For Helm, this is the dot notation for the matching element in the `values.yaml` files. For docker-compose, this is the name of the environment variable to set. |  
-| appliesTo       | string            | N | Indicates which deployment the parameter value applies to. The valid options are either `helm-chart`, `docker-compose` or both.  |
+| pointer         | string            | Y               | The name of the parameter in the deployment configuration. For Helm deployments, this is the dot notation for the matching element in the `values.yaml` files. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command. For docker-compose deployments, this is the name of the environment variable to set. |  
+| components      | []string          | Y               | Indicates which deployment profile [component](#component-attribute) the parameter target applies to. The component name specified here MUST match a component name in the [deployment profiles](#deployment-profiles-attributes) section.  |
+
+**Configuration Attributes**
+
+| Attribute       | Type               | Required?           | Description     |
+|-----------------|--------------------|---------------------|-----------------|
+| sections        | []Section          | Y                   | Sections are used to group related parameters together, so it is possible to present a user interface with a logical grouping of the parameters in each section. See the [Section](#section-attributes) section below. |
+| schema          | []Schema           | Y                   | Schema is used to provide details about how to validate each parameter value. At a minimum, the parameter value must be validated to match the schema’s data type. The schema indicates additional rules the provided value must satisfy to be considered valid input. See the [Schema](#schema-attributes) section below. |
+
+**Section Attributes**
+
+| Attribute       | Type            | Required?       | Description     |
+|-----------------|-----------------|-----------------|-----------------|
+| name            | string          | Y               | The name of the section. This may be used in the user interface to show the grouping of the associated parameters within the section. |  
+| settings        | []Setting       | Y               | Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the user. See the [Setting](#setting-attributes) section below.  |  
+
+**Setting Attributes**
+
+| Attribute       | Type              | Required?       | Description     |
+|-----------------|-------------------|-----------------|-----------------|
+| parameter       | string            | Y               | The name of the [parameter](#parameter-attributes) the setting is associated with. |
+| name            | string            | Y               | The parameter's display name to show in the user interface. |  
+| description     | string            | N               | The parameters's short description to provide additional context to the user in the user interface about what the parameter is for. |
+| immutable       | boolean           | N               | If true, indicates the parameter value MUST not be changed once it has been set and used to install the application. Default is false if not provided. |
+| schema          | string            | Y               | The name of the schema definition to use to validate the parameter's value. See the [Schema](#schema-attributes) section below.|
 
 **Schema Attributes**
+  
+| Attribute                   | Type              | Required?       | Description     |
+|-----------------------------|-------------------|-----------------|-----------------|
+| name                        | string            | Y               | The name of the schema rule. This used in the [setting](#setting-attribute) to link the setting to the schema rule. |  
+| datatype                    | string            | Y               | Indicates the expected data type for the customer provided value. Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean]. At a minimum, the provided parameter value MUST match the schema’s data type. |
+| <`validation rule options`> | <*see below*>     | N               | Defines the validation rules to use to validate the user provided parameter value. The rules are based on the schema's data type and are listed below. The value MUST be validated against any validation rules defined in the schema. |
 
-The schema indicates the rules each indicated parameter value must meet before using the value to install the application. At a minimum, the provided parameter value must match the parameter’s data type. The value must also be validated against any of the validation rules defined in the schema.
+**Validation Rules**
 
-| Attribute       | Type              | Required?       | Description     |
-|-----------------|-------------------|-----------------|-----------------|
-| name                      | string             | Y | The name of the parameter the configuration setting applies to. |  
-| <`validation rule options`> | <*see below*>        | Y | This defines the validation rules to use. The rules are based on the selected input type. |
+Each data type has its own set of validation rules that can be used.
 
-**Text Validation Rules**
+- Text Validation Rules
 
-| Attribute       | Type              | Required?       | Description     |
-|-----------------|-------------------|-----------------|-----------------|
-| allowEmpty      | bool              | N | If true, indicates a value must be provided. Default is false if not provided. |  
-| minLength       | integer           | N | If set, indicates the minimum number of characters the value must have to be considered valid. |
-| maxLength       | integer           | N | If set, indicates the maximum number of characters the value must have to be considered valid. |
-| regexMatch      | string            | N | If set, indicates a regular expression to use to validate the value. |
+    | Attribute       | Type              | Required?       | Description     |
+    |-----------------|-------------------|-----------------|-----------------|
+    | allowEmpty      | bool              | N               | If true, indicates a value must be provided. Default is false if not provided. |  
+    | minLength       | integer           | N               | If set, indicates the minimum number of characters the value must have to be considered valid. |
+    | maxLength       | integer           | N               | If set, indicates the maximum number of characters the value must have to be considered valid. |
+    | regexMatch      | string            | N               | If set, indicates a regular expression to use to validate the value. |
 
-**Boolean Validation Rules**
+- Boolean Validation Rules
 
-| Attribute       | Type              | Required?       | Description     |
-|-----------------|-------------------|-----------------|-----------------|
-| allowEmpty      | bool              | N | If true, indicates a value must be provided. Default is false if not provided. |  
+    | Attribute       | Type              | Required?       | Description     |
+    |-----------------|-------------------|-----------------|-----------------|
+    | allowEmpty      | bool              | N               | If true, indicates a value must be provided. Default is false if not provided. |  
 
-**Numeric Integer Validation Rules**
+- Numeric Integer Validation Rules
 
-| Attribute       | Type              | Required?       | Description     |
-|-----------------|-------------------|-----------------|-----------------|
-| allowEmpty      | bool              | N | If true, indicates a value must be provided. Default is false if not provided. |  
-| minValue        | integer           | N | If set, indicates the minimum allowed integer value the value must have to be considered valid.  |
-| maxValue        | integer           | N | If set, indicates the maximum allowed integer value the value must have to be considered valid.  |
+    | Attribute       | Type              | Required?       | Description     |
+    |-----------------|-------------------|-----------------|-----------------|
+    | allowEmpty      | bool              | N               | If true, indicates a value must be provided. Default is false if not provided. |  
+    | minValue        | integer           | N               | If set, indicates the minimum allowed integer value the value must have to be considered valid.  |
+    | maxValue        | integer           | N               | If set, indicates the maximum allowed integer value the value must have to be considered valid.  |
 
-**Numeric Double Validation Rules**
+- Numeric Double Validation Rules
 
-| Attribute       | Type              | Required?       | Description     |
-|-----------------|-------------------|-----------------|-----------------|
-| allowEmpty      | bool              | N | If true, indicates a value must be provided. Default is false if not provided. |  
-| minValue        | double            | N | If set, indicates the minimum allowed double value the value must have to be considered valid.  |
-| maxValue        | double            | N | If set, indicates the maximum allowed double value the value must have to be considered valid.   |
-| minPrecision    | integer           | N | If set, indicates the minimum level of precision the value must have to be considered valid.  |
-| maxPrecision    | integer           | N | If set, indicates the maximum level of precision the value must have to be considered valid.   |
+    | Attribute       | Type              | Required?       | Description     |
+    |-----------------|-------------------|-----------------|-----------------|
+    | allowEmpty      | bool              | N               | If true, indicates a value must be provided. Default is false if not provided. |  
+    | minValue        | double            | N               | If set, indicates the minimum allowed double value the value must have to be considered valid.  |
+    | maxValue        | double            | N               | If set, indicates the maximum allowed double value the value must have to be considered valid.   |
+    | minPrecision    | integer           | N               | If set, indicates the minimum level of precision the value must have to be considered valid.  |
+    | maxPrecision    | integer           | N               | If set, indicates the maximum level of precision the value must have to be considered valid.   |
 
-**Select Validation Rules**
+- Select Validation Rules
 
-| Attribute       | Type              | Required?       | Description     |
-|-----------------|-------------------|-----------------|-----------------|
-| allowEmpty      | bool              | N | If true, indicates a value must be provided. Default is false if not provided. |  
-| multiselect     | bool              | N | If true, indicates multiple values can be selected. If multiple values can be selected the resulting value is an array of the selected values. The default is false if not provided.   |
-| options         | array             | Y | This provides the list of acceptable options the customer can select from. The data type for each option must match the parameter setting’s data type.    |
+    | Attribute       | Type              | Required?       | Description     |
+    |-----------------|-------------------|-----------------|-----------------|
+    | allowEmpty      | bool              | N               | If true, indicates a value must be provided. Default is false if not provided. |  
+    | multiselect     | bool              | N               | If true, indicates multiple values can be selected. If multiple values can be selected the resulting value is an array     of the     selected values. The default is false if not provided.   |
+    | options         | array             | Y               | This provides the list of acceptable options the user can select from. The data type for each option must match the     parameter     setting’s data type.    |
