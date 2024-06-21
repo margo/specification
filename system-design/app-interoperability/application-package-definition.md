@@ -308,8 +308,8 @@ configuration:
 | kind               | string                 | Y               | Must be `application`.|
 | metadata           | Metadata               | Y               | Metadata element specifying marketing characteristics about the application. See the [Metadata](#metadata-attributes) section below.|
 | deploymentProfiles | Deployment             | Y               | Deployment profiles element specifying the types of deployments the application supports. See the [Deployment](#deployment-profiles-attributes) section below. |
-| parameters         | map[string][Parameter] | N               | Parameters element specifying the parameters users are able to provide values for when installing, or updating, the application. See the [Parameter](#parameter-attributes) section below. |
-| configuration      | Configuration          | N               | Configuration element specifying how parameters should be displayed to the user and validated. See the [Configuration](#configuration-attributes) section below. |
+| parameters         | map[string][Parameter] | N               | Parameters element specifying the configurable parameters to use when installing, or updating, the application. See the [Parameter](#parameter-attributes) section below. |
+| configuration      | Configuration          | N               | Configuration element specifying how parameters should be displayed to the user for setting the value as well as the rules to use to validate the user's input. See the [Configuration](#configuration-attributes) section below. |
 
 **Metadata Attributes**
 
@@ -394,7 +394,7 @@ The expected properties for the suppported deployment types are indicated below.
 
 ## Defining configurable application parameters
 
-To allow users to provide configuration values when installing an application, the `margo.yaml` defines the parameters and configuration sections giving the application vendor control over what a user can configure when installing, or updating, an application. The [configuration](#configuration-attributes) section describes how the workload orchestration software vendor must display these parameters to the user to allow them to specify the values. The [schema](#schema-attributes) section describes how the workload orchestration software vendor must validate the configuration values provided by the user before the application is installed or updated.
+To allow customizable configuration values when installing an application, the `margo.yaml` defines the parameters and configuration sections giving the application vendor control over what can be configured when installing, or updating, an application. The [configuration](#configuration-attributes) section describes how the workload orchestration software vendor must display parameters to the user to allow them to specify the values. The [schema](#schema-attributes) section describes how the workload orchestration software vendor must validate the values provided by the user before the application is installed or updated.
 
 > **Note:** At this point the specification only deals with parameter values provided by the user as part of installing, or updating, the application. We anticipate parameter values to come from other sources, such as the device, in the future and not only from the user.
 
@@ -403,13 +403,13 @@ To allow users to provide configuration values when installing an application, t
 | Attribute       | Type                    | Required?       | Description     |
 |-----------------|-------------------------|-----------------|-----------------|
 | value           |  <*see description*>    | N               | The parameter’s default value. Accepted data types are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].|
-| targets         | []Target                | Y               | Used to indicate which component the value should be applied to when installing or updating the application. See the [Target](#target-attributes) section below.|
+| targets         | []Target                | Y               | Used to indicate which component the value should be applied to when installing, or updating, the application. See the [Target](#target-attributes) section below.|
 
 **Target Attributes**
 
 | Attribute       | Type              | Required?       | Description     |
 |-----------------|-------------------|-----------------|-----------------|
-| pointer         | string            | Y               | The name of the parameter in the deployment configuration. For Helm deployments, this is the dot notation for the matching element in the `values.yaml` files. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command. For docker-compose deployments, this is the name of the environment variable to set. |  
+| pointer         | string            | Y               | The name of the parameter in the deployment configuration. For Helm deployments, this is the dot notation for the matching element in the `values.yaml` file. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command. For docker-compose deployments, this is the name of the environment variable to set. |  
 | components      | []string          | Y               | Indicates which deployment profile [component](#component-attribute) the parameter target applies to. The component name specified here MUST match a component name in the [deployment profiles](#deployment-profiles-attributes) section.  |
 
 **Configuration Attributes**
@@ -441,7 +441,7 @@ To allow users to provide configuration values when installing an application, t
 | Attribute                   | Type              | Required?       | Description     |
 |-----------------------------|-------------------|-----------------|-----------------|
 | name                        | string            | Y               | The name of the schema rule. This used in the [setting](#setting-attribute) to link the setting to the schema rule. |  
-| datatype                    | string            | Y               | Indicates the expected data type for the customer provided value. Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean]. At a minimum, the provided parameter value MUST match the schema’s data type. |
+| datatype                    | string            | Y               | Indicates the expected data type for the user provided value. Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean]. At a minimum, the provided parameter value MUST match the schema’s data type if no other validation rules are provided. |
 | <`validation rule options`> | <*see below*>     | N               | Defines the validation rules to use to validate the user provided parameter value. The rules are based on the schema's data type and are listed below. The value MUST be validated against any validation rules defined in the schema. |
 
 **Validation Rules**
