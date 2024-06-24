@@ -1,0 +1,30 @@
+---
+name: Bug report
+description: File a new bug for the Margo Specification
+labels: [bug, triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before requesting: search [existing issues](https://github.com/margo/spefification/labels/bug).
+
+  - type: textarea
+    attributes:
+      label: "Bug description"
+      description: "Description of the bug."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Proposed fix"
+      description: "Description of the proposed fix."
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: "Anything else (optional)"
+      description: "Any additional information, hints, links, or references?"
+    validations:
+      required: false

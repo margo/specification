@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2024 Margo
+#
+# SPDX-License-Identifier: MIT
+#
+# Author: Christian Storm <christian.storm@siemens.com>
+---
+name: PR checks
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  check-sign-off:
+    name: Comment if commits are not signed-off
+    env:
+      FORCE_COLOR: 1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: live627/check-pr-signoff-action@v1
+

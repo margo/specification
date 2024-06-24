@@ -6,12 +6,11 @@ It also sketches the typical integration process.
 ## New Features
 
 Contributions to Margo are _typically_ very welcome!
-However, please keep the following in mind when adding new features:
+However, please keep the following in mind when adding new enhancements:
 It is ultimately the responsibility of the maintainers to maintain your addition (although any help is more than appreciated!).
-Thus, when accepting new features, we have to make a trade-off between the added value and the added cost of maintenance.
+Thus, when accepting new enhancements, we have to make a trade-off between the added value and the added cost of maintenance.
 If the maintenance cost exceeds the added value by far, we reserve the right to reject the feature.
-Hence it is **recommended to first create a new issue on Github before starting the actual implementation**
-and wait for feedback from the maintainers.
+Hence it is **recommended to first create a new issue on Github before starting the actual implementation** and wait for feedback from the maintainers.
 
 ## Bug Fixes
 
@@ -28,8 +27,8 @@ Bug and security fixes are _always_ welcome and take the highest priority, see o
   - do not mix those there in a single commit
   - after each commit, the tree still has to build and work, i.e. do not add
     even temporary breakages inside a commit series (helps when tracking down
-    bugs)
-- Base commits on top of latest `next` branch
+    bugs). This also applies to documentation commits processed by, e.g., `mkdocs`
+- Base commits on top of latest `pre-draft` branch
 
 ### Signing the CLA for Contributions to the Specification
 If you have not yet signed the Individual CLA, or your organization has not yet signed the Corporate CLA, or if your account has not yet been authorized by your organization to contribute to Margo, the [LFX EasyCLA bot](https://easycla.lfx.linuxfoundation.org/#/) will prompt you to follow the appriopriate steps to authorize your contribution. 
@@ -77,6 +76,4 @@ Check with your employer when not working on your own!
 
 1. Create a pull request on Github.
 2. The EasyCLA check, CI pipeline, and other applicable checks as may be introduced must pass.
-3. Accepted pull requests are merged into the `next` branch first.
-4. If no new problems or discussions show up, `next` will be merged into `main`.
-
+3. Accepted pull requests are merged into the `pre-draft` branch.

@@ -1,6 +1,6 @@
 # Security Policy
 
-Margo takes the security of its code seriously.
+Margo takes the security of its specification and code seriously.
 If you think you have found a security vulnerability, please read the next section and follow the instructions to
 report your finding.
 

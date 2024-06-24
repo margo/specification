@@ -8,7 +8,7 @@ Find out more about the Margo initiative and how to become engaged at [margo.org
 
 > **Disclaimer**
 
-This is a commit *snapshot* rendering of the of work-in-progress Margo System Specification draft from the branch [=@=branchname=@=](https://github.com/margo/specification/tree/=@=branchname=@=), commit `=@=commit=@=`.
+This is a commit *snapshot* rendering of the of work-in-progress Margo System Specification draft from the repository [=@=reponame=@=](https://github.com/=@=reponame=@=), commit `=@=commit=@=`.
 
 Do not attempt to implement this version of the Specification or reference this version as authoritative in any way!
 

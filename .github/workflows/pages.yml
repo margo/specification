@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2024 Margo
+#
+# SPDX-License-Identifier: MIT
+#
+# Author: Christian Storm <christian.storm@siemens.com>
+---
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - pre-draft
+
+permissions:
+  contents: write
+
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Prime Cache Key
+        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+
+      - name: Setup Cache
+        uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+
+      - name: Install mkdocs-material
+        run: pip install mkdocs mkdocs-material mkdocs-markdownextradata-plugin
+
+      - name: GitHub Pages Deploy
+        run: mkdocs gh-deploy --force --clean --verbose
