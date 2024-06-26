@@ -83,9 +83,214 @@ The following shall be configurable to ensure compliance with local operations.
 
 ![Application Repository Traffic (svg)](../figures/System-design-workload-orchestration-agent-repository-traffic.drawio.svg)
 
-**Desired State File Format**
+**Application Deployment Specification**
 
-> **Investigation Needed:** Further Investigation needed on this strategy. 
+To ensure interoperability between the Orchestration Software and the Edge device, Margo intends to define the Application Deployment specification. This deployment specification represents the application desired state the WOS would like the Device to apply and become the current state. 
+
+> **Investigation Needed:** Further Investigation needed on the content regarding deployment for Docker Compose applications. 
+
+
+**Deployment specification example for Cluster with a single component**
+```
+apiVersion: margo.org/v1-alpha1
+kind: ApplicationDeployment
+metadata:
+    id: 0f83e682-a35b-4533-ae93-ff3810095f31
+    applicationId: com-northstarida-digitron-orchestrator
+spec:
+    deploymentProfile:
+      type: helm.v3
+      components:
+        - name: digitron-orchestrator
+          properties:
+            repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
+            revision: 1.0.9
+    parameters:
+      hostname:
+        value: edge.host.local
+        targets:
+          - pointer: edge_host_name
+            components: ["digitron-orchestrator"]
+          - pointer: global.ingress.host
+            components: ["digitron-orchestrator", "database-services"]
+      pollFrequency:
+        value: 30
+        targets: 
+          - pointer: settings.pollFrequency
+            components: ["digitron-orchestrator"]
+      siteId:
+        value: d8b64e67-3bc4-4d0b-a3b8-da94b8f36315
+        targets:
+          - pointer: settings.siteId
+            components: ["digitron-orchestrator"]
+          - pointer: globals.site.id
+            components: ["database-services"]
+```
+
+**Top-level Attributes**
+
+| Attribute       | Type            | Required?       | Description     |
+|-----------------|-----------------|-----------------|-----------------|
+| apiVersion      | string    | Y    | Identifier of the version of the API the object definition follows.|
+| kind            | string    | Y    | Must be `ApplicationDeployment`.|
+| metadata        | Metadata    | Y    | Metadata element specifying characteristics about the application deployment. |
+| spec            | Spec    | Y    | Spec element that defines deployment profiles and parameters associated with the application deployment. |
+
+**Metadata Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|-----------------|-----------------|-----------------|-----------------|
+| id             | string          | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Orchestration Software.|
+| applicationID         | string          | Y    | An identifier for the application. The id is used to help create unique identifiers where required, such as namespaces. The id must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters. |
+
+**Spec Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|-----------------|-----------------|-----------------|-----------------|
+| deploymentProfile           | Target          | Y    | Section that defines which edge device the deployment specification is designed for|
+| parameters        | Parameters          | Y    | Describes the configured parameters applied via the end-user.|
+
+**Deployment Profile Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| type             | string          | Y               | Indicates the components's deployment configuration. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file. Component types under `cluster` must use `helm.v3`. Component types under `standalone` must use `docker-compose` |
+| components      | Component    | Y               | Component element indicating the components to deploy when installing the application.|
+
+
+**Component Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|------------------|-----------------|-----------------|-----------------|
+| name             | string          | Y               | A unique name used to identify the component package. For helm installations the name will be used as the chart name. The name must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. |
+| properties       | map[string][interface{}] | Y              | A dictionary element specifying the component packages's deployment details. See the [Component Properties](#component-properties) section below.|
+
+
+**Component Properties**
+
+The expected properties for the suppported deployment types are indicated below.
+
+- Properties for `helm.v3` components
+
+    | Attribute        | Type            | Required?       | Description     |
+    |------------------|-----------------|-----------------|-----------------|
+    | repository       | string          | Y               | The URL indicating the helm chart's location.|
+    | revision         | string          | Y               | The helm chart's full version.|
+    | wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
+    | timeout        | string          | N    | Describes the timeout period to wait before moving to th enext component in the deployment specification.|
+
+- Properties for `docker-compose` components
+
+    > **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
+    > We also need to determine if there is a version of docker-compose that needs to be specified. The docker compose schema [version has been
+    > deprecated](https://github.com/compose-spec/compose-spec/blob/master/spec.md#version-and-name-top-level-elements) so it's not clear what we would even use for this if we wanted to.
+
+    | Attribute        | Type            | Required?       | Description     |
+    |------------------|-----------------|-----------------|-----------------|
+    | packageLocation  | string          | Y               | The URL indicating the Docker Compose package's location. |
+    | keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
+    | wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
+    | timeout        | string          | N    | Describes the timeout period to wait before moving to th enext component in the deployment specification.|
+
+**Parameter Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|-----------------|-----------------|-----------------|-----------------|
+| name           | string          | Y    | Unique name of the parameter.|
+| value        | string          | Y    | Value pair matched to the name of the parameter.|
+| targets        | Target         | Y    | Describes how the parameter is applied. Noting the Pointer within the application and components it shall be applied to. |
+
+
+**Target Attributes**
+
+| Attribute        | Type            | Required?       | Description     |
+|-----------------|-----------------|-----------------|-----------------|
+| pointer           | string          | Y    | Defines the component the previously stated value will be applied to.|
+| components        | array         | Y    | Describes which component in the deployment specification the parameter should be applied to.|
+
+**Deployment specification example for Cluster with multiple components**
+
+```
+apiVersion: margo.deployment/v1
+kind: ApplicationDeployment
+metadata:
+    id: 0f83e682-a35b-4533-ae93-ff3810095f31
+    applicationId: com-northstarida-digitron-orchestrator
+spec:
+    deploymentProfile:
+      type: helm.v3
+      components:
+        - name: digitron-orchestrator
+          properties:
+            repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
+            revision: 1.0.9
+            wait: true
+            timeout: 8m0s
+        - name: database-services
+           properties:
+             repository: oci://quay.io/charts/realtime-database-services
+             revision: 2.3.7
+    parameters:
+      hostname:
+        value: edge.host.local
+        targets:
+          - pointer: edge_host_name
+            components: ["digitron-orchestrator"]
+          - pointer: global.ingress.host
+            components: ["digitron-orchestrator", "database-services"]
+      pollFrequency:
+        value: 30
+        targets: 
+          - pointer: settings.pollFrequency
+            components: ["digitron-orchestrator"]
+      siteId:
+        value: d8b64e67-3bc4-4d0b-a3b8-da94b8f36315
+        targets:
+          - pointer: settings.siteId
+            components: ["digitron-orchestrator"]
+          - pointer: globals.site.id
+            components: ["database-services"]
+      cpuLimit:
+        value: 3
+        targets:
+          - pointer: settings.limits.cpu
+            components: ["digitron-orchestrator"]
+      memoryLimit:
+        value: 16384
+        targets:
+          - pointer: settings.limits.memory
+            components: ["digitron-orchestrator"]
+```
+
+
+**Deployment specification example for Standalone Device with a single component**
+
+> **Investigation Needed:** Further Investigation needed on the content regarding deployment for Docker Compose applications. 
+
+```
+apiVersion: margo.org/v1-alpha1
+kind: ApplicationDeployment
+metadata:
+    id: 0f83e682-a35b-4533-ae93-ff3810095f31
+    applicationId: com-northstarida-digitron-orchestrator
+spec:
+    deploymentProfile:
+  - type: docker-compose
+    components:
+      - name: digitron-orchestrator-docker
+        properties:
+          packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
+          keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
+    parameters:
+      hostname:
+        value: edge.host.local
+        targets:
+          - pointer: edge_host_name
+            components: ["digitron-orchestrator"]
+          - pointer: global.ingress.host
+            components: ["digitron-orchestrator", "database-services"]
+
+```
 
 **Current State Reporting**
 
