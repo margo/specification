@@ -135,15 +135,16 @@ metadata:
 deploymentProfiles:
   - type: helm.v3
     components:
-      - name: digitron-orchestrator
-        properties:
-          repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
-          revision: 1.0.9
-          wait: true
       - name: database-services
         properties: 
           repository: oci://quay.io/charts/realtime-database-services
           revision: 2.3.7
+          wait: true
+          timeout: 8m30s
+      - name: digitron-orchestrator
+        properties:
+          repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
+          revision: 1.0.9
           wait: true
   - type: docker-compose
     components:
@@ -379,6 +380,7 @@ The expected properties for the suppported deployment types are indicated below.
     | repository       | string          | Y               | The URL indicating the helm chart's location.|
     | revision         | string          | Y               | The helm chart's full version.|
     | wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
+    | timeout          | string         | N                | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait. |  
 
 - Properties for `docker-compose` components
 
@@ -391,6 +393,7 @@ The expected properties for the suppported deployment types are indicated below.
     | packageLocation  | string          | Y               | The URL indicating the Docker Compose package's location. |
     | keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
     | wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
+    | timeout          | string         | N                | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait.|
 
 ## Defining configurable application parameters
 
