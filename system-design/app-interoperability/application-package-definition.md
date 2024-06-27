@@ -96,9 +96,9 @@ configuration:
           name: Greeting
           description: The greeting to use.
           schema: requireText
-        - parameter: greetingTarget
-          name: Greeting Target
-          description: The target of the greeting.
+        - parameter: greetingAddressee
+          name: Greeting Addressee
+          description: The person, or group, the greeting addresses.
           schema: requireText
   schema:
     - name: requireText
@@ -427,7 +427,7 @@ To allow customizable configuration values when installing an application, the `
 | Attribute       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | name            | string          | Y               | The name of the section. This may be used in the user interface to show the grouping of the associated parameters within the section. |  
-| settings        | []Setting       | Y               | Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the user. See the [Setting](#setting-attributes) section below.  |  
+| settings        | []Setting       | Y               | Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the user. A user MUST be able to provide values for all settings. See the [Setting](#setting-attributes) section below.  |  
 
 **Setting Attributes**
 
