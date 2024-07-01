@@ -146,7 +146,7 @@ spec:
 | Attribute        | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | deploymentProfile           | Deployment Profile          | Y    | Section that defines deployment details including type and components.|
-| parameters        | Parameters          | Y    | Describes the configured parameters applied via the end-user.|
+| parameters        | map[string][Parameter]          | Y    | Describes the configured parameters applied via the end-user.|
 
 **Deployment Profile Attributes**
 
