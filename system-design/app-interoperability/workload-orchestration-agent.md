@@ -1,25 +1,23 @@
 # Workload Orchestration Agent
 
-The Workload Orchestration Agent within Margo represents a service or set of services running on the Edge Device that enables communication in various ways. It enables communication to the Workload Orchestration software to retreive a Desired state, communications with the Margo Device to apply Desired state, and lastly the ability to report to the WOS it's current status and device capability file. These communication patterns are enabled by two main components within the Agent including Pulling/Posting service and Deployment Service. 
+The WOA within Margo represents a service or set of services running on the Edge Device that enables communication in various ways. It enables communication to the Workload Orchestration software to retreive a Desired state, communications with the Margo Device to apply Desired state, and lastly the ability to report to the WOS it's current status and device capability file. These communication patterns are enabled by two main components within the WOA including Pulling/Posting service and Deployment Service. 
 
-The Workload Orchestration Agent can either be pre-packaged by the Device Manufacturer at production or be installed by the Device Integrator. This agent is agnostic to the eventual Workload Orchestration software.  
+The WOA can either be pre-packaged by the Device Manufacturer at production or be installed by the Device Integrator. This WOA is agnostic to the eventual Workload Orchestration software.  
 
-Margo will maintain within the standard repository reference source code, generic solution, and a test package that can be utilized by Device Owners to build their Orchestration Agent. Device Owners can produce their own agent so long as they follow the minimal requirements outlined below. 
-
-Device Owners must comply with Margo's Workload Orchestration Agent requirements. This can be completed by utilizing Margo's recommended strategies or by utilizng the provided reference implementation out of the box.
+Device Owners must comply with Margo's WOA requirements. This can be completed by utilizing Margo's recommended strategies or by utilizng the provided reference implementation out of the box.
 
 Requirements include:
 
 - Support communication pattern that initiates from the device within the safe zone to the Workload Orchestration software.
 - Support a pull method that retrieves the Desired State configuration files to be applied. Includes a configurable pulling time interval the user can configure for their use case. Extended disconnection periods must be supported.
 - Support a posting method that posts the Current State to the Workload Orchestration Software to ensure it reflects the running state to the user. 
-- Enrollment functionality shall occur on the Margo Compliant device with a minimal requirement of configuring a trusted relationship between the Workload Orchestration Software and the Agent.
-- The agent must reference industry security standards for port assignments. 
-- Communications between the Orchestration Agent and Software must follow secure industry standards.
-- It is suggested that the agent shall minimize it's footprint on the Margo compliant device to enable support for wider range of devices. 
-- Containerized Workload Orchestration Agents are prefered and enable easier orchestration, however, are not required.
+- Enrollment functionality shall occur on the Margo Compliant device with a minimal requirement of configuring a trusted relationship between the Workload Orchestration Software and the WOA.
+- The WOA must reference industry security standards for port assignments. 
+- Communications between the WOA and Software must follow secure industry standards.
+- It is suggested that the WOA shall minimize it's footprint on the Margo compliant device to enable support for wider range of devices. 
+- Containerized WOAs are prefered and enable easier orchestration, however, are not required.
 
-Below is a high-level drawing detailing the communication patterns supported via the Agent.
+Below is a high-level drawing detailing the communication patterns supported via the WOA.
 
 ![Workload Orchestration Agent (svg)](../figures/System-design-workload-orchestration-agent.drawio.svg)
 
@@ -27,7 +25,7 @@ Below is a high-level drawing detailing the communication patterns supported via
 
 **Enrollment Process**
 
-In order for the Workload Orchestration Software to manage an Agent, it must first be enrolled. Within Margo, this process is called the Enrollment Process. 
+In order for the Workload Orchestration Software to manage the WOA, it must first be enrolled. Within Margo, this process is called the Enrollment Process. 
 
 Enrollment process includes:
 
@@ -57,7 +55,7 @@ Following the establishment of trust between the WOA and the WOS, the WOA shall 
 
 Shall follow the standard format for defining resources at the edge. See [Device Capability Discovery](./device-capability-discovery.md) section for more details.
 
-## Workload Orchestration Software and Agent Communication Patterns
+## Workload Orchestration Software and WOA Communication Patterns
 
 **Application & Configuration Repository Traffic**
 
@@ -67,7 +65,7 @@ Margo uses a GitOps style approach to manage a node’s applications and associa
 
 > **Investigation Needed:** Further Investigation needed on this strategy. API vs. OpenGitops Patterns being discussed. 
 
-Workload Orchestration Agent may enable a local caching of the Application Artifacts(manifest/marketplace data/binaries) to enable disconnected states, decrease network traffic, and other benefits.  
+Workload Orchestration WOA may enable a local caching of the Application Artifacts(manifest/marketplace data/binaries) to enable disconnected states, decrease network traffic, and other benefits.  
 
 It is expected the connection between the Workload Orchestration Agent and the Node Configuration Repository is secured using standard secure connectivity best practices. Some standard practices include the following:
 
@@ -78,7 +76,7 @@ It is expected the connection between the Workload Orchestration Agent and the N
 The following shall be configurable to ensure compliance with local operations. 
 
 - Polling Interval Period - Describes a configurable time period when the Polling is allowed.
-- Polling Interval Rate - Describes the rate at which the Agent shall poll the repository for a new Desired State. 
+- Polling Interval Rate - Describes the rate at which the WOA shall poll the repository for a new Desired State. 
 - **Note:** This functionality is expected to be inforced via the Policy Mechanism. See section for further details. 
 
 ![Application Repository Traffic (svg)](../figures/System-design-workload-orchestration-agent-repository-traffic.drawio.svg)
@@ -148,63 +146,9 @@ spec:
 | deploymentProfile           | Deployment Profile          | Y    | Section that defines deployment details including type and components.|
 | parameters        | map[string][Parameter]          | Y    | Describes the configured parameters applied via the end-user.|
 
-**Deployment Profile Attributes**
 
-| Attribute        | Type            | Required?       | Description     |
-|------------------|-----------------|-----------------|-----------------|
-| type             | string          | Y               | Indicates the components's deployment configuration. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file. Component types under `cluster` must use `helm.v3`. Component types under `standalone` must use `docker-compose` |
-| components      | []Component    | Y               | Component element indicating the components to deploy when installing the application.|
+> **Please see the [Application Package Definition](./application-package-definition.md) section for full details regarding the Spec Attributes.**
 
-
-**Component Attributes**
-
-| Attribute        | Type            | Required?       | Description     |
-|------------------|-----------------|-----------------|-----------------|
-| name             | string          | Y               | A unique name used to identify the component package. For helm installations the name will be used as the chart name. The name must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. |
-| properties       | map[string][interface{}] | Y              | A dictionary element specifying the component packages's deployment details. See the [Component Properties](#component-properties) section below.|
-
-
-**Component Properties**
-
-The expected properties for the suppported deployment types are indicated below.
-
-- Properties for `helm.v3` components
-
-    | Attribute        | Type            | Required?       | Description     |
-    |------------------|-----------------|-----------------|-----------------|
-    | repository       | string          | Y               | The URL indicating the helm chart's location.|
-    | revision         | string          | Y               | The helm chart's full version.|
-    | wait             | bool            | N               | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
-    | timeout        | string          | N    | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait.|
-
-- Properties for `docker-compose` components
-
-    > **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
-    > We also need to determine if there is a version of docker-compose that needs to be specified. The docker compose schema [version has been
-    > deprecated](https://github.com/compose-spec/compose-spec/blob/master/spec.md#version-and-name-top-level-elements) so it's not clear what we would even use for this if we wanted to.
-
-    | Attribute        | Type            | Required?       | Description     |
-    |------------------|-----------------|-----------------|-----------------|
-    | packageLocation  | string          | Y               | The URL indicating the Docker Compose package's location. |
-    | keyLocation      | string          | N               | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
-    | wait             | bool            | N               | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
-    | timeout        | string          | N    | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait.|
-
-**Parameter Attributes**
-
-| Attribute        | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| name           | string          | Y    | Unique name of the parameter.|
-| value        | string          | Y    | Value pair matched to the name of the parameter.|
-| targets        | Target         | Y    | Describes how the parameter is applied. Noting the Pointer within the application and components it shall be applied to. |
-
-
-**Target Attributes**
-
-| Attribute        | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| pointer           | string          | Y    | Defines the component the previously stated value will be applied to.|
-| components        | array         | Y    | Describes which component in the deployment specification the parameter should be applied to.|
 
 **Deployment specification example for Cluster with multiple components**
 
