@@ -13,7 +13,7 @@ nav:
     - Workload Orchestration to App Registry Interactions: app-interoperability/workload-orch-to-app-reg-interaction.md
     - Workload Orchestrator App Configuration and Deployment: app-interoperability/orchestator-app-config-deploy.md
     - Workload Orchestration Agent: app-interoperability/workload-orchestration-agent.md
-    - Observability: app-interoperability/observability.md
+    - Application Observability: app-interoperability/observability.md
   - Device Interoperability:
     - Device Requirements: device-interoperability/device-requirements.md
 
