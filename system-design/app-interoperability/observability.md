@@ -1,4 +1,4 @@
-# Observability
+# Application Observability
 
 Observability is about being able to use information outputs from a system to monitor how the system behaves internally.
 
@@ -66,56 +66,61 @@ In order to allow for monitoring the chosen container platform's state the devic
 
 For devices running Kubernetes the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
-Cluster (both single or multiple node) observability data MUST be collected. It is recommended the Device Owner use the [Kubernetes Cluster Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-cluster-receiver) with the default configuration to collect this information but using this receiver is not required.
+- Cluster (both single or multiple node) observability data MUST be collected.
+  - It is recommended the Device Owner use the [Kubernetes Cluster Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-cluster-receiver) with the default configuration to collect this information but using this receiver is not required.
+  - If the Device Owner chooses not to use the Kubernetes Cluster Receiver they MUST provide the same output as the Kubernetes Cluster Receiver's default configuration.
 
-If the Device Owner chooses not to use the Kubernetes Cluster Receiver they MUST provide the same output as the Kubernetes Cluster Receiver's default configuration.
-> **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
+  > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default metrics emitted by the Kubernetes Cluster Receiver.
 
-Cluster events observability data MUST be collected. It is recommended the Device Owner use either the [Kubernetes Objects Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-objects-receiver) or [Kubernetes Event Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/k8seventsreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
+- Cluster events observability data MUST be collected.
+  - It is recommended the Device Owner use either the [Kubernetes Objects Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-objects-receiver) or [Kubernetes Event Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/k8seventsreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
+  - If the Device Owner chooses not to use either the Kubernetes Object Receiver or Kubernetes Event Receiver they MUST provide the same output as these Kubernetes Event Receiver's default configuration.
 
-If the Device Owner chooses not to use either the Kubernetes Object Receiver or Kubernetes Event Receiver they MUST provide the same output as these Kubernetes Event Receiver's default configuration.
 > **Action:** Need to determine which namespaces should be included. All of them, or just the ones the device owner is responsible for creating.
 >
-> **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
+> **Action:** The Kubernetes objects receiver needs to be configured to export events and other resource logs so we'll need to document something additional for this receiver.
 
-Node, Pod and Container observability data MUST be collected. It is recommended the Device Owner use the [Kubelet Stats Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubeletstats-receiver) with the default configuration to collect this information but using this receiver is not required.
+- Node, Pod and Container observability data MUST be collected.
+  - It is recommended the Device Owner use the [Kubelet Stats Receiver](https://opentelemetry.io/docs/kubernetes/collector/components/#kubeletstats-receiver) with the default configuration to collect this information but using this receiver is not required.
+  - If the Device Owner chooses not to use the Kubelet Stats Receiver they MUST provide the same output as the Kubelet Stats Receiver's default configuration.
 
-If the Device Owner chooses not to use the Kubelet Stats Receiver they MUST provide the same output as the Kubelet Stats Receiver's default configuration.
-> **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
+  > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default metrics emitted by the Kubelet Stats Receiver.
 
-Metadata identifying the observability data's source MUST be added to the received observability data. It is recommend the Device Owner use the [Kubernetes Attributes Processor](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-attributes-processor) with the default configuration to enhance the observability data with this additional metadata but using this processor is not required.
+- Metadata identifying the observability data's source MUST be added to the received observability data.
+  - It is recommend the Device Owner use the [Kubernetes Attributes Processor](https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-attributes-processor) with the default configuration to enhance the observability data with this additional metadata but using this processor is not required.
+  - If the Device Owner chooses not to use the Kubernetes Attributes Processor they MUST provide the same metadata as the Kubernetes Attributes Processor's default configuration
 
-If the Device Owner chooses not to use the Kubernetes Attributes Processor they MUST provide the same metadata as the Kubernetes Attributes Processor's default configuration
-> **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
+  > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default attributes added by the Kubernetes Attributes Processor.
 
-**Non-Clustered Container Platforms (e.g. Docker, Podman)**
-
-> **Action:** We need a better way of referring to this since we're not supposed to say it's running "Docker".
+**Standalone Device Container Platforms**
 
 For devices running non-clustered container platforms such as Docker or Podman the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
-Container observability data MUST be collected. It is recommended the Device Owner use the [Docker Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/dockerstatsreceiver/README.md) or [Podman Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/podmanreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
+- Container observability data MUST be collected.
+  - It is recommended the Device Owner use the [Docker Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/dockerstatsreceiver/README.md) or [Podman Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/podmanreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
+  - If the Device Owner chooses not to use either receiver they MUST provide the same output as the receiver's default configuration.
 
-If the Device Owner chooses not to use either receiver they MUST provide the same output as the receiver's default configuration.
-> **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
-
-Host observability data MUST be collected. It is recommended the Device Owner use the [Host Metrics Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/hostmetricsreceiver/README.md) with the default configuration to collect this information but using this receiver is not required.
-
-If the Device Owner chooses not to use the Host Metrics Receiver they MUST provided the same output as the Host Metrics Receiver's default configuration.
-> **Action:** Determine how we want to represent this information and what the defaults should be if the current defaults are not right.
+  > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default metrics emitted by the Docker Stats and Podman Stats Receivers.
 
 **General**
 
-The collector MUST receive data using the [OLTP](https://opentelemetry.io/docs/specs/otlp/) format. It is recommended the Device Owner use the [OLTP Receiver](https://github.com/open-telemetry/opentelemetry-collector/blob/main/receiver/otlpreceiver/README.md) to allow applications to send observability data to the collector.
-
-If the Device Owner chooses not to use the OLTP Receiver they MUST provide the same functionality as the OLTP receiver.
+- The collector MUST receive data using the [OLTP](https://opentelemetry.io/docs/specs/otlp/) format.
+  - It is recommended the Device Owner use the [OLTP Receiver](https://github.com/open-telemetry/opentelemetry-collector/blob/main/receiver/otlpreceiver/README.md) to allow applications to send observability data to the collector.
+  - If the Device Owner chooses not to use the OLTP Receiver they MUST provide the same functionality as the OLTP receiver.
 
 > **Action:** We will need to determine if there is additional information the device owner needs to include as attributes for each message to ensure the source can be identified. For example, we may require a device device Id attribute.
 
-Log file observability data MUST be collected. It is recommended the Device Owner use the [File Log Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md) to receive logs from their chosen container platform and applications sending logs to **stdout**.
+- Host observability data MUST be collected.
+  - It is recommended the Device Owner use the [Host Metrics Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/hostmetricsreceiver/README.md) with the default configuration to collect this information but using this receiver is not required.
+  - If the Device Owner chooses not to use the Host Metrics Receiver they MUST provided the same output as the Host Metrics Receiver's default configuration.
 
-If the Device Owner chooses not to use the File Log Receiver they MUST provide the same functionality to receive the container platform and application logs.
-> **Action:** Determine how we want to represent this information and what the defaults/minimum set of logs should be.
+  > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default metrics emitted by the Host Metrics Receivers.
+
+- Log file observability data MUST be collected.
+  - It is recommended the Device Owner use the [File Log Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md) to receive logs from their chosen container platform and applications sending logs to **stdout**.  
+  - If the Device Owner chooses not to use the File Log Receiver they MUST provide the same functionality to receive the container platform and application logs.
+
+> **Action:** The Log Receiver needs to be configured to capture the container logs so we'll need to figure out how we want to document this. We also need to determine if there are any other logs we should capture in addition to the container logs.
 
 ## Workload Orchestration Agent Observability Requirements
 
@@ -133,7 +138,8 @@ In addition to the resource utilization data the workload orchestration agent MU
 
 Compliant applications MAY choose to expose application specific observability data by sending their observability data to the Open Telemetry collector on the device/cluster. While this is optional, is it highly recommended in order to support distributed diagnostics.
 
-Application developers choosing to expose application logs for consumption with OpenTelemetry they should either write their logs to **stdout** or send them using OTLP so the receiver on the OpenTelemetry collector can import them.
+Application developers choosing to expose application logs for consumption with OpenTelemetry MUST either write their logs to **stdout** or send them using OTLP so the receiver on the OpenTelemetry collector can import them.
+
 > **Action:** We need some research here to understand if there are any expectations on log format, if it's best to use stdout, log files, or sending logs directly to the collector. Also, need to explore the option to allow people to use third part log collection agents (e.g., FluentBit) that collect the logs and forward them to the collector.
 
 Application developers SHOULD NOT expect their applications to be auto-instrumented by anything outside for their control (by the [OpenTelemetry operator](https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection) for example).
@@ -172,3 +178,127 @@ Solution vendors, such as the workload orchestration service vendor, MAY choose 
 Customers MAY choose to consume observability data exported from their devices to other OpenTelemetry collectors or backends withing their environment that is not on the device.
 
 Device owners are NOT expected to provide backends for consuming observability data on their devices.
+
+## Application Observability Default Telemetry
+
+The following telemetry data is collected by using the default configurations for the receivers indicated above. You can find more information about each piece of telemetry from the receiver's documentation.
+
+> **Action**: This information was compiled based on the receiver's documentation and we still need to validate the default data emitted matches what is documented.
+
+**Metrics**
+
+The following table shows the metrics emitted by the indicated receivers when using the default configuration.
+
+| Metric Group   |  Metric  | Target | [Kubernetes Cluster Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sclusterreceiver) |  [Kubelet Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/kubeletstatsreceiver) | [Docker Stats Reciever](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/dockerstatsreceiver) | [Podman Stats Reciever](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/podmanreceiver) | [Host Metrics Reciever](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/hostmetricsreceiver) |
+|----------|---------|-------|----------------|--------------------------|-------------------------|--------------------------|--------------------------|
+| CPU | Limit | Container | X |  |  |  |  |
+| CPU | Load Average (15m, 5m, 1m) | System |  |  |  |  | X |
+| CPU | Time | Container, K8s Nod, K8s Pod, System |  | X |  |  | X |
+| CPU | Request | Container | X |  |  |  |  |
+| CPU | Usage Kernel Mode | Container |   |  | X |  |  |
+| CPU | Usage Per CPU | Container |  |  |  | X |  |
+| CPU | Usage System | Container |  |  |  | X |  |
+| CPU | Usage Total | Container |   |   | X | X |  |
+| CPU | Usage Use Mode | Container |  |  | X |  |  |
+| CPU | Utilization | Container, K8s Node, k8s Pod |  | X | X | X |   |
+| Disk | IO | Container, System |  |  |  | X | X |
+| Disk | IO Read | Container |  |  |  | X |  |
+| Disk | IO Write | Container |  |  |  | X |  |
+| Disk | IO Time | System |  |  |  | X |  |
+| Disk | IO Time (Weighted) | System  |  |  |  | X |  |
+| Disk | Operations | System |  |  |  | X |  |
+| Disk | Operations Pending | System  |  |  |  | X |  |
+| Disk | Operation Time | System |  |  |  | X |  |
+| Disk | Total Read/Writes  |  System |  |  |  | X |  |
+| File System | Available | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| File System | Capacity | Container, K8s Node, K8s Pod  |  | X |  |  |  |
+| File System | Inodes | K8s Volume, System |  | X |  | X |  |
+| File System | Inodes Free | Volume |  | X |  |  |  |
+| File System | Inodes Used | Volume |  | X |  |  |  |
+| File System | Usage | Container, K8s Node, K8s Pod, System|  | X |  |  | X |
+| Memory | Available | Container, K8s Node, K8s Pod  |  | X |  |  |  |
+| Memory | File | Container |  |  | X |  |  |
+| Memory | Limit | Container | X |  | X | X |  |
+| Memory | Major Page Fault | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| Memory | Page Faults | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| Memory | Percent | Container |  |  | X | X |  |
+| Memory | Request | Container | X |  |  |  |  |
+| Memory | RSS | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| Memory | Total Cache | Container |  |  | X |  |  |
+| Memory | Usage | Container, K8s Node, K8s Pod, System |  | X | X | X | X |
+| Memory | Working Set | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| Network | Connections | System |  |  |  |  | X |
+| Network | Errors | K8s Node, K8s Pod, System |  | X |  |  | X |
+| Network | IO | K8s Node, K8s Pod, System |  | X |  |  | X |
+| Network | IO Bytes Sent | Container |  |  | X | X |  |
+| Network | IO Bytes Received | Container |  |  | X | X |  |
+| Network | IO Packets | System |  |  |  |  | X |
+| Network | IO Packets Dropped | System |  |  |  |  | X |
+| Network | IO Packets Dropped (Incoming) | Container |  |  | X |  |  |
+| Network | IO Packets Dropped (Outgoing) | Container |  |  | X |  |  |
+| Paging | Faults | System |  |  |  |  | X |
+| Paging | Operations | System |  |  |  |  | X |
+| Paging | Usage | System |  |  |  |  | X |
+| Process | CPU Time | System |  |  |  |  | X |
+| Process | Disk IO | System |  |  |  |  | X |
+| Process | Memory Usage | System |  |  |  |  X |  |
+| Process | Memory Virtual | System |  |  |  | X |  |
+| Processes | Count | System |  |  |  |  | X |
+| Processes | Created | System |  |  |  |   | X |
+| Resource Quota | Hard Limit | Various | X |  |  |  |  |
+| Resource Quota | Used | Various | X |  |  |  |  |
+| State | Ready | Container | X |  |  |  |  |
+| State | Restarts | Container | X |  |  |  |  |
+| State | Active Jobs | Cron Job | X |  |  |  |  |
+| State | Current Scheduled Nodes | Daemonset | X |  |  |  |  |
+| State | Desired Scheduled Nodes | Daemonset | X |  |  |  |  |
+| State | Misscheduled Modes | Daemonset | X |  |  |  |  |
+| State | Ready Nodes | Daemonset | X |  |  |  |  |
+| State | Available | Deployment | X |  |  |  |  |
+| State | Desired | Deployment | X |  |  |  |  |
+| State | Current Replicas | HPA | X |  |  |  |  |
+| State | Desired Replicas | HPA | X |  |  |  |  |
+| State | Max Replicas | HPA | X |  |  |  |  |
+| State | Min Replicas | HPA | X |  |  |  |  |
+| State | Active Pods | Job | X |  |  |  |  |
+| State | Desired Successful Pods | Job | X |  |  |  |  |
+| State | Failed Pods | Job | X  |  |  |  |  |
+| State | Max Parallel Jobs | Job | X |  |  |  |  |
+| State | Successful Pods | Job | X |  |  |  |  |
+| State | Phase | Namespace | X |  |  |  |  |
+| State | Phase | Pod | X |  |  |  |  |
+| State | Available | Replicaset | X |  |  |  |  |
+| State | Desired | Replicaset | X |  |  |  |  |
+| State | Available | Replication Controller | X |  |  |  |  |
+| State | Desired | Replication Controller | X |  |  |  |  |
+| State | Current Pods | Stateful Set | X |  |  |  |  |
+| State | Desired Pods | Stateful Set | X |  |  |  |  |
+| State | Ready Pods | Stateful Set | X |  |  |  |  |
+| State | Updated Pods | Stateful Set | X |  |  |  |  |
+| Storage | Available | Volume |  | X |  |  |  |
+| Storage | Capacity | Volume |  | X |  |  |  |
+| Storage | Limit | Container | X |  |  |  |  |
+| Storage (Ephemeral) | Limit | Container | X |  |  |  |  |
+| Storage | Requests | Container | X |  |  |  |  |
+| Storage (Ephemeral) | Request | Container | X |  |  |  |  |
+
+**Logs**
+
+The following shows the logs emitted by the indicated receiver. The Kubernetes Event receiver collects the event logs when using the default configuration. The Kubernetes Object Receiver and Log Receiver must be configured to collect the desired logs.
+
+| Source | [Kubernetes Object Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sobjectsreceiver) | [Kubernetes Event Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8seventsreceiver) | [File Log Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/filelogreceiver) |
+|---------|--------------------------------|------------------------------|--------------------|
+| Container Logs |  |  | - |
+| K8s Events | - | - |  |  
+| K8s Resources | X |  |  |
+
+**Kubernetes Attributes Processor**
+
+The following shows the attributes added to each signal when using the [Kubernetes Attribute Processors'](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/k8sattributesprocessor) default configuration.
+
+- k8s.namespace.name
+- k8s.pod.name
+- k8s.pod.uid
+- k8s.pod.start_time
+- k8s.deployment.name
+- k8s.node.name
