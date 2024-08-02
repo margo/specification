@@ -12,7 +12,7 @@ Margo's application observability scope is limited to the following areas:
 
 - The device's container platform
 - The device's workload orchestration agent
-- The compliant applications deployed to the device.
+- The compliant workloads deployed to the device.
 
 The application observability data is intended to be used for purposes such as:
 
@@ -34,7 +34,6 @@ There are several reasons why OpenTelemetry was chosen:
 - OpenTelemetry provides [SDKs](https://opentelemetry.io/docs/languages/) for many popular languages if people wish to use them
 - The OpenTelemetry community project has reusable components such as telemetry [receivers](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver) for Kubernetes, Docker and the host system making integration easier.
 - OpenTelemetry is vendor agnostic.
-- There are a lot of open-source and paid products available for consuming and displaying observability data.
 
 > **Decision Needed:** Need to determine which version(s) of the specification are supported
 
@@ -196,14 +195,14 @@ The following table shows the metrics emitted by the indicated receivers when us
 |----------|---------|-------|----------------|--------------------------|-------------------------|--------------------------|--------------------------|
 | CPU | Limit | Container | X |  |  |  |  |
 | CPU | Load Average (15m, 5m, 1m) | System |  |  |  |  | X |
-| CPU | Time | Container, K8s Nod, K8s Pod, System |  | X |  |  | X |
+| CPU | Time | Container, Kubernetes Node, Kubernetes Pod, System |  | X |  |  | X |
 | CPU | Request | Container | X |  |  |  |  |
 | CPU | Usage Kernel Mode | Container |   |  | X |  |  |
 | CPU | Usage Per CPU | Container |  |  |  | X |  |
 | CPU | Usage System | Container |  |  |  | X |  |
 | CPU | Usage Total | Container |   |   | X | X |  |
 | CPU | Usage Use Mode | Container |  |  | X |  |  |
-| CPU | Utilization | Container, K8s Node, k8s Pod |  | X | X | X |   |
+| CPU | Utilization | Container, Kubernetes Node, Kubernetes Pod |  | X | X | X |   |
 | Disk | IO | Container, System |  |  |  | X | X |
 | Disk | IO Read | Container |  |  |  | X |  |
 | Disk | IO Write | Container |  |  |  | X |  |
@@ -213,26 +212,26 @@ The following table shows the metrics emitted by the indicated receivers when us
 | Disk | Operations Pending | System  |  |  |  | X |  |
 | Disk | Operation Time | System |  |  |  | X |  |
 | Disk | Total Read/Writes  |  System |  |  |  | X |  |
-| File System | Available | Container, K8s Node, K8s Pod |  | X |  |  |  |
-| File System | Capacity | Container, K8s Node, K8s Pod  |  | X |  |  |  |
-| File System | Inodes | K8s Volume, System |  | X |  | X |  |
+| File System | Available | Container, Kubernetes Node, Kubernetes Pod |  | X |  |  |  |
+| File System | Capacity | Container, Kubernetes Node, Kubernetes Pod  |  | X |  |  |  |
+| File System | Inodes | Kubernetes Volume, System |  | X |  | X |  |
 | File System | Inodes Free | Volume |  | X |  |  |  |
 | File System | Inodes Used | Volume |  | X |  |  |  |
-| File System | Usage | Container, K8s Node, K8s Pod, System|  | X |  |  | X |
-| Memory | Available | Container, K8s Node, K8s Pod  |  | X |  |  |  |
+| File System | Usage | Container, Kubernetes Node, Kubernetes Pod, System|  | X |  |  | X |
+| Memory | Available | Container, Kubernetes Node, Kubernetes Pod  |  | X |  |  |  |
 | Memory | File | Container |  |  | X |  |  |
 | Memory | Limit | Container | X |  | X | X |  |
-| Memory | Major Page Fault | Container, K8s Node, K8s Pod |  | X |  |  |  |
-| Memory | Page Faults | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| Memory | Major Page Fault | Container, Kubernetes Node, Kubernetes Pod |  | X |  |  |  |
+| Memory | Page Faults | Container, Kubernetes Node, Kubernetes Pod |  | X |  |  |  |
 | Memory | Percent | Container |  |  | X | X |  |
 | Memory | Request | Container | X |  |  |  |  |
-| Memory | RSS | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| Memory | RSS | Container, Kubernetes Node, Kubernetes Pod |  | X |  |  |  |
 | Memory | Total Cache | Container |  |  | X |  |  |
-| Memory | Usage | Container, K8s Node, K8s Pod, System |  | X | X | X | X |
-| Memory | Working Set | Container, K8s Node, K8s Pod |  | X |  |  |  |
+| Memory | Usage | Container, Kubernetes Node, Kubernetes Pod, System |  | X | X | X | X |
+| Memory | Working Set | Container, Kubernetes Node, Kubernetes Pod |  | X |  |  |  |
 | Network | Connections | System |  |  |  |  | X |
-| Network | Errors | K8s Node, K8s Pod, System |  | X |  |  | X |
-| Network | IO | K8s Node, K8s Pod, System |  | X |  |  | X |
+| Network | Errors | Kubernetes Node, Kubernetes Pod, System |  | X |  |  | X |
+| Network | IO | Kubernetes Node, Kubernetes Pod, System |  | X |  |  | X |
 | Network | IO Bytes Sent | Container |  |  | X | X |  |
 | Network | IO Bytes Received | Container |  |  | X | X |  |
 | Network | IO Packets | System |  |  |  |  | X |
@@ -292,8 +291,8 @@ The following shows the logs emitted by the indicated receiver. The Kubernetes E
 | Source | [Kubernetes Object Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sobjectsreceiver) | [Kubernetes Events Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8seventsreceiver) | [File Log Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/filelogreceiver) |
 |---------|--------------------------------|------------------------------|--------------------|
 | Container Logs |  |  | - |
-| K8s Events | - | X |  |  
-| K8s Resources | - |  |  |
+| Kubernetes Events | - | X |  |  
+| Kubernetes Resources | - |  |  |
 
 **Kubernetes Attributes Processor**
 
