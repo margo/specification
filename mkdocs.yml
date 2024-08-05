@@ -3,19 +3,25 @@ docs_dir: system-design
 
 nav:
   - Introduction: index.md
-  - Envisioned System Design: margo-overview/introduction-system-design.md
+  - Example System Design: margo-overview/introduction-system-design.md
   - Personas: margo-overview/personas.md
   - Technical Lexicon: margo-overview/technical-lexicon.md
-  - App Interoperability:
+  - Application Distribution:
     - Application Package Definition: app-interoperability/application-package-definition.md
-    - Device Capability Discovery: app-interoperability/device-capability-discovery.md
-    - Workload Orchestration Software: app-interoperability/workload-orchestration-software.md
     - Workload Orchestration to App Registry Interactions: app-interoperability/workload-orch-to-app-reg-interaction.md
-    - Workload Orchestrator App Configuration and Deployment: app-interoperability/orchestator-app-config-deploy.md
-    - Workload Orchestration Agent: app-interoperability/workload-orchestration-agent.md
-    - Observability: app-interoperability/observability.md
-  - Device Interoperability:
+  - Device Interoperability: 
     - Device Requirements: device-interoperability/device-requirements.md
+    - Observability: app-interoperability/observability.md
+  - Orchestration:
+    - Workload:
+      - Interface: orchestration/workload/workload-management-interface-breakdown.md
+      - Onboarding: orchestration/workload/workload-orchestration-edge-onboarding.md
+      - Device Capabilities: orchestration/workload/device-capability-reporting.md
+      - Workload Deployment: orchestration/workload/workload-deployment.md 
+##    - Device:
+##  - Appendix:
+##    - Management API Definition: margo-overview/personas.md
+
 
 theme:
   name: material
