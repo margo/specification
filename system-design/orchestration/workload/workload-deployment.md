@@ -43,6 +43,10 @@ Margo uses a GitOps style approach to manage a Edge Device's Deployment Specific
 
 **If Success, report INSTALLED**
 
+## Workload Install Sequence Diagram
+
+![Workload Install Sequence Diagram (svg)](../../figures/workload-install-sequence.drawio.svg)
+
 
 ## Deployment Specification - Cluster Enabled Devices
 
