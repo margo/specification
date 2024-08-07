@@ -21,7 +21,11 @@ nav:
 ##    - Device:
 ##  - Appendix:
 ##    - Management API Definition: margo-overview/personas.md
-
+  - Margo API Reference:
+    - Workload API:
+      - Device API: 
+        - Device Capabilities: margo-api-reference/workload-api/device-api/device-capabilities.md
+        - Deployment Status: margo-api-reference/workload-api/device-api/deployment-status.md
 
 theme:
   name: material
@@ -45,6 +49,10 @@ theme:
   favicon: assets/favicon.ico
   palette:
     scheme: margo
+
+markdown_extensions:
+  - toc:
+      toc_depth: 2
 
 extra_css:
   - css/margo.css

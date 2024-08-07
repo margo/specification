@@ -1,21 +1,22 @@
 # Deployment Specification storage and retrieval
+
 Margo uses a GitOps style approach to manage a Edge Device's Deployment Specification and associated configuration changes. For each device the Workload Orchestration Software maintains a source code/file-based repository under its control. The Margo Management Interface is responsible for monitoring this code repository for any changes and applying the Desired State configurations.
 
 **Deployment specification requirements:**
 
 - The Deployment specification MUST be stored within a Git Repository available to access via the Margo Interface. Git Repository storage was selected to ensure secure storage and traceability pertaining to the Workload Desired state(s).  
-- The Margo Device Interface shall have a service utilizing Open Gitops Patterns to monitor the repository via release URL, which houses the associated Deploymnt specification. 
+- The Margo Device Interface shall have a service utilizing Open Gitops Patterns to monitor the repository via release URL, which houses the associated Deploymnt specification.
 
 > Note: Need to investigate best way to construct the Git Repository. Folder structure / Multiple applications per Edge Device/Cluster
-> Note: this is the recommendation from FluxCD https://fluxcd.io/flux/guides/repository-structure/
+> Note: this is the recommendation from FluxCD <https://fluxcd.io/flux/guides/repository-structure/>
 
-## Interface - Workload Management Sequence of Operations 
+## Interface - Workload Management Sequence of Operations
 
 **Deployment specification lifecycle:**
 
 1. User constructs the Desired state within the WOS
 2. WOS Prepares the Desired state within the Edge associated Git Repository
-3. Interface monitors the Edge Device Assigned Git Repository release URL 
+3. Interface monitors the Edge Device Assigned Git Repository release URL
 4. Once the interface notices a difference between the Current(running) state and Desired state, it shall pull down the new Desired state via Open Gitops methods.
 
 **Deployment Specification being applied:**
@@ -23,17 +24,17 @@ Margo uses a GitOps style approach to manage a Edge Device's Deployment Specific
 1. Device Applies Desired state to become "Current State"
 2. While applying current state, the interface shall report progress via API on state changes(see section below)
 
-**During installation, the deployment status should be sent to the WOS via the interface. The following MUST be included.** 
+**During installation, the deployment status should be sent to the WOS via the interface. The following MUST be included.**
 
-- Deployment ID that matches the Deployment spec id metadata parameter. 
+- Deployment ID that matches the Deployment spec id metadata parameter.
 - Current State of the overall deployment:
-	- Send overall deployment spec state(inherits the component state that is being deployed)
-	- Send also individual component states
+ 	- Send overall deployment spec state(inherits the component state that is being deployed)
+ 	- Send also individual component states
 
 **If Pending, report information regarding the reason.**
 
 - Such as waiting on Policy agent
-- Waiting on other applications in the 'Order of operations' to be completed. 
+- Waiting on other applications in the 'Order of operations' to be completed.
 
 **If Installing, report INSTALLING for whole deployment**
 
@@ -47,10 +48,9 @@ Margo uses a GitOps style approach to manage a Edge Device's Deployment Specific
 
 ![Workload Install Sequence Diagram (svg)](../../figures/workload-install-sequence.drawio.svg)
 
-
 ## Deployment Specification - Cluster Enabled Devices
 
-The Deployment specification shall be formated as a Custom Resource Definition YAMl File. 
+The Deployment specification shall be formated as a Custom Resource Definition YAMl File.
 
 **Example Cluster Enabled Device Deployment Specification:**
 
@@ -218,7 +218,6 @@ spec:
                     - digitron-orchestrator-docker
 ```
 
-
 **Top-level Attributes**
 
 | Attribute       | Type            | Required?       | Description     |
@@ -235,7 +234,6 @@ spec:
 | annotations             | Annotations          | Y    | Defines the application ID and unique identifier associated to the deployment specification. Needs to be assigned by the Workload Orchestration Software.|
 | name             | string          | Y    | The application's official name. This name is for display purposes only and can container whitespace and special characters.|
 
-
 **Annotation Attributes**
 
 | Attribute        | Type            | Required?       | Description     |
@@ -250,80 +248,6 @@ spec:
 | deploymentProfile           | Deployment Profile          | Y    | Section that defines deployment details including type and components.|
 | parameters        | map[string][Parameter]          | Y    | Describes the configured parameters applied via the end-user.|
 
+## Deployment Status
 
-## Deployment Status 
-The Deployment Statue update is sent via the Margo Device Interface to the WOS. The purpose of this API function is to provide status updates to the WOS while it installs the Deployment specification. This shall be static information regarding how the deployment specification was installed, for dynamic information please see the application observability section . 
-
-Example deployment status:
-
-```
-{
-    "apiVersion": "deployment.margo/v1",
-    "kind": "DeploymentStatus",
-    "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
-    "status": {
-        "state": "pending",
-        "error": {
-            "code": "",
-            "message": ""
-        }
-    },
-    "components": [
-        {
-            "name": "digitron-orchestrator",
-            "state": "pending",
-            "error": {
-                "code":"",
-                "message":""
-            }
-        },
-        {
-            "name": "database-services",
-            "state": "pending",
-            "error": {
-                "code": "",
-                "message ": ""
-            }
-        }
-    ]
-}
-```
-
-**Top-level Attributes**
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version of the API the object definition follows.|
-| kind            | string    | Y    | Must be `DeploymentStatus`.|
-| deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Orchestration Software. |
-| status          | []status    | Y    | Section of the message that provides details on the overall deployment status. See Status Attributes section below for more details. |
-| components      | []components    | Y    | Section of the message that provides details on the individual components of the deployment specification and their status'. |
-
-**State Atrributes**
-
-State attributes are assigned at the overall deployment level along with the individual component level. 
-- State attribute MUST be on the following options: Pending, Installing, Installed, Failed.
-- The overall deployment status MUST inherit the current component's status until it has gone through installing each component.
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| state      | string    | Y    | Current state of the overall deployment or individual component within the deployment specification depending on the current stage of deployment. |
-| error      | Error    | N    | Location of the message where details regarding an installation error need to be provided. |
-
-**Error Atrributes**
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| code      | string    | Y    | Associated error code following a component failure during installation. |
-| message   | string    | Y    | Associated error message that provides further details to the WOS about the error that was encountered. |
-
-> Note: Need to figure out the options for error code and message. Are these to be free form?
-
-
-**Components Attributes**
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| name      | string    | Y    | Name of the deployment component, inherited via the deployment specification |
-| state     | string    | Y    | Current state of the deployment component. MUST be one of the following options: Pending, Installing, Installed, Failed |
-| error     | Error    | N    | Location of the message where details regarding an installation error need to be provided. See **Error** attributes section above for more details.  |
+The Deployment Statue update is sent via the Margo Device Interface to the WOS. The purpose of this API function is to provide status updates to the WOS while it installs the Deployment specification. This shall be static information regarding how the deployment specification was installed, for dynamic information please see the application observability section .
