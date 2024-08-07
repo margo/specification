@@ -1,253 +1,41 @@
-# Deployment Specification storage and retrieval
+# Desired State Storage and Retrieval
 
-Margo uses a GitOps style approach to manage a Edge Device's Deployment Specification and associated configuration changes. For each device the Workload Orchestration Software maintains a source code/file-based repository under its control. The Margo Management Interface is responsible for monitoring this code repository for any changes and applying the Desired State configurations.
+Margo uses an OpenGitOps approach for managing the edge device's desired state. The workload orchestration solution vendor maintains Git repositories, under their control, to push updates to the desired state for each device being managed. The device's management client is responsible for monitoring the device's assigned Git repository for any changes to the desired state that MUST be applied.
 
-**Deployment specification requirements:**
-
-- The Deployment specification MUST be stored within a Git Repository available to access via the Margo Interface. Git Repository storage was selected to ensure secure storage and traceability pertaining to the Workload Desired state(s).  
-- The Margo Device Interface shall have a service utilizing Open Gitops Patterns to monitor the repository via release URL, which houses the associated Deploymnt specification.
+### Desired State Requirements:
 
 > Note: Need to investigate best way to construct the Git Repository. Folder structure / Multiple applications per Edge Device/Cluster
 > Note: this is the recommendation from FluxCD <https://fluxcd.io/flux/guides/repository-structure/>
 
-## Interface - Workload Management Sequence of Operations
+- The workload orchestration solution MUST store the device's desired state documents within a Git repository the device's management client can access. 
+> Note: Git Repository storage was selected to ensure secure storage and traceability pertaining to the workload's desire state(s).  
+- The device's management client MUST monitor the device's Git repository for updates to the desired state using the URL and access token provided by the workload orchestration service during onboarding.
 
-**Deployment specification lifecycle:**
+### Workload Management Sequence of Operations
 
-1. User constructs the Desired state within the WOS
-2. WOS Prepares the Desired state within the Edge associated Git Repository
-3. Interface monitors the Edge Device Assigned Git Repository release URL
-4. Once the interface notices a difference between the Current(running) state and Desired state, it shall pull down the new Desired state via Open Gitops methods.
+#### Deployment specification lifecycle:
 
-**Deployment Specification being applied:**
+1. The workload orchestration solution creates the desired state document based on the end user's inputs when installing, updating or deleting an application.
+2. The workload orchestration solution pushes updates to the device's Git repository reflecting the changes to the desired state.
+3. The device's management client monitors its assigned Git repository for changes
+4. When the device's management client notices a difference between the current(running) state and the desired state, it MUST pull down and attempt to apply the new desired state.
 
-1. Device Applies Desired state to become "Current State"
-2. While applying current state, the interface shall report progress via API on state changes(see section below)
+#### Applying the Desired State:
 
-**During installation, the deployment status should be sent to the WOS via the interface. The following MUST be included.**
+1. The device attempts to apply the desired state to become new current state
+2. While the new desired state is being applied, the device management client MUST report progress on state changes(see [deployment state](#deployment-state) section below) using the [Device API](../../margo-api-reference/workload-api/device-api/deployment-status.md)
 
-- Deployment ID that matches the Deployment spec id metadata parameter.
-- Current State of the overall deployment:
- 	- Send overall deployment spec state(inherits the component state that is being deployed)
- 	- Send also individual component states
+#### Deployment State
 
-**If Pending, report information regarding the reason.**
+The deployment state is sent to the workload orchestration web service using the [Device API](../../margo-api-reference/workload-api/device-api/deployment-status.md) when there is a change in the deployment state. This informs the workload orchestration web service of the current state as the new desired state is applied. 
 
-- Such as waiting on Policy agent
-- Waiting on other applications in the 'Order of operations' to be completed.
+The deployment state uses the following rules:
 
-**If Installing, report INSTALLING for whole deployment**
-
-**If Failure, report failure condition and associated details.**
-
-- Such as error message / error code
-
-**If Success, report INSTALLED**
-
-## Workload Install Sequence Diagram
+- The state is `Pending` once the device management client has received the updated desired state but has not started applying it. When reporting this state indicate the reason.
+    - Such as waiting on Policy agent
+    - Waiting on other applications in the 'Order of operations' to be completed.
+- The state is `Installing` once the device management client has started the process of applying the desired state.
+- The state is `Failure` if at any point the desired state fails to be applied. When reporting a `Failure` state the error message and error code MUST be reported
+- The state is `Success` once the desired state has been applied completely 
 
 ![Workload Install Sequence Diagram (svg)](../../figures/workload-install-sequence.drawio.svg)
-
-## Deployment Specification - Cluster Enabled Devices
-
-The Deployment specification shall be formated as a Custom Resource Definition YAMl File.
-
-**Example Cluster Enabled Device Deployment Specification:**
-
-```
-apiVersion: application.margo.org/v1alpha1
-kind: ApplicationDeployment
-metadata:
-    annotations:
-        applicationId: com-northstartida-digitron-orchestrator
-        id: a3e2f5dc-912e-494f-8395-52cf3769bc06
-    name: com-northstartida-digitron-orchestrator-deployment
-    namespace: margo-poc
-spec:
-    deploymentProfile:
-        type: helm.v3
-        components:
-            - name: database-services
-              properties:
-                repository: oci://quay.io/charts/realtime-database-services
-                revision: 2.3.7
-                timeout: 8m30s
-                wait: "true"
-            - name: digitron-orchestrator
-              properties:
-                repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
-                revision: 1.0.9
-                wait: "true"
-    parameters:
-        adminName:
-            value: Some One
-            targets:
-                - pointer: administrator.name
-                  components:
-                    - digitron-orchestrator
-        adminPrincipalName:
-            value: someone@somewhere.com
-            targets:
-                - pointer: administrator.userPrincipalName
-                  components:
-                    - digitron-orchestrator
-        cpuLimit:
-            value: "4"
-            targets:
-                - pointer: settings.limits.cpu
-                  components:
-                    - digitron-orchestrator
-        idpClientId:
-            value: 123-ABC
-            targets:
-                - pointer: idp.clientId
-                  components:
-                    - digitron-orchestrator
-        idpName:
-            value: Azure AD
-            targets:
-                - pointer: idp.name
-                  components:
-                    - digitron-orchestrator
-        idpProvider:
-            value: aad
-            targets:
-                - pointer: idp.provider
-                  components:
-                    - digitron-orchestrator
-        idpUrl:
-            value: https://123-abc.com
-            targets:
-                - pointer: idp.providerUrl
-                  components:
-                    - digitron-orchestrator
-                - pointer: idp.providerMetadata
-                  components:
-                    - digitron-orchestrator
-        memoryLimit:
-            value: "16384"
-            targets:
-                - pointer: settings.limits.memory
-                  components:
-                    - digitron-orchestrator
-        pollFrequency:
-            value: "120"
-            targets:
-                - pointer: settings.pollFrequency
-                  components:
-                    - digitron-orchestrator
-                    - database-services
-        siteId:
-            value: SID-123-ABC
-            targets:
-                - pointer: settings.siteId
-                  components:
-                    - digitron-orchestrator
-                    - database-services
-```
-
-## Deployment Specification - Standalone Devices
-
-**Example Cluster Enabled Device Deployment Specification:**
-
-```
-apiVersion: application.margo.org/v1alpha1
-kind: ApplicationDeployment
-metadata:
-    annotations:
-        applicationId: com-northstartida-digitron-orchestrator
-        id: ad9b614e-8912-45f4-a523-372358765def
-    name: com-northstartida-digitron-orchestrator-deployment
-    namespace: margo-poc
-spec:
-    deploymentProfile:
-        type: docker-compose
-        components:
-            - name: digitron-orchestrator-docker
-              properties:
-                keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
-                packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
-    parameters:
-        adminName:
-            value: Some One
-            targets:
-                - pointer: ENV.ADMIN_NAME
-                  components:
-                    - digitron-orchestrator-docker
-        adminPrincipalName:
-            value: someone@somewhere.com
-            targets:
-                - pointer: ENV.ADMIN_PRINCIPALNAME
-                  components:
-                    - digitron-orchestrator-docker
-        idpClientId:
-            value: 123-ABC
-            targets:
-                - pointer: ENV.IDP_CLIENT_ID
-                  components:
-                    - digitron-orchestrator-docker
-        idpName:
-            value: Azure AD
-            targets:
-                - pointer: ENV.IDP_NAME
-                  components:
-                    - digitron-orchestrator-docker
-        idpProvider:
-            value: aad
-            targets:
-                - pointer: ENV.IDP_PROVIDER
-                  components:
-                    - digitron-orchestrator-docker
-        idpUrl:
-            value: https://123-abc.com
-            targets:
-                - pointer: ENV.IDP_URL
-                  components:
-                    - digitron-orchestrator-docker
-        pollFrequency:
-            value: "120"
-            targets:
-                - pointer: ENV.POLL_FREQUENCY
-                  components:
-                    - digitron-orchestrator-docker
-        siteId:
-            value: SID-123-ABC
-            targets:
-                - pointer: ENV.SITE_ID
-                  components:
-                    - digitron-orchestrator-docker
-```
-
-**Top-level Attributes**
-
-| Attribute       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version of the API the object definition follows.|
-| kind            | string    | Y    | Must be `ApplicationDeployment`.|
-| metadata        | Metadata    | Y    | Metadata element specifying characteristics about the application deployment. |
-| spec            | Spec    | Y    | Spec element that defines deployment profile and parameters associated with the application deployment. |
-
-**Metadata Attributes**
-
-| Attribute        | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| annotations             | Annotations          | Y    | Defines the application ID and unique identifier associated to the deployment specification. Needs to be assigned by the Workload Orchestration Software.|
-| name             | string          | Y    | The application's official name. This name is for display purposes only and can container whitespace and special characters.|
-
-**Annotation Attributes**
-
-| Attribute        | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| applicationId         | string          | Y    | An identifier for the application. The id is used to help create unique identifiers where required, such as namespaces. The id must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters. The applicationId MUST match the associated application package Metadata "id" attribute. |
-| id         | string          | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Orchestration Software. |
-
-**Spec Attributes**
-
-| Attribute        | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| deploymentProfile           | Deployment Profile          | Y    | Section that defines deployment details including type and components.|
-| parameters        | map[string][Parameter]          | Y    | Describes the configured parameters applied via the end-user.|
-
-## Deployment Status
-
-The Deployment Statue update is sent via the Margo Device Interface to the WOS. The purpose of this API function is to provide status updates to the WOS while it installs the Deployment specification. This shall be static information regarding how the deployment specification was installed, for dynamic information please see the application observability section .

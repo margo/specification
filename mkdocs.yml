@@ -14,18 +14,23 @@ nav:
     - Observability: app-interoperability/observability.md
   - Orchestration:
     - Workload:
-      - Interface: orchestration/workload/workload-management-interface-breakdown.md
+      - Management API: orchestration/workload/workload-management-interface-breakdown.md
       - Onboarding: orchestration/workload/workload-orchestration-edge-onboarding.md
       - Device Capabilities: orchestration/workload/device-capability-reporting.md
       - Workload Deployment: orchestration/workload/workload-deployment.md 
 ##    - Device:
 ##  - Appendix:
 ##    - Management API Definition: margo-overview/personas.md
-  - Margo API Reference:
+  - Management API Reference:
     - Workload API:
+      - Desired State API:
+        - Desired State: margo-api-reference/workload-api/desired-state-api/desired-state.md
       - Device API: 
         - Device Capabilities: margo-api-reference/workload-api/device-api/device-capabilities.md
         - Deployment Status: margo-api-reference/workload-api/device-api/deployment-status.md
+      - Onboarding API:
+        - Device Onboarding: margo-api-reference/workload-api/onboarding-api/device-onboarding.md
+        - Certificate Download: margo-api-reference/workload-api/onboarding-api/rootca-download.md
 
 theme:
   name: material

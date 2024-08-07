@@ -1,62 +1,70 @@
-# Workload Management Interface Onboarding
-In order for the Workload Orchestration Software to manage the Edge Device's workloads, the Workload Management Interface must first be onboarded.
+# Device Management Client Onboarding
+In order for the workload orchestration solution to manage the edge device's workloads, the device's management client must first complete onboarding.
 
-**Onboarding process includes:**
+> Action: The details in this page are still under discussion and have not been finalized.
 
-1. Margo Interface receives WOS API Endpoint and Signing Certificate HTTP Endpoint
-2. Context and Trust is established between Interface and the WOS API Endpoints
-3. Margo Interface receives Git release URL endpoint and interface associated access token
-3. Trust establishment between the interface and the Device's Associated Git Repository 
-4. Device Capability information transfer from Device to Orchestration Software
+**The onboarding process includes:**
 
-## Management Endpoint Discovery/Configuration
+1. The end user provides the the workload orchestration web service's root URL to the management client
+1. The management client downloads the workload orchestration solution's public root CA certificate using the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/rootca-download.md)
+1. Context and trust is established between the management client and the workload orchestration web service
+1. The management client uses the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/device-onboarding.md) to onboard with the workload orchestration solution
+1. The management client receives the clientId, client secret and token endpoint URL used to generate a bearer token.
+1. The management client receives the URL for the Git repository containing its desired state and an associated access token for authentication
+1. The [device capabilities](./device-capability-reporting.md) information is sent from the device to the workload orchestration web service using the [Device API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)
 
-To ensure the Management Interface is configured to communicate with the correct API Endpoint. We need to ensure the endpoint is first configured. 
+![Margo Management Interface Operational Flow Diagram (svg)](../../figures/margo-interface-generic.drawio.svg)
 
-- Tier 1 Device management scenario
 
-In this scenario the Margo interface is not aware of the WOS API Endpoint. It will either need to be configured manually or via the proprietary device management service. This scenario is also relevant for "Split-Brain" scenarios where the WOS and DOS are provided via different vendors. 
+### Configuring the Workload Orchestration Web Service URL
 
-- Tier 2 Device Management scenario
+> Action: Ideally this URL is discoverable instead of having to manually enter it but we still need to determine if there is a good way to make this discoverable by using something like the FDO Rendezvous service or multicast DNS. Also, once we determine how the Margo compliant device onboarding and orchestration is going to work it will probably impact this.
 
-It is assumed during the device onboarding process, the Management Interface endpoint will be configured automatically. Endpoint configuration MUST be a feature of the DOS.   
+To ensure the management client is configured to communicate with the correct workload orchestration web service, the management client needs to be configured with the expected URL. The device vendor MUST provide a way for the end user to manually set the URL the management client uses to communicate with the workload orchestration web service the end user has chosen to use.
 
-> Note: maybe discoverable means will need to be necessary. Rendevous server or DNS route.
+### Margo Web API Authentication Method
 
-## Rest API Authentication Method
+The Margo Web API communication pattern between the management client and the workload orchestration web service must use a secure communication channel. In order to facilitate this secure communication Margo requires the use of oAuth 2.0 for authentication.
 
-The REST API communication pattern between the Management Interface and the WOS API Endpiont needs to be a secure communication channel. Due to this requirement, Margo has adopted a certificate-based authentication approach. By utilizing the certificates to create Payload Envelopes, the management interface can ensure secure transport even if there is a TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection.
+#### API Authorization Strategy
 
-API Authorization Strategy
+1. During the [onboarding process](../../margo-api-reference/workload-api/onboarding-api/device-onboarding.md) the workload orchestration web service provides the management client with a client Id, client secret and token endpoint URL
+1. The management client uses this information to create a bearer token for each request
+1. The bearer token is set in the `Authorization` header for each web request sent to the workload orchestration web service requiring authorization.
 
-1. End user uploads the x.509 device certificate to the WOS 
-2. WOS prepares a signing certificate available via a HTTP API 
-3. Edge Device Interface retrieves the signing certificate from endpoint outlined above, and traces back to the root CA to validate WOS ownership. 
-4. Once this is complete, both sides of the interface are able to produce the envelope. 
+#### Payload Security Method
 
-Details pertaining to the message Envelope:
+> Action: Certificate Rotation / Unique Identifier for device are still research areas needed.
 
-Once Edge Device has a message prepared for the WOS, it completes the following to secure the message.
+Because of limitations using mTLS with common OT infrastructure such as TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection Margo has adopted certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes, the management client can ensure secure transport between the management client and the workload orchestration web service.
 
-1. Calculates a digest and signature of the payload
-2. Adds envelope around it that has:
+1. During the onboarding process the end user uploads the x.509 device's certificate to the workload orchestration solution 
+1. The management client downloads the root CA certificate using the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/rootca-download.md)
+1. Once this is complete, both parties are able to secure their payloads. 
+
+##### Details pertaining to the message Envelope:
+
+Once the edge device has a message prepared for the workload orchestration web service, it completes the following to secure the message.
+
+1. The management client calculates a digest and signature of the payload
+1. The management client adds an envelope around it that has:
     - actual payload
     - SHA of the payload, signed by the device certificate
     - Identifier for the certificate that corresponds to the private key used to sign it. 
-        - This identifier MUST be the GUID provided by the Device Manufacturer. Typically the hardware serial number. 
-3. Envelope is sent as the payload to the WOS API Endpoint. 
-4. WOS treats the POST payload as envelope structure, and receives the certificate identifier. Note: This certificate is the Device Certificate that was manually uploaded to the WOS. 
-5. WOS computes digest from the payload, and verifies the signature using the device certification.
-6. Payload is then processed via the WOS. 
+        - This identifier MUST be the GUID provided by the device manufacturer. Typically the hardware serial number. 
+1. The envelope is sent as the payload to the workload orchestration web service. 
+1. The workload orchestration web service treats the request's payload as envelope structure, and receives the certificate identifier.
+> Note: This certificate is the device certificate that was manually uploaded to the workload orchestration solution during onboarding. 
+1. The workload orchestration web service computes digest from the payload, and verifies the signature using the device certification.
+1. The payload is then processed by the workload orchestration web service. 
 
-> Note: Certificate Rotation / Unique Identifier for device are still research areas needed. 
 
-## Gitops Service Enrollment
+### GitOps Service Enrollment
 
-Authorization methods for OpenGitops
+> Action: Need to think through a process for retrieving new tokens when one expires.
+> Is time synchronization required in this interface?
 
-- Github Access Tokens shall be provided to the Management Interface. These access tokens MUST be tied to a dedicated non-user account for access where credentials are frequently rotated and short lived.
+#### Authorization methods for the Desired State Git Repository
+
+- Github Access Tokens shall be provided to the management client. These access tokens MUST be tied to a dedicated non-user account for access where credentials are frequently rotated and short lived.
 - Need to support accessing rotations of tokens
-
-> Note: Need to think through a process for retrieving new tokens when one expires.
-> Note: Is time synchronization required in this interface?

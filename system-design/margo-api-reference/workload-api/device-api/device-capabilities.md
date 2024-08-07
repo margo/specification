@@ -32,7 +32,7 @@ PUT /device/{deviceId}/capabilities
 | id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner.|
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
-| serialNumber       | string    | Y    | Defines the servial number of the device.|
+| serialNumber       | string    | Y    | Defines the serial number of the device.|
 | roles         | []string    | Y    | Element that defines the device role it can provide to the Margo environment. MUST be one of the following: Standalone Cluster, Cluster Leader, or Standalone Device |
 | resources            | []Resource    | Y    | Element that defines the device's resources available to the application deployed on the device. See the [Resource Fields](#resources-fields) section below. |
 | peripherals            | []Peripheral    | Y    | Element that defines the device's peripherals available to the application deployed on the device. See the [Peripheral Fields](#peripheral-fields) section below. |
@@ -61,7 +61,7 @@ PUT /device/{deviceId}/capabilities
 | name      | string    | Y    | Name of the peripheral.|
 | type      | string    | Y    | Type of the peripheral. i.e. GPU|
 | modelNumber      | string    | Y    | Model number of the peripheral.|
-| properties      | string    | Y    | Properties of the peripheral.|
+| properties      | map[string]string    | Y    | Properties of the peripheral.|
 
 #### Interface Fields
 
@@ -70,7 +70,7 @@ PUT /device/{deviceId}/capabilities
 | name      | string    | Y    | Name of the interface.|
 | type      | string    | Y    | Type of the interface. i.e. Ethernet NIC, |
 | modelNumber      | string    | Y    | Model number of the interface.|
-| properties      | string    | Y    | Properties of the interface to inform the WOS with additional information.|
+| properties      | map[string]string   | Y    | Properties of the interface to inform the WOS with additional information.|
 
 ### Example Request
 
