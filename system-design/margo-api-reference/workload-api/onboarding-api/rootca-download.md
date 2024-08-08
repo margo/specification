@@ -1,6 +1,6 @@
-# Download Root CA Certificate
+# Certificate API
 
-In order to facilitate secure communication between the management client and workload orchestration web service the workload orchestration web service's root CA certificate must be downloaded using the Onboarding API.
+In order to facilitate secure communication between the device's management client and workload orchestration web service the workload orchestration web service's root CA certificate must be downloaded using the Onboarding API's `certificate` endpoint.
 
 ### Route and HTTP Methods
 
@@ -12,6 +12,6 @@ GET /onboarding/certificate
 
 ```json
 {
-    "certificate":"<certificate text>"
+    "certificate":"<base-64 encoded certificate text>"
 }
 ```

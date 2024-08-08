@@ -1,6 +1,6 @@
 # Device Capabilities
 
-Devices need needs to provide the workload orchestration web service with its capabilites and characteristics. This is done calling the Device API's `device capabilites` endpoint.
+Devices need needs to provide the workload orchestration web service with its capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint.
 
 ### Route and HTTP Methods
 

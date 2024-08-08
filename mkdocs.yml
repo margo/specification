@@ -22,6 +22,7 @@ nav:
 ##  - Appendix:
 ##    - Management API Definition: margo-overview/personas.md
   - Management API Reference:
+    - Overview: margo-api-reference/margo-api-specification.md
     - Workload API:
       - Desired State API:
         - Desired State: margo-api-reference/workload-api/desired-state-api/desired-state.md

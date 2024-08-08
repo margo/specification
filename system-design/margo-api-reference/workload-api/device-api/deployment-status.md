@@ -1,6 +1,6 @@
 # Deployment Status
 
-Devices need needs to provide the workload orchestration web service with its capabilites and characteristics. This is done calling the Device API's `device capabilites` endpoint.
+While applying a new desired state the device's management client MUST provide the workload orchestration web service with an indication of the current status. This is done calling the Device API's `device status` endpoint.
 
 ### Route and HTTP Methods
 
@@ -12,7 +12,7 @@ POST /device/{deviceId}/deployment/{deploymentId}/status
 
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
-| {deviceId} | string | Y | The device's Id registered with the workload orchestration web service during onboarding.|
+| {deviceId} | string | Y | The device's Id registered with the workload orchestration solution during onboarding.|
 | {deploymentId} | string | Y | The deployment Id the status is being reported for |
 
 ### Request Body Fields

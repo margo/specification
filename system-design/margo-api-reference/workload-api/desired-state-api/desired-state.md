@@ -2,7 +2,7 @@
 
 > Action: This is incomplete and doesn't contain the details for the deploymentProfile or parameters
 
-The desired state is expressed as a [Kubernetes custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) and made available to the management client as a yaml document using the OpenGitOps pattern.
+The desired state is expressed as a [Kubernetes custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) and made available to the device's management client as a YAML document using the OpenGitOps pattern.
 
 ### ApplicationDeployment Definition
 
