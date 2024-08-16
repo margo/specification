@@ -1,0 +1,11 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "mkdocs",
+	"service": "mkdocs",
+	"workspaceFolder": "/home/vscode/docs/",
+	"dockerComposeFile": [
+		"../.devcontainer/docker-compose.yaml"
+	],
+	"remoteUser": "vscode"
+}
