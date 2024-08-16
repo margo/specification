@@ -1,0 +1,17 @@
+services:
+  mkdocs:
+    build:
+      context: ../
+      dockerfile: ./.devcontainer/.dockerfile
+    container_name: mkdocs
+    ports:
+      - 8000:8000
+    volumes:
+      - ..:/home/vscode/docs/
+    tty: true           # <- keeps container running
+    networks:
+      - mkdocs-network
+
+networks: 
+  mkdocs-network:
+    driver: bridge
