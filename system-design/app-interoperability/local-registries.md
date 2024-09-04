@@ -64,7 +64,7 @@ Then, the Docker daemon needs to be configured to use the private registry as a 
 }
 ```
 
-## Option - Helm Chart Registry Mirror
+## Option - Helm Chart Registry as Pull-through Cache
 
 Setting up a pull-through cache for Helm charts in combination with Kubernetes involves configuring a local Helm chart repository, e.g., ChartMuseum that can be installed with the `PROXY_CACHE` variable set to `true`:
 
