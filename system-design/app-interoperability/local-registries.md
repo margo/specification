@@ -10,7 +10,7 @@ In terms of connectivity, we can thereby distinguish mainly between the followin
 
 Local registries for Docker images and Helm Charts can be used for all 3 categories of devices. In case of **fully connected devices**, although the device could reach the Internet, a local registry can still be useful, e.g., as a cache for remote registries to save on bandwidth or to have Docker images and Helm Carts reliably available. In case of **locally connected devices**, a local registry is required to enable the WOA to install margo applications on the device, as the device/WOA does not have Internet access. Thereby, the local registry can be setup as a _pull-through cache_ where data (e.g., Docker images) are cached locally when they are first retrieved from a remote source and subsequent requests for the same data are served from the local cache rather than fetching it again from the remote source. In case of **air-gapped devices**, a local registry has to be accessible on the technician's laptop (or other directly connected device), which performs the application installation process.
 
-To setup local registries, different configuration options exist. 
+To setup local registries, different configuration options exist:
 
 ## Option - Docker Registry Mirror on Kubernetes Level
 
@@ -28,7 +28,7 @@ configs:
       password: "<password>"
 ```
 
-## Option - Docker Registry Mirror on Docker Level
+## Option - Docker Registry as Pull-through Cache on Docker Level
 
 To configure a pull-through cache in Docker for the container registry, a Docker Registry can be setup that acts as caching proxy for a remote Docker registry Such a Docker Registry container can be defined using the following `config.yml`:
 
@@ -66,3 +66,20 @@ Then, the Docker daemon needs to be configured to use the private registry as a 
 
 ## Option - Helm Chart Registry Mirror
 
+Setting up a pull-through cache for Helm charts in combination with Kubernetes involves configuring a local Helm chart repository, e.g., ChartMuseum that can be installed with the `PROXY_CACHE` variable set to `true`:
+
+```
+helm repo add chartmuseum https://chartmuseum.github.io/charts
+helm repo update
+helm install my-chartmuseum chartmuseum/chartmuseum --set env.open.DISABLE_API=false --set env.open.PROXY_CACHE=true
+```
+
+Then, this Helm Chart repository can be added to Helm and chart releases can be installed there:
+
+```
+helm repo add my-cached-repo http://<chartmuseum-ip>:8080
+helm repo update
+helm install my-release my-cached-repo/<chart-name>
+
+```
+Now, when deploying applications in Kubernetes using Helm, the cached repository is used to serve charts rather than the remote repository.
