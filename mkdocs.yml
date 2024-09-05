@@ -17,6 +17,10 @@ nav:
   - Device Interoperability:
     - Device Requirements: device-interoperability/device-requirements.md
 
+markdown_extensions:
+  - toc:
+      toc_depth: 2
+
 theme:
   name: material
   features:
