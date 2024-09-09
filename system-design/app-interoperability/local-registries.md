@@ -1,6 +1,6 @@
 # Local Registries
 
-This section investigates options for configuring the usage of local Docker (or Helm Chart) registries. The goal of configuring such local registries is to avoid the reliance on public, Internet-accessible registries. The reasons for not using such public registries are mainly twofold: (1) publicly hosted Docker images or Helm charts could become unavailable at some point, as the owner decides to take the Docker images or Helm charts off the public registry, or (2) Internet connectivity may not be available to the device and hence public registries are not reachable.
+This section investigates options for configuring the usage of local Docker (or Helm Chart) registries. The goal of configuring such local registries is to avoid the reliance on public, Internet-accessible registries. The reasons for not using such public registries are mainly twofold: (1) publicly hosted Docker images or Helm charts could become unavailable at some point, as the owner decides to take the Docker images or Helm charts off the public registry, (2) Internet connectivity may not be available to the device and hence public registries are not reachable, or (3) end-users want to host their own registries so they can do security scans and validate the packages.
 
 In terms of connectivity, we can thereby distinguish mainly between the following device categories:
 
@@ -30,7 +30,7 @@ configs:
 
 ## Option - Docker Registry as Pull-through Cache on Docker Level
 
-To configure a pull-through cache in Docker for the container registry, a Docker Registry can be setup that acts as caching proxy for a remote Docker registry Such a Docker Registry container can be defined using the following `config.yml`:
+To configure a pull-through cache in Docker for the container registry, a Docker Registry can be setup that acts as caching proxy for a remote Docker registry. Such a Docker Registry container can be defined using the following `config.yml`:
 
 ```
 version: 0.1
