@@ -77,3 +77,87 @@ Check with your employer when not working on your own!
 1. Create a pull request on Github.
 2. The EasyCLA check, CI pipeline, and other applicable checks as may be introduced must pass.
 3. Accepted pull requests are merged into the `pre-draft` branch.
+
+---------------------
+
+# Tutorial: Utilizing VS code to contribute towards the Margo specification
+
+## Software components needed
+
+1. Visual Studio Code
+    - Download VS Code via link below:
+    - https://code.visualstudio.com/
+2. Visual Studio extensions needed:
+    - Remote Repositories
+    - Github Repositories
+    - Github Pull Requests
+    - Draw.io integration
+
+2. Python
+    - Download Python for your workstation via link below:
+    - <https://www.python.org/downloads/>
+3. PIP
+    - Command to install: `python.exe -m pip install --upgrade pip`
+4. Required PIP packages:
+    - Command to install
+    `python -m pip install <package>`
+- List of packages needed:
+    - mkdocs
+    - mkdocs-markdownextradata-plugin
+    - mkdocs-material
+    - mkdocs-material-extensions
+    - mkdocs-pdf
+    - mkdocs-pdf-export-plugin
+    - mkdocs-print-site-plugin
+
+## Visual Studio Quick Start
+
+After installing the necessary components as detailed above, complete the following steps to enable VSCode with the Margo specification repository.
+
+- Select "Clone Git Repository" within the home page of VS Code
+- Provide the full URL to the Margo Specification Repo:
+- https://github.com/margo/specification
+- Select Clone from Github
+- Select 'specification' within the repository list
+- Select a host machine folder you would like the repository to be cloned
+- Repo should be cloned
+- Select Open or Open in new window
+
+### Terminal Operations
+
+- Within VS Code select terminal at the top of the window
+- Select new terminal
+- To create additional terminal sessions, select the drop down next to the + in the terminal window at the bottom to create a new terminal session via bash/python/other
+
+#### Check Local Repo Status
+
+- Type the following command to check your local repo status
+    - `git status`
+- If status states "up to date with origin/pre-draft" you have the latest.
+- If not, run the following command to ensure you are starting with the latest pre-draft branch. 
+    - `git pull`
+
+#### Rendering Margo documentation locally
+
+- type the following command within your terminal:
+    - `mkdocs serve`
+- URL should be available for you to click and show within your local default browser.
+
+
+#### Switching branches
+
+- Select the branch symbol located bottom left toolbar in VS Code
+- All branches related to the specification repository will then be shown in the search bar drop down. 
+- Select desired branch
+
+#### Creating a branch
+
+- Select the Source Control tab within the left pane of the VS Code window
+- Select the three dot elipses to show the drop down, select Branch, select create Branch and provide a name.
+
+#### Creating a Pull Request
+
+- Ensure you have source control selected in the left pane
+- Select the + symbol next to the changes you want to be included in the pull request
+- Include comment to your PR along with your sign off message(detailed above)
+- Select arrow down button and then select "Commit and push" 
