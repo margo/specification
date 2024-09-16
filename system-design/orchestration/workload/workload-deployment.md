@@ -1,6 +1,8 @@
 # Desired State Storage and Retrieval
 
 Margo uses an [OpenGitOps](https://opengitops.dev/) approach for managing the edge device's desired state. The workload orchestration solution vendor maintains Git repositories, under their control, to push updates to the desired state for each device being managed. The device's management client is responsible for monitoring the device's assigned Git repository for any changes to the desired state that MUST be applied.
+> Action: The use of GitOps patterns for pulling desired state is still being discussed/investigated. 
+
 
 ### Desired State Requirements:
 

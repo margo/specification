@@ -2,6 +2,16 @@
 
 The Margo Management API is used to enable communication between Margo compliant devices and orchestration solutions.
 
+Links below provide further detail regarding the API definition:
+
+  - [Desired State](./workload-api/desired-state-api/desired-state.md)
+  - [Deployment Status](./workload-api/device-api/deployment-status.md)
+  - [Device Capabilities](./workload-api/device-api/device-capabilities.md)
+  - [RootCA Download](./workload-api/onboarding-api/rootca-download.md)
+
+
+## Management Interface Authorization and Security Details
+
 ### Authorization Header
 For requests requiring authentication a bearer token MUST be present in the message's `Authorization` header.
 

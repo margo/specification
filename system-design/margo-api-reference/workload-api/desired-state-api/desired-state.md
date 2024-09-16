@@ -2,6 +2,8 @@
 
 > Action: This is incomplete and doesn't contain the details for the deploymentProfile or parameters
 
+> Action: We are currently investigating the best way to interface with source control infrastructure.
+
 The desired state is expressed as a [Kubernetes custom resource definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) and made available to the device's management client as a YAML document using the OpenGitOps pattern.
 
 ### ApplicationDeployment Definition
@@ -59,7 +61,7 @@ spec:
 | parameters        | map[string][Parameter]          | Y    | Describes the configured parameters applied via the end-user.|
 
 
-### Example Cluster Enabled Device Deployment Specification
+### Example: Cluster Enabled Application Deployment Specification
 
 ```
 apiVersion: application.margo.org/v1alpha1
@@ -153,7 +155,7 @@ spec:
                     - database-services
 ```
 
-### Example Cluster Enabled Device Deployment Specification:**
+### Example: Standalone Device Application Deployment Specification:
 
 ```
 apiVersion: application.margo.org/v1alpha1

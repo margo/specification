@@ -13,6 +13,7 @@ The [Margo management API](../../margo-api-reference/margo-api-specification.md)
 - The workload orchestration solution MUST maintain a Git repository to store the devices desired state.
 - The device's management client MUST retrieve the device's desired state from the device's assigned Git repository.
 - Both Web API and GitOps patterns MUST support extended device communication downtime. 
+> Action: The use of GitOps patterns for pulling desired state is still being discussed/investigated. 
 - The device's management client MUST reference industry security protocols and port assignments.
 - Running the device's management client as containerized services is preferred to enable easier lifecycle management but not required.
 - The device's management client MUST allow and end user to configure the following options.

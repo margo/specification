@@ -8,13 +8,13 @@ In order for the workload orchestration solution to manage the edge device's wor
 1. The end user provides the the workload orchestration web service's root URL to the device's management client
 1. The device's management client downloads the workload orchestration solution vendor's public root CA certificate using the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/rootca-download.md)
 1. Context and trust is established between the device's management client and the workload orchestration web service
-1. The device's management client uses the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/device-onboarding.md) to onboard with the workload orchestration solution
+1. The device's management client uses the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/device-onboarding.md) to onboard with the workload orchestration service.
 1. The device's management client receives the client Id, client secret and token endpoint URL used to generate a bearer token.
 1. The device's management client receives the URL for the Git repository containing its desired state and an associated access token for authentication
 1. The [device capabilities](./device-capability-reporting.md) information is sent from the device to the workload orchestration web service using the [Device API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)
 
 ![Margo Management Interface Operational Flow Diagram (svg)](../../figures/margo-interface-generic.drawio.svg)
-
+> Action: FIDO Device onboarding has not been finalized as the standard onboarding solution. Further discussion/investigations are needed. 
 
 ### Configuring the Workload Orchestration Web Service URL
 
