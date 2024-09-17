@@ -40,7 +40,7 @@ The application package has the following folder structure:
 
 ## Application Description
 
-The `margo.yaml` file is the application description. The purpose of this file is to present the application on an application catalog or marketplace from where an end user selects the application to hand it over to the Workload Orchestration Software, which configures it and makes it available for installation on the edge device (see Section [Workload Orchestration Agent](./workload-orchestration-agent.md)).
+The `margo.yaml` file is the application description. The purpose of this file is to present the application on an application catalog or marketplace from where an end user selects the application to hand it over to the Workload Orchestration Software, which configures it and makes it available for installation on the edge device (see Section [Workload Management Interface](../orchestration/workload/workload-management-interface-breakdown.md)).
 
 ### Application Description Example
 
