@@ -59,9 +59,13 @@ theme:
 markdown_extensions:
   - toc:
       toc_depth: 2
-
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 extra_css:
-  - css/margo.css
+  - css/margo.css  
 
 extra:
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice
