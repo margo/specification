@@ -5,19 +5,23 @@ nav:
   - Introduction: index.md
   - Example System Design: margo-overview/introduction-system-design.md
   - Personas: margo-overview/personas.md
-  - Technical Lexicon: margo-overview/technical-lexicon.md
+  - Concepts and Terms:
+       - Technical Lexicon: margo-overview/technical-lexicon.md
+       - Application Observability Overview: margo-overview/application-observability-overview.md
   - Application Distribution:
       - Application Package Definition: app-interoperability/application-package-definition.md
       - Workload Orchestration to App Registry Interactions: app-interoperability/workload-orch-to-app-reg-interaction.md
+      - Publishing Application Observability Data: app-interoperability/publishing-application-observability-data.md
   - Device Interoperability:
       - Device Requirements: device-interoperability/device-requirements.md
-      - Observability: app-interoperability/observability.md
+      - Collecting Application Observability Data: device-interoperability/collecting-application-observability-data.md
   - Orchestration:
       - Workload:
           - Management API: orchestration/workload/workload-management-interface-breakdown.md
           - Onboarding: orchestration/workload/workload-orchestration-edge-onboarding.md
           - Device Capabilities: orchestration/workload/device-capability-reporting.md
           - Workload Deployment: orchestration/workload/workload-deployment.md
+          - Consuming Application Observability Data: orchestration/workload/consuming-application-observability-data.md
   ##    - Device:
   ##  - Appendix:
   ##    - Management API Definition: margo-overview/personas.md

@@ -1,44 +1,3 @@
-# Application Observability
-
-Observability involves the collection and analysis of information produced by a system to monitor its internal behavior.
-
-Observability data is captured using the following signals:
-
-- [Metrics](https://opentelemetry.io/docs/specs/otel/metrics/) - a numerical measurement in time used to observe change over a period of time or configured limits. For example, memory consumption, CPU Usage, available disk space.
-- [Logs](https://opentelemetry.io/docs/specs/otel/logs/) - text outputs produced by a running system/application to provide information about what is happening. For example, outputs to capture security events such as failed login attempts, or unexpected conditions such as errors.  
-- [Traces](https://opentelemetry.io/docs/specs/otel/trace/) - contextual data used to follow a request's entire path through a distributed system. For example, trace data can be used to identify bottlenecks, or failure points, within a distributed system.
-
-Margo's application observability scope is limited to the following areas:
-
-- The device's container platform
-- The device's workload orchestration agent
-- The compliant workloads deployed to the device.
-
-The application observability data is intended to be used for purposes such as:
-
-- Monitoring the container platform's health and current state. This includes aspects such as memory, CPU, and disk usage as well as cluster, node, pod, and container availability, run state, and configured resource limits. This enables end users to make decisions such as whether or not a device can support more applications, or has too many deployed.
-- Monitoring the workload orchestration agent and containerized application's state to ensure it is running correctly, performing as expected and not consuming more resource than expected.
-- To assist with debugging/diagnostics for applications encountering unexpected conditions impacting their ability to run as expected.
-
-Margo's application observability is NOT intended to be used to monitor anything outside the device such as production processes, machinery, controllers, or sensors and should NOT be used for this purpose.
-
-## Observability Framework
-
-Application observability data is made available using [OpenTelemetry](https://opentelemetry.io/docs/). OpenTelemetry, a popular open source specification, defines a common way for observability data to be generated and consumed.
-
-There are several reasons why OpenTelemetry was chosen:
-
-- OpenTelemetry is based on a open source specification and not only an implementation
-- OpenTelemetry is widely adopted
-- OpenTelemetry has a large, and active, open source community
-- OpenTelemetry provides [SDKs](https://opentelemetry.io/docs/languages/) for many popular languages if people wish to use them
-- The OpenTelemetry community project has reusable components such as telemetry [receivers](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver) for Kubernetes, Docker and the host system making integration easier.
-- OpenTelemetry is vendor agnostic.
-
-> **Decision Needed:** Need to determine which version(s) of the specification are supported
-
-### Open Telemetry Collector Deployment Methods
-
 The device owner MUST deploy, and configure, an OpenTelemetry collector on their device. The device owner MAY choose the deployment model they wish to follow but MUST use one of the following approaches.
 
 For standalone and clustered devices there MUST be at least one OpenTelemetry collector deployed to collect the observability data required below. The Device owner MAY choose to deploy multiple OpenTelemetry collectors with each collector receiving different parts of the observability data required below as long as all required observability data is collected.
@@ -58,6 +17,10 @@ The device owner MUST NOT require the use the sidecar deployment model at this t
 The device owner MUST NOT pre-configure exporters to send observability data from the device because the end user must control what observability data is exported.
 
 The device owner MUST NOT attempt to inject auto-instrumentation (by using the [OpenTelemetry operator](https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection) for example) into any compliant applications running on the device that are not owned by the device owner.
+
+Device owners are NOT required to provide backends for consuming observability data on their devices.
+
+> **Note:** See the [application observability overview](../margo-overview/application-observability-overview.md) page for more information about application observablity.
 
 ## Container Platform Observability Requirements
 
@@ -129,18 +92,6 @@ In addition to the resource utilization data the workload orchestration agent MU
 
 > **Action:** We need to understand what the WOS/a is going to be doing to determine what this is.
 
-## Compliant Application Observability Requirements
-
-Compliant applications MAY choose to expose application specific observability data by sending their observability data to the Open Telemetry collector on the standalone device or cluster. While this is optional, is it highly recommended in order to support distributed diagnostics.
-
-Application developers choosing to expose application metrics, traces or logs for consumption with OpenTelemetry MUST send the data to the OpenTelemetry collector using OTLP.
-
-Application developers SHOULD NOT expect their applications to be auto-instrumented by anything outside of their control (by the [OpenTelemetry operator](https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection) for example).
-
-An application developer MAY choose an observability framework other than OpenTelemetry but it MUST be self-contained within the deployment of their application. If an alternative approach is taken, it is NOT recommended application developers publish their observability data outside the device/cluster by using any other means other than the Open Telemetry collector. If the application developer chooses to export data without using the OpenTelemetry collector they MUST NOT do this without the end user's approval.
-
-> **Action:** Need to address in some form legacy applications that are not currently using open telemetry and don't want to migrate their application to use it.
-
 ### Connecting to the OpenTelemetry Collector
 
 In order for an application to publish its observability data to the collector on the standalone device or cluster the device own MUST inject the following environment variables into each container.
@@ -164,14 +115,6 @@ End users MUST be able to export observability data from a standalone device or 
 > For MVS1 we have decided the configuration is updated manually. We know this is not ideal because it is error prone and can result in changes being made that should not be made. The current thinking is that the device orchestration agent will be responsible for updating the configuration when the WOS vendor or customer needs to add exports but this is out of scope for MVS1.
 
 OpenTelemetry allows using either a push or pull approach for getting data from a collector. Cloud based workload orchestration or observability platform service vendors should NOT require a pull method for collecting observability data because most end users will not allow devices to be exposed to the internet because of security concerns.
-
-## Consuming Observability Data
-
-Workload orchestration or observability platform vendors MAY choose to consume observability data exported from the end user's devices to provide valuable services to the end user.
-
-The end user MAY choose to export observability data from Margo compliant devices to other OpenTelemetry collectors or backends within their environment that is not on the device.
-
-Device owners are NOT required to provide backends for consuming observability data on their devices.
 
 ## Application Observability Default Telemetry
 
