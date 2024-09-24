@@ -37,7 +37,7 @@ There are several reasons why OpenTelemetry was chosen:
 
 > **Decision Needed:** Need to determine which version(s) of the specification are supported
 
-**Open Telemetry Collector Deployment Methods**
+### Open Telemetry Collector Deployment Methods
 
 The device owner MUST deploy, and configure, an OpenTelemetry collector on their device. The device owner MAY choose the deployment model they wish to follow but MUST use one of the following approaches.
 
@@ -50,9 +50,8 @@ For multi-node capable clusters the device owner MAY chose to use the DaemonSet 
 ![Deployment Model - DaemonSet](../figures/System-design-observability-deployment2.drawio.svg)
 
 For multi-node capable clusters the device owner MUST ensure the communication between applications, and collector, from one node to a collector on a different node is secure.
-> **Action:** Need to research how this is done so we can provide additional information on what is required.
 
-The device owner MUST NOT use the sidecar deployment model at this time since this requires the pods/containers to have foreknowledge of this deployment model.
+The device owner MUST NOT require the use the sidecar deployment model at this time since this requires the pods/containers to have foreknowledge of this deployment model.
 
 > **Action:** Some more research needs to be done here. If there is a way to do this dynamically without requiring the application developer to include special attributes on their pods then it may be allowed.
 
@@ -64,7 +63,7 @@ The device owner MUST NOT attempt to inject auto-instrumentation (by using the [
 
 In order to allow for monitoring the chosen container platform's state the device owner MUST ensure the following observability data is being collected and made available for export from the OpenTelemetry collector(s) on the standalone device or cluster
 
-**Kubernetes**
+### Kubernetes
 
 For devices running Kubernetes the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
@@ -94,7 +93,7 @@ For devices running Kubernetes the following is a minimum list of observability 
 
   > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default attributes added by the Kubernetes Attributes Processor.
 
-**Standalone Device Container Platforms**
+### Standalone Device Container Platforms
 
 For devices running non-clustered container platforms such as Docker or Podman the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
@@ -104,7 +103,7 @@ For devices running non-clustered container platforms such as Docker or Podman t
 
   > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default metrics emitted by the Docker Stats and Podman Stats Receivers.
 
-**General**
+### General
 
 - The collector MUST receive data using the [OLTP](https://opentelemetry.io/docs/specs/otlp/) format.
   - It is recommended the Device Owner use the [OLTP Receiver](https://github.com/open-telemetry/opentelemetry-collector/blob/main/receiver/otlpreceiver/README.md) to allow applications to send observability data to the collector.
@@ -117,12 +116,6 @@ For devices running non-clustered container platforms such as Docker or Podman t
   - If the Device Owner chooses not to use the Host Metrics Receiver they MUST provided the same output as the Host Metrics Receiver's default configuration.
 
   > **Note:** Please see the [information below](#application-observability-default-telemetry) for the default metrics emitted by the Host Metrics Receivers.
-
-- Log file observability data MUST be collected.
-  - It is recommended the Device Owner use the [File Log Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/filelogreceiver/README.md) to receive logs from their chosen container platform and applications sending logs to **stdout**.  
-  - If the Device Owner chooses not to use the File Log Receiver they MUST provide the same functionality to receive the container platform and application logs.
-
-> **Action:** The Log Receiver needs to be configured to capture the container logs so we'll need to figure out how we want to document this. We also need to determine if there are any other logs we should capture in addition to the container logs.
 
 ## Workload Orchestration Agent Observability Requirements
 
@@ -140,9 +133,7 @@ In addition to the resource utilization data the workload orchestration agent MU
 
 Compliant applications MAY choose to expose application specific observability data by sending their observability data to the Open Telemetry collector on the standalone device or cluster. While this is optional, is it highly recommended in order to support distributed diagnostics.
 
-Application developers choosing to expose application logs for consumption with OpenTelemetry MUST either write their logs to **stdout** or send them using OTLP so the receiver on the OpenTelemetry collector can import them.
-
-> **Action:** We need some research here to understand if there are any expectations on log format, if it's best to use stdout, log files, or sending logs directly to the collector. Also, need to explore the option to allow people to use third part log collection agents (e.g., FluentBit) that collect the logs and forward them to the collector.
+Application developers choosing to expose application metrics, traces or logs for consumption with OpenTelemetry MUST send the data to the OpenTelemetry collector using OTLP.
 
 Application developers SHOULD NOT expect their applications to be auto-instrumented by anything outside of their control (by the [OpenTelemetry operator](https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection) for example).
 
@@ -150,16 +141,17 @@ An application developer MAY choose an observability framework other than OpenTe
 
 > **Action:** Need to address in some form legacy applications that are not currently using open telemetry and don't want to migrate their application to use it.
 
-**Connecting to the OpenTelemetry Collector**
+### Connecting to the OpenTelemetry Collector
 
 In order for an application to publish its observability data to the collector on the standalone device or cluster the device own MUST inject the following environment variables into each container.
 
 |Environment Variable|Description|
 |---|---|
-|HTTP_OTEL_EXPORTER_OTLP_ENDPOINT|(Required) The URL for the application to use to connect to the OpenTelemetry collector HTTP + protobuf|
-|OTEL_EXPORTER_OTLP_PROTOCOL|(Optional) "grpc" if the preferred protocol is gRPC, "http/protobuf" if the preferred protocol is HTTP + protobuf. The default is "http/protobuf" if nothing is provided for this environment variable. If the preferred protocol is "grpc" but no gRPC endpoint is provided, or if the application client cannot connect via gRPC, the application client connects using "http/protobuf". |
 |GRPC_OTEL_EXPORTER_OTLP_ENDPOINT|(Optional) The URL for the application to use to connect to the OpenTelemetry collector using gRPC.|
+|HTTP_OTEL_EXPORTER_OTLP_ENDPOINT|(Required) The URL for the application to use to connect to the OpenTelemetry collector HTTP + protobuf|
 |OTEL_EXPORTER_OTLP_CERTIFICATE|(Optional)The PATH for the client certificate (in PEM format) to use for secure connections to the OpenTelemetry Collector. The application must connect using the certificate if it is provided.|
+|OTEL_EXPORTER_OTLP_PROTOCOL|(Optional) "grpc" if the preferred protocol is gRPC, "http/protobuf" if the preferred protocol is HTTP + protobuf. The default is "http/protobuf" if nothing is provided for this environment variable. If the preferred protocol is "grpc" but no gRPC endpoint is provided, or if the application client cannot connect via gRPC, the application client connects using "http/protobuf". |
+
 > **Action:** We need to do some additional research to validate the above and see if any other data is needed for things like establishing a secure connection to the collector.
 
 ## Exporting Observability Data
@@ -185,9 +177,7 @@ Device owners are NOT required to provide backends for consuming observability d
 
 The following telemetry data is collected by using the default configurations for the receivers indicated above. You can find more information about each piece of telemetry from the receiver's documentation.
 
-> **Action**: This information was compiled based on the receiver's documentation and we still need to validate the default data emitted matches what is documented.
-
-**Metrics**
+### Metrics
 
 The following table shows the metrics emitted by the indicated receivers when using the default configuration.
 
@@ -284,17 +274,11 @@ The following table shows the metrics emitted by the indicated receivers when us
 | Storage | Requests | Container | X |  |  |  |  |
 | Storage (Ephemeral) | Request | Container | X |  |  |  |  |
 
-**Logs**
+### Logs
 
-The following shows the logs emitted by the indicated receiver. The Kubernetes Events receiver collects the event logs when using the default configuration. The Kubernetes Object Receiver and Log Receiver must be configured to collect the desired logs.
+The Kubernetes Events receiver collects the event logs when using the default configuration. The Kubernetes Object Receiver must be configured to collect the desired logs. Container logs must be emitted using OTLP.
 
-| Source | [Kubernetes Object Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8sobjectsreceiver) | [Kubernetes Events Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/k8seventsreceiver) | [File Log Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/filelogreceiver) |
-|---------|--------------------------------|------------------------------|--------------------|
-| Container Logs |  |  | - |
-| Kubernetes Events | - | X |  |  
-| Kubernetes Resources | - |  |  |
-
-**Kubernetes Attributes Processor**
+### Kubernetes Attributes Processor
 
 The following shows the attributes added to each signal when using the [Kubernetes Attribute Processors'](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/k8sattributesprocessor) default configuration.
 
