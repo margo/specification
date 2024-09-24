@@ -85,20 +85,24 @@ Check with your employer when not working on your own!
 ## Software components needed
 
 1. Visual Studio Code
-    - Download VS Code via link below:
-    - https://code.visualstudio.com/
+    - Download VS Code via: https://code.visualstudio.com/
 2. Visual Studio extensions needed:
     - Remote Repositories
     - Github Repositories
     - Github Pull Requests
     - Draw.io integration
+    - (Optional) [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers)
 
-2. Python
+### Option 1: Building and running locally
+
+If you want to be build and run MKDocs locally the following components must be installed
+
+1. Python
     - Download Python for your workstation via link below:
     - <https://www.python.org/downloads/>
-3. PIP
+2. PIP
     - Command to install: `python.exe -m pip install --upgrade pip`
-4. Required PIP packages:
+3. Required PIP packages:
     - Command to install
     `python -m pip install <package>`
 - List of packages needed:
@@ -109,6 +113,18 @@ Check with your employer when not working on your own!
     - mkdocs-pdf
     - mkdocs-pdf-export-plugin
     - mkdocs-print-site-plugin
+
+### Option 2: Building and running using VS Code Dev Containers
+
+If you are able to run containers locally you can build and run MKDocs using [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) instead of installing Python, and the required packages, on your local machine.
+
+To run the container from VS code use `ctrl` + `shift` + `p` to open the command search dropdown in VS Code. Search for the `Dev Containers: Rebuild and Reopen in Container` command and select it.
+
+When the container starts VS Code will connect to the container automatically. To build and run MKDocs use the following command in the [terminal window](#terminal-operations):
+
+`mkdocs serve --dev-addr 0.0.0.0:8000`
+
+After running this command you can view the documents by navigating to `http://localhost:8000` from your host machine.
 
 ## Visual Studio Quick Start
 
