@@ -12,6 +12,7 @@ Please select the relevant options:
 
 - [ ] Fix (change that resolves an issue)
 - [ ] New enhancement (change that adds specification content)
+- [ ] Content edits (change that edits existing content)
 
 #### Checklist
 
