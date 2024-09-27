@@ -40,9 +40,10 @@ The application package has the following folder structure:
 
 ## Application Description
 
-The `margo.yaml` file is the application description. The purpose of this file is to present the application on an application catalog or marketplace from where an end user selects the application to hand it over to the Workload Orchestration Software, which configures it and makes it available for installation on the edge device (see Section [Workload Orchestration Agent](./workload-orchestration-agent.md)).
+The `margo.yaml` file is the application description. The purpose of this file is to present the application on an application catalog or marketplace from where an end user selects the application to hand it over to the Workload Orchestration Software, which configures it and makes it available for installation on the edge device (see Section [Workload Management Interface](../orchestration/workload/workload-management-interface-breakdown.md)).
 
-### Application Description Example**
+
+### Application Description Example
 
 A simple hello-world example of an `margo.yaml` file is shown below:
 
@@ -301,7 +302,7 @@ configuration:
       allowEmpty: false
 ```
 
-**Top-level Attributes**
+### Top-level Attributes
 
 | Attribute          | Type                   | Required?       | Description     |
 |--------------------|------------------------|-----------------|-----------------|
@@ -312,7 +313,7 @@ configuration:
 | parameters         | map[string][Parameter] | N               | Parameters element specifying the configurable parameters to use when installing, or updating, the application. See the [Parameter](#parameter-attributes) section below. |
 | configuration      | Configuration          | N               | Configuration element specifying how parameters should be displayed to the user for setting the value as well as the rules to use to validate the user's input. See the [Configuration](#configuration-attributes) section below. |
 
-**Metadata Attributes**
+### Metadata Attributes
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
@@ -321,7 +322,7 @@ configuration:
 | version          | string          | Y    | The application's version.|
 | catalog          | Catalog         | Y    | Catalog element specifying the application catalog details used to display the application in an application catalog or marketplace. See the [Catalog](#catalog-attribute) section below.|
 
-**Catalog Attributes**
+### Catalog Attributes
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
@@ -329,7 +330,7 @@ configuration:
 | author           | []Author          | N               | Author element specifying metadata about the application's author. See the [Author Metadata](#author-metadata-attributes) section below.|
 | organization     | []Organization    | Y               | Organization element specifying metadata about the organization/company providing the application. See the [Organization Metadata](#organization-metadata-attributes) section below.|
 
-**Application Metadata Attributes**
+### Application Metadata Attributes
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
@@ -341,35 +342,35 @@ configuration:
 | tagline          | string          | N               | The application's slogan.|
 | tags             | []string        | N               | An array of strings that can be used to provide additional context for the application in a user interface to assist with task such as categorizing, searching, etc. |
 
-**Author Metadata Attributes**
+### Author Metadata Attributes
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | name             | string          | N               | The name of the application's creator.|
 | email            | string          | N               | Email address of the application's creator.|
 
-**Organization Metadata Attributes**
+### Organization Metadata Attributes
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | name             | string          | Y               | Organization responsible for the application's development and distribution.|
 | site             | string          | N               | Link to the organization's website.|
 
-**Deployment Profiles Attributes**
+### Deployment Profiles Attributes
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | type             | string          | Y               | Indicates the components's deployment configuration. The values are `helm.v3` to indicate the component's package format is Helm version 3 and `docker-compose` to indicate the component's package format is Docker Compose. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. When installing the application on a device supporting docker-compose all `docker-compose` components, and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. The device will install the components in the same order they are listed in the application description file.|
 | components      | []Component    | N               | Component element indicating the components to deploy when installing the application. See the [Component](#component-attributes) section below. |
 
-**Component Attributes**
+### Component Attributes
 
 | Attribute        | Type            | Required?       | Description     |
 |------------------|-----------------|-----------------|-----------------|
 | name             | string          | Y               | A unique name used to identify the component package. For helm installations the name will be used as the chart name. The name must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. |
 | properties       | map[string][interface{}] | Y              | A dictionary element specifying the component packages's deployment details. See the [Component Properties](#component-properties) section below.|
 
-**Component Properties**
+### Component Properties
 
 The expected properties for the suppported deployment types are indicated below.
 
@@ -401,35 +402,35 @@ To allow customizable configuration values when installing an application, the `
 
 > **Note:** At this point the specification only deals with parameter values provided by the user as part of installing, or updating, the application. We anticipate parameter values to come from other sources, such as the device, in the future and not only from the user.
 
-**Parameter Attributes**
+### Parameter Attributes
 
 | Attribute       | Type                    | Required?       | Description     |
 |-----------------|-------------------------|-----------------|-----------------|
 | value           |  <*see description*>    | N               | The parameter’s default value. Accepted data types are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].|
 | targets         | []Target                | Y               | Used to indicate which component the value should be applied to when installing, or updating, the application. See the [Target](#target-attributes) section below.|
 
-**Target Attributes**
+### Target Attributes
 
 | Attribute       | Type              | Required?       | Description     |
 |-----------------|-------------------|-----------------|-----------------|
 | pointer         | string            | Y               | The name of the parameter in the deployment configuration. For Helm deployments, this is the dot notation for the matching element in the `values.yaml` file. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command. For docker-compose deployments, this is the name of the environment variable to set. |  
 | components      | []string          | Y               | Indicates which deployment profile [component](#component-attribute) the parameter target applies to. The component name specified here MUST match a component name in the [deployment profiles](#deployment-profiles-attributes) section.  |
 
-**Configuration Attributes**
+### Configuration Attributes
 
 | Attribute       | Type               | Required?           | Description     |
 |-----------------|--------------------|---------------------|-----------------|
 | sections        | []Section          | Y                   | Sections are used to group related parameters together, so it is possible to present a user interface with a logical grouping of the parameters in each section. See the [Section](#section-attributes) section below. |
 | schema          | []Schema           | Y                   | Schema is used to provide details about how to validate each parameter value. At a minimum, the parameter value must be validated to match the schema’s data type. The schema indicates additional rules the provided value must satisfy to be considered valid input. See the [Schema](#schema-attributes) section below. |
 
-**Section Attributes**
+### Section Attributes
 
 | Attribute       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | name            | string          | Y               | The name of the section. This may be used in the user interface to show the grouping of the associated parameters within the section. |  
 | settings        | []Setting       | Y               | Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the user. A user MUST be able to provide values for all settings. See the [Setting](#setting-attributes) section below.  |  
 
-**Setting Attributes**
+### Setting Attributes
 
 | Attribute       | Type              | Required?       | Description     |
 |-----------------|-------------------|-----------------|-----------------|
@@ -439,7 +440,7 @@ To allow customizable configuration values when installing an application, the `
 | immutable       | boolean           | N               | If true, indicates the parameter value MUST not be changed once it has been set and used to install the application. Default is false if not provided. |
 | schema          | string            | Y               | The name of the schema definition to use to validate the parameter's value. See the [Schema](#schema-attributes) section below.|
 
-**Schema Attributes**
+### Schema Attributes
   
 | Attribute                   | Type              | Required?       | Description     |
 |-----------------------------|-------------------|-----------------|-----------------|
@@ -447,7 +448,7 @@ To allow customizable configuration values when installing an application, the `
 | datatype                    | string            | Y               | Indicates the expected data type for the user provided value. Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean]. At a minimum, the provided parameter value MUST match the schema’s data type if no other validation rules are provided. |
 | <`validation rule options`> | <*see below*>     | N               | Defines the validation rules to use to validate the user provided parameter value. The rules are based on the schema's data type and are listed below. The value MUST be validated against any validation rules defined in the schema. |
 
-**Validation Rules**
+### Validation Rules
 
 Each data type has its own set of validation rules that can be used.
 

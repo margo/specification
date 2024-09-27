@@ -3,19 +3,35 @@ docs_dir: system-design
 
 nav:
   - Introduction: index.md
-  - Envisioned System Design: margo-overview/introduction-system-design.md
+  - Example System Design: margo-overview/introduction-system-design.md
   - Personas: margo-overview/personas.md
   - Technical Lexicon: margo-overview/technical-lexicon.md
-  - App Interoperability:
-    - Application Package Definition: app-interoperability/application-package-definition.md
-    - Device Capability Discovery: app-interoperability/device-capability-discovery.md
-    - Workload Orchestration Software: app-interoperability/workload-orchestration-software.md
-    - Workload Orchestration to App Registry Interactions: app-interoperability/workload-orch-to-app-reg-interaction.md
-    - Workload Orchestrator App Configuration and Deployment: app-interoperability/orchestator-app-config-deploy.md
-    - Workload Orchestration Agent: app-interoperability/workload-orchestration-agent.md
-    - Application Observability: app-interoperability/observability.md
+  - Application Distribution:
+      - Application Package Definition: app-interoperability/application-package-definition.md
+      - Workload Orchestration to App Registry Interactions: app-interoperability/workload-orch-to-app-reg-interaction.md
   - Device Interoperability:
-    - Device Requirements: device-interoperability/device-requirements.md
+      - Device Requirements: device-interoperability/device-requirements.md
+      - Observability: app-interoperability/observability.md
+  - Orchestration:
+      - Workload:
+          - Management API: orchestration/workload/workload-management-interface-breakdown.md
+          - Onboarding: orchestration/workload/workload-orchestration-edge-onboarding.md
+          - Device Capabilities: orchestration/workload/device-capability-reporting.md
+          - Workload Deployment: orchestration/workload/workload-deployment.md
+  ##    - Device:
+  ##  - Appendix:
+  ##    - Management API Definition: margo-overview/personas.md
+  - Management API Reference:
+      - Overview: margo-api-reference/margo-api-specification.md
+      - Workload API:
+          - Desired State API:
+              - Desired State: margo-api-reference/workload-api/desired-state-api/desired-state.md
+          - Device API:
+              - Device Capabilities: margo-api-reference/workload-api/device-api/device-capabilities.md
+              - Deployment Status: margo-api-reference/workload-api/device-api/deployment-status.md
+          - Onboarding API:
+              - Device Onboarding: margo-api-reference/workload-api/onboarding-api/device-onboarding.md
+              - Certificate Download: margo-api-reference/workload-api/onboarding-api/rootca-download.md
 
 theme:
   name: material
@@ -40,6 +56,10 @@ theme:
   palette:
     scheme: margo
 
+markdown_extensions:
+  - toc:
+      toc_depth: 2
+
 extra_css:
   - css/margo.css
 
@@ -48,8 +68,8 @@ extra:
   generator: true
   homepage: https://margo.org
   copyright: Copyright &copy; 2024 Margo
-  reponame: !ENV [GITHUB_REPOSITORY, 'margo/specification']
-  commit: !ENV [GITHUB_SHA, '<unknown>']
+  reponame: !ENV [GITHUB_REPOSITORY, "margo/specification"]
+  commit: !ENV [GITHUB_SHA, "<unknown>"]
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/margo
