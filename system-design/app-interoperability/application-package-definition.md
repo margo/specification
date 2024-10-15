@@ -84,10 +84,10 @@ parameters:
     targets:
     - pointer: global.config.appGreeting
       components: ["hello-world"]
-  greetingTarget:
+  greetingAddressee:
     value: World
     targets:
-    - pointer: global.config.appGreetingTarget
+    - pointer: global.config.appGreetingAddressee
       components: ["hello-world"]
 configuration:
   sections:
