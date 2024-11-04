@@ -10,7 +10,7 @@ For multi-node capable clusters the device owner MAY chose to use the DaemonSet 
 
 For multi-node capable clusters the device owner MUST ensure the communication between applications, and collector, from one node to a collector on a different node is secure.
 
-The device owner MUST NOT require the use the sidecar deployment model at this time since this requires the pods/containers to have foreknowledge of this deployment model.
+The device owner MUST NOT require the use of the sidecar deployment model at this time since this requires the pods/containers to have foreknowledge of this deployment model.
 
 > **Action:** Some more research needs to be done here. If there is a way to do this dynamically without requiring the application developer to include special attributes on their pods then it may be allowed.
 
