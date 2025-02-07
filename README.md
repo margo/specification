@@ -1,6 +1,7 @@
 <p align="center" width="100%"><a href="https://margo.org/"><img src="assets/margo-logo.svg" width="400" alt="margo logo"/></a><br/><br/></p>
 
 ![Static Badge](https://img.shields.io/badge/Deliverable_Development_Status-Pre_Draft-blue)
+[![GitHub Pages](https://github.com/margo/specification/actions/workflows/pages.yml/badge.svg)](https://github.com/margo/specification/actions/workflows/pages.yml)
 
 The margo initiative defines mechanisms for interoperation between edge applications, devices, and orchestration software through ― amongst others ― an open standard at home in this repository.
 
