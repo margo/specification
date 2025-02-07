@@ -148,3 +148,11 @@ jobs:
         # only deploy if we are on the default branch
         if: ${{ github.ref == 'refs/heads/pre-draft' }}
         run: poetry run -- mkdocs gh-deploy --force --clean --verbose
+
+      - name: Upload pages
+        uses: actions/upload-artifact@v4
+        if: ${{ github.ref != 'refs/heads/pre-draft' }}
+        with:
+          name: margo-specification
+          path: site
+          retention-days: 5
