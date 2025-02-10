@@ -13,6 +13,10 @@ In order for the Workload Fleet Management software to manage the edge device's 
 - The device's management client receives the URL for the Git repository containing its desired state and an associated access token for authentication
 - The [device capabilities](./device-capability-reporting.md) information is sent from the device to the workload orchestration web service using the [Device API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)
 
+> Note:
+> 🔐 Indicates communication is secure and requires authentication/authorization.
+> 🔓 Indicates communication is secure but DOES NOT require authentication/authorization.
+
 ``` mermaid
 sequenceDiagram
     %%{init: {'sequence': {'mirrorActors': false}}}%%
@@ -23,51 +27,54 @@ sequenceDiagram
     participant wos as WOS
     participant git as WOS: Device Git Repo   
     note over device, git: Workload orchestration onboarding
-    user -->> device: Get device id and cert
-    activate device
-        device -->> user: return
-    deactivate device
-    user -->> wos: Provides device id and cert to pre-register device in end user's tenant 🔐
+    user ->>+ device: Get device id and cert
+    device -->>- user: return
+    user ->> wos: Provides device id and cert to pre-register device in end user's tenant 🔐
      
-    %%note over device, rendezvous: FIDO
-    user -->> rendezvous: Provides WOS URL
-    device -->>+ rendezvous: Looks up WOS URL
-    rendezvous -->>- device: return
-    device -->>+ wos: Request WOS' public signing cert 🔓
-    wos -->- device: return
-    device -->>+ wos: Send onboard request, device id and certificate 🔓
-    wos -->> wos: Vaidates device id and cert with onboarding registry
-    wos -->- device: returns URL to check onboarding status
+    %% A background highlight could be also used here
+    %% https://mermaid.js.org/syntax/sequenceDiagram.html#background-highlighting
+    alt FIDO: client-initiated rendezvous
+        user ->> rendezvous: Provides WOS URL
+    else FIDO: Discoverable credentials
+        device ->>+ rendezvous: Looks up WOS URL
+        rendezvous -->>- device: return
+    end
+    device ->>+ wos: Request WOS' public signing cert 🔓
+    wos -->>- device: return
+    device ->>+ wos: Send onboard request, device id and certificate 🔓
+    wos ->> wos: Validates device id and cert with onboarding registry
+    wos -->>- device: returns URL to check onboarding status
     
     loop until onboarding status is active   
-        device -->>+ wos: Checks onboarding status providing device id and certificate 🔓
-        wos -->> wos: Validates device id and cert with onboarding registry
-        wos -->- device: returns in progress
+        device ->>+ wos: Checks onboarding status providing device id and certificate 🔓
+        wos ->> wos: Validates device id and cert with onboarding registry
+        wos -->>- device: returns in progress
     end
-    device -->>+ wos: Checks onboarding status providing device id and certificate 🔓
-    wos -->> wos: Validates device id and cert with onboarding registry
-    wos -->- device: returns git repo URL and GitOps token, encrypted client id, encrypted client secret
+    device ->>+ wos: Checks onboarding status providing device id and certificate 🔓
+    wos ->> wos: Validates device id and cert with onboarding registry
+    wos -->>- device: returns git repo URL and GitOps token, encrypted client id, encrypted client secret
     
-    device -->> wos: Uploads device capabilities
+    device ->> wos: Uploads device capabilities
     note over device, git: Workload deployment
     loop Until end of time
-        device -->>+ git: Checks for updates to desired state 🔐
+        device ->>+ git: Checks for updates to desired state 🔐
         git -->>- device: return
         opt
-            device -->> wos: Requests new GitOps token 🔐
+            device ->> wos: Requests new GitOps token 🔐
             wos -->> device: return
         end
-        device -->> device: Applies new desired state
-        device -->> wos: Sends state 🔐
-        device -->> wos: Sends state 🔐
-        device -->> wos: Sends final state 🔐
+        device ->> device: Applies new desired state
+        device ->> wos: Sends state 🔐
+        device ->> wos: Sends state 🔐
+        device ->> wos: Sends final state 🔐
     end    
 ```
+
 > Action: FIDO Device onboarding has not been finalized as the standard onboarding solution. Further discussion/investigations are needed. 
 
 ### Configuring the Workload Fleet Management Web Service URL
 
-> Action: Ideally this URL is discoverable instead of having to manually enter it but we still need to determine if there is a good way to make this discoverable by using something like the FDO Rendezvous service or multicast DNS. Also, once we determine how the Margo compliant device onboarding and fleet management is going to work it will probably impact this.
+> Action: Ideally this URL is discoverable instead of having to manually enter it but we still need to determine if there is a good way to make this discoverable by using something like the FIDO Rendezvous service or multicast DNS. Also, once we determine how the Margo compliant device onboarding and fleet management is going to work it will probably impact this.
 
 To ensure the management client is configured to communicate with the correct Workload Fleet Management web service, the device's management client needs to be configured with the expected URL. The device vendor MUST provide a way for the end user to manually set the URL the device's management client uses to communicate with the workload orchestration solution chosen by the end user.
 
