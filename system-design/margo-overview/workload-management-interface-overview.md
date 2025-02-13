@@ -1,6 +1,15 @@
 # Margo Management API
 The [Margo management API](../../margo-api-reference/margo-api-specification.md) is a critical component that enables interoperability between devices and workload orchestration solutions. This API MUST be used for communication between all Margo compliant devices and orchestration services. This documentation section focuses on the workload management functions of this management API. The device's management client implementation can either be pre-packaged by the device manufacturer during production or installed by the device integrator later. 
 
+## Workload Managmeent API Concepts
+### State Seeking
+
+### Provider Model
+
+### Interoperability
+
+### Cloud and Edge
+
 ## Workload Management API Requirements:
 
 - The [Margo management API](../../margo-api-reference/margo-api-specification.md) MUST be used for the following core functions
@@ -24,3 +33,7 @@ The [Margo management API](../../margo-api-reference/margo-api-specification.md)
 ![Margo Management Interface for Workloads (svg)](../../figures/System-design-workload-orchestration-agent.drawio.svg)
 
 
+## Relevant Links
+Please follow the subsuquent links to view more technical information regarding Margo compliant devices:
+
+- [Margo API Reference](../margo-api-reference/margo-api-specification.md)

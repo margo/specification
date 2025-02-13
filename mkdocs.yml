@@ -2,12 +2,19 @@ site_name: System Design
 docs_dir: system-design
 
 nav:
-  - index.md
-  - margo-overview/introduction-system-design.md
-  - margo-overview/personas.md
-  - Concepts and Terms:
-       - margo-overview/technical-lexicon.md
-       - margo-overview/application-observability-overview.md
+  - Introduction: index.md
+  - Envisioned System Design: margo-overview/introduction-system-design.md
+  - Make a Contribution:
+      - how-to-contribute/contribution-tutorial.md
+      - how-to-contribute/contribution-navigation.md
+  - Technical Lexicon & Personas:
+      - margo-overview/personas.md
+      - margo-overview/technical-lexicon.md
+  - Overview of System Components:
+      - margo-overview/application-package-overview.md
+      - margo-overview/workload-management-interface-overview.md
+      - margo-overview/devices-overview.md
+      - margo-overview/application-observability-overview.md
   - Application Distribution:
       - app-interoperability/application-package-definition.md
       - app-interoperability/workload-orch-to-app-reg-interaction.md
@@ -16,16 +23,13 @@ nav:
   - Device Interoperability:
       - device-interoperability/device-requirements.md
       - device-interoperability/collecting-application-observability-data.md
-  - Orchestration:
+  - Fleet Management:
       - Workload:
-          - orchestration/workload/workload-management-interface-breakdown.md
-          - orchestration/workload/workload-orchestration-edge-onboarding.md
-          - orchestration/workload/device-capability-reporting.md
-          - orchestration/workload/workload-deployment.md
-          - orchestration/workload/consuming-application-observability-data.md
-  ##    - Device:
-  ##  - Appendix:
-  ##    - Management API Definition: margo-overview/personas.md
+          - fleet-management/workload/workload-management-interface-overview.md
+          - fleet-management/workload/workload-fleet-management-edge-onboarding.md
+          - fleet-management/workload/device-capability-reporting.md
+          - fleet-management/workload/workload-deployment.md
+          - fleet-management/workload/consuming-application-observability-data.md
   - Management API Reference:
       - margo-api-reference/margo-api-specification.md
       - Workload API:
