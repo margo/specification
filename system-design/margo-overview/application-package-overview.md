@@ -22,3 +22,11 @@ The [deployment profiles](#deploymentprofile-attributes) specified in the applic
 
 - To target devices, which run Kubernetes, applications must be packaged as Helm charts using [Helm V3](https://helm.sh/).
 - To target devices, which deploy applications using Docker Compose, applications must be packaged as a tarball file containing the *docker-compose.yml* file and any additional artifacts referenced by the docker compose file (e.g., configuration files, environment variable files, etc.). It is highly recommend to digitally sign this package. When digitally signing the package PGP MUST be used.
+
+
+
+## Relevant Links
+Please follow the subsuquent links to view more technical information regarding Margo application packaging:
+
+- [Application Package Definition](../app-interoperability/application-package-definition.md)
+- [Application Distribution](../app-interoperability/workload-orch-to-app-reg-interaction.md)

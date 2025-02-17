@@ -13,4 +13,4 @@ Supported Device roles are shown below:
 Please follow the subsuquent links to view more technical information regarding Margo compliant devices:
 
 - [Device Requirements](../device-interoperability/device-requirements.md)
-- [Collecting Application Observability Data](../device-interoperability/collecting-application-observability-data.md)
+- [Collecting Application Observability Data](../device-interoperability/collecting-application-observability-data.md)s

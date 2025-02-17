@@ -4,9 +4,6 @@ docs_dir: system-design
 nav:
   - Introduction: index.md
   - Envisioned System Design: margo-overview/introduction-system-design.md
-  - Make a Contribution:
-      - how-to-contribute/contribution-tutorial.md
-      - how-to-contribute/contribution-navigation.md
   - Technical Lexicon & Personas:
       - margo-overview/personas.md
       - margo-overview/technical-lexicon.md
@@ -25,22 +22,22 @@ nav:
       - device-interoperability/collecting-application-observability-data.md
   - Fleet Management:
       - Workload:
-          - fleet-management/workload/workload-management-interface-overview.md
           - fleet-management/workload/workload-fleet-management-edge-onboarding.md
           - fleet-management/workload/device-capability-reporting.md
           - fleet-management/workload/workload-deployment.md
           - fleet-management/workload/consuming-application-observability-data.md
-  - Management API Reference:
-      - margo-api-reference/margo-api-specification.md
+  - Technical References:
+      - Management API Reference:
+        - margo-api-reference/margo-api-specification.md
       - Workload API:
-          - Desired State API:
-              - margo-api-reference/workload-api/desired-state-api/desired-state.md
-          - Device API:
-              - margo-api-reference/workload-api/device-api/device-capabilities.md
-              - margo-api-reference/workload-api/device-api/deployment-status.md
-          - Onboarding API:
-              - margo-api-reference/workload-api/onboarding-api/device-onboarding.md
-              - margo-api-reference/workload-api/onboarding-api/rootca-download.md
+        - margo-api-reference/workload-api/desired-state-api/desired-state.md
+        - margo-api-reference/workload-api/device-api/device-capabilities.md
+        - margo-api-reference/workload-api/device-api/deployment-status.md
+        - margo-api-reference/workload-api/onboarding-api/device-onboarding.md
+        - margo-api-reference/workload-api/onboarding-api/rootca-download.md
+  - Make a Contribution:
+      - how-to-contribute/contribution-tutorial.md
+      - how-to-contribute/contribution-navigation.md
 
 theme:
   name: material
@@ -48,6 +45,7 @@ theme:
     #- navigation.tabs
     #- navigation.settings
     #- navigation.top
+    #- navigation.sections
     - navigation.tracking
     - navigation.footer
     - toc.integrate

@@ -1,37 +1,92 @@
 # Personas
 
-**End User**
+Throughout this documentation, the following personas are used to represent interaction with the standard and/or with entities defined by the standard.
 
-Within the industrial automation market interactions are business to business operations. Meaning, end user means the business organization within the transaction. Any user within a company that has access to the Margo compliant application or devices. 
+## Persona Relationships
+![Persona Relationships](./assets/persona-relationships.png)
 
-**Application Developer** 
+## Categories
 
-Application developer persona represents an entity that utilizes the Margo standard to construct their application. By utilizing the Margo standard, the developer can focus on differentiation while inheriting the advantages of the Margo ecosystem.  
+These categories group common personas together under a shared goal or role. These categories will be used in other documentation to provide grouping and clarity where appropriate.
 
-**Application Marketplace Provider**
+### End Users
+- Evaluates the best-in-class products offered by the suppliers
+- Consumes products provided by the suppliers
+- Assembles multiple vendor's products into a productive automation system
 
-This Marketplace provider is a transactional software that is provided to End Users to browse available applications and gain access via purchasing the software.  
+### Suppliers
+- Contribute knowledge and expertise to the specification sections relevant to their business.
+- Builds products compliant with the Margo specification.
+- Markets and sells their products to end users
 
-Note:
-Application Marketplaces are out of scope for Project Margo. However, Margo provides guidelines around content required within the Application Package that is utilized by Marketplaces.  
+## Persona Definitions
 
-**Workload Orchestration Vendor** 
+These persona definitions represent individual entities with specified use cases and requirements, aligned with the other personas in their category.
 
-The Workload Orchestration Vendor provides End Users with the infrastructure to manage applications along with Kubernetes Node and Node Cluster enrollment and management.   
+### End Users
 
-**Device Owner**
-The Device Owner within Project Margo is responsible for meeting the requirements outlined within the device requirements section.
+End users consume products and technologies that adopt the specification to deliver desired business outcomes. 
 
-[Device Requirements](../device-interoperability/device-requirements.md)
+#### OT User
 
-**Device Manufacturer**
+Consumer of functionality provided by the application vendors to run critical and non-critical business functions, or to improve business efficiency
 
-The Device Manufacturer within Project Margo is responsible for providing hardware that complies with the Project Margo device requirements that enable End Users within the Margo ecosystem. The Device Manufacturer is responsible for managing the device's lifecycle for the End-User. An additional option is for the Manufacturer to contract a Device Integrator to manage the lifecycle for the End-User. 
+#### OT Architect
 
-**Device Integrator**
+Creates and enforces standards across OT deployment locations or sites for greater supportability and consistency
 
-The Device Integrator within Project Margo is responsible for transforming a generic device into a Project Margo device. Once the device is Margo compliant, the Device Integrator is responsible for managing the device's lifecycle for the End-User.
+#### Integrator
 
-**Device Orchestration Vendor**
+Optional persona, external to the organization of the other end user personas, but tasked with assembling and installing hardware and software provided by the suppliers
 
-The Device Orchestration Vendor provides End Users with the service to manage their Edge Devices lifecycle within the Margo ecosystem.  
+#### IT Service Provider
+
+Provides "IT-like" services, such as connectivity, backup and restore, automation, security and auditing, within the End User's OT environment. 
+
+### Suppliers
+
+Suppliers provides hardware or software that's evaluated and deployed by the end users
+
+#### Workload Supplier
+
+Provides an application that performs some desired function, such as computer vision, software-defined control, etc, which is deployed to device via a Workload Fleet Manager
+
+#### Fleet Management Supplier
+
+Provides a software package that enables End Users to manage their workloads and/or devices the workloads run on via Fleet management patterns.
+
+#### Device Supplier
+
+Provides hardware resources, such as CPU and memory, along with lifecycle support, such as firmware and BIOS updates
+
+#### Platform Supplier
+
+Provides operating system level software to abstract hardware resources, and optionally, container orchestration software on top of the the operating system layer
+
+## Multiple Personas per Entity
+
+In some cases, a single entity, such as a company or organization, may provide multiple roles within the Margo enabled ecosystem. Below are a few examples of this with some visualizations.
+
+### Combination of Device Supplier and Platform Supplier
+
+A supplier may be both the device supplier (the underlying hardware) and the platform provider, selling a "ready to deploy" offering for consumption by end users:
+
+![Multiple Personas - Device Supplier and Platform Supplier](./assets/multiple-personas-device-platform.png)
+
+> Note:
+>
+> This diagram is a subset of the diagram above, with modifications for the combined personas of device supplier and platform supplier
+
+### Combination of Workload Supplier and OT User
+
+A persona in the end user category, such as an OT user, could also internally develop an application, and leverage the Margo specification to ease deployment to devices in their environment:
+
+![Multiple Personas - OT User and Workload Supplier](./assets/multiple-personas-ot-user-workload.png)
+
+> Note:
+>
+> This diagram is a subset of the diagram above, with modifications for the combined personas of OT user and workload supplier
+
+## Notes
+
+- Other personas to be added as requested or required

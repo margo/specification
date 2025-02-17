@@ -38,3 +38,9 @@ There are several reasons why OpenTelemetry was chosen:
 See the following pages for information about application vendors [publishing observablity data](../app-interoperability/publishing-application-observability-data.md), devices [collection application observability data](../device-interoperability/collecting-application-observability-data.md), and workload orechestration solutions [consuming application observability data](../orchestration/workload/consuming-application-observability-data.md)
 
 > **Decision Needed:** Need to determine which version(s) of the specification are supported
+
+
+## Relevant Links
+Please follow the subsuquent links to view more technical information regarding Margo application observability:
+
+- [Application Package Definition](../app-interoperability/application-package-definition.md)
