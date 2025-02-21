@@ -1,4 +1,4 @@
-# Collecting Application Observability Data
+# Collecting Observability Data
 
 The device owner MUST deploy, and configure, an OpenTelemetry collector on their device. The device owner MAY choose the deployment model they wish to follow but MUST use one of the following approaches.
 
@@ -118,7 +118,7 @@ End users MUST be able to export observability data from a standalone device or 
 
 OpenTelemetry allows using either a push or pull approach for getting data from a collector. Cloud based workload orchestration or observability platform service vendors should NOT require a pull method for collecting observability data because most end users will not allow devices to be exposed to the internet because of security concerns.
 
-## Application Observability Default Telemetry
+## Observability Default Telemetry
 
 The following telemetry data is collected by using the default configurations for the receivers indicated above. You can find more information about each piece of telemetry from the receiver's documentation.
 

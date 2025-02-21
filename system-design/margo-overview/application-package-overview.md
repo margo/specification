@@ -1,4 +1,4 @@
-# Application Package Definition
+# Workload / Application Distribution
 
 This section defines the application package provided by an “Application Developer” who has implemented the application and aims to provide it to Margo-conformant systems. The application package comprises:
  
