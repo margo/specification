@@ -1,18 +1,5 @@
-# Workload Management API
+# Workload Management
 The [Margo management API](../../margo-api-reference/margo-api-specification.md) is a critical component that enables interoperability between devices and workload orchestration solutions. This API MUST be used for communication between all Margo compliant devices and orchestration services. This documentation section focuses on the workload management functions of this management API. The device's management client implementation can either be pre-packaged by the device manufacturer during production or installed by the device integrator later. 
-
-## Concepts
-Below is a list of concepts that Margo management API is governed by. 
-
-State Seeking
-The state seeking methodology, adopted via Margo, is enabled first by the Workload Fleet Manager when it establishes the **Desired state**. The Edge Device then reconciles it's **Current state** with the **Desired state** provided by the Fleet Manager and reports the status. 
-
-### Provider Model
-The provider model within Margo describes a service that is able to orchestrate or implement the desired state within the edge device. 
-Current providers supported:
-- Helm Client
-- Docker Compose client
-
 
 ## Requirements
 

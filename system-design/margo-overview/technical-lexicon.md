@@ -21,6 +21,20 @@ Supported Device roles are shown below:
 
 Workload Fleet Manager(WFM) represents a software offering that enables End Users to configure, deploy, and manage edge Workloads as a fleet on their registered Edge Devices.
 
+**Fleet Management Concepts**
+
+**State Seeking**
+
+The state seeking methodology, adopted via Margo, is enabled first by the Workload Fleet Manager when it establishes the "Desired state". The Edge Device then reconciles it's "Current state" with the "Desired state" provided by the Fleet Manager and reports the status. 
+
+**Provider Model**
+
+The provider model within Margo describes a service that is able to orchestrate or implement the desired state within the edge device. 
+Current providers supported:
+
+- Helm Client
+- Docker Compose Client
+
 **Workload Fleet Management Agent** 
 
 The Workload Fleet Management Agent is a service that runs on the Edge Compute Device which communicates with the Workload Fleet Management Software to receive workloads and configurations to be applied on the Edge Compute Device.
