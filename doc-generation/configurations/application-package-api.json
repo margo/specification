@@ -1,0 +1,6 @@
+{
+    "root": "src/margo-api-reference/workload-api/application-package-api",
+    "targetclass": "ApplicationDescription",
+    "schemafile": "application-description.linkml.yaml",
+    "markdowndoc": "application-description.md"
+}
