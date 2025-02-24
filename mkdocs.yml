@@ -2,7 +2,7 @@ site_name: Specification(pre-draft)
 docs_dir: system-design
 
 nav:
-  - Introduction: index.md
+  - What is Margo?: index.md
   - Terms & Definitions:
       - margo-overview/personas.md
       - margo-overview/personas-extended.md
