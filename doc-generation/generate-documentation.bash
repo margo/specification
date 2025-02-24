@@ -45,5 +45,5 @@ done
 
 (
     cd "${ROOT_DIR}"
-    ${RUN} mkdocs build
+    ${RUN} mkdocs serve
 )

@@ -1,4 +1,4 @@
-site_name: Specification(pre-draft)
+site_name: Specification (pre-draft)
 docs_dir: system-design
 
 nav:
@@ -7,25 +7,26 @@ nav:
       - margo-overview/personas.md
       - margo-overview/personas-extended.md
       - margo-overview/technical-lexicon.md
-  - Margo Overview:
+  - Overview:
       - margo-overview/introduction-system-design.md
       - margo-overview/application-package-overview.md
       - margo-overview/workload-management-interface-overview.md
       - margo-overview/devices-overview.md
       - margo-overview/application-observability-overview.md
-  - Application Distribution:
-      - app-interoperability/application-package-definition.md
-      - app-interoperability/workload-orch-to-app-reg-interaction.md # = Application Registry
-      - app-interoperability/publishing-application-observability-data.md
-      - app-interoperability/local-registries.md
-  - Workload Management:
-      - fleet-management/workload/workload-fleet-management-edge-onboarding.md
-      - fleet-management/workload/device-capability-reporting.md
-      - fleet-management/workload/workload-deployment.md
-      - fleet-management/workload/consuming-application-observability-data.md
-  - Device Interoperability:
-      - device-interoperability/device-requirements.md
-      - device-interoperability/collecting-observability-data.md
+  - Components:
+      - Application Distribution:
+          - app-interoperability/application-package-definition.md
+          - app-interoperability/workload-orch-to-app-reg-interaction.md # = Application Registry
+          - app-interoperability/publishing-application-observability-data.md
+          - app-interoperability/local-registries.md
+      - Workload Management:
+          - fleet-management/workload/workload-fleet-management-edge-onboarding.md
+          - fleet-management/workload/device-capability-reporting.md
+          - fleet-management/workload/workload-deployment.md
+          - fleet-management/workload/consuming-application-observability-data.md
+      - Device Interoperability:
+          - device-interoperability/device-requirements.md
+          - device-interoperability/collecting-observability-data.md
   - Technical References:
       - Margo Management Interface:
           - margo-api-reference/margo-api-specification.md
@@ -34,7 +35,8 @@ nav:
           - margo-api-reference/workload-api/device-api/deployment-status.md
           - margo-api-reference/workload-api/onboarding-api/device-onboarding.md
           - margo-api-reference/workload-api/onboarding-api/rootca-download.md
-      #- Application Package Definition:
+      - Application Package Definition:
+          - margo-api-reference/workload-api/application-package-api/application-description.md
       #- Observability: 
   - Make a Contribution:
       - how-to-contribute/contribution-tutorial.md

@@ -1,6 +1,0 @@
-{
-    "root": "src/app-interoperability",
-    "targetclass": "ApplicationDescription",
-    "schemafile": "application-package-definition.linkml.yaml",
-    "markdowndoc": "application-package-definition.md"
-}
