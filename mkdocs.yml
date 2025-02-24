@@ -14,17 +14,17 @@ nav:
       - margo-overview/devices-overview.md
       - margo-overview/workload-observability-overview.md
   - Components:
-      - Application Distribution:
+      - Workloads:
           - app-interoperability/application-package-definition.md
           - app-interoperability/workload-orch-to-app-reg-interaction.md # = Application Registry
           - app-interoperability/publishing-workload-observability-data.md
           - app-interoperability/local-registries.md
-      - Workload Management:
+      - Workload Fleet Managers:
           - fleet-management/workload/workload-fleet-management-edge-onboarding.md
           - fleet-management/workload/device-capability-reporting.md
           - fleet-management/workload/workload-deployment.md
           - fleet-management/workload/consuming-workload-observability-data.md
-      - Device Interoperability:
+      - Edge Compute Devices:
           - device-interoperability/device-requirements.md
           - device-interoperability/collecting-workload-observability-data.md
   - Technical References:
