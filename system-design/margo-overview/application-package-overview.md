@@ -1,27 +1,56 @@
 # Application Package Definition
 
-This section defines the application package provided by an “Application Developer” who has implemented the application and aims to provide it to Margo-conformant systems. The application package comprises:
- 
-- The **application description**: a YAML document with the element `kind` defined as `ApplicationDescription`, which is stored in a file (e.g., `margo.yaml`) and contains information about the application's [metadata](#metadata-attributes) (e.g., description, icon, release notes, license file, etc.), application supported [deployment configurations](#deploymentprofile-attributes) (e.g,  Helm charts, Docker Compose package), and [configurable application parameters](#defining-configurable-application-parameters).  There SHALL be only one YAML file in the package root of kind `ApplicationDescription`.
-- The **resources**, which are additional information about the application (e.g., manual, icon, release notes, license file, etc.) that can be provided in an [application catalog](../../margo-overview/technical-lexicon) or [marketplace](../../margo-overview/technical-lexicon).
+The application package is provided by an “Application Developer” who has implemented the application and aims to provide it to Margo-conformant systems. Therefore, the “Application Developer” creates an **application description**, a YAML document that contains information about the application and a reference on how to deploy the [OCI Containers](https://github.com/opencontainers) that make up the application. The application package is made available in an [application registry](../app-interoperability/workload-orch-to-app-reg-interaction.md) and the OCI artifacts are stored in a remote or [local registry](../app-interoperability/local-registries.md). 
 
-The application package has the following file/folder structure:
+The following diagram shows the typical workflow for the usage of the application description:
 
-```yaml
-/                           # REQUIRED top-level directory 
-└── application description # REQUIRED a YAML document with element 'kind' as 'ApplicationDescription' stored in a file  (e.g., 'margo.yaml')
-└── resources               # OPTIONAL folder with application resources (e.g., icon, license file, release notes) that can be displayed in an application catalog
+```mermaid
+---
+config:
+    layout: elk
+
+
+---
+sequenceDiagram
+    actor EndUser as End User
+    participant frontend as Workload Fleet Manager Frontend
+    participant fleetmgr as Workload Fleet Manager
+    participant registry as Application Registry
+        
+    autonumber
+    
+    EndUser->>frontend: Visits Application Catalog
+    frontend->>fleetmgr: Get list of available workloads (=Apps)
+    
+    alt
+      fleetmgr ->> registry: Get 'application description' from each known application registry.
+    else
+      fleetmgr ->> fleetmgr: Get cached 'application description' for all cached applications.
+    end
+    fleetmgr->>frontend: Return list of 'application description's
+    
+    frontend ->> frontend: Read all 'application description's -> 'metadata' element
+    frontend ->> EndUser: Show UI with list of applications
+    EndUser->>frontend: Select workload (=App) to install
+    frontend ->> frontend: Read 'application description' -> 'configuration' element
+    frontend -->> EndUser: Show UI to fill App configuration
+    EndUser ->> frontend: Answer configurable questions to be applied to workload(s)
+    frontend ->> fleetmgr: Create 'ApplicationDeployment' definition
+    
 ```
 
-An application aggregates one or more [OCI Containers](https://github.com/opencontainers). While the application package is made available in an [application registry](./workload-orch-to-app-reg-interaction.md), the referenced OCI artifacts are stored in a remote or [local registry](../local-registries). 
-
-> **Note**  
-> Application catalogs or marketplaces are out of scope for Margo. The exact requirements of the marketing material shall be defined by the application marketplace beyond outlined mandatory content.
-
-The [deployment profiles](#deploymentprofile-attributes) specified in the application description SHALL be defined as Helm Charts AND/OR Docker Compose components.
-
-- To target devices, which run Kubernetes, applications must be packaged as Helm charts using [Helm V3](https://helm.sh/).
-- To target devices, which deploy applications using Docker Compose, applications must be packaged as a tarball file containing the *docker-compose.yml* file and any additional artifacts referenced by the docker compose file (e.g., configuration files, environment variable files, etc.). It is highly recommend to digitally sign this package. When digitally signing the package PGP MUST be used.
+1. An end user visits an application catalog (or marketplace) of the Workload Fleet Manager Frontend.
+2. This frontend requests all workloads from the Workload Fleet Manager.
+3. *Either*: the Workload Fleet Manager requests all application descriptions from each known  Application Registry.
+4. *Or*: the Workload Fleet Manager maintains a cache of application descriptions and services the request from there.
+5. The Workload Fleet Manager returns the retrieved documents of application descriptions to the frontend.
+6. The frontend parses the [metadata](#metadata-attributes) element of all received application description documents.
+7. The frontend presents the parsed metadata in a UI to the end user.
+8. The end user selects the workload to be installed.
+9. The frontend parses the [configuration](#dconfiguration-attributes) element of the selected application description.
+10. The frontend presents the parsed configuration to the user.
+11. The end user fills out the [configurable application parameters](#defining-configurable-application-parameters) to be applied to the workload.
+12. The frontend creates an `ApplicationDeployment` definition (from the `ApplicationDescription` and the filled out parameters) and sends it to the Workload Fleet Manager, which executes it as the [desired state](../../margo-api-reference/workload-api/desired-state-api/desired-state/).
 
 
 

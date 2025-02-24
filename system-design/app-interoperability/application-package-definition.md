@@ -36,3 +36,7 @@ If either one cannot be implemented it MAY be omitted but Margo RECOMMENDS defin
 > **Note**
 > A device running the application will only install the application using either Docker Compose files or Helm Charts but not both.
 
+## Relevant Links
+Please follow the subsuquent links to view the technical reference:
+
+- [Application Description](../margo-api-reference/workload-api/application-package-api/application-description.md)
