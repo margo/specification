@@ -2,11 +2,16 @@
 
 ## Interoperability
 
-TBD
+Interoperability is an overloaded term that has different meanings depending on the context. For Margo, interoperability is about achieving the following:
+
+- Defining a common approach for packaging workloads so they can be deployed to any compatible Margo-compliant edge compute devices via any Margo-compliant workload fleet management software.
+- Defining a common approach for packaging device software and firmware updates so they can be deployed to any Margo-compliant edge compute devices via any Margo-compliant device fleet management software.
+- Defining a common API to enable communication between any Margo-compliant edge compute devices and any Margo-compliant fleet management software.
+- Defining a common approach for collecting and transmitting diagnostics and observability data from a Margo-compliant edge compute device
 
 ## Orchestration
 
-TBD
+Orchestration is an overloaded term that has different meanings depending on the context. For Margo, orchestration is about the delivery of workloads and device software updates to Margo-compliant edge compute devices via Margo-compliant fleet management software. Margo depends on container orchestration platforms such as Kubernetes, Docker and Podman existing on the edge compute devices and is not an attempt to duplicate what these platforms provide.
 
 ## Workload
 
