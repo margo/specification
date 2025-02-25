@@ -1,4 +1,4 @@
-# Workload Observability Overview
+# Workload Observability
 
 Observability involves the collection and analysis of information produced by a system to monitor its internal behavior.
 
