@@ -20,9 +20,9 @@ Read more about Margo's [Mission Statement](https://margo.org/about/who-are-we/#
 
 ## Addressing Industrial Edge Pain Points
 
-Because of recent trends in industiral manufacturing, lifecycle management of the massive increase of compute devices and apps from a multitude of suppliers deployed in their plants is becoming a challenge. Margo intends to reduce the complexity of maintaining and operating such an infrastructure at scale in a multi-vendor environment.
+Because of recent trends in industrial manufacturing, lifecycle management is becoming a challenge because of the massive increase of compute devices and apps from a multitude of suppliers deployed in plants. Margo intends to reduce the complexity of maintaining and operating such an infrastructure at scale in a multi-vendor environment.
 
-Read more about how Margo is [addressing industial edge pain points](https://margo.org/about/who-are-we/#industrial-edge) on our website.
+Read more about how Margo is [addressing industrial edge pain points](https://margo.org/about/who-are-we/#industrial-edge) on our website.
 
 ## Applying an Open Approach
 
