@@ -3,7 +3,7 @@
 The application package, which is used to [distribute an application](../margo-overview/application-package-overview.md), comprises the following elements:
  
 - The **application description**: a YAML document with the element `kind` defined as `ApplicationDescription`, which is stored in a file (for example named `margo.yaml`) and contains information about the application's [metadata](../margo-api-reference/workload-api/application-package-api/application-description.md#metadata-attributes) (e.g., description, icon, release notes, license file, etc.), application supported [deployment configurations](../margo-api-reference/workload-api/application-package-api/application-description.md#deploymentprofile-attributes) (e.g,  Helm charts, Docker Compose package), and [configurable application parameters](../margo-api-reference/workload-api/application-package-api/application-description.md#defining-configurable-application-parameters).  There SHALL be only one YAML file in the package root of kind `ApplicationDescription`.
-- The **resources**, which are additional information about the application (e.g., manual, icon, release notes, license file, etc.) that can be provided in an [application catalog](../../margo-overview/technical-lexicon) or [marketplace](../../margo-overview/technical-lexicon).
+- The **resources**, which are additional information about the application (e.g., manual, icon, release notes, license file, etc.) that can be provided in an [application catalog](../margo-overview/technical-lexicon.md) or [marketplace](../margo-overview/technical-lexicon.md).
 
 The application package has the following file/folder structure:
 
