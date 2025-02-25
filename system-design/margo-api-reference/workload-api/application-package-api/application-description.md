@@ -1,6 +1,4 @@
-## Application Description
-
-The application description has the purpose of presenting the application, e.g., on an application catalog or marketplace from where an end user selects an application to be installed. The end user defines an `ApplicationDeployment` by specifying [configuration parameters](#defining-configurable-application-parameters) for an `ApplicationDescription`. An `ApplicationDeployment` defines the [desired state](../../margo-api-reference/workload-api/desired-state-api/desired-state/) for an application.
+The application description has the purpose of presenting the application, e.g., on an application catalog or marketplace from where an end user selects an application to be installed. The end user defines an `ApplicationDeployment` by specifying [configuration parameters](#defining-configurable-application-parameters) for an `ApplicationDescription`. An `ApplicationDeployment` defines the [desired state](../desired-state-api/desired-state.md) for an application.
 
 ### Top-level Attributes
 
@@ -231,8 +229,9 @@ Extends schema to define a specific set of validation rules that can be used for
 | options | []string |  Y  | This provides the list of acceptable options the user can select from. The data type for each option must match the parameter setting’s data type.|
 
 
-### Application Description Example
+## Application Description Examples
 
+### Example 1: Simple Application Description
 A simple hello-world example of an `ApplicationDescription` is shown below:
 
 ```yaml
@@ -296,7 +295,8 @@ configuration:
       allowEmpty: false
 ```
 
-An example of an `ApplicationDescription` defining [deployment profiles](#deploymentprofile-attributes) for both cases, Helm chart as well as Docker Compose, is shown below.
+### Example 2: Application Description with Deployment Profiles for Helm and Compose
+An example of an `ApplicationDescription` defining [deployment profiles](#deploymentprofile-attributes) for both cases, Helm chart as well as Compose, is shown below.
 
 ```yaml
 apiVersion: margo.org/v1-alpha1
