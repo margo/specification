@@ -40,13 +40,13 @@ Read about Margo's [edge interoperability user story](https://margo.org/about/wh
 
 Margo relies on a few principles in tackling the interoperability challenge and simplifying the process of building, deploying, scaling, and operating complex, multi-vendor edge environments for organizations of all sizes.
 
-Read about Mago's plans to [delever on the interoperability promise](https://margo.org/about/who-are-we/#promise) on our web site.
+Read about Margo's plans to [deliver on the interoperability promise](https://margo.org/about/who-are-we/#promise) on our web site.
 
 ## Margo Deliverables
 
 The core deliverables for Margo address the mission to enable interoperability at scale:
 
-- Referene Implementation
+- Reference Implementation
 - Open Standard
 - Open Compliance Test Suite
 
