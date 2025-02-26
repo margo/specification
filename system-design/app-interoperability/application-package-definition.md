@@ -2,7 +2,7 @@
 
 The application package, which is used to [distribute an application](../margo-overview/application-package-overview.md), comprises the following elements:
  
-- The **application description**: a YAML document with the element `kind` defined as `ApplicationDescription`, which is stored in a file (for example named `margo.yaml`) and contains information about the application's [metadata](../margo-api-reference/workload-api/application-package-api/application-description.md#metadata-attributes) (e.g., description, icon, release notes, license file, etc.), application supported [deployment configurations](../margo-api-reference/workload-api/application-package-api/application-description.md#deploymentprofile-attributes) (e.g,  Helm charts, Docker Compose package), and [configurable application parameters](../margo-api-reference/workload-api/application-package-api/application-description.md#defining-configurable-application-parameters).  There SHALL be only one YAML file in the package root of kind `ApplicationDescription`.
+- The **application description**: a YAML document with the element `kind` defined as `ApplicationDescription`, which is stored in a file (for example named `margo.yaml`) and contains information about the application's [metadata](../margo-api-reference/workload-api/application-package-api/application-description.md#metadata-attributes) (e.g., description, icon, release notes, license file, etc.), application supported [deployment configurations](../margo-api-reference/workload-api/application-package-api/application-description.md#deploymentprofile-attributes) (e.g,  Helm charts, Compose package), and [configurable application parameters](../margo-api-reference/workload-api/application-package-api/application-description.md#defining-configurable-application-parameters).  There SHALL be only one YAML file in the package root of kind `ApplicationDescription`.
 - The **resources**, which are additional information about the application (e.g., manual, icon, release notes, license file, etc.) that can be provided in an [application catalog](../margo-overview/technical-lexicon.md) or [marketplace](../margo-overview/technical-lexicon.md).
 
 The application package has the following file/folder structure:
@@ -20,8 +20,8 @@ An application aggregates one or more [OCI Containers](https://github.com/openco
 
 The [deployment profiles](../margo-api-reference/workload-api/application-package-api/application-description.md#deploymentprofile-attributes) specified in the application description SHALL be defined as Helm Charts AND/OR Compose components.
 
-- To target devices, which run Kubernetes, applications must be packaged as Helm charts using [Helm V3](https://helm.sh/).
-- To target devices, which deploy applications using Compose, applications must be packaged as a tarball file containing the *compose.yml* file and any additional artifacts referenced by the Compose file (e.g., configuration files, environment variable files, etc.). It is highly recommend to digitally sign this package. When digitally signing the package PGP MUST be used.
+- To target devices, which run Kubernetes, applications must be packaged as Helm charts using [Helm (version 3)](https://helm.sh/docs/topics/charts/).
+- To target devices, which deploy applications using [Compose](https://www.compose-spec.io/), applications must be packaged as a tarball file containing the *compose.yml* file and any additional artifacts referenced by the Compose file (e.g., configuration files, environment variable files, etc.). It is highly recommend to digitally sign this package. When digitally signing the package PGP encryption MUST be used.
 
 > **Investigation Needed**: We plan to do a security review of this package definition later.
 > During this review we will revisit the way the Compose tarball file should be signed.
