@@ -70,7 +70,7 @@ The Workload Fleet Management Agent is a service that runs on the Edge Compute D
 
 #### Device Fleet Manager
 
-Device Fleet Manager(WFM) represents a software offering that enables End Users to onboard, delete, and maintain Edge Compute Devices within the ecosystem. This software is utilized in conjunction with the Workload Fleet Manager software to provide users with the features required to manage their edge device along with workloads running on them.  
+Device Fleet Manager(DFM) represents a software offering that enables End Users to onboard, delete, and maintain Edge Compute Devices within the ecosystem. This software is utilized in conjunction with the Workload Fleet Manager software to provide users with the features required to manage their edge device along with workloads running on them.  
 
 #### Device Fleet Management Agent
 
