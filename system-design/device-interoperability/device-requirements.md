@@ -10,7 +10,7 @@ Supported Device roles are shown below:
 - Standalone Device
 > Note: Additional device roles will be introduced as the specification matures. 
 
-## Base Requirements for All Devices
+## Base device requirements
 - TPM support
 - Secure Boot
 - Attestation

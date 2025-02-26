@@ -16,6 +16,14 @@ Supported Device roles are shown below:
 
 > Note: Additional device roles will be introduced as the specification matures. 
 
+## Margo Device layers
+
+Margo device roles consist of three major layers: Margo interface layer, platform layer, traditional device layer. Although Margo requires compliance towards it's requirements, such as hosting the Margo management interface client, the device vendor has freedom to implement as they see fit. 
+
+Below is a diagram that depicts the device layers along with some examples: 
+
+![Device Layer Drawing)](../figures/device-layers.drawio.svg)
+
 ## Relevant Links
 
 Please follow the subsequent links to view more technical information regarding Margo compliant devices:
