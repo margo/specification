@@ -1,3 +1,5 @@
+# Persona Examples
+
 ## Multiple Personas per Entity
 
 In some cases, a single entity, such as a company or organization, may provide multiple roles within the Margo enabled ecosystem. Below are a few examples of this with some visualizations.
