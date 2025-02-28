@@ -3,7 +3,7 @@ docs_dir: system-design
 
 nav:
   - What is Margo?: index.md
-  - Terms & Definitions:
+  - Personas & Definitions:
       - margo-overview/personas.md
       - margo-overview/personas-extended.md
       - margo-overview/technical-lexicon.md
@@ -20,6 +20,7 @@ nav:
           - app-interoperability/publishing-workload-observability-data.md
           - app-interoperability/local-registries.md
       - Workload Fleet Managers:
+          - fleet-management/workload/management-interface-requirements.md
           - fleet-management/workload/workload-fleet-management-edge-onboarding.md
           - fleet-management/workload/device-capability-reporting.md
           - fleet-management/workload/workload-deployment.md

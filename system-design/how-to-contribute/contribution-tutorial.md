@@ -14,13 +14,13 @@ Hence it is **recommended to first create a new issue on Github before starting 
 
 ## Bug Fixes
 
-Bug and security fixes are _always_ welcome and take the highest priority, see our [Security Policy](SECURITY.md).
+Bug and security fixes are _always_ welcome and take the highest priority, see our [Security Policy](https://github.com/margo/specification/blob/pre-draft/SECURITY.md).
 
 ## Contribution Checklist
 
 - Contributions to the Specification must be covered by a Corporate CLA or Individual CLA  
 - Any code changes must be accompanied with automated tests 
-- Add the required copyright header to each new file introduced if appropriate, see [licensing information](LICENSE)
+- Add the required copyright header to each new file introduced if appropriate, see [licensing information](https://github.com/margo/specification/blob/pre-draft/LICENSE)
 - Add `signed-off` to all commits to certify the "Developer's Certificate of Origin", see below
 - Structure your commits logically, in small steps
   - one separable functionality/fix/refactoring = one commit
@@ -45,6 +45,7 @@ This lines certifies that you wrote it or otherwise have the right to pass it on
 Check with your employer when not working on your own!
 
 **Tip**: The sign-off will be created for you automatically if you use `git commit -s` (or `git revert -s`).
+
 
 ### Developer's Certificate of Origin 1.1
 
@@ -140,11 +141,11 @@ Steps 1. and 2. only apply to those documents.
 
 Currently two Bash scripts are being provided the directory `doc-generation` to simplify steps 1. and 2.
 
-The input for the generation of the MarkDown documents is provided in the directory `[src](./src/)`.
+The input for the generation of the MarkDown documents is provided in the directory `./src/`.
 
 #### Validate input for MarkDown Generation
 
-The script [check-examples.bash](./doc-generation/check-examples.bash) checks:
+The script `check-examples.bash` locationed in the following location `./doc-generation/check-examples.bash`` checks:
 
 - the validity of the LinkML resource definitions (AKA schemas), and
 - the validity of provided examples and counter-examples according the resource definitions
@@ -153,9 +154,9 @@ The script [check-examples.bash](./doc-generation/check-examples.bash) checks:
 
 #### Generate MarkDown Documents
 
-The script [generate-documentation.bash](./doc-generation/generate-documentation.bash) generates MarkDown documents for the resources specified in LinkML format.
+The script `generate-documentation.bash` located in the followign location `./doc-generation/generate-documentation.bash` generates MarkDown documents for the resources specified in LinkML format.
 
-The LinkML specification documents can be found in the directory [src](./src/) and the resulting MarkDown documents are integrated with the other MarkDown documents in the directory [system-design](./system-design/).
+The LinkML specification documents can be found in the directory `./src/` and the resulting MarkDown documents are integrated with the other MarkDown documents in the directory `/system design/`.
 
 #### Generate HTML Documents
 
