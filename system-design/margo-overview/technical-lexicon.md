@@ -31,7 +31,7 @@ The provider model within Margo describes a service that is able to orchestrate 
 Current providers supported:
 
 - Helm Client
-- Docker Compose Client
+- Compose Client
 
 ## Technical Terms
 
@@ -44,8 +44,8 @@ An application is a collection of one, or more, workloads bundled together in an
 An Edge Workload is a piece of software tailored to run within a customer's environment on a Edge Compute Device. A Workload within Margo consists of a description file, manifest(s), along with one or more source code containers.
 Supported Workload manifests include:
 
-- Helm Package
-- Docker Compose Manifest
+- Helm Chart
+- Compose file
 
 #### Edge Compute Device
 

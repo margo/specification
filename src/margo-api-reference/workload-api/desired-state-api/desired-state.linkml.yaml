@@ -128,15 +128,15 @@ classes:
         range: HelmComponent
         rank: 20
 
-  DockerComposeDeploymentProfile:
+  ComposeDeploymentProfile:
     is_a: DeploymentProfile
     rank: 40
     slot_usage:
       type:
-        equals_string: "docker-compose"
+        equals_string: "compose"
         rank: 10
       components:
-        range: DockerComposeComponent
+        range: ComposeComponent
         rank: 20
 
   Component:
@@ -162,7 +162,7 @@ classes:
     is_a: Component
     rank: 50
 
-  DockerComposeComponent:
+  ComposeComponent:
     is_a: Component
     rank: 50
 
@@ -213,7 +213,7 @@ classes:
 
 slots:
   type:
-    description: The type of deployment profile (e.g., helm.v3, docker-compose).
+    description: The type of deployment profile (e.g., helm.v3, compose).
     range: string
     required: true
     rank: 10

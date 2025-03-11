@@ -1,6 +1,6 @@
 # Local Registries
 
-This section investigates options for configuring the usage of local Docker (or Helm Chart) registries. The goal of configuring such local registries is to avoid the reliance on public, Internet-accessible registries. The reasons for not using such public registries are mainly twofold: (1) publicly hosted Docker images or Helm charts could become unavailable at some point, as the owner decides to take the Docker images or Helm charts off the public registry, (2) Internet connectivity may not be available to the device and hence public registries are not reachable, or (3) end-users want to host their own registries so they can do security scans and validate the packages.
+This section investigates options for configuring the usage of local OCI-based container (or Helm Chart) registries. The goal of configuring such local registries is to avoid the reliance on public, Internet-accessible registries. The reasons for not using such public registries are mainly twofold: (1) publicly hosted container images or Helm charts could become unavailable at some point, as the owner decides to take the container images or Helm charts off the public registry, (2) Internet connectivity may not be available to the device and hence public registries are not reachable, or (3) end-users want to host their own registries so they can do security scans and validate the packages.
 
 In terms of connectivity, we can thereby distinguish mainly between the following device categories:
 
@@ -8,11 +8,11 @@ In terms of connectivity, we can thereby distinguish mainly between the followin
 2.	**Locally connected device**, i.e., the device has connectivity to a local network (e.g., factory- or enterprise-wide) and a local repository can be made reachable.
 3.	**Air-gapped device**, i.e., the device generally is not connected and must be configured by accessing it directly (via USB, Bluetooth, or a direct network link, e.g., via Ethernet cable, or similar) for example via a technician’s laptop.
 
-Local registries for Docker images and Helm Charts can be used for all 3 categories of devices. In case of **fully connected devices**, although the device could reach the Internet, a local registry can still be useful, e.g., as a cache for remote registries to save on bandwidth or to have Docker images and Helm Carts reliably available. In case of **locally connected devices**, a local registry is required to enable the WOA to install margo applications on the device, as the device/WOA does not have Internet access. Thereby, the local registry can be setup as a _pull-through cache_ where data (e.g., Docker images) are cached locally when they are first retrieved from a remote source and subsequent requests for the same data are served from the local cache rather than fetching it again from the remote source. In case of **air-gapped devices**, a local registry has to be accessible on the technician's laptop (or other directly connected device), which performs the application installation process.
+Local registries for container images and Helm Charts can be used for all 3 categories of devices. In case of **fully connected devices**, although the device could reach the Internet, a local registry can still be useful, e.g., as a cache for remote registries to save on bandwidth or to have container images and Helm Carts reliably available. In case of **locally connected devices**, a local registry is required to enable the WOA to install margo applications on the device, as the device/WOA does not have Internet access. Thereby, the local registry can be setup as a _pull-through cache_ where data (e.g., container images) are cached locally when they are first retrieved from a remote source and subsequent requests for the same data are served from the local cache rather than fetching it again from the remote source. In case of **air-gapped devices**, a local registry has to be accessible on the technician's laptop (or other directly connected device), which performs the application installation process.
 
 To setup local registries, different configuration options exist:
 
-## Option - Docker Registry Mirror on Kubernetes Level
+## Option - Container Registry Mirror on Kubernetes Level
 
 Kubernetes supports the configuration of registry mirrors. How this is configured depends on the distribution and the underlying container runtime. Distributions that utilize **containerd** as runtime (e.g., k3s or microk8s) allow the definition of mirrors in a configuration file. For example, in k3s the file `/etc/rancher/k3s/registries.yaml` can be used to set up a mirror for each device's Kubernetes environment:
 
@@ -28,7 +28,7 @@ configs:
       password: "<password>"
 ```
 
-## Option - Docker Registry as Pull-through Cache on Docker Level
+## Option - Container Registry as Pull-through Cache on Docker Level
 
 To configure a pull-through cache in Docker for the container registry, a Docker Registry can be setup that acts as caching proxy for a remote Docker registry. Such a Docker Registry container can be defined using the following `config.yml`:
 

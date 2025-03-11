@@ -8,7 +8,7 @@ metadata:
     namespace: margo-poc
 spec:
     deploymentProfile:
-        type: docker-compose
+        type: compose
         components:
             - name: digitron-orchestrator-docker
               properties:

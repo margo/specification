@@ -71,7 +71,7 @@ Represents a deployment configuration for the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | string |  Y  | Indicates the components's deployment configuration.  The values are `helm.v3` to indicate the component's package format is Helm version 3  and `docker-compose` to indicate the component's package format is Docker Compose.  When installing the application on a device supporting the Kubernetes platform all `helm.v3` components,  and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file.  When installing the application on a device supporting docker-compose all `docker-compose` components,  and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file.  The device will install the components in the same order they are listed in the application description file.|
+| type | string |  Y  | Indicates the components's deployment configuration.  The values are `helm.v3` to indicate the component's package format is Helm version 3  and -compose` to indicate the component's package format is a Compose file.  When installing the application on a device supporting the Kubernetes platform all `helm.v3` components,  and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file.  When installing the application on a device supporting Compose all `compose` components,  and only `compose` components, will be provided to the device in the same order they are listed in the application description file.  The device will install the components in the same order they are listed in the application description file.|
 | components | []Component |  Y  | Component element indicating the components to deploy when installing the application.  See the [Component](#component-attributes) section below.|
 
 
@@ -96,17 +96,15 @@ The expected properties for the suppported deployment types are indicated below.
 | wait | bool  | N  | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
 | timeout | string      | N   | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait. |  
 
-- Properties for `docker-compose` components
+- Properties for `compose` components
 
-> **Investigation Needed**: We need to have more discussion about how docker-compose should be handled and what is required here.
-> We also need to determine if there is a version of docker-compose that needs to be specified. The docker compose schema [version has been
-> deprecated](https://github.com/compose-spec/compose-spec/blob/master/spec.md#version-and-name-top-level-elements) so it's not clear what we would even use for this if we wanted to.
+> **Investigation Needed**: We need to have more discussion about how Compose should be handled and what is required here.
 
 | Attribute      | Type  | Required?     | Description    |
 | --- | --- | --- | --- |
-| packageLocation  | string |  Y  | The URL indicating the Docker Compose package's location. |
+| packageLocation  | string |  Y  | The URL indicating the Compose package's location. |
 | keyLocation    | string | N  | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
-| wait | bool  | N  | If `True`, indicates the device MUST wait until the Docker Compose file has finished starting up before starting the next Docker Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `docker-compose` components are provided.|
+| wait | bool  | N  | If `True`, indicates the device MUST wait until the Compose file has finished starting up before starting the next Compose file. The default is `True`. The Workload Orchestration Agent MUST support `True` and MAY support `False`. Only applies if multiple `compose` components are provided.|
 | timeout | string      | N   | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait.|
 
 ## Defining configurable application parameters
@@ -130,7 +128,7 @@ Specifies where the parameter applies in the deployment. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| pointer | string |  Y  | The name of the parameter in the deployment configuration.  For Helm deployments, this is the dot notation for the matching element in the `values.yaml` file. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command.  For docker-compose deployments, this is the name of the environment variable to set.|
+| pointer | string |  Y  | The name of the parameter in the deployment configuration.  For Helm deployments, this is the dot notation for the matching element in the `values.yaml` file. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command.  For compose deployments, this is the name of the environment variable to set.|
 | components | []string |  Y  | Indicates which deployment profile [component](#component-attributes the parameter target applies to.  The component name specified here MUST match a component name in the [deployment profiles](#deploymentprofile-attributes) section.|
 
 
@@ -335,7 +333,7 @@ deploymentProfiles:
           repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
           revision: 1.0.9
           wait: true
-  - type: docker-compose
+  - type: compose
     components:
       - name: digitron-orchestrator-docker
         properties:

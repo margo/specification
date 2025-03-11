@@ -34,7 +34,7 @@ deploymentProfiles:
           repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
           revision: 1.0.9
           wait: true
-  - type: docker-compose
+  - type: compose
     components:
       - name: digitron-orchestrator-docker
         properties:

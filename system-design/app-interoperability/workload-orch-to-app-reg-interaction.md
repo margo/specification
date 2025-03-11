@@ -17,7 +17,7 @@ Then, the [application package](./application-package-definition.md) is ready to
 > **Note** 
 > The specifics of the installation process are still under discussion: this could be for example a GitOps based approach. 
 
-During this process the containers referenced in the application manifest ([Helm Chart](https://helm.sh/docs/) or [Docker Compose](https://github.com/compose-spec/compose-spec/blob/master/03-compose-file.md)) are retrieved from container/Helm registries. 
+During this process the containers referenced in the application manifest ([Helm Chart](https://helm.sh/docs/) or [Compose](https://github.com/compose-spec/compose-spec/blob/master/03-compose-file.md)) are retrieved from container/Helm registries. 
 
 At a minimum, a Margo-compliant WOS SHALL provide a way for an end user to manually setup a connection between the WOS and an application registry. This is required so as not to prohibit an end user for being able to install any Margo-compliant application they wish; including applications developed by the end user. 
 

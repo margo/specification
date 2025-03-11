@@ -216,15 +216,15 @@ classes:
         range: HelmComponent
         rank: 20
 
-  DockerComposeDeploymentProfile:
+  ComposeDeploymentProfile:
     is_a: DeploymentProfile
     #rank: 66
     slot_usage:
       type:
-        equals_string: "docker-compose"
+        equals_string: "compose"
         rank: 10
       components:
-        range: DockerComposeComponent
+        range: ComposeComponent
         rank: 20
 
   Component:
@@ -251,7 +251,7 @@ classes:
     is_a: Component
     #rank: 73
 
-  DockerComposeComponent:
+  ComposeComponent:
     is_a: Component
     #rank: 76
   
@@ -276,7 +276,7 @@ classes:
         rank: 40
         range: string
       packageLocation:
-        description: URL indicating the Docker Compose package's location.
+        description: URL indicating the Compose package's location.
         rank: 50
         range: string
       keyLocation:
@@ -323,7 +323,7 @@ classes:
         description: >-
           The name of the parameter in the deployment configuration. 
           For Helm deployments, this is the dot notation for the matching element in the `values.yaml` file. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command. 
-          For docker-compose deployments, this is the name of the environment variable to set.
+          For compose deployments, this is the name of the environment variable to set.
         rank: 10
         range: string
         required: true
@@ -561,15 +561,15 @@ slots:
     description: >-
           Indicates the components's deployment configuration. 
           The values are `helm.v3` to indicate the component's package format is Helm version 3 
-          and `docker-compose` to indicate the component's package format is Docker Compose. 
+          and -compose` to indicate the component's package format is a Compose file. 
           When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, 
           and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. 
-          When installing the application on a device supporting docker-compose all `docker-compose` components, 
-          and only `docker-compose` components, will be provided to the device in the same order they are listed in the application description file. 
+          When installing the application on a device supporting Compose all `compose` components, 
+          and only `compose` components, will be provided to the device in the same order they are listed in the application description file. 
           The device will install the components in the same order they are listed in the application description file.
     range: string
     required: true
-    pattern: ^(helm\.v3|docker-compose)$
+    pattern: ^(helm\.v3|compose)$
     rank: 10
 
   components:
