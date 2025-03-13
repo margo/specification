@@ -561,7 +561,7 @@ slots:
     description: >-
           Indicates the components's deployment configuration. 
           The values are `helm.v3` to indicate the component's package format is Helm version 3 
-          and -compose` to indicate the component's package format is a Compose file. 
+          and `compose` to indicate the component's package format is a Compose file. 
           When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, 
           and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. 
           When installing the application on a device supporting Compose all `compose` components, 
