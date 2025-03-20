@@ -256,9 +256,9 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to provision an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the workload engines/managers to provision the workload artifacts.
+When a device gets the instruction to provision an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to provision the workload artifacts.
 
-In this stage the external workload engines/managers (Helm, Compose,...) are responsible for managing the workload artifacts.
+In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the workload artifacts.
 
 On a Helm v3 deployment profile, the WOA will instruct the Helm API to install the specified Helm Charts.
 
@@ -362,10 +362,10 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to run an application (over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the workload engines/managers.
+When a device gets the instruction to run an application (over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model).
 That way all workloads needed for an application should get started and the desired state should be reached.
 
-In this stage the external workload engines/managers (Helm, Compose,...) are responsible for managing the individual workloads.
+In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the individual workloads.
 
 On a Helm v3 deployment profile, the WOA will instruct the Helm API to start the individual Helm Charts.
 
