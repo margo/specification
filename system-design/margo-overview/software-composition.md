@@ -256,13 +256,13 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to stage an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to stage the workload artifacts.
+When a device gets the instruction to stage an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Fleet Management Agent interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to stage the workload artifacts.
 
 In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the workload artifacts.
 
-On a Helm v3 deployment profile, the WOA will instruct the Helm API to install the specified Helm Charts.
+On a Helm v3 deployment profile, the Workload Fleet Management Agent will instruct the Helm API to install the specified Helm Charts.
 
-On a Compose deployment profile, the WOA will instruct the corresponding middleware (remember that Compose workload artifacts are archives containing Compose configurations and other resources) to install the workload artifact.
+On a Compose deployment profile, the Workload Fleet Management Agent will instruct the corresponding middleware (remember that Compose workload artifacts are archives containing Compose configurations and other resources) to install the workload artifact.
 
 Following diagram shows the result of staging an application and the corresponding workload artifacts on a Helm v3 deployment profile (the result of `helm pull`).
 
@@ -273,7 +273,7 @@ C4Component
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
     System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Orchestration Agent") {
+        System_Boundary(woa1, "Workload Fleet Management Agent") {
             Component(atb1, "ApplicationDeployment 1", "ApplicationDeployment", "YAML document")
         }
 
@@ -310,7 +310,7 @@ C4Component
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
     System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Orchestration Agent") {
+        System_Boundary(woa1, "Workload Fleet Management Agent") {
             Component(atb1, "ApplicationDeployment 1", "ApplicationDeployment", "YAML document")
         }
 
@@ -362,14 +362,14 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to run an application (over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model).
+When a device gets the instruction to run an application (over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Fleet Management Agent interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model).
 That way all workloads needed for an application should get started and the desired state should be reached.
 
 In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the individual workloads.
 
-On a Helm v3 deployment profile, the WOA will instruct the Helm API to start the individual Helm Charts.
+On a Helm v3 deployment profile, the Workload Fleet Management Agent will instruct the Helm API to start the individual Helm Charts.
 
-On a Compose deployment profile, the WOA will instruct the Compose CLI to start the individual workloads.
+On a Compose deployment profile, the Workload Fleet Management Agent will instruct the Compose CLI to start the individual workloads.
 
 Following diagram shows the result of reaching the desired state for an application on a Helm v3 deployment profile (the result of `helm install`).
 
@@ -380,7 +380,7 @@ C4Component
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
     System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Orchestration Agent") {
+        System_Boundary(woa1, "Workload Fleet Management Agent") {
             Component(atb1, "Application Description 1", "ApplicationDescription", "YAML document")
         }
 
@@ -415,7 +415,7 @@ C4Component
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
     System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Orchestration Agent") {
+        System_Boundary(woa1, "Workload Fleet Management Agent") {
             Component(atb1, "Application Description 1", "ApplicationDescription", "YAML document")
         }
 
