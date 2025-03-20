@@ -2,8 +2,8 @@
 
 Applications can be found in completely different stages:
 
-1. "Application Packaging": application has been prepared and made ready for provisioning.
-2. "Application Provisioning": application is set up, configured, and made available for use to the device, but has not yet been deployed (started) to be used.
+1. "Application Packaging": application has been prepared and made ready for staging.
+2. "Application Staging": application is set up, configured, and made available for use to the device, but has not yet been deployed (started) to be used.
 3. "Application Deployment" (AKA Runtime): application has been made available and accessible on the device.
 
 Distinguishing which stage terminology refers to is important to understand the scope of following definitions.
@@ -18,22 +18,22 @@ The term [application](technical-lexicon.md#application) refers to all three sta
 
 The term [workload](technical-lexicon.md#workload) applies only to [running software](#3-software-deployment).
 
-The term [workload artifact](#workload-artifact) applies to the resources available in [packaged software](#1-software-packaging) and [provisioned software](#2-software-provisioning) for the workload to run.
+The term [workload artifact](#workload-artifact) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
 
 #### Workload Artifact
 
 ℹ️ _NOTE_: new term proposal
 
-The term [workload artifact](#workload-artifact) applies to the resources available in [packaged software](#1-software-packaging) and [provisioned software](#2-software-provisioning) for the workload to run.
+The term [workload artifact](#workload-artifact) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
 
 The instantiation of a workload artifact results in a [workload](#workload).
 
 Workload artifacts might have different shapes depending on the workload type and on which stage is being considered:
 
 1. Helm v3 as Packaged Software: a [Helm Chart](https://helm.sh/docs/topics/charts/)
-2. Helm v3 as Provisioned software: all container images required by the to-be-started pods.
+2. Helm v3 as Staged software: all container images required by the to-be-started pods.
 3. Compose as Packaged Software: a [Compose Archive](../app-interoperability/application-package-definition.md)
-4. Compose as Provisioned software: a so-called [Compose file](https://github.com/compose-spec/compose-spec/blob/main/spec.md#compose-file) and all the container images required by the to-be-started [services](https://github.com/compose-spec/compose-spec/blob/main/05-services.md).
+4. Compose as Staged software: a so-called [Compose file](https://github.com/compose-spec/compose-spec/blob/main/spec.md#compose-file) and all the container images required by the to-be-started [services](https://github.com/compose-spec/compose-spec/blob/main/05-services.md).
 
 ## Stages
 
@@ -222,17 +222,17 @@ C4Component
 
 Both an application as well as the contained components are typically configurable, but can though provide some default values.
 
-### 2. Software Provisioning
+### 2. Software Staging
 
 ⁉️ _QUESTION_: what is the connection between `ApplicationDescription` and `ApplicationDeployment`?
 
 ℹ️ _NOTE_: stage completely out of scope as of now.
 
-⁉️ _QUESTION_: How to get an application provisioned, but not deployed?
+⁉️ _QUESTION_: How to get an application staged, but not deployed?
 
 ```mermaid
 C4Context
-    title Software Provisioning stage
+    title Software Staging stage
 
     UpdateLayoutConfig($c4BoundaryInRow="1", $c4ShapeInRow="2")
 
@@ -256,7 +256,7 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to provision an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to provision the workload artifacts.
+When a device gets the instruction to stage an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Orchestration Agent (WOA) interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to stage the workload artifacts.
 
 In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the workload artifacts.
 
@@ -264,11 +264,11 @@ On a Helm v3 deployment profile, the WOA will instruct the Helm API to install t
 
 On a Compose deployment profile, the WOA will instruct the corresponding middleware (remember that Compose workload artifacts are archives containing Compose configurations and other resources) to install the workload artifact.
 
-Following diagram shows the result of provisioning an application and the corresponding workload artifacts on a Helm v3 deployment profile (the result of `helm pull`).
+Following diagram shows the result of staging an application and the corresponding workload artifacts on a Helm v3 deployment profile (the result of `helm pull`).
 
 ```mermaid
 C4Component
-    title Application Provisioning: Helm v3 deployment profile
+    title Application Staging: Helm v3 deployment profile
 
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
@@ -301,11 +301,11 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-Following diagram shows the result of provisioning an application and the corresponding workload artifacts on a Compose deployment profile (the result of `compose pull`).
+Following diagram shows the result of staging an application and the corresponding workload artifacts on a Compose deployment profile (the result of `compose pull`).
 
 ```mermaid
 C4Component
-    title Application Provisioning: Compose deployment profile
+    title Application Staging: Compose deployment profile
 
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
