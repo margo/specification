@@ -62,7 +62,7 @@ They are managed and hosted separately:
 
 ⁉️ _QUESTION_: what is an application catalog? are there workload artifact catalogs? what's that?
 
-Following diagram shows the mentioned registries and resources (container images not being shown for simplicity):
+The following diagram shows the mentioned registries and resources (container images are not shown for simplicity):
 
 ```mermaid
 C4Component
