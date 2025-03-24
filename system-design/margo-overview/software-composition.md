@@ -301,7 +301,7 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-Following diagram shows the result of staging an application and the corresponding workload artifacts on a Compose deployment profile (the result of `compose pull`).
+The following diagram shows the result of staging an application and the corresponding workload artifacts on a Compose deployment profile (the result of `compose pull`).
 
 ```mermaid
 C4Component
