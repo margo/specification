@@ -406,7 +406,7 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-Following diagram shows the result of deploying an application and the corresponding workload artifacts on a Compose deployment profile (the result of `compose up`).
+The following diagram shows the result of deploying an application and the corresponding workload artifacts with a Compose deployment profile (the result of `compose up`).
 
 ```mermaid
 C4Component
