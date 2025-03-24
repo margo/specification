@@ -371,7 +371,7 @@ On a Helm v3 deployment profile, the Workload Fleet Management Agent will instru
 
 On a Compose deployment profile, the Workload Fleet Management Agent will instruct the Compose CLI to start the individual workloads.
 
-Following diagram shows the result of reaching the desired state for an application on a Helm v3 deployment profile (the result of `helm install`).
+The following diagram shows the result of reaching the desired state for an application with a Helm v3 deployment profile (the result of `helm install`).
 
 ```mermaid
 C4Component
