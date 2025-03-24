@@ -220,7 +220,7 @@ C4Component
     UpdateElementStyle(ca1, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
 ```
 
-Both an application as well as the contained components are typically configurable, but can though provide some default values.
+The application and contained components are typically configurable with the option of providing default values.
 
 ### 2. Software Staging
 
