@@ -125,7 +125,7 @@ The following diagram shows the relationship between the different resources of 
 
 ```mermaid
 C4Component
-    title Application Bundling: Example 1 - Helm and Compose workload profiles provided
+    title Application Bundling: Example 1 - Helm and Compose deployment profiles provided
 
     System_Boundary(ar, "Application Registry") {
         Container_Boundary(ab1, "Application Package 1") {
