@@ -173,7 +173,7 @@ C4Component
     UpdateElementStyle(cc1, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
 ```
 
-Following diagram shows the top-level structure of a Compose workload artifact:
+The following diagram shows the top-level structure of a Compose workload artifact:
 
 ```mermaid
 C4Component
