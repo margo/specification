@@ -121,7 +121,7 @@ C4Component
     UpdateElementStyle(cc2, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
 ```
 
-Following diagram shows the relationship between the different resources of an application bundle and their relationship with the required workload artifacts for a sample application provide Helm v3 and Compose deployment profiles:
+The following diagram shows the relationship between the different resources of an application bundle and the required workload artifacts for an example application providing both Helm v3 and Compose deployment profiles:
 
 ```mermaid
 C4Component
