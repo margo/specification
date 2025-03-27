@@ -24,7 +24,7 @@ The Cluster Leader Role within Margo describes devices that have the ability to 
 
 **Cluster Leader Functional Requirements:**
 
-- Host the "Workload Fleet Management Agent" Interface
+- Host the Workload Fleet Management Client
     - This enables the device with the functionality outlined within the [Workload Management](../margo-overview/workload-management-interface-overview.md) section of the specification
 - Enable management functionality via Kubernetes API
 - Host the following additional components:
@@ -32,7 +32,7 @@ The Cluster Leader Role within Margo describes devices that have the ability to 
     - OCI Container Runtime
     - OTEL Collector
     - Policy Agent
-    - Host Device Fleet Management Agent
+    - Host Device Fleet Management Client
         - > Note: this functionality is coming soon to the specification
 
 ## Cluster Worker Role Details
@@ -46,7 +46,7 @@ The Cluster Worker Role within Margo describes devices that have a limited amoun
     - OCI Container Runtime
     - OTEL Collector
     - Policy Agent
-    - Host Device Fleet Management Agent
+    - Host Device Fleet Management Client
         - > Note: this functionality is coming soon to the specification
 
 ## Standalone Cluster Role Details
@@ -65,11 +65,11 @@ The Standalone Device role represents a device that can host Margo Compliant Wor
 
 **Standalone Device functional requirements:**
 
-- Host the "Workload Fleet Management Agent" Interface
+- Host the Workload Fleet Management Client
     - This enables the device with the functionality outlined within the [Workload Management](../margo-overview/workload-management-interface-overview.md) section of the specification
 - Host the following additional components:
     - OCI Container Runtime
     - OTEL Collector
     - Policy Agent
-    - Host Device Fleet Management Agent
-        - **Note:** Out of scope for MVS1
+    - Host Device Fleet Management Client
+        - > Note: this functionality is coming soon to the specification

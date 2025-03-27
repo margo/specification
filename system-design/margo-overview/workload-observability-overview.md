@@ -11,13 +11,13 @@ Observability data is captured using the following signals:
 Margo's workload observability scope is limited to the following areas:
 
 - The device's container platform
-- The device's workload fleet management agent
+- The device's Workload Fleet Management Client
 - The compliant workloads deployed to the device.
 
 The workload observability data is intended to be used for purposes such as:
 
 - Monitoring the container platform's health and current state. This includes aspects such as memory, CPU, and disk usage as well as cluster, node, pod, and container availability, run state, and configured resource limits. This enables end users to make decisions such as whether or not a device can support more workloads, or has too many deployed.
-- Monitoring the workload fleet management agent and containerized workload's state to ensure it is running correctly, performing as expected and not consuming more resource than expected.
+- Monitoring the Workload Fleet Management Client and containerized workload's state to ensure it is running correctly, performing as expected and not consuming more resource than expected.
 - To assist with debugging/diagnostics for workloads encountering unexpected conditions impacting their ability to run as expected.
 
 Margo's workload observability is NOT intended to be used to monitor anything outside the device such as production processes, machinery, controllers, or sensors and should NOT be used for this purpose.

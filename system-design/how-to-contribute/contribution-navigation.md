@@ -22,7 +22,7 @@ Repository for Technical Working Group collaboration.
 ## Current Technical Focus Group(FG) Details
 Below are details regarding the current focus groups, leads, meeting information, associated Github Project, and associated markdowns within the specification repository. 
 
-### FG: Workload Fleet Management Agent Interfaces
+### FG: Workload Fleet Management API
 - Focus Group Lead
     - Armand Craig(ajcraig@rockwellautomation.com)
 * Focus Group Meeting Details

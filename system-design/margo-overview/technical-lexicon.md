@@ -49,7 +49,7 @@ Supported Workload manifests include:
 
 #### Edge Compute Device
 
-Edge Compute Devices are represented by compute hardware that runs within the customer's environment to enable the system with Margo Compliant Workloads. Edge Compute Devices host the Margo compliant management agents, container orchestration platform, and device operating systems. Margo Edge Compute Devices are defined by the roles they can facilitate within the Margo Architecture.
+Edge Compute Devices are represented by compute hardware that runs within the customer's environment to enable the system with Margo Compliant Workloads. Edge Compute Devices host the Margo compliant management clients, container orchestration platform, and device operating systems. Margo Edge Compute Devices are defined by the roles they can facilitate within the Margo Architecture.
 Supported Device roles are shown below:
 
 - Standalone Cluster(Leader and/or Worker)
@@ -64,17 +64,17 @@ Workload Fleet Manager(WFM) represents a software offering that enables End User
 
 List of Workloads within the Workload Fleet Management Software that the end user has access to deploy and manage.
 
-#### Workload Fleet Management Agent
+#### Workload Fleet Management Client
 
-The Workload Fleet Management Agent is a service that runs on the Edge Compute Device which communicates with the Workload Fleet Management Software to receive workloads and configurations to be applied on the Edge Compute Device.
+The Workload Fleet Management Client(WFC) is a service that runs on the Edge Compute Device which communicates with the Workload Fleet Management Software to receive workloads and configurations to be applied on the Edge Compute Device.
 
 #### Device Fleet Manager
 
 Device Fleet Manager(DFM) represents a software offering that enables End Users to onboard, delete, and maintain Edge Compute Devices within the ecosystem. This software is utilized in conjunction with the Workload Fleet Manager software to provide users with the features required to manage their edge device along with workloads running on them.  
 
-#### Device Fleet Management Agent
+#### Device Fleet Management Client
 
-The Device Fleet Management Agent is a service that runs on the Edge Compute Device which communicates with the Device Fleet Management Software to receive device configuration to be applied on the Edge Compute Device.
+The Device Fleet Management Client(DFC) is a service that runs on the Edge Compute Device which communicates with the Device Fleet Management Software to receive device configuration to be applied on the Edge Compute Device.
 
 #### Workload Marketplace
 
