@@ -53,7 +53,7 @@ Software at rest requires following resources:
 - some application resources: icon, license(s), release notes,...
 - some components: a well-specified way to distribute software supported by Margo specification (e.g. Helm Chart and container images, Compose Archive,...)
 
-They are managed and hosted separately:
+Application definitions, resources and components are managed and hosted separately:
 
 - application registries store application definitions and their associated application resources 
 - component registries store components
