@@ -67,22 +67,22 @@ C4Component
     title Application Bundling: applications-workload definitions relationship
 
     System_Boundary(ar, "Application Registry") {
-        Container_Boundary(ab2, "Application Package 1") {
+        System_Boundary(ab2, "Application Package 1") {
             Component(atb2, "Application Description 1", "ApplicationDescription", "YAML document")
             Component(o2, "...", "Others")
         }
 
-        Container_Boundary(ab1, "Application Package 2") {
+        System_Boundary(ab1, "Application Package 2") {
             Component(atb1, "Application Description 2", "ApplicationDescription", "YAML document")
             Component(o1, "...", "Others")
         }
         
-        Container_Boundary(ab4, "Application Package 3") {
+        System_Boundary(ab4, "Application Package 3") {
             Component(atb4, "Application Description 3", "ApplicationDescription", "YAML document")
             Component(o4, "...", "Others")
         }
 
-        Container_Boundary(ab3, "Application Package 4") {
+        System_Boundary(ab3, "Application Package 4") {
             Component(atb3, "Application Description 4", "ApplicationDescription", "YAML document")
             Component(o3, "...", "Others")
         }
@@ -126,10 +126,10 @@ C4Component
     title Application Bundling: Example 1 - Helm and Compose deployment profiles provided
 
     System_Boundary(ar, "Application Registry") {
-        Container_Boundary(ab1, "Application Package 1") {
+        System_Boundary(ab1, "Application Package 1") {
             Component(atb1, "Application Package", "Reference", "Git reference? OCI manifest?")
 
-            Container_Boundary(c99, "Resources") {
+            System_Boundary(c99, "Resources") {
                 Component(rd, "Resources", "Directory")
                 Component(ic, "Icon", "File(s)")
                 Component(lc, "License", "File(s)")
@@ -139,13 +139,13 @@ C4Component
                 Rel(rd, rn, "contains")
             }
 
-            Container_Boundary(c1, "Application Description") {
+            System_Boundary(c1, "Application Description") {
                 Component(ad, "Application Description", "ApplicationDescription", "YAML document")
-                Container_Boundary(c2, "deploymentProfiles") {
-                    Container_Boundary(c3, "helm.v3") {
+                System_Boundary(c2, "deploymentProfiles") {
+                    System_Boundary(c3, "helm.v3") {
                         Component(wldh1, "Helm WorkloadArtifact 1", "Section in YAML document")
                     }
-                    Container_Boundary(c4, "compose") {
+                    System_Boundary(c4, "compose") {
                         Component(wldc1, "Compose WorkloadArtifact 1", "Section in YAML document")
                     }
                 }
@@ -180,13 +180,13 @@ C4Component
     UpdateLayoutConfig($c4BoundaryInRow="1", $c4ShapeInRow="3")
 
     System_Boundary(ar, "Application Registry") {
-        Container_Boundary(ab1, "Application Package 1") {
+        System_Boundary(ab1, "Application Package 1") {
             Component(atb1, "Application Package", "Git reference? OCI manifest?")
 
-            Container_Boundary(c1, "Application Description") {
+            System_Boundary(c1, "Application Description") {
                 Component(ad, "Application Description", "YAML document")
-                Container_Boundary(c2, "deploymentProfiles") {
-                    Container_Boundary(c4, "compose") {
+                System_Boundary(c2, "deploymentProfiles") {
+                    System_Boundary(c4, "compose") {
                         Component(wldc1, "Compose WorkloadArtifact 1")
                     }
                 }
