@@ -18,17 +18,15 @@ The term [application](technical-lexicon.md#application) refers to all three sta
 
 The term [workload](technical-lexicon.md#workload) applies only to [running software](#3-software-deployment).
 
-The term [workload artifact](#workload-artifact) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
+The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
 
-#### Workload Artifact
+#### Component
 
-ℹ️ _NOTE_: new term proposal
+The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
 
-The term [workload artifact](#workload-artifact) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
+The instantiation of a component results in a [workload](#workload).
 
-The instantiation of a workload artifact results in a [workload](#workload).
-
-Workload artifacts might have different shapes depending on the workload type and on which stage is being considered:
+Components might have different shapes depending on the workload type and on which stage is being considered:
 
 1. Helm v3 as Packaged Software: a [Helm Chart](https://helm.sh/docs/topics/charts/)
 2. Helm v3 as Staged software: all container images required by the to-be-started pods.
@@ -53,14 +51,14 @@ Software at rest requires following resources:
 
 - an application definition: a Margo-specific way to distribute a composition of one or more components
 - some application resources: icon, license(s), release notes,...
-- some workload artifacts: a well-specified way to distribute software supported by Margo specification (e.g. Helm Chart and container images, Compose Archive,...)
+- some components: a well-specified way to distribute software supported by Margo specification (e.g. Helm Chart and container images, Compose Archive,...)
 
 They are managed and hosted separately:
 
 - application registries store application definitions and their associated application resources 
-- workload artifact registries store workload artifacts
+- component registries store components
 
-⁉️ _QUESTION_: what is an application catalog? are there workload artifact catalogs? what's that?
+⁉️ _QUESTION_: what is an application catalog? are there component catalogs? what's that?
 
 The following diagram shows the mentioned registries and resources (container images are not shown for simplicity):
 
@@ -90,12 +88,12 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Workload Artifact Registry") {
-        Component(hc1, "Helm Chart 1", "Workload Artifact")
-        Component(hc2, "Helm Chart 2", "Workload Artifact")
-        Component(hc3, "Helm Chart 3", "Workload Artifact")
-        Component(cc1, "Compose Archive 1", "Workload Artifact", "TARball")
-        Component(cc2, "Compose Archive 2", "Workload Artifact", "TARball")
+    System_Boundary(crr, "Component Registry") {
+        Component(hc1, "Helm Chart 1", "Component")
+        Component(hc2, "Helm Chart 2", "Component")
+        Component(hc3, "Helm Chart 3", "Component")
+        Component(cc1, "Compose Archive 1", "Component", "TARball")
+        Component(cc2, "Compose Archive 2", "Component", "TARball")
     }
 
     Rel(atb1, hc1, "refers")
@@ -121,7 +119,7 @@ C4Component
     UpdateElementStyle(cc2, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
 ```
 
-The following diagram shows the relationship between the different resources of an application bundle and the required workload artifacts for an example application providing both Helm v3 and Compose deployment profiles:
+The following diagram shows the relationship between the different resources of an application bundle and the required components for an example application providing both Helm v3 and Compose deployment profiles:
 
 ```mermaid
 C4Component
@@ -160,9 +158,9 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Workload Artifact Registry") {
-        Component(hc1, "Helm Chart 1", "Workload Artifact")
-        Component(cc1, "Compose Archive 1", "Workload Artifact", "TARball")
+    System_Boundary(crr, "Component Registry") {
+        Component(hc1, "Helm Chart 1", "Component")
+        Component(cc1, "Compose Archive 1", "Component", "TARball")
     }
 
     Rel(wldh1, hc1, "refers")
@@ -173,7 +171,7 @@ C4Component
     UpdateElementStyle(cc1, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
 ```
 
-The following diagram shows the top-level structure of a Compose workload artifact:
+The following diagram shows the top-level structure of a Compose component:
 
 ```mermaid
 C4Component
@@ -202,9 +200,9 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Workload Artifact Registry") {
+    System_Boundary(crr, "Component Registry") {
         Component(cc1, "Compose Configuration 1", "Compose")
-        Component(ca1, "Compose Archive 1", "Workload Artifact", "TARball")
+        Component(ca1, "Compose Archive 1", "Component", "TARball")
         Rel(ca1, cc1, "contains")
         UpdateRelStyle(cc1, cim1, $offsetY="50")
     }
@@ -243,7 +241,7 @@ C4Context
 
     Enterprise_Boundary(dev, "Device") {
         System(apdd, "ApplicationDeployment", "Application Deployment specification")
-        System(wls, "Workload Artifacts")
+        System(wls, "Components")
         System(appd, "ApplicationDescription", "Application Package")
         Rel(apdd, wls, "requires")
     }
@@ -256,15 +254,15 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to stage an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Fleet Management Agent interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to stage the workload artifacts.
+When a device gets the instruction to stage an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Fleet Management Agent interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to stage the components.
 
-In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the workload artifacts.
+In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the components.
 
 On a Helm v3 deployment profile, the Workload Fleet Management Agent will instruct the Helm API to install the specified Helm Charts.
 
-On a Compose deployment profile, the Workload Fleet Management Agent will instruct the corresponding middleware (remember that Compose workload artifacts are archives containing Compose configurations and other resources) to install the workload artifact.
+On a Compose deployment profile, the Workload Fleet Management Agent will instruct the corresponding middleware (remember that Compose components are archives containing Compose configurations and other resources) to install the component.
 
-Following diagram shows the result of staging an application and the corresponding workload artifacts on a Helm v3 deployment profile (the result of `helm pull`).
+Following diagram shows the result of staging an application and the corresponding components on a Helm v3 deployment profile (the result of `helm pull`).
 
 ```mermaid
 C4Component
@@ -301,7 +299,7 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-The following diagram shows the result of staging an application and the corresponding workload artifacts on a Compose deployment profile (the result of `compose pull`).
+The following diagram shows the result of staging an application and the corresponding components on a Compose deployment profile (the result of `compose pull`).
 
 ```mermaid
 C4Component
@@ -406,7 +404,7 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-The following diagram shows the result of deploying an application and the corresponding workload artifacts with a Compose deployment profile (the result of `compose up`).
+The following diagram shows the result of deploying an application and the corresponding components with a Compose deployment profile (the result of `compose up`).
 
 ```mermaid
 C4Component
