@@ -67,23 +67,23 @@ C4Component
     title Application Bundling: applications-workload definitions relationship
 
     System_Boundary(ar, "Application Registry") {
-        Container_Boundary(ab2, "Application Package 2") {
-            Component(atb2, "Application Description 2", "ApplicationDescription", "YAML document")
+        Container_Boundary(ab2, "Application Package 1") {
+            Component(atb2, "Application Description 1", "ApplicationDescription", "YAML document")
             Component(o2, "...", "Others")
         }
 
-        Container_Boundary(ab1, "Application Package 1") {
-            Component(atb1, "Application Description 1", "ApplicationDescription", "YAML document")
+        Container_Boundary(ab1, "Application Package 2") {
+            Component(atb1, "Application Description 2", "ApplicationDescription", "YAML document")
             Component(o1, "...", "Others")
         }
         
-        Container_Boundary(ab4, "Application Package 4") {
-            Component(atb4, "Application Description 4", "ApplicationDescription", "YAML document")
+        Container_Boundary(ab4, "Application Package 3") {
+            Component(atb4, "Application Description 3", "ApplicationDescription", "YAML document")
             Component(o4, "...", "Others")
         }
 
-        Container_Boundary(ab3, "Application Package 3") {
-            Component(atb3, "Application Description 3", "ApplicationDescription", "YAML document")
+        Container_Boundary(ab3, "Application Package 4") {
+            Component(atb3, "Application Description 4", "ApplicationDescription", "YAML document")
             Component(o3, "...", "Others")
         }
     }
