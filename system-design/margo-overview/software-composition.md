@@ -236,17 +236,19 @@ C4Context
     Enterprise_Boundary(be, "Backend") {
         System(apdb, "ApplicationDeployment", "Application Deployment specification")
         System(appb, "ApplicationDescription", "Application Package")
+        System(wlb, "Components")
+        Rel(apdb, wlb, "requires")
+        Rel(appb, wlb, "provides")
     }
 
     Enterprise_Boundary(dev, "Device") {
         System(apdd, "ApplicationDeployment", "Application Deployment specification")
-        System(wls, "Components")
-        System(appd, "ApplicationDescription", "Application Package")
-        Rel(apdd, wls, "requires")
+        System(wld, "Components")
+        Rel(apdd, wlb, "requires")
     }
 
     BiRel(apdb, apdd, "same")
-    BiRel(appb, appd, "same")
+    BiRel(wlb, wld, "same")
     UpdateElementStyle(appb, $fontColor="black", $bgColor="blue", $borderColor="grey")
     UpdateElementStyle(appd, $fontColor="black", $bgColor="blue", $borderColor="grey")
     UpdateElementStyle(apdb, $fontColor="black", $bgColor="green", $borderColor="grey")
@@ -280,7 +282,7 @@ C4Component
         }
 
         System_Boundary(fs1, "File System") {
-            System_Boundary(doc1, "Docker Engine") {
+            System_Boundary(doc1, "Container Engine") {
                 Component(cim1, "Container Image 1")
                 Component(cim2, "Container Image 2")
                 Component(cim3, "Container Image 3")
@@ -314,7 +316,7 @@ C4Component
         System_Boundary(fs1, "File System") {
             Component(cc1, "Compose Configuration 1")
             Component(cc2, "Compose Configuration 2")
-            System_Boundary(doc1, "Docker Engine") {
+            System_Boundary(doc1, "Container Engine") {
                 Component(cim1, "Container Image 1")
                 Component(cim2, "Container Image 2")
                 Component(cim3, "Container Image 3")
@@ -419,7 +421,7 @@ C4Component
         System_Boundary(fs1, "File System") {
             Component(cc1, "Compose Configuration 1")
             Component(cc2, "Compose Configuration 2")
-            System_Boundary(doc1, "Docker Engine") {
+            System_Boundary(doc1, "Container Engine") {
                 Component(srv1, "Service 1")
                 Component(srv2, "Service 2")
                 Component(srv3, "Service 3")
