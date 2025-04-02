@@ -55,10 +55,8 @@ Software at rest requires following resources:
 
 Application definitions, resources and components are managed and hosted separately:
 
-- application registries store application definitions and their associated application resources 
+- application registries store application definitions and their associated application resources (as of now application registries shall be git repositories) 
 - component registries store components
-
-⁉️ _QUESTION_: what is an application catalog? are there component catalogs? what's that?
 
 The following diagram shows the mentioned registries and resources (container images are not shown for simplicity):
 
@@ -66,7 +64,7 @@ The following diagram shows the mentioned registries and resources (container im
 C4Component
     title Application Bundling: applications-workload definitions relationship
 
-    System_Boundary(ar, "Application Registry") {
+    System_Boundary(ar, "Application Registry (Git)") {
         System_Boundary(ab2, "Application Package 1") {
             Component(atb2, "Application Description 1", "ApplicationDescription", "YAML document")
             Component(o2, "...", "Others")
@@ -124,7 +122,7 @@ The following diagram shows the relationship between the different resources of 
 C4Component
     title Application Bundling: Example 1 - Helm and Compose deployment profiles provided
 
-    System_Boundary(ar, "Application Registry") {
+    System_Boundary(ar, "Application Registry (Git)") {
         System_Boundary(ab1, "Application Package 1") {
             Component(atb1, "Application Package", "Reference", "Git reference? OCI manifest?")
 
@@ -178,7 +176,7 @@ C4Component
 
     UpdateLayoutConfig($c4BoundaryInRow="1", $c4ShapeInRow="3")
 
-    System_Boundary(ar, "Application Registry") {
+    System_Boundary(ar, "Application Registry (Git)") {
         System_Boundary(ab1, "Application Package 1") {
             Component(atb1, "Application Package", "Git reference? OCI manifest?")
 
