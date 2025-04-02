@@ -24,7 +24,7 @@ The term [component](#component) applies to the resources available in [packaged
 
 The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
 
-The instantiation of a component results in a [workload](#workload).
+The deployment of a component results in one to many [workloads](#workload).
 
 Components might have different shapes depending on the workload type and on which stage is being considered:
 
@@ -96,7 +96,6 @@ C4Component
         Component(cc2, "Compose Archive 2", "Component", "TARball")
     }
 
-    Rel(atb1, hc1, "refers")
     Rel(atb1, hc2, "refers")
     Rel(atb1, cc1, "refers")
 
