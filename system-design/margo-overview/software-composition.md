@@ -26,6 +26,8 @@ The term [component](#component) applies to the resources available in [packaged
 
 The deployment of a component results in one to many [workloads](#workload).
 
+Components are made available over Componet Catalogs (as of now still called [Workload Catalogs](https://specification.margo.org/margo-overview/technical-lexicon/#workload-catalog)).
+
 Components might have different shapes depending on the workload type and on which stage is being considered:
 
 1. Helm v3 as Packaged Software: a [Helm Chart](https://helm.sh/docs/topics/charts/)
@@ -86,7 +88,7 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Component Registry") {
+    System_Boundary(crr, "Component Catalog") {
         Component(hc1, "Helm Chart 1", "Component")
         Component(hc2, "Helm Chart 2", "Component")
         Component(hc3, "Helm Chart 3", "Component")
@@ -155,7 +157,7 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Component Registry") {
+    System_Boundary(crr, "Component Catalog") {
         Component(hc1, "Helm Chart 1", "Component")
         Component(cc1, "Compose Archive 1", "Component", "TARball")
     }
@@ -172,7 +174,7 @@ The following diagram shows the top-level structure of a Compose component:
 
 ```mermaid
 C4Component
-    title Application Bundling: Example 2 - focus on Worload Definition registry
+    title Application Bundling: Example 2 - focus on Component Catalog
 
     UpdateLayoutConfig($c4BoundaryInRow="1", $c4ShapeInRow="3")
 
@@ -197,7 +199,7 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Component Registry") {
+    System_Boundary(crr, "Component Catalog") {
         Component(cc1, "Compose Configuration 1", "Compose")
         Component(ca1, "Compose Archive 1", "Component", "TARball")
         Rel(ca1, cc1, "contains")
