@@ -2,27 +2,28 @@
 
 Applications can be found in completely different stages:
 
-1. "Application Packaging": application has been prepared and made ready for staging.
-2. "Application Staging": application is set up, configured, and made available for use to the device, but has not yet been deployed (started) to be used.
-3. "Application Deployment" (AKA Runtime): application has been made available and accessible on the device.
+1. "Application Packaging": application has been prepared and made ready for deployment.
+2. "Application Deployment" (AKA Runtime): application has been made available and accessible on the device.
 
 Distinguishing which stage terminology refers to is important to understand the scope of following definitions.
+
+ℹ️ _Note_: Logically there is another intermediate stage: "Application Staging". This is the stage in which the application is set up, configured, and made available for use to the device, but has not yet been deployed (started) to be used. As of now this stage is out of scope in the Margo specification and not being considered, because some of the providers (like the Helm one) do not provide any mechanisms to manage it.
 
 ## Terminology Scoping
 
 #### Application
 
-The term [application](technical-lexicon.md#application) refers to all three stages.
+The term [application](technical-lexicon.md#application) refers to all stages.
 
 #### Workload
 
-The term [workload](technical-lexicon.md#workload) applies only to [running software](#3-software-deployment).
+The term [workload](technical-lexicon.md#workload) applies only to [running software](#2-software-deployment).
 
-The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
+The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) for the workload to run.
 
 #### Component
 
-The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) and [staged software](#2-software-staging) for the workload to run.
+The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) for the workload to run.
 
 The deployment of a component results in one to many [workloads](#workload).
 
@@ -219,121 +220,7 @@ C4Component
 
 The application and contained components are typically configurable with the option of providing default values.
 
-### 2. Software Staging
-
-⁉️ _QUESTION_: what is the connection between `ApplicationDescription` and `ApplicationDeployment`?
-
-ℹ️ _NOTE_: stage completely out of scope as of now.
-
-⁉️ _QUESTION_: How to get an application staged, but not deployed?
-
-```mermaid
-C4Context
-    title Software Staging stage
-
-    UpdateLayoutConfig($c4BoundaryInRow="1", $c4ShapeInRow="2")
-
-    Enterprise_Boundary(be, "Backend") {
-        System(apdb, "ApplicationDeployment", "Application Deployment specification")
-        System(appb, "ApplicationDescription", "Application Package")
-        System(wlb, "Components")
-        Rel(apdb, wlb, "requires")
-        Rel(appb, wlb, "provides")
-    }
-
-    Enterprise_Boundary(dev, "Device") {
-        System(apdd, "ApplicationDeployment", "Application Deployment specification")
-        System(wld, "Components")
-        Rel(apdd, wlb, "requires")
-    }
-
-    BiRel(apdb, apdd, "same")
-    BiRel(wlb, wld, "same")
-    UpdateElementStyle(appb, $fontColor="black", $bgColor="blue", $borderColor="grey")
-    UpdateElementStyle(appd, $fontColor="black", $bgColor="blue", $borderColor="grey")
-    UpdateElementStyle(apdb, $fontColor="black", $bgColor="green", $borderColor="grey")
-    UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
-```
-
-When a device gets the instruction to stage an application (indirectly over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Fleet Management Agent interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) (e.g. Helm client) to stage the components.
-
-In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the components.
-
-On a Helm v3 deployment profile, the Workload Fleet Management Agent will instruct the Helm API to install the specified Helm Charts.
-
-On a Compose deployment profile, the Workload Fleet Management Agent will instruct the corresponding middleware (remember that Compose components are archives containing Compose configurations and other resources) to install the component.
-
-Following diagram shows the result of staging an application and the corresponding components on a Helm v3 deployment profile (the result of `helm pull`).
-
-```mermaid
-C4Component
-    title Application Staging: Helm v3 deployment profile
-
-    UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
-
-    System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Fleet Management Agent") {
-            Component(atb1, "ApplicationDeployment 1", "ApplicationDeployment", "YAML document")
-        }
-
-        System_Boundary(hel1, "Helm") {
-            Component(hc1, "Helm Chart File 1", "YAML file")
-            Component(hc2, "Helm Chart File 2", "YAML file")
-        }
-
-        System_Boundary(fs1, "File System") {
-            System_Boundary(doc1, "Container Engine") {
-                Component(cim1, "Container Image 1")
-                Component(cim2, "Container Image 2")
-                Component(cim3, "Container Image 3")
-            }
-        }
-    }
-
-    Rel(atb1, hc1, "refers")
-    Rel(hc1, cim1, "refers")
-    Rel(atb1, hc2, "refers")
-    Rel(hc2, cim1, "refers")
-    Rel(hc2, cim2, "refers")
-    Rel(hc2, cim3, "refers")
-
-    UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
-```
-
-The following diagram shows the result of staging an application and the corresponding components on a Compose deployment profile (the result of `compose pull`).
-
-```mermaid
-C4Component
-    title Application Staging: Compose deployment profile
-
-    UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
-
-    System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Fleet Management Agent") {
-            Component(atb1, "ApplicationDeployment 1", "ApplicationDeployment", "YAML document")
-        }
-
-        System_Boundary(fs1, "File System") {
-            Component(cc1, "Compose Configuration 1")
-            Component(cc2, "Compose Configuration 2")
-            System_Boundary(doc1, "Container Engine") {
-                Component(cim1, "Container Image 1")
-                Component(cim2, "Container Image 2")
-                Component(cim3, "Container Image 3")
-            }
-        }
-    }
-
-    Rel(atb1, cc1, "refers")
-    Rel(atb1, cc2, "refers")
-    Rel(cc1, cim1, "refers")
-    Rel(cc2, cim2, "refers")
-    Rel(cc2, cim3, "refers")
-
-    UpdateElementStyle(atb1, $fontColor="white", $bgColor="green", $borderColor="grey")
-```
-
-### 3. Software Deployment
+### 2. Software Deployment
 
 ```mermaid
 C4Context
