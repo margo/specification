@@ -233,17 +233,19 @@ C4Context
     Enterprise_Boundary(be, "Backend") {
         System(apdb, "ApplicationDeployment", "Application Deployment specification")
         System(appb, "ApplicationDescription", "Application Package")
+        System(cmp, "Component")
+        Rel(appb, apdb, "deployment")
+        Rel(appb, cmp, "requires")
     }
 
     Enterprise_Boundary(dev, "Device") {
         System(apdd, "ApplicationDeployment", "Application Deployment specification")
         System(wls, "Workload")
-        System(appd, "ApplicationDescription", "Application Package")
         Rel(apdd, wls, "configures")
     }
 
     BiRel(apdb, apdd, "same")
-    BiRel(appb, appd, "same")
+    Rel(cmp, wls, "instantiation")
     UpdateElementStyle(appb, $fontColor="black", $bgColor="blue", $borderColor="grey")
     UpdateElementStyle(appd, $fontColor="black", $bgColor="blue", $borderColor="grey")
     UpdateElementStyle(apdb, $fontColor="black", $bgColor="green", $borderColor="grey")
@@ -255,9 +257,9 @@ That way all [Workloads][workload] needed for an [Application][application] shou
 
 In this stage the [providers][provider-model] are responsible for managing the individual [Workloads][workload].
 
-On a Helm v3 [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] will instruct the Helm API to start the individual Helm Charts.
+On a Helm v3 [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] would probably instruct the Helm API to start the individual Helm Charts.
 
-On a Compose [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] will instruct the Compose CLI to start the individual [Workloads][workload].
+On a Compose [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] would probably instruct the Compose CLI to start the individual [Workloads][workload].
 
 The following diagram shows the result of reaching the desired state for an [Application][application] with a Helm v3 [Deployment Profiles][deployment-profile] (the result of `helm install`).
 
