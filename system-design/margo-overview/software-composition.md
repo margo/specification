@@ -1,6 +1,6 @@
 # Software Composition
 
-Applications can be found in completely different stages:
+[Applications][application] can be found in completely different stages:
 
 1. "Application Packaging": application has been prepared and made ready for deployment.
 2. "Application Deployment" (AKA Runtime): application has been made available and accessible on the device.
@@ -11,30 +11,32 @@ Distinguishing which stage terminology refers to is important to understand the 
 
 ## Terminology Scoping
 
+This section does not declare terminology, that is the task of the [Technical Lexicon](technical-lexicon.md), but rather tries to scope some of the terms to the above mentioned stages.
+
 #### Application
 
-The term [application](technical-lexicon.md#application) refers to all stages.
+The term [application][application] applies to all stages.
 
 #### Workload
 
-The term [workload](technical-lexicon.md#workload) applies only to [running software](#2-software-deployment).
+The term [Workload][workload] applies only to [running software](#2-software-deployment).
 
-The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) for the workload to run.
+[Workloads][workload] are the result of deploying [Components][component].
 
 #### Component
 
-The term [component](#component) applies to the resources available in [packaged software](#1-software-packaging) for the workload to run.
+The term [Component][component] applies to the resources available in [packaged software](#1-software-packaging) that get instantiated into [Workloads][workload].
 
-The deployment of a component results in one to many [workloads](#workload).
+Some providers might support that multiple [Workload][workload] replicas are instantiated from a single [Component][component].
 
-Components are made available over Componet Catalogs (as of now still called [Workload Catalogs](https://specification.margo.org/margo-overview/technical-lexicon/#workload-catalog)).
+[Components][component] are made available over [Component Catalogs][component-catalog].
 
-Components might have different shapes depending on the workload type and on which stage is being considered:
+[Components][component] might have different shapes depending on their type and on which stage is being considered:
 
-1. Helm v3 as Packaged Software: a [Helm Chart](https://helm.sh/docs/topics/charts/)
-2. Helm v3 as Staged software: all container images required by the to-be-started pods.
-3. Compose as Packaged Software: a [Compose Archive](../app-interoperability/application-package-definition.md)
-4. Compose as Staged software: a so-called [Compose file](https://github.com/compose-spec/compose-spec/blob/main/spec.md#compose-file) and all the container images required by the to-be-started [services](https://github.com/compose-spec/compose-spec/blob/main/05-services.md).
+1. Helm v3 as [Component][component]: a [Helm Chart](https://helm.sh/docs/topics/charts/)
+2. Helm v3 as [Workload][workload]: all container images required by the to-be-started pods.
+3. Compose as [Component][component]: a [Compose Archive][compose-archive]
+4. Compose as [Workload][workload]: a so-called [Compose file](https://github.com/compose-spec/compose-spec/blob/main/spec.md#compose-file) and all the container images required by the to-be-started [services](https://github.com/compose-spec/compose-spec/blob/main/05-services.md).
 
 ## Stages
 
@@ -52,14 +54,14 @@ C4Context
 
 Software at rest requires following resources:
 
-- an application definition: a Margo-specific way to distribute a composition of one or more components
+- an [Application Description][application-description]: a Margo-specific way to distribute a composition of one or more [Component][component]
 - some application resources: icon, license(s), release notes,...
-- some components: a well-specified way to distribute software supported by Margo specification (e.g. Helm Chart and container images, Compose Archive,...)
+- some [Component][component]: a well-specified way to distribute software supported by Margo specification (e.g. Helm Chart and container images, Compose Archive,...)
 
-Application definitions, resources and components are managed and hosted separately:
+[Application Descriptions][application-description], resources and [Components][component] are managed and hosted separately:
 
-- application registries store application definitions and their associated application resources (as of now application registries shall be git repositories) 
-- component registries store components
+- [Application Registries][application-registry] store [Application Descriptions][application-description] and their associated application resources (as of now application registries SHALL be git repositories) 
+- [Component Registries][component-registry] store components
 
 The following diagram shows the mentioned registries and resources (container images are not shown for simplicity):
 
@@ -119,7 +121,7 @@ C4Component
     UpdateElementStyle(cc2, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
 ```
 
-The following diagram shows the relationship between the different resources of an application bundle and the required components for an example application providing both Helm v3 and Compose deployment profiles:
+The following diagram shows the relationship between the different resources of an [Application][application] bundle and the required [Components][component] for an example application providing both Helm v3 and Compose [Deployment Profiles][deployment-profile]:
 
 ```mermaid
 C4Component
@@ -248,16 +250,16 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to run an application (over a desired-state specified with an [`ApplicationDeployment` object](https://specification.margo.org/margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment#applicationdeployment-definition)), its Workload Fleet Management Agent interacts with the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model).
-That way all workloads needed for an application should get started and the desired state should be reached.
+When a device gets the instruction to run an [Application][application] (over a desired-state specified with an [`ApplicationDeployment` object][deployment-definition]), its [Workload Fleet Management Agent][wfma] interacts with the [providers][provider-model].
+That way all [Workloads][workload] needed for an [Application][application] should get started and the desired state should be reached.
 
-In this stage the [providers](https://specification.margo.org/margo-overview/technical-lexicon/#provider-model) are responsible for managing the individual workloads.
+In this stage the [providers][provider-model] are responsible for managing the individual [Workloads][workload].
 
-On a Helm v3 deployment profile, the Workload Fleet Management Agent will instruct the Helm API to start the individual Helm Charts.
+On a Helm v3 [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] will instruct the Helm API to start the individual Helm Charts.
 
-On a Compose deployment profile, the Workload Fleet Management Agent will instruct the Compose CLI to start the individual workloads.
+On a Compose [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] will instruct the Compose CLI to start the individual [Workloads][workload].
 
-The following diagram shows the result of reaching the desired state for an application with a Helm v3 deployment profile (the result of `helm install`).
+The following diagram shows the result of reaching the desired state for an [Application][application] with a Helm v3 [Deployment Profiles][deployment-profile] (the result of `helm install`).
 
 ```mermaid
 C4Component
@@ -292,7 +294,7 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-The following diagram shows the result of deploying an application and the corresponding components with a Compose deployment profile (the result of `compose up`).
+The following diagram shows the result of deploying an [Application][application] and the corresponding [Components][component] with a Compose [Deployment Profiles][deployment-profile] (the result of `compose up`).
 
 ```mermaid
 C4Component
@@ -324,3 +326,15 @@ C4Component
 
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
+
+[application-description]: ../margo-api-reference/workload-api/application-package-api/application-description.md
+[compose-archive]: ../app-interoperability/application-package-definition.md
+[application-registry]: technical-lexicon.md#application-registry
+[component]: technical-lexicon.md#component
+[workload]: technical-lexicon.md#workload
+[application]: technical-lexicon.md#application
+[component-catalog]: technical-lexicon.md#component-catalog
+[deployment-definition]: ../margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment.md#applicationdeployment-definition
+[provider-model]: technical-lexicon.md/#provider-model
+[wfma]: technical-lexicon/#workload-fleet-management-agent
+[deployment-profile]: margo-api-reference/workload-api/application-package-api/application-description.md/#deploymentprofile-attributes
