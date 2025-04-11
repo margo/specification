@@ -40,7 +40,7 @@ sequenceDiagram
     loop Continuous check for new deployment specifications
         WorkloadFleetManagementClient->>WorkloadFleetManager: Queries for new deployment spec(s)
         end
-    WorkloadFleetManager->>WorkloadManagementClient: Pulls deployment specification(s)
+    WorkloadFleetManager->>WorkloadFleetManagementClient: Pulls deployment specification(s)
     WorkloadManagementClient->>WorkloadManifestRepo: Pulls Workload Manifest(Helm)
     %% Need to include authentication to the app devs repository
     WorkloadManagementClient->>ContainerOrchestrator: Provides Workload Manifest
