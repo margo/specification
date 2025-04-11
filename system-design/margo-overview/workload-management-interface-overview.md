@@ -38,7 +38,7 @@ sequenceDiagram
     WorkloadFleetManager-->>WorkloadFleetManager: Create & Store new deployment specification(s)
     activate WorkloadFleetManagementClient
     loop Continuous check for new deployment specifications
-        WorkloadManagementClient->>WorkloadFleetManager: Queries for new deployment spec(s)
+        WorkloadFleetManagementClient->>WorkloadFleetManager: Queries for new deployment spec(s)
         end
     WorkloadFleetManager->>WorkloadManagementClient: Pulls deployment specification(s)
     WorkloadManagementClient->>WorkloadManifestRepo: Pulls Workload Manifest(Helm)
