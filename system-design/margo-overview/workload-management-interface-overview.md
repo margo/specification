@@ -58,7 +58,7 @@ sequenceDiagram
         WorkloadFleetManagementClient->>WorkloadFleetManager: Component 2 Status update
         WorkloadFleetManagementClient->>WorkloadFleetManager: Component n Status update
         end
-    WorkloadManagementClient->>WorkloadFleetManager: Provides Full Deployment Status
+    WorkloadFleetManagementClient->>WorkloadFleetManager: Provides Full Deployment Status
     deactivate WorkloadManagementClient
     WorkloadFleetManager->>WorkloadFleetManagerFrontEnd: Updates Web UI Full Deployment Status
     WorkloadFleetManagerFrontEnd->>EndUser: EndUser Receives Final Update
