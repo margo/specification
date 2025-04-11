@@ -36,7 +36,7 @@ sequenceDiagram
     EndUser->>WorkloadFleetManagerFrontEnd: Select Device(s) to install application on
     EndUser->>WorkloadFleetManagerFrontEnd: Answer configurable questions to be applied to workload(s)
     WorkloadFleetManager-->>WorkloadFleetManager: Create & Store new deployment specification(s)
-    activate WorkloadManagementClient
+    activate WorkloadFleetManagementClient
     loop Continuous check for new deployment specifications
         WorkloadManagementClient->>WorkloadFleetManager: Queries for new deployment spec(s)
         end
