@@ -19,7 +19,7 @@ sequenceDiagram
        participant DeviceDeploymentspecificationRepo
     participant ContainerOrchestrator
     participant ContainerRuntime
-    participant WorkloadManagementClient
+    participant WorkloadFleetManagementClient
  
     autonumber
     EndUser->>WorkloadFleetManagerFrontEnd: Visits App Catalog Page
