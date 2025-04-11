@@ -56,7 +56,7 @@ sequenceDiagram
     loop
         WorkloadFleetManagementClient->>WorkloadFleetManager: Component 1 Status update
         WorkloadFleetManagementClient->>WorkloadFleetManager: Component 2 Status update
-        WorkloadManagementClient->>WorkloadFleetManager: Component n Status update
+        WorkloadFleetManagementClient->>WorkloadFleetManager: Component n Status update
         end
     WorkloadManagementClient->>WorkloadFleetManager: Provides Full Deployment Status
     deactivate WorkloadManagementClient
