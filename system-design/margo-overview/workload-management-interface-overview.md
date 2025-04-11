@@ -54,7 +54,7 @@ sequenceDiagram
     activate WorkloadManagementClient
     WorkloadManagementClient->>WorkloadFleetManager: Provides Component Status Updates
     loop
-        WorkloadManagementClient->>WorkloadFleetManager: Component 1 Status update
+        WorkloadFleetManagementClient->>WorkloadFleetManager: Component 1 Status update
         WorkloadManagementClient->>WorkloadFleetManager: Component 2 Status update
         WorkloadManagementClient->>WorkloadFleetManager: Component n Status update
         end
