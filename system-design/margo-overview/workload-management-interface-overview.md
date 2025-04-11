@@ -41,7 +41,7 @@ sequenceDiagram
         WorkloadFleetManagementClient->>WorkloadFleetManager: Queries for new deployment spec(s)
         end
     WorkloadFleetManager->>WorkloadFleetManagementClient: Pulls deployment specification(s)
-    WorkloadManagementClient->>WorkloadManifestRepo: Pulls Workload Manifest(Helm)
+    WorkloadFleetManagementClient->>WorkloadManifestRepo: Pulls Workload Manifest(Helm)
     %% Need to include authentication to the app devs repository
     WorkloadManagementClient->>ContainerOrchestrator: Provides Workload Manifest
     deactivate WorkloadManagementClient
