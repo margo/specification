@@ -10,13 +10,19 @@ The main goals of the management interface are as follows:
 ## Workload Deployment Sequence Diagram
 
 ```mermaid
+---
+config:
+    layout: elk
+
+
+---
 sequenceDiagram
     actor EndUser
     participant WorkloadFleetManagerFrontEnd
     participant WorkloadManifestRepo
     participant WorkloadContainerRepo
     participant WorkloadFleetManager
-       participant DeviceDeploymentspecificationRepo
+    participant DeviceDeploymentspecificationRepo
     participant ContainerOrchestrator
     participant ContainerRuntime
     participant WorkloadFleetManagementClient
@@ -43,16 +49,16 @@ sequenceDiagram
     WorkloadFleetManager->>WorkloadFleetManagementClient: Pulls deployment specification(s)
     WorkloadFleetManagementClient->>WorkloadManifestRepo: Pulls Workload Manifest(Helm)
     %% Need to include authentication to the app devs repository
-    WorkloadManagementClient->>ContainerOrchestrator: Provides Workload Manifest
-    deactivate WorkloadManagementClient
+    WorkloadFleetManagementClient->>ContainerOrchestrator: Provides Workload Manifest
+    deactivate WorkloadFleetManagementClient
     loop
         ContainerOrchestrator->>ContainerRuntime: Initiates workload installation component 1
         ContainerOrchestrator->>ContainerRuntime: Initiates workload installation component 2
         ContainerOrchestrator->>ContainerRuntime: Initiates workload installation component n
         end
     ContainerRuntime->>WorkloadContainerRepo: Pulls OCI Containers
-    activate WorkloadManagementClient
-    WorkloadManagementClient->>WorkloadFleetManager: Provides Component Status Updates
+    activate WorkloadFleetManagementClient
+    WorkloadFleetManagementClient->>WorkloadFleetManager: Provides Component Status Updates
     loop
         WorkloadFleetManagementClient->>WorkloadFleetManager: Component 1 Status update
         WorkloadFleetManagementClient->>WorkloadFleetManager: Component 2 Status update
