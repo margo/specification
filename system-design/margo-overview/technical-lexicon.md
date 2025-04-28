@@ -37,15 +37,20 @@ Current providers supported:
 
 #### Application
 
-An application is a collection of one, or more, [Workloads](#workload) bundled together in an [application package](../app-interoperability/application-package-definition.md).
+An application is a collection of one, or more, [Components](#component), as defined by an Application Description, and bundled within an [application package](#application-package).
+
+#### Application Package
+
+An Application Package is used to distribute an [application](#application).
+According the [specification](../app-interoperability/application-package-definition.md), it is a folder in a Git repository referenced by URL, which contains the Application Description (that refers to contained and deployable Components) as well as associated resources (e.g., icons).
 
 #### Component
 
-A Component is a piece of software tailored to run within a customer's environment on a [Edge Compute Device](#edge-compute-device). A Component within Margo consists of a description file, manifest(s), along with one or more source code containers.
-Supported Component manifests include:
+A Component is a piece of software tailored to be deployed within a customer's environment on an [Edge Compute Device](#edge-compute-device).
+Currently Margo-supported components are:
 
 - Helm Chart
-- Compose file
+- Compose Archive
 
 #### Workload
 
@@ -66,22 +71,26 @@ Workload Fleet Manager (WFM) represents a software offering that enables End Use
 
 ##### Application Registry
 
-Service that can be used by [Application](#application) developers to make their applications available.
-As of now Application Registries MUST be Git repositories.
+An Application Registry holds [Application](#application) Packages.
+It is used by developers to make their applications available.
+An Application Registries MUST be a Git repository.
 
 [Workload Fleet Managers](#workload-fleet-manager) cannot access Application Registries directly, they can only access [Application Catalogs](#application-catalog).
 
 ##### Application Catalog
 
-List of [Applications](#capplication) available for the [Workload Fleet Manager](#workload-fleet-manager) to deploy them to [Edge Compute Devices](#edge-compute-device).
+An Application Catalog holds Application Packages that were preselected to be install-ready for the edge environment of a [Workload Fleet Manager](#workload-fleet-manager) to deploy them to managed [Edge Compute Devices](#edge-compute-device).
 
 An Application Catalog obtains the offered [Applications](#application) from one or more [Application Registries](#application-registry).
 
 An Application Catalog MIGHT be optionally implemented as an [Application Registry](#application-registry).
 
-##### Component Catalog
+##### Component Registry
 
-List of [Components](#component) within the [Workload Fleet Manager](#workload-fleet-manager) that the end user has access to deploy and manage.
+A Component Registry holds [Components](#component) (e.g., Helm Charts and Compose Archives) for Application Packages.
+When an application gets deployed through a [Workload Fleet Manager](#workload-fleet-manager), the components (linked within an Application Description) are requested from the Component Registry.
+
+This can be implemented, for example, as an OCI Registry.
 
 #### Workload Fleet Management Client
 

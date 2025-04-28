@@ -7,7 +7,9 @@
 
 Distinguishing which stage terminology refers to is important to understand the scope of following definitions.
 
-ℹ️ _Note_: Logically there is another intermediate stage: "Application Staging". This is the stage in which the application is set up, configured, and made available for use to the device, but has not yet been deployed (started) to be used. As of now this stage is out of scope in the Margo specification and not being considered, because some of the providers (like the Helm one) do not provide any mechanisms to manage it.
+ℹ️ _Note_: Logically there is another intermediate stage: "Application Staging".
+This is the stage in which the application is set up, configured, and made available for use to the device, but has not yet been deployed (started) to be used.
+As of now this stage is out of scope in the Margo specification and not being considered, because some of the [providers (like the Helm one)][provider-model] do not provide any mechanisms to manage it.
 
 ## Terminology Scoping
 
@@ -25,17 +27,17 @@ The term [Workload][workload] applies only to [running software](#2-software-dep
 
 #### Component
 
-The term [Component][component] applies to the resources available in [packaged software](#1-software-packaging) that get instantiated into [Workloads][workload].
+The term [Component][component] applies to the resources available in [packaged software](#1-software-packaging) that get deployed as [Workloads][workload].
 
-Some providers might support that multiple [Workload][workload] replicas are instantiated from a single [Component][component].
+Some [providers][provider-model] might support that multiple [Workload][workload] replicas are deployed from a single [Component][component].
 
-[Components][component] are made available over [Component Catalogs][component-catalog].
+[Components][component] are made available over [Component Registrys][component-registry].
 
 [Components][component] might have different shapes depending on their type and on which stage is being considered:
 
 1. Helm v3 as [Component][component]: a [Helm Chart](https://helm.sh/docs/topics/charts/)
 2. Helm v3 as [Workload][workload]: all container images required by the to-be-started pods.
-3. Compose as [Component][component]: a [Compose Archive][compose-archive]
+3. Compose as [Component][component]: a [Compose Archive][application-package]
 4. Compose as [Workload][workload]: a so-called [Compose file](https://github.com/compose-spec/compose-spec/blob/main/spec.md#compose-file) and all the container images required by the to-be-started [services](https://github.com/compose-spec/compose-spec/blob/main/05-services.md).
 
 ## Stages
@@ -58,70 +60,12 @@ Software at rest requires following resources:
 - some application resources: icon, license(s), release notes,...
 - some [Component][component]: a well-specified way to distribute software supported by Margo specification (e.g. Helm Chart and container images, Compose Archive,...)
 
-[Application Descriptions][application-description], resources and [Components][component] are managed and hosted separately:
+[Application Packages][application-package] and [Components][component] are managed and hosted separately:
 
 - [Application Registries][application-registry] store [Application Descriptions][application-description] and their associated application resources (as of now application registries SHALL be git repositories) 
 - [Component Registries][component-registry] store components
 
-The following diagram shows the mentioned registries and resources (container images are not shown for simplicity):
-
-```mermaid
-C4Component
-    title Application Bundling: applications-workload definitions relationship
-
-    System_Boundary(ar, "Application Registry (Git)") {
-        System_Boundary(ab2, "Application Package 1") {
-            Component(atb2, "Application Description 1", "ApplicationDescription", "YAML document")
-            Component(o2, "...", "Others")
-        }
-
-        System_Boundary(ab1, "Application Package 2") {
-            Component(atb1, "Application Description 2", "ApplicationDescription", "YAML document")
-            Component(o1, "...", "Others")
-        }
-        
-        System_Boundary(ab4, "Application Package 3") {
-            Component(atb4, "Application Description 3", "ApplicationDescription", "YAML document")
-            Component(o4, "...", "Others")
-        }
-
-        System_Boundary(ab3, "Application Package 4") {
-            Component(atb3, "Application Description 4", "ApplicationDescription", "YAML document")
-            Component(o3, "...", "Others")
-        }
-    }
-
-    System_Boundary(crr, "Component Catalog") {
-        Component(hc1, "Helm Chart 1", "Component")
-        Component(hc2, "Helm Chart 2", "Component")
-        Component(hc3, "Helm Chart 3", "Component")
-        Component(cc1, "Compose Archive 1", "Component", "TARball")
-        Component(cc2, "Compose Archive 2", "Component", "TARball")
-    }
-
-    Rel(atb1, hc2, "refers")
-    Rel(atb1, cc1, "refers")
-
-    Rel(atb2, hc1, "refers")
-    Rel(atb1, hc3, "refers")
-
-    Rel(atb3, hc3, "refers")
-    Rel(atb3, cc1, "refers")
-
-    Rel(atb4, cc2, "refers")
-
-    UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
-    UpdateElementStyle(atb2, $fontColor="white", $bgColor="blue", $borderColor="grey")
-    UpdateElementStyle(atb3, $fontColor="white", $bgColor="blue", $borderColor="grey")
-    UpdateElementStyle(atb4, $fontColor="white", $bgColor="blue", $borderColor="grey")
-    UpdateElementStyle(hc1, $fontColor="black", $bgColor="khaki", $borderColor="grey")
-    UpdateElementStyle(hc2, $fontColor="black", $bgColor="khaki", $borderColor="grey")
-    UpdateElementStyle(hc3, $fontColor="black", $bgColor="khaki", $borderColor="grey")
-    UpdateElementStyle(cc1, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
-    UpdateElementStyle(cc2, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
-```
-
-The following diagram shows the relationship between the different resources of an [Application][application] bundle and the required [Components][component] for an example application providing both Helm v3 and Compose [Deployment Profiles][deployment-profile]:
+The following diagram shows, at hand of an example, the relationship between an [Application Package][application-package] and tis [Components][component] listed within its [Deployment Profiles][deployment-profile]:
 
 ```mermaid
 C4Component
@@ -160,7 +104,7 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Component Catalog") {
+    System_Boundary(crr, "Component Registry") {
         Component(hc1, "Helm Chart 1", "Component")
         Component(cc1, "Compose Archive 1", "Component", "TARball")
     }
@@ -173,11 +117,11 @@ C4Component
     UpdateElementStyle(cc1, $fontColor="black", $bgColor="lightsalmon", $borderColor="grey")
 ```
 
-The following diagram shows the top-level structure of a Compose component:
+The following diagram is similar to the previous one, but showing more details on the [Component Registry][component-registry] for a Compose [Deployment Profile][deployment-profile]:
 
 ```mermaid
 C4Component
-    title Application Bundling: Example 2 - focus on Component Catalog
+    title Application Bundling: Example 2 - focus on Component Registry
 
     UpdateLayoutConfig($c4BoundaryInRow="1", $c4ShapeInRow="3")
 
@@ -202,8 +146,8 @@ C4Component
         }
     }
 
-    System_Boundary(crr, "Component Catalog") {
-        Component(cc1, "Compose Configuration 1", "Compose")
+    System_Boundary(crr, "Component Registry") {
+        Component(cc1, "Compose File 1", "Compose")
         Component(ca1, "Compose Archive 1", "Component", "TARball")
         Rel(ca1, cc1, "contains")
         UpdateRelStyle(cc1, cim1, $offsetY="50")
@@ -223,6 +167,9 @@ C4Component
 The application and contained components are typically configurable with the option of providing default values.
 
 ### 2. Software Deployment
+
+When a device gets the instruction to run an [Application][application] (over a desired-state specified with an [`ApplicationDeployment` object][deployment-definition]), its [Workload Fleet Management Agent][wfma] interacts with the [providers][provider-model].
+That way all [Workloads][workload] needed for an [Application][application] should get started and the desired state should be reached.
 
 ```mermaid
 C4Context
@@ -252,16 +199,13 @@ C4Context
     UpdateElementStyle(apdd, $fontColor="black", $bgColor="green", $borderColor="grey")
 ```
 
-When a device gets the instruction to run an [Application][application] (over a desired-state specified with an [`ApplicationDeployment` object][deployment-definition]), its [Workload Fleet Management Agent][wfma] interacts with the [providers][provider-model].
-That way all [Workloads][workload] needed for an [Application][application] should get started and the desired state should be reached.
-
 In this stage the [providers][provider-model] are responsible for managing the individual [Workloads][workload].
 
-On a Helm v3 [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] would probably instruct the Helm API to start the individual Helm Charts.
+On a Helm v3 [Deployment Profiles][deployment-profile], a [Workload Fleet Management Agent][wfma] implementation could utilize the Helm API to start the individual Helm Charts.
 
-On a Compose [Deployment Profiles][deployment-profile], the [Workload Fleet Management Agent][wfma] would probably instruct the Compose CLI to start the individual [Workloads][workload].
+On a Compose [Deployment Profiles][deployment-profile], a [Workload Fleet Management Agent][wfma] implementation could utilize the Compose CLI to start the individual [Workloads][workload].
 
-The following diagram shows the result of reaching the desired state for an [Application][application] with a Helm v3 [Deployment Profiles][deployment-profile] (the result of `helm install`).
+The following diagram shows the result of reaching the desired state for an [Application][application] with a Helm v3 [Deployment Profile][deployment-profile] (the result of `helm install`).
 
 ```mermaid
 C4Component
@@ -296,7 +240,7 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-The following diagram shows the result of deploying an [Application][application] and the corresponding [Components][component] with a Compose [Deployment Profiles][deployment-profile] (the result of `compose up`).
+The following diagram shows the result of reaching the desired state for an [Application][application] with a Compose [Deployment Profile][deployment-profile] (the result of the `compose up` CLI call).
 
 ```mermaid
 C4Component
@@ -310,8 +254,8 @@ C4Component
         }
 
         System_Boundary(fs1, "File System") {
-            Component(cc1, "Compose Configuration 1")
-            Component(cc2, "Compose Configuration 2")
+            Component(cc1, "Compose File 1")
+            Component(cc2, "Compose File 2")
             System_Boundary(doc1, "Container Engine") {
                 Component(srv1, "Service 1")
                 Component(srv2, "Service 2")
@@ -330,13 +274,13 @@ C4Component
 ```
 
 [application-description]: ../margo-api-reference/workload-api/application-package-api/application-description.md
-[compose-archive]: ../app-interoperability/application-package-definition.md
+[application-package]: ../app-interoperability/application-package-definition.md
 [application-registry]: technical-lexicon.md#application-registry
 [component]: technical-lexicon.md#component
 [workload]: technical-lexicon.md#workload
 [application]: technical-lexicon.md#application
-[component-catalog]: technical-lexicon.md#component-catalog
+[component-registry]: technical-lexicon.md#component-registry
 [deployment-definition]: ../margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment.md#applicationdeployment-definition
-[provider-model]: technical-lexicon.md/#provider-model
-[wfma]: technical-lexicon/#workload-fleet-management-agent
-[deployment-profile]: margo-api-reference/workload-api/application-package-api/application-description.md/#deploymentprofile-attributes
+[provider-model]: technical-lexicon.md#provider-model
+[wfma]: technical-lexicon#workload-fleet-management-agent
+[deployment-profile]: margo-api-reference/workload-api/application-package-api/application-description.md#deploymentprofile-attributes
