@@ -14,7 +14,7 @@ nav:
       - margo-overview/workload-management-interface-overview.md
       - margo-overview/devices-overview.md
       - margo-overview/workload-observability-overview.md
-  - Components:
+  - Concepts:
       - Workloads:
           - app-interoperability/application-package-definition.md
           - app-interoperability/workload-orch-to-app-reg-interaction.md # = Application Registry
