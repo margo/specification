@@ -181,7 +181,7 @@ C4Context
         System(apdb, "ApplicationDeployment", "Application Deployment specification")
         System(appb, "ApplicationDescription", "Application Package")
         System(cmp, "Component")
-        Rel(appb, apdb, "deployment")
+        Rel(appb, apdb, "instantiation")
         Rel(appb, cmp, "requires")
     }
 
