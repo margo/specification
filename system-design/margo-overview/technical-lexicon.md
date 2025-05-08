@@ -83,7 +83,6 @@ An Application Catalog holds Application Packages that were preselected to be in
 
 An Application Catalog obtains the offered [Applications](#application) from one or more [Application Registries](#application-registry).
 
-An Application Catalog MIGHT be optionally implemented as an [Application Registry](#application-registry).
 
 ##### Component Registry
 
