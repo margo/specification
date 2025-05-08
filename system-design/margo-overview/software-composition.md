@@ -73,7 +73,7 @@ C4Component
 
     System_Boundary(ar, "Application Registry (Git)") {
         System_Boundary(ab1, "Application Package 1") {
-            Component(atb1, "Application Package", "Reference", "Git reference? OCI manifest?")
+            Component(atb1, "Application Package", "Reference")
 
             System_Boundary(c99, "Resources") {
                 Component(rd, "Resources", "Directory")
@@ -106,7 +106,7 @@ C4Component
 
     System_Boundary(crr, "Component Registry") {
         Component(hc1, "Helm Chart 1", "Component")
-        Component(cc1, "Compose Archive 1", "Component", "TARball")
+        Component(cc1, "Compose Archive 1", "Component")
     }
 
     Rel(wldh1, hc1, "refers")
@@ -127,7 +127,7 @@ C4Component
 
     System_Boundary(ar, "Application Registry (Git)") {
         System_Boundary(ab1, "Application Package 1") {
-            Component(atb1, "Application Package", "Git reference? OCI manifest?")
+            Component(atb1, "Application Package")
 
             System_Boundary(c1, "Application Description") {
                 Component(ad, "Application Description", "YAML document")
@@ -148,7 +148,7 @@ C4Component
 
     System_Boundary(crr, "Component Registry") {
         Component(cc1, "Compose File 1", "Compose")
-        Component(ca1, "Compose Archive 1", "Component", "TARball")
+        Component(ca1, "Compose Archive 1", "Component")
         Rel(ca1, cc1, "contains")
         UpdateRelStyle(cc1, cim1, $offsetY="50")
     }
