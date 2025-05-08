@@ -54,7 +54,10 @@ C4Context
     UpdateElementStyle(app, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-Software at rest requires following resources:
+Software at rest is made available as an Application Package, which is a folder with a Margo-defined structure comprising the software application. This Application Package contains:
+
+- An [Application Description][application-description] that is a Margo-specific way to define the composition of one or more [Components][component]. These [Components][component] are linked in the Application Description document, are deployable as workloads, and are provided in a Margo-supported way, e.g. as Helm Charts or Compose Archives.
+- Some application resources: icon, license(s), release notes,...
 
 - an [Application Description][application-description]: a Margo-specific way to distribute a composition of one or more [Component][component]
 - some application resources: icon, license(s), release notes,...
