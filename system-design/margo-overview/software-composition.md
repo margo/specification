@@ -62,7 +62,7 @@ Software at rest requires following resources:
 
 [Application Packages][application-package] and [Components][component] are managed and hosted separately:
 
-- [Application Registries][application-registry] store [Application Descriptions][application-description] and their associated application resources (as of now application registries SHALL be git repositories) 
+- [Application Registries][application-registry] store [Application Descriptions][application-description] and their associated application resources. An Application Registry is implemented as a git repository.
 - [Component Registries][component-registry] store components
 
 The following diagram shows, at hand of an example, the relationship between an [Application Package][application-package] and tis [Components][component] listed within its [Deployment Profiles][deployment-profile]:
