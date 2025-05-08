@@ -214,7 +214,7 @@ C4Component
 
     System_Boundary(dev1, "Device 1") {
         System_Boundary(woa1, "Workload Fleet Management Agent") {
-            Component(atb1, "Application Description 1", "ApplicationDescription", "YAML document")
+            Component(atb1, "Application Deployment 1", "ApplicationDeployment", "YAML document")
         }
 
         System_Boundary(hel1, "Helm") {
@@ -249,7 +249,7 @@ C4Component
 
     System_Boundary(dev1, "Device 1") {
         System_Boundary(woa1, "Workload Fleet Management Agent") {
-            Component(atb1, "Application Description 1", "ApplicationDescription", "YAML document")
+            Component(atb1, "Application Deployment 1", "ApplicationDeployment", "YAML document")
         }
 
         System_Boundary(fs1, "File System") {
