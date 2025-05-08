@@ -59,10 +59,6 @@ Software at rest is made available as an Application Package, which is a folder 
 - An [Application Description][application-description] that is a Margo-specific way to define the composition of one or more [Components][component]. These [Components][component] are linked in the Application Description document, are deployable as workloads, and are provided in a Margo-supported way, e.g. as Helm Charts or Compose Archives.
 - Some application resources: icon, license(s), release notes,...
 
-- an [Application Description][application-description]: a Margo-specific way to distribute a composition of one or more [Component][component]
-- some application resources: icon, license(s), release notes,...
-- some [Component][component]: a well-specified way to distribute software supported by Margo specification (e.g. Helm Chart and container images, Compose Archive,...)
-
 [Application Packages][application-package] and [Components][component] are managed and hosted separately:
 
 - [Application Registries][application-registry] store [Application Descriptions][application-description] and their associated application resources. An Application Registry is implemented as a git repository.
