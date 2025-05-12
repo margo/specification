@@ -687,12 +687,12 @@ classes:
 slots:
   type:
     description: >-
-          Indicates the components's deployment configuration. 
-          The values are `helm.v3` to indicate the component's package format is Helm version 3 
-          and `compose` to indicate the component's package format is a Compose file. 
-          When installing the application on a device supporting the Kubernetes platform all `helm.v3` components, 
+          Defines the type of this deployment configuration for the application. 
+          The allowed values are `helm.v3`, to indicate the deployment profile's format is Helm version 3, 
+          and `compose` to indicate the deployment profile's format is a Compose file. 
+          When installing the application on a device supporting the Kubernetes platform, all `helm.v3` components, 
           and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. 
-          When installing the application on a device supporting Compose all `compose` components, 
+          When installing the application on a device supporting Compose, all `compose` components, 
           and only `compose` components, will be provided to the device in the same order they are listed in the application description file. 
           The device will install the components in the same order they are listed in the application description file.
     range: string
