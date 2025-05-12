@@ -22,6 +22,7 @@ metadata:
         site: http://northstar-ida.com
 deploymentProfiles:
   - type: helm.v3
+    id: com-northstartida-hello-world-helm.v3-a
     components:
       - name: hello-world
         properties:  

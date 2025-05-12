@@ -22,6 +22,9 @@ metadata:
         site: http://northstar-ida.com
 deploymentProfiles:
   - type: helm.v3
+    id: com-northstartida-digitron-orchestrator-helm.v3-a
+    description: This allows to install / run the application as a Helm chart deployment.
+      The device where this application is installed needs to have a screen and a keyboard (as indicated in the required peripherals).
     components:
       - name: database-services
         properties: 
@@ -50,6 +53,7 @@ deploymentProfiles:
       - type: Ethernet
       - type: Bluetooth
   - type: compose
+    id: com-northstartida-digitron-orchestrator-compose-a
     components:
       - name: digitron-orchestrator-docker
         properties:

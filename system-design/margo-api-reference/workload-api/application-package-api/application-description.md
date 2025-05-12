@@ -72,7 +72,9 @@ Represents a deployment configuration for the application. <br>
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 | type | string |  Y  | Defines the type of this deployment configuration for the application.  The allowed values are `helm.v3`, to indicate the deployment profile's format is Helm version 3,  and `compose` to indicate the deployment profile's format is a Compose file.  When installing the application on a device supporting the Kubernetes platform, all `helm.v3` components,  and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file.  When installing the application on a device supporting Compose, all `compose` components,  and only `compose` components, will be provided to the device in the same order they are listed in the application description file.  The device will install the components in the same order they are listed in the application description file.|
+| id | string |  Y  | An identifier for the deployment profile, given by the application developer, used to uniquely identify this deployment profile in scope of this application description.  The id can be used to display deployment profiles in a user interface and being able to unique distinguish each one of them.|
 | components | []Component |  Y  | Component element indicating the components to deploy when installing the application.  See the [Component](#component-attributes) section below.|
+| description | string |  N  | This human-readable description of a deployment profile allows to provide additional context about the deployment profile. E.g., the application developer can use this to provide information about the deployment profile's purpose, such as the intended use case. Additionally, the application developer can use this to provide further details on resources, peripherals and interfaces required to run the application.|
 | requiredResources | RequiredResources |  N  | Required resources element specifying the resources required to install the application.  See the [Required Resources](#requiredresources-attributes) section below.|
 | requiredPeripherals | []RequiredPeripherals |  N  | Required peripherals element specifying the peripherals required to install the application.  See the [Required Peripherals](#requiredperipherals-attributes) section below.|
 | requiredInterfaces | []RequiredInterfaces |  N  | Required interfaces element specifying the communication interfaces required to install the application.  See the [Required Interfaces](#requiredinterfaces-attributes) section below.|
@@ -313,6 +315,7 @@ metadata:
         site: http://northstar-ida.com
 deploymentProfiles:
   - type: helm.v3
+    id: com-northstartida-hello-world-helm.v3-a
     components:
       - name: hello-world
         properties:  
@@ -377,6 +380,9 @@ metadata:
         site: http://northstar-ida.com
 deploymentProfiles:
   - type: helm.v3
+    id: com-northstartida-digitron-orchestrator-helm.v3-a
+    description: This allows to install / run the application as a Helm chart deployment.
+      The device where this application is installed needs to have a screen and a keyboard (as indicated in the required peripherals).
     components:
       - name: database-services
         properties: 
@@ -405,6 +411,7 @@ deploymentProfiles:
       - type: Ethernet
       - type: Bluetooth
   - type: compose
+    id: com-northstartida-digitron-orchestrator-compose-a
     components:
       - name: digitron-orchestrator-docker
         properties:

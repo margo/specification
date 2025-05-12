@@ -202,6 +202,20 @@ classes:
     description: Represents a deployment configuration for the application.
     rank: 60
     attributes:
+      id:
+        description: >-
+          An identifier for the deployment profile, given by the application developer, used to uniquely identify this deployment profile in scope of this application description. 
+          The id can be used to display deployment profiles in a user interface and being able to unique distinguish each one of them.
+        rank: 10
+        range: string
+        required: true
+      description:
+        description: >-
+          This human-readable description of a deployment profile allows to provide additional context about the deployment profile. E.g., the application developer can use this to provide information about the deployment profile's purpose,
+          such as the intended use case. Additionally, the application developer can use this to provide further details on resources, peripherals and interfaces required to run the application.
+        rank: 20
+        range: string
+        required: false
       requiredResources:
         description: >-
           Required resources element specifying the resources required to install the application. 
