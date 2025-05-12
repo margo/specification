@@ -34,6 +34,21 @@ deploymentProfiles:
           repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
           revision: 1.0.9
           wait: true
+    requiredResources:
+      cpu:
+        coreCountMinimum: 1
+        architecture: amd64 # or: x86_64
+      memory: 
+        sizeMinimum: 1024 # MB
+      storage: 
+        sizeMinimum: 10000 # MB := 10 GB
+    requiredPeripherals:
+      - type: GPU
+        manufacturer: NVIDIA
+      - type: Display
+    requiredInterfaces:
+      - type: Ethernet
+      - type: Bluetooth
   - type: compose
     components:
       - name: digitron-orchestrator-docker

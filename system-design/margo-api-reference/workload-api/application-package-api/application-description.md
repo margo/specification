@@ -71,8 +71,64 @@ Represents a deployment configuration for the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | string | Y | Defines the type of this deployment configuration for the application. The allowed values are `helm.v3`, to indicate the component's package format is Helm version 3, and `compose` to indicate the component's package format is a Compose file. When installing the application on a device supporting the Kubernetes platform all `helm.v3` components,  and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file.  When installing the application on a device supporting Compose all `compose` components,  and only `compose` components, will be provided to the device in the same order they are listed in the application description file.  The device will install the components in the same order they are listed in the application description file.|
+| type | string |  Y  | Indicates the components's deployment configuration.  The values are `helm.v3` to indicate the component's package format is Helm version 3  and `compose` to indicate the component's package format is a Compose file.  When installing the application on a device supporting the Kubernetes platform all `helm.v3` components,  and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file.  When installing the application on a device supporting Compose all `compose` components,  and only `compose` components, will be provided to the device in the same order they are listed in the application description file.  The device will install the components in the same order they are listed in the application description file.|
 | components | []Component |  Y  | Component element indicating the components to deploy when installing the application.  See the [Component](#component-attributes) section below.|
+| requiredResources | RequiredResources |  N  | Required resources element specifying the resources required to install the application.  See the [Required Resources](#requiredresources-attributes) section below.|
+| requiredPeripherals | []RequiredPeripherals |  N  | Required peripherals element specifying the peripherals required to install the application.  See the [Required Peripherals](#requiredperipherals-attributes) section below.|
+| requiredInterfaces | []RequiredInterfaces |  N  | Required interfaces element specifying the communication interfaces required to install the application.  See the [Required Interfaces](#requiredinterfaces-attributes) section below.|
+
+
+### RequiredResources Attributes  <br><br>
+Required resources element specifying the resources required to install the application. <br> 
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| cpu | CPU |  N  | CPU element specifying the CPU requirements for the application.  See the [CPU](#cpu-attributes) section below.|
+| memory | Memory |  N  | Memory element specifying the memory requirements for the application. See the [Memory](#memory-attributes) section below.|
+| storage | Storage |  N  | Storage element specifying the storage requirements for the application.  See the [Storage](#storage-attributes) section below.|
+
+
+### CPU Attributes  <br><br>
+CPU element specifying the CPU requirements for the application. <br> 
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| coreCountMinimum | integer |  Y  | The number of CPU cores required by the application to run in its full functionality. This is defined by the application developer. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
+| architecture | CpuArchitectureType |  N  | The CPU architecture required by the application. This can be e.g. amd64, x86_64, arm64, arm (according to CpuArchitectureType).|
+
+
+### Memory Attributes  <br><br>
+Memory element specifying the memory requirements for the application. <br> 
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| sizeMinimum | integer |  Y  | The minimum amount of memory required. Specified in megabyte (MB). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of memory for the application.|
+
+
+### Storage Attributes  <br><br>
+Storage element specifying the storage requirements for the application. <br> 
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| sizeMinimum | integer |  Y  | The amount of storage required. Specified in megabyte (MB). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of storage for the application|
+
+
+### RequiredPeripherals Attributes  <br><br>
+Peripherals required to run the application. <br> 
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| type | PeripheralType |  Y  | The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker (according to PeripheralType).|
+| manufacturer | string |  N  | The name of the manufacturer.|
+| model | string |  N  | The model of the peripheral.|
+
+
+### RequiredInterfaces Attributes  <br><br>
+Communication interfaces required to run the application. <br> 
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| type | CommunicationInterfaceType |  N  | The type of interface required to run the application. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232 (according to CommunicationInterfaceType)|
 
 
 ### Component Attributes  <br><br>
@@ -333,6 +389,21 @@ deploymentProfiles:
           repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
           revision: 1.0.9
           wait: true
+    requiredResources:
+      cpu:
+        coreCountMinimum: 1
+        architecture: amd64 # or: x86_64
+      memory: 
+        sizeMinimum: 1024 # MB
+      storage: 
+        sizeMinimum: 10000 # MB := 10 GB
+    requiredPeripherals:
+      - type: GPU
+        manufacturer: NVIDIA
+      - type: Display
+    requiredInterfaces:
+      - type: Ethernet
+      - type: Bluetooth
   - type: compose
     components:
       - name: digitron-orchestrator-docker
