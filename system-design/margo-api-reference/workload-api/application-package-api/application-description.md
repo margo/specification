@@ -76,8 +76,6 @@ Represents a deployment configuration for the application. <br>
 | components | []Component |  Y  | Component element indicating the components to deploy when installing the application.  See the [Component](#component-attributes) section below.|
 | description | string |  N  | This human-readable description of a deployment profile allows for providing additional context about the deployment profile. E.g., the application developer can use this to describe the deployment profile's purpose, such as the intended use case. Additionally, the application developer can use this to provide further details about the resources, peripherals, and interfaces required to run the application.|
 | requiredResources | RequiredResources |  N  | Required resources element specifying the resources required to install the application.  See the [Required Resources](#requiredresources-attributes) section below. The consequences (e.g., aborting / blocking the installation or execution of the application) of not meeting these required resources are not defined (yet) by margo.|
-| requiredPeripherals | []RequiredPeripherals |  N  | Required peripherals element specifying the peripherals required to install the application.  See the [Required Peripherals](#requiredperipherals-attributes) section below. The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required peripherals are not defined (yet) by margo.|
-| requiredInterfaces | []RequiredInterfaces |  N  | Required interfaces element specifying the communication interfaces required to install the application.  See the [Required Interfaces](#requiredinterfaces-attributes) section below. The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required interfaces are not defined (yet) by margo.|
 
 
 ### RequiredResources Attributes  <br><br>
@@ -86,8 +84,10 @@ Required resources element specifying the resources required to install the appl
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 | cpu | CPU |  N  | CPU element specifying the CPU requirements for the application.  See the [CPU](#cpu-attributes) section below.|
-| memory | Memory |  N  | Memory element specifying the memory requirements for the application. See the [Memory](#memory-attributes) section below.|
-| storage | Storage |  N  | Storage element specifying the storage requirements for the application.  See the [Storage](#storage-attributes) section below.|
+| memory | string |  N  | The minimum amount of memory required. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of memory for the application.|
+| storage | string |  N  | The amount of storage required. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of storage for the application|
+| peripherals | []Peripheral |  N  | Peripherals element specifying the peripherals required to run the application.  See the [Peripheral](#peripheral-attributes) section below.|
+| interfaces | []CommunicationInterface |  N  | Interfaces element specifying the communication interfaces required to run the application.  See the [Communication Interfaces](#communicationinterface-attributes) section below.|
 
 
 ### CPU Attributes  <br><br>
@@ -95,28 +95,12 @@ CPU element specifying the CPU requirements for the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| coreCountMinimum | double |  Y  | The required CPU resources the application must use to run in its full functionality. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the application developer. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
+| cores | double |  Y  | The required amount of CPU cores the application must use to run in its full functionality. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the application developer. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
 | architectures | []CpuArchitectureType |  N  | The CPU architectures supported by the application. This can be e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values. Multiple arcitecture types can be specified, as the deployment profile may support multiple CPU architectures.|
 
 
-### Memory Attributes  <br><br>
-Memory element specifying the memory requirements for the application. <br> 
-
-| Attribute | Type | Required? | Description |
-| --- | --- | --- | --- |
-| sizeMinimum | string |  Y  | The minimum amount of memory required. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of memory for the application.|
-
-
-### Storage Attributes  <br><br>
-Storage element specifying the storage requirements for the application. <br> 
-
-| Attribute | Type | Required? | Description |
-| --- | --- | --- | --- |
-| sizeMinimum | string |  Y  | The amount of storage required. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of storage for the application|
-
-
-### RequiredPeripherals Attributes  <br><br>
-Peripherals required to run the application. <br> 
+### Peripheral Attributes  <br><br>
+Peripheral hardware of a device. <br> 
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
@@ -125,12 +109,12 @@ Peripherals required to run the application. <br>
 | model | string |  N  | The model of the peripheral. If `model` is specified as a requirement here, it may be difficult to find devices that can host the application. Please use these requirements with caution.|
 
 
-### RequiredInterfaces Attributes  <br><br>
-Communication interfaces required to run the application. <br> 
+### CommunicationInterface Attributes  <br><br>
+Communication interface of a device. <br> 
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | CommunicationInterfaceType |  N  | The type of interface required to run the application. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.|
+| type | CommunicationInterfaceType |  N  | The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.|
 
 
 ### Component Attributes  <br><br>
@@ -433,22 +417,20 @@ deploymentProfiles:
           revision: 1.0.9
           wait: true
     requiredResources:
-      cpu:
-        coreCountMinimum: 1
+      cpu: 
+        cores: 1.5
         architectures: 
           - amd64 
           - x86_64
-      memory: 
-        sizeMinimum: 1024Mi
-      storage: 
-        sizeMinimum: 10Gi
-    requiredPeripherals:
-      - type: gpu
-        manufacturer: NVIDIA
-      - type: display
-    requiredInterfaces:
-      - type: ethernet
-      - type: bluetooth
+      memory: 1024Mi
+      storage: 10Gi
+      peripherals:
+        - type: gpu
+          manufacturer: NVIDIA
+        - type: display
+      interfaces:
+        - type: ethernet
+        - type: bluetooth
   - type: compose
     id: com-northstartida-digitron-orchestrator-compose-a
     components:

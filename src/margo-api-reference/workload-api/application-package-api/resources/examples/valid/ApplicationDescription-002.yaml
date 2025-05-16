@@ -38,22 +38,20 @@ deploymentProfiles:
           revision: 1.0.9
           wait: true
     requiredResources:
-      cpu:
-        coreCountMinimum: 1
+      cpu: 
+        cores: 1.5
         architectures: 
           - amd64 
           - x86_64
-      memory: 
-        sizeMinimum: 1024Mi
-      storage: 
-        sizeMinimum: 10Gi
-    requiredPeripherals:
-      - type: gpu
-        manufacturer: NVIDIA
-      - type: display
-    requiredInterfaces:
-      - type: ethernet
-      - type: bluetooth
+      memory: 1024Mi
+      storage: 10Gi
+      peripherals:
+        - type: gpu
+          manufacturer: NVIDIA
+        - type: display
+      interfaces:
+        - type: ethernet
+        - type: bluetooth
   - type: compose
     id: com-northstartida-digitron-orchestrator-compose-a
     components:

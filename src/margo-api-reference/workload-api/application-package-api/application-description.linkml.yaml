@@ -223,28 +223,6 @@ classes:
         rank: 30
         range: RequiredResources
         required: false
-      requiredPeripherals:
-        description: >-
-          Required peripherals element specifying the peripherals required to install the application. 
-          See the [Required Peripherals](#requiredperipherals-attributes) section below.
-          The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required peripherals are not defined (yet) by margo.
-        rank: 40
-        range: RequiredPeripherals
-        required: false
-        multivalued: true
-        inlined: true
-        inlined_as_list: true
-      requiredInterfaces:
-        description: >-
-          Required interfaces element specifying the communication interfaces required to install the application. 
-          See the [Required Interfaces](#requiredinterfaces-attributes) section below.
-          The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required interfaces are not defined (yet) by margo.
-        rank: 50
-        range: RequiredInterfaces
-        required: false
-        multivalued: true
-        inlined: true
-        inlined_as_list: true
     slots:
       - type
       - components
@@ -260,17 +238,44 @@ classes:
           See the [CPU](#cpu-attributes) section below.
         range: CPU
         required: false
+        rank: 10
       memory:
-        description: >-
-          Memory element specifying the memory requirements for the application.
-          See the [Memory](#memory-attributes) section below.
-        range: Memory
+        description: The minimum amount of memory required.
+          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). 
+          This is defined by the application developer.
+          After deployment of the application, the device MUST provide this amount of memory for the application.
+        rank: 20
+        range: string
+        pattern: ^[0-9]+(Mi|Gi|Ki)$
         required: false
       storage:
+        description: The amount of storage required.
+          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
+          This is defined by the application developer.
+          After deployment of the application, the device MUST provide this amount of storage for the application
+        rank: 30
+        range: string
+        pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
+        required: false
+      peripherals:
         description: >-
-          Storage element specifying the storage requirements for the application. 
-          See the [Storage](#storage-attributes) section below.
-        range: Storage
+          Peripherals element specifying the peripherals required to run the application. 
+          See the [Peripheral](#peripheral-attributes) section below.
+        range: Peripheral
+        rank: 40
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        required: false
+      interfaces:
+        description: >-
+          Interfaces element specifying the communication interfaces required to run the application. 
+          See the [Communication Interfaces](#communicationinterface-attributes) section below.
+        range: CommunicationInterface
+        rank: 40
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
         required: false
 
   CPU:
@@ -278,8 +283,9 @@ classes:
       CPU element specifying the CPU requirements for the application.
     rank: 62
     attributes:
-      coreCountMinimum:
-        description: The required CPU resources the application must use to run in its full functionality. Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
+      cores:
+        description: The required amount of CPU cores the application must use to run in its full functionality. 
+          Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this number of CPU cores for the application. 
         rank: 10
@@ -295,40 +301,9 @@ classes:
         multivalued: true
         inlined: true
         inlined_as_list: true
-
-  Memory:
-    description: >-
-      Memory element specifying the memory requirements for the application.
-    rank: 63
-    attributes:
-      sizeMinimum:
-        description: The minimum amount of memory required.
-          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). 
-          This is defined by the application developer.
-          After deployment of the application, the device MUST provide this amount of memory for the application.
-        rank: 10
-        range: string
-        pattern: ^[0-9]+(Mi|Gi|Ki)$
-        required: true
       
-  Storage:
-    description: >-
-      Storage element specifying the storage requirements for the application.
-    rank: 64
-    attributes:
-      sizeMinimum:
-        description: The amount of storage required.
-          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
-          This is defined by the application developer.
-          After deployment of the application, the device MUST provide this amount of storage for the application
-        rank: 10
-        range: string
-        pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
-        required: true
-
-  RequiredPeripherals:
-    description: >-
-      Peripherals required to run the application.
+  Peripheral:
+    description: Peripheral hardware of a device.
     rank: 65
     attributes:
       type:
@@ -348,13 +323,13 @@ classes:
         range: string
         required: false
 
-  RequiredInterfaces:
+  CommunicationInterface:
     description: >-
-      Communication interfaces required to run the application.
+      Communication interface of a device.
     rank: 66
     attributes:   
       type:
-        description: The type of interface required to run the application. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
+        description: The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
           See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.
         rank: 30
         range: CommunicationInterfaceType
