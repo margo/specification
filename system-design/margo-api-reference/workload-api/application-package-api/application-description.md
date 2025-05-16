@@ -96,7 +96,7 @@ CPU element specifying the CPU requirements for the application. <br>
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 | coreCountMinimum | integer |  Y  | The number of CPU cores required by the application to run in its full functionality. This is defined by the application developer. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
-| architecture | CpuArchitectureType |  N  | The CPU architecture required by the application. This can be e.g. amd64, x86_64, arm64, arm (according to CpuArchitectureType).|
+| architecture | CpuArchitectureType |  N  | The CPU architecture required by the application. This can be e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.|
 
 
 ### Memory Attributes  <br><br>
@@ -120,7 +120,7 @@ Peripherals required to run the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | PeripheralType |  Y  | The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker (according to PeripheralType).|
+| type | PeripheralType |  Y  | The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker. See the [PeriperalType](#peripheraltype) definition for all permissible values.|
 | manufacturer | string |  N  | The name of the manufacturer.|
 | model | string |  N  | The model of the peripheral.|
 
@@ -130,7 +130,7 @@ Communication interfaces required to run the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | CommunicationInterfaceType |  N  | The type of interface required to run the application. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232 (according to CommunicationInterfaceType)|
+| type | CommunicationInterfaceType |  N  | The type of interface required to run the application. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.|
 
 
 ### Component Attributes  <br><br>
@@ -285,6 +285,43 @@ Extends schema to define a specific set of validation rules that can be used for
 | options | []string |  Y  | This provides the list of acceptable options the user can select from. The data type for each option must match the parameter setting’s data type.|
 
 
+
+## Enumerations
+These enumerations are used as vocabularies for attribute values of the `ApplicationDescription`.
+
+### CpuArchitectureType
+
+| Permissible Values | Description |
+| --- | --- |
+| amd64 | AMD 64-bit architecture.|
+| x86_64 | x86 64-bit architecture.|
+| arm64 | ARM 64-bit architecture.|
+| arm | ARM 32-bit architecture. |  
+
+### CommunicationInterfaceType
+
+| Permissible Values | Description |
+| --- | --- |
+| ethernet | This type stands for an Ethernet interface.|
+| wifi | This type stands for an WiFi interface.|
+| cellular | This type stands for cellular communication technologies such as 5G, LTE, 3G, 2G, ....|
+| bluetooth | This type stands for a Bluetooth or Bluetooth Low-Energy (BLE) interface. |  
+| usb | This type stands for a USB interface.|
+| canbus | This type stands for a CANBus interface.|
+| rs232 | This type stands for a RS232 interface. |  
+
+### PeripheralType
+
+| Permissible Values | Description |
+| --- | --- |
+| gpu | This type stands for a Graphics Processing Unit (GPU) peripheral.|
+| display | This type stands for a display peripheral.|
+| camera | This type stands for a camera peripheral.|
+| microphone | This type stands for a microphone peripheral. |
+| speaker | This type stands for a speaker peripheral. |
+
+
+
 ## Application Description Examples
 
 ### Example 1: Simple Application Description
@@ -404,12 +441,12 @@ deploymentProfiles:
       storage: 
         sizeMinimum: 10000 # MB := 10 GB
     requiredPeripherals:
-      - type: GPU
+      - type: gpu
         manufacturer: NVIDIA
-      - type: Display
+      - type: display
     requiredInterfaces:
-      - type: Ethernet
-      - type: Bluetooth
+      - type: ethernet
+      - type: bluetooth
   - type: compose
     id: com-northstartida-digitron-orchestrator-compose-a
     components:

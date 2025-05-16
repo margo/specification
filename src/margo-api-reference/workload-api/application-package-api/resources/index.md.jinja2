@@ -58,7 +58,11 @@ The application description has the purpose of presenting the application, e.g.,
 | {{ slot.name }} | <*see description*> | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
 {%- endif %}
 {% endfor %}
+
 {%- endif %}
+
+
+
 
 {%- if c.name.startswith("ComponentProperties") %}
 
@@ -93,6 +97,43 @@ To allow customizable configuration values when installing an application, the *
 
 {%- endif %}
 {%- endfor %}
+
+
+## Enumerations
+These enumerations are used as vocabularies for attribute values of the `ApplicationDescription`.
+
+### CpuArchitectureType
+
+| Permissible Values | Description |
+| --- | --- |
+| amd64 | AMD 64-bit architecture.|
+| x86_64 | x86 64-bit architecture.|
+| arm64 | ARM 64-bit architecture.|
+| arm | ARM 32-bit architecture. |  
+
+### CommunicationInterfaceType
+
+| Permissible Values | Description |
+| --- | --- |
+| ethernet | This type stands for an Ethernet interface.|
+| wifi | This type stands for an WiFi interface.|
+| cellular | This type stands for cellular communication technologies such as 5G, LTE, 3G, 2G, ....|
+| bluetooth | This type stands for a Bluetooth or Bluetooth Low-Energy (BLE) interface. |  
+| usb | This type stands for a USB interface.|
+| canbus | This type stands for a CANBus interface.|
+| rs232 | This type stands for a RS232 interface. |  
+
+### PeripheralType
+
+| Permissible Values | Description |
+| --- | --- |
+| gpu | This type stands for a Graphics Processing Unit (GPU) peripheral.|
+| display | This type stands for a display peripheral.|
+| camera | This type stands for a camera peripheral.|
+| microphone | This type stands for a microphone peripheral. |
+| speaker | This type stands for a speaker peripheral. |
+
+
 
 ## Application Description Examples
 

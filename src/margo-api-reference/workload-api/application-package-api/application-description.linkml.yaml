@@ -284,7 +284,8 @@ classes:
         range: integer
         required: true
       architecture:
-        description: The CPU architecture required by the application. This can be e.g. amd64, x86_64, arm64, arm (according to CpuArchitectureType).
+        description: The CPU architecture required by the application. This can be e.g. amd64, x86_64, arm64, arm.
+          See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.
         rank: 20
         range: CpuArchitectureType
         required: false
@@ -321,7 +322,8 @@ classes:
     rank: 65
     attributes:
       type:
-        description: The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker (according to PeripheralType).
+        description: The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker.
+          See the [PeriperalType](#peripheraltype) definition for all permissible values.
         rank: 20
         range: PeripheralType
         required: true
@@ -342,7 +344,8 @@ classes:
     rank: 66
     attributes:   
       type:
-        description: The type of interface required to run the application. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232 (according to CommunicationInterfaceType)
+        description: The type of interface required to run the application. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
+          See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.
         rank: 30
         range: CommunicationInterfaceType
         required: false
@@ -739,31 +742,31 @@ enums:
   
   CommunicationInterfaceType:
     permissible_values:
-      Ethernet:
+      ethernet:
         description: This type stands for an Ethernet interface.
-      WiFi:
+      wifi:
         description: This type stands for an WiFi interface.
-      Cellular:
+      cellular:
         description: This type stands for cellular communication technologies such as 5G, LTE, 3G, 2G, ....
-      Bluetooth:
+      bluetooth:
         description: This type stands for a Bluetooth or Bluetooth Low-Energy (BLE) interface.
-      USB:
+      usb:
         description: This type stands for a USB interface.
-      CANBus:
+      canbus:
         description: This type stands for a CANBus interface.
-      RS232:
+      rs232:
         description: This type stands for a RS232 interface.
   
   PeripheralType:
     permissible_values:
-      GPU:
+      gpu:
         description: This type stands for a Graphics Processing Unit (GPU) peripheral.
-      Display:
+      display:
         description: This type stands for a display peripheral.
-      Camera:
+      camera:
         description: This type stands for a camera peripheral.
-      Microphone:
+      microphone:
         description: This type stands for a microphone peripheral.
-      Speaker:
+      speaker:
         description: This type stands for a speaker peripheral.
 

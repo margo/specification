@@ -46,12 +46,12 @@ deploymentProfiles:
       storage: 
         sizeMinimum: 10000 # MB := 10 GB
     requiredPeripherals:
-      - type: GPU
+      - type: gpu
         manufacturer: NVIDIA
-      - type: Display
+      - type: display
     requiredInterfaces:
-      - type: Ethernet
-      - type: Bluetooth
+      - type: ethernet
+      - type: bluetooth
   - type: compose
     id: com-northstartida-digitron-orchestrator-compose-a
     components:
