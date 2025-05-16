@@ -40,11 +40,13 @@ deploymentProfiles:
     requiredResources:
       cpu:
         coreCountMinimum: 1
-        architecture: amd64 # or: x86_64
+        architectures: 
+          - amd64 
+          - x86_64
       memory: 
-        sizeMinimum: 1024 # MB
+        sizeMinimum: 1024Mi
       storage: 
-        sizeMinimum: 10000 # MB := 10 GB
+        sizeMinimum: 10Gi
     requiredPeripherals:
       - type: gpu
         manufacturer: NVIDIA

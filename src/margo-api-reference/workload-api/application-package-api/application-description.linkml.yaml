@@ -7,7 +7,7 @@ description: >-
   The purpose of this file is to present the application on an application catalog or marketplace 
   from where an end user selects the application to hand it over to the Workload Orchestration Software, 
   which configures it and makes it available for installation on the edge device.
-version: 1.0 #Arne: update later
+version: 1.0 
 prefixes:
   linkml: https://w3id.org/linkml/
   margo: https://specification.margo.org/
@@ -31,7 +31,7 @@ classes:
         description: Specifies the object type; must be 'application'.
         range: string
         required: true
-        equals_string: "ApplicationDescription" #Arne: should this be changed to "ApplicationPackageDefinition"?
+        equals_string: "ApplicationDescription" 
         rank: 20
       metadata:
         description: >-
@@ -44,7 +44,7 @@ classes:
         description: >-
           Deployment profiles element specifying the types of deployments the application supports. 
           See the [Deployment](#deploymentprofile-attributes) section below.
-        range: DeploymentProfile #Arne: mistake in spec: called "Deployment" but type is called "DeploymentProfile"
+        range: DeploymentProfile 
         multivalued: true
         inlined: true
         inlined_as_list: true
@@ -54,7 +54,7 @@ classes:
         description: >-
           Parameters element specifying the configurable parameters to use when installing, or updating, the application.
           See the [Parameter](#parameter-attributes) section below.
-        range: Parameter #Arne: mmmh, spec defines this as map[string][Parameter]
+        range: Parameter 
         multivalued: true
         inlined: true
         inlined_as_list: false
@@ -113,7 +113,7 @@ classes:
           Application element specifying the application specific metadata. 
           See the [Application Metadata](#applicationmetadata-attributes) section below.
         rank: 10
-        range: ApplicationMetadata #Arne: mistake in spec where it is called "Application"
+        range: ApplicationMetadata 
       author:
         description: >-
           Author element specifying metadata about the application's author. 
@@ -204,15 +204,14 @@ classes:
     attributes:
       id:
         description: >-
-          An identifier for the deployment profile, given by the application developer, used to uniquely identify this deployment profile in scope of this application description. 
-          The id can be used to display deployment profiles in a user interface and being able to unique distinguish each one of them.
+          An identifier for the deployment profile, given by the application developer, used to uniquely identify this deployment profile from others within this application description's scope.
         rank: 10
         range: string
         required: true
       description:
         description: >-
-          This human-readable description of a deployment profile allows to provide additional context about the deployment profile. E.g., the application developer can use this to provide information about the deployment profile's purpose,
-          such as the intended use case. Additionally, the application developer can use this to provide further details on resources, peripherals and interfaces required to run the application.
+          This human-readable description of a deployment profile allows for providing additional context about the deployment profile. E.g., the application developer can use this to describe the deployment profile's purpose,
+          such as the intended use case. Additionally, the application developer can use this to provide further details about the resources, peripherals, and interfaces required to run the application.
         rank: 20
         range: string
         required: false
@@ -220,6 +219,7 @@ classes:
         description: >-
           Required resources element specifying the resources required to install the application. 
           See the [Required Resources](#requiredresources-attributes) section below.
+          The consequences (e.g., aborting / blocking the installation or execution of the application) of not meeting these required resources are not defined (yet) by margo.
         rank: 30
         range: RequiredResources
         required: false
@@ -227,6 +227,7 @@ classes:
         description: >-
           Required peripherals element specifying the peripherals required to install the application. 
           See the [Required Peripherals](#requiredperipherals-attributes) section below.
+          The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required peripherals are not defined (yet) by margo.
         rank: 40
         range: RequiredPeripherals
         required: false
@@ -237,6 +238,7 @@ classes:
         description: >-
           Required interfaces element specifying the communication interfaces required to install the application. 
           See the [Required Interfaces](#requiredinterfaces-attributes) section below.
+          The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required interfaces are not defined (yet) by margo.
         rank: 50
         range: RequiredInterfaces
         required: false
@@ -277,18 +279,22 @@ classes:
     rank: 62
     attributes:
       coreCountMinimum:
-        description: The number of CPU cores required by the application to run in its full functionality.
+        description: The required CPU resources the application must use to run in its full functionality. Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this number of CPU cores for the application. 
         rank: 10
-        range: integer
+        range: double
         required: true
-      architecture:
-        description: The CPU architecture required by the application. This can be e.g. amd64, x86_64, arm64, arm.
+      architectures:
+        description: The CPU architectures supported by the application. This can be e.g. amd64, x86_64, arm64, arm.
           See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.
+          Multiple arcitecture types can be specified, as the deployment profile may support multiple CPU architectures.
         rank: 20
         range: CpuArchitectureType
         required: false
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
 
   Memory:
     description: >-
@@ -296,11 +302,13 @@ classes:
     rank: 63
     attributes:
       sizeMinimum:
-        description: The minimum amount of memory required. Specified in megabyte (MB).
+        description: The minimum amount of memory required.
+          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). 
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of memory for the application.
         rank: 10
-        range: integer
+        range: string
+        pattern: ^[0-9]+(Mi|Gi|Ki)$
         required: true
       
   Storage:
@@ -309,11 +317,13 @@ classes:
     rank: 64
     attributes:
       sizeMinimum:
-        description: The amount of storage required. Specified in megabyte (MB).
+        description: The amount of storage required.
+          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of storage for the application
         rank: 10
-        range: integer
+        range: string
+        pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
         required: true
 
   RequiredPeripherals:
@@ -328,12 +338,12 @@ classes:
         range: PeripheralType
         required: true
       manufacturer:
-        description: The name of the manufacturer.
+        description: The name of the manufacturer. If `manufacturer` is specified as a requirement here, it may be difficult to find devices that can host the  application. Please use these requirements with caution.
         rank: 30
         range: string
         required: false
       model:
-        description: The model of the peripheral.
+        description: The model of the peripheral. If `model` is specified as a requirement here, it may be difficult to find devices that can host the application. Please use these requirements with caution.
         rank: 40
         range: string
         required: false
@@ -388,7 +398,7 @@ classes:
         description: >-
            A dictionary element specifying the component packages's deployment details. 
            See the [Component Properties](#componentproperties-attributes) section below.
-        range: ComponentProperties #Arne: error in spec, as it is defined as map[string][interface{}] 
+        range: ComponentProperties 
         required: true
         rank: 20
 
@@ -433,7 +443,7 @@ classes:
     description: Defines a configurable parameter for the application.
     rank: 90
     attributes:
-      name: #Arne: error in spec. This attribute is missing.
+      name: 
         description: Name of the parameter.
         rank: 10
         identifier: true

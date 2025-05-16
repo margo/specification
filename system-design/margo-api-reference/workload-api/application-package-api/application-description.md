@@ -72,12 +72,12 @@ Represents a deployment configuration for the application. <br>
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 | type | string |  Y  | Defines the type of this deployment configuration for the application.  The allowed values are `helm.v3`, to indicate the deployment profile's format is Helm version 3,  and `compose` to indicate the deployment profile's format is a Compose file.  When installing the application on a device supporting the Kubernetes platform, all `helm.v3` components,  and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file.  When installing the application on a device supporting Compose, all `compose` components,  and only `compose` components, will be provided to the device in the same order they are listed in the application description file.  The device will install the components in the same order they are listed in the application description file.|
-| id | string |  Y  | An identifier for the deployment profile, given by the application developer, used to uniquely identify this deployment profile in scope of this application description.  The id can be used to display deployment profiles in a user interface and being able to unique distinguish each one of them.|
+| id | string |  Y  | An identifier for the deployment profile, given by the application developer, used to uniquely identify this deployment profile from others within this application description's scope.|
 | components | []Component |  Y  | Component element indicating the components to deploy when installing the application.  See the [Component](#component-attributes) section below.|
-| description | string |  N  | This human-readable description of a deployment profile allows to provide additional context about the deployment profile. E.g., the application developer can use this to provide information about the deployment profile's purpose, such as the intended use case. Additionally, the application developer can use this to provide further details on resources, peripherals and interfaces required to run the application.|
-| requiredResources | RequiredResources |  N  | Required resources element specifying the resources required to install the application.  See the [Required Resources](#requiredresources-attributes) section below.|
-| requiredPeripherals | []RequiredPeripherals |  N  | Required peripherals element specifying the peripherals required to install the application.  See the [Required Peripherals](#requiredperipherals-attributes) section below.|
-| requiredInterfaces | []RequiredInterfaces |  N  | Required interfaces element specifying the communication interfaces required to install the application.  See the [Required Interfaces](#requiredinterfaces-attributes) section below.|
+| description | string |  N  | This human-readable description of a deployment profile allows for providing additional context about the deployment profile. E.g., the application developer can use this to describe the deployment profile's purpose, such as the intended use case. Additionally, the application developer can use this to provide further details about the resources, peripherals, and interfaces required to run the application.|
+| requiredResources | RequiredResources |  N  | Required resources element specifying the resources required to install the application.  See the [Required Resources](#requiredresources-attributes) section below. The consequences (e.g., aborting / blocking the installation or execution of the application) of not meeting these required resources are not defined (yet) by margo.|
+| requiredPeripherals | []RequiredPeripherals |  N  | Required peripherals element specifying the peripherals required to install the application.  See the [Required Peripherals](#requiredperipherals-attributes) section below. The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required peripherals are not defined (yet) by margo.|
+| requiredInterfaces | []RequiredInterfaces |  N  | Required interfaces element specifying the communication interfaces required to install the application.  See the [Required Interfaces](#requiredinterfaces-attributes) section below. The consequences (e.g., aborting / blocking the installation or execution of the application) of not providing these required interfaces are not defined (yet) by margo.|
 
 
 ### RequiredResources Attributes  <br><br>
@@ -95,8 +95,8 @@ CPU element specifying the CPU requirements for the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| coreCountMinimum | integer |  Y  | The number of CPU cores required by the application to run in its full functionality. This is defined by the application developer. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
-| architecture | CpuArchitectureType |  N  | The CPU architecture required by the application. This can be e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.|
+| coreCountMinimum | double |  Y  | The required CPU resources the application must use to run in its full functionality. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the application developer. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
+| architectures | []CpuArchitectureType |  N  | The CPU architectures supported by the application. This can be e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values. Multiple arcitecture types can be specified, as the deployment profile may support multiple CPU architectures.|
 
 
 ### Memory Attributes  <br><br>
@@ -104,7 +104,7 @@ Memory element specifying the memory requirements for the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| sizeMinimum | integer |  Y  | The minimum amount of memory required. Specified in megabyte (MB). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of memory for the application.|
+| sizeMinimum | string |  Y  | The minimum amount of memory required. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of memory for the application.|
 
 
 ### Storage Attributes  <br><br>
@@ -112,7 +112,7 @@ Storage element specifying the storage requirements for the application. <br>
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| sizeMinimum | integer |  Y  | The amount of storage required. Specified in megabyte (MB). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of storage for the application|
+| sizeMinimum | string |  Y  | The amount of storage required. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of storage for the application|
 
 
 ### RequiredPeripherals Attributes  <br><br>
@@ -121,8 +121,8 @@ Peripherals required to run the application. <br>
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 | type | PeripheralType |  Y  | The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker. See the [PeriperalType](#peripheraltype) definition for all permissible values.|
-| manufacturer | string |  N  | The name of the manufacturer.|
-| model | string |  N  | The model of the peripheral.|
+| manufacturer | string |  N  | The name of the manufacturer. If `manufacturer` is specified as a requirement here, it may be difficult to find devices that can host the  application. Please use these requirements with caution.|
+| model | string |  N  | The model of the peripheral. If `model` is specified as a requirement here, it may be difficult to find devices that can host the application. Please use these requirements with caution.|
 
 
 ### RequiredInterfaces Attributes  <br><br>
@@ -435,11 +435,13 @@ deploymentProfiles:
     requiredResources:
       cpu:
         coreCountMinimum: 1
-        architecture: amd64 # or: x86_64
+        architectures: 
+          - amd64 
+          - x86_64
       memory: 
-        sizeMinimum: 1024 # MB
+        sizeMinimum: 1024Mi
       storage: 
-        sizeMinimum: 10000 # MB := 10 GB
+        sizeMinimum: 10Gi
     requiredPeripherals:
       - type: gpu
         manufacturer: NVIDIA
