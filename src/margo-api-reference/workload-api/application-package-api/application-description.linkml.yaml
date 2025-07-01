@@ -241,7 +241,7 @@ classes:
         rank: 10
       memory:
         description: The minimum amount of memory required.
-          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). 
+          The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). 
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of memory for the application.
         rank: 20
@@ -250,7 +250,7 @@ classes:
         required: false
       storage:
         description: The amount of storage required.
-          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
+          The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of storage for the application
         rank: 30
