@@ -249,7 +249,7 @@ classes:
         pattern: ^[0-9]+(Mi|Gi|Ki)$
         required: false
       storage:
-        description: The amount of storage required.
+        description: The amount of storage required for the application to be run. This encompasses the installed application and the data it needs to store.
           The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of storage for the application
@@ -724,6 +724,11 @@ enums:
         description: ARM 64-bit architecture.
       arm:
         description: ARM 32-bit architecture.
+      riscv64:
+        description: RISC-V 64-bit architecture.
+      other:
+        description: >-
+          Any other CPU architecture not listed here. The application developer MUST provide a description of the architecture in the deployment profile's `description` field.
   
   CommunicationInterfaceType:
     permissible_values:
@@ -741,6 +746,8 @@ enums:
         description: This type stands for a CANBus interface.
       rs232:
         description: This type stands for a RS232 interface.
+      other:
+        description: This type stands for any other communication interface not listed here. The application developer MUST provide a description of the interface in the deployment profile's `description` field.
   
   PeripheralType:
     permissible_values:
@@ -754,4 +761,6 @@ enums:
         description: This type stands for a microphone peripheral.
       speaker:
         description: This type stands for a speaker peripheral.
+      other:
+        description: This type stands for any other peripheral not listed here. The application developer MUST provide a description of the peripheral in the deployment profile's `description` field.
 
