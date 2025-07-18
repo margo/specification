@@ -1,12 +1,10 @@
 # Device Capabilities
 
-The purpose of device capabilities reporting is to ensure the Workload Fleet Management solution has the information needed to pair workloads with compatible edge devices. The [device's capabilities](../../margo-api-reference/workload-api/device-api/device-capabilities.md) are reported to the workload orchestration web service using [Margo management API](../../margo-api-reference/margo-api-specification.md).
+The purpose of device capabilities reporting is to ensure the Workload Fleet Management solution has the information needed to pair workloads with compatible edge devices. The device's capabilities are reported to the WFM web service using the Margo Management API.
 
 ### Device Capability Reporting
 
-The device owner MUST report their device's capabilities and characteristics via the [Device API](../../margo-api-reference/workload-api/device-api/device-capabilities.md) when onboarding the device with the workload orchestration solution. Additionally, during the lifecycle of the Edge device, if there is a change that impacts the reported characteristics, the device's interface shall send an update to the Workload Fleet Manager. 
-
-> Action: The device capabilities details are still being discussed
+The device owner MUST report their device's capabilities and characteristics, via the device API, when onboarding the device with the Workload Fleet Management solution. Additionally, during the lifecycle of the edge device, if there is a change that impacts the reported characteristics, the device MUST update the Workload Fleet Manager with the latest information via the management API. 
 
 The following information MUST be provided:
 
@@ -16,10 +14,14 @@ The following information MUST be provided:
 - Serial Number
 - Margo Device Role Designation(Cluster Leader/Worker / Standalone Device)
 - Resources available for workloads to utilize on the Device:
-  - Memory Capacity
+    - Memory Capacity
     - Storage Capacity
-  - CPU information
+    - CPU information
 - Device peripherals(i.e. Graphics card)
 - Network interfaces(wifi/eth/cellular)
 
-For more information see the [device capabilties API](../../margo-api-reference/workload-api/device-api/device-capabilities.md).
+## Relevant Links
+
+Please follow the subsequent links to view more technical information on device capability reporting:
+
+- [Device Capabilities API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)

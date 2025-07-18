@@ -1,18 +1,18 @@
 # Deployment Status
 
-While applying a new desired state the device's management client MUST provide the workload orchestration web service with an indication of the current status. This is done calling the Device API's `device status` endpoint.
+While applying a new desired state the device's management client MUST provide the Workload Fleet Manager API endpoint with an indication of the current workload deployment status. This is done calling the Device API's `device status` endpoint.
 
 ### Route and HTTP Methods
 
 ```http
-POST /device/{deviceId}/deployment/{deploymentId}/status
+POST /api/v1/device/{deviceId}/deployment/{deploymentId}/status
 ```
 
 ### Route Parameters
 
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
-| {deviceId} | string | Y | The device's Id registered with the workload orchestration solution during onboarding.|
+| {deviceId} | string | Y | The device's Id registered with the Workload Fleet Manager solution during onboarding.|
 | {deploymentId} | string | Y | The deployment Id the status is being reported for |
 
 ### Request Body Fields
@@ -23,7 +23,7 @@ POST /device/{deviceId}/deployment/{deploymentId}/status
 |-----------------|-----------------|-----------------|-----------------|
 | apiVersion      | string    | Y    | Identifier of the version of the API the object definition follows.|
 | kind            | string    | Y    | Must be `DeploymentStatus`.|
-| deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Orchestration Software. |
+| deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Fleet Management Software. |
 | status          | []status    | Y    | Element that defines overall deployment status. See the [Status Fields](#status-fields) section below.|
 | components      | []components    | Y    | Element that defines the individual component's deployment status. See the [Component Fields](#component-fields) section below.|
 

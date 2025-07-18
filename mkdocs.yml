@@ -31,11 +31,11 @@ nav:
           - device-interoperability/collecting-workload-observability-data.md
   - Technical References:
       - Margo Management Interface:
-          - margo-api-reference/margo-api-specification.md
+          - margo-api-reference/workload-api/api-security-details.md
           - margo-api-reference/workload-api/desired-state-api/desired-state.md
           - margo-api-reference/workload-api/device-api/device-capabilities.md
           - margo-api-reference/workload-api/device-api/deployment-status.md
-          - margo-api-reference/workload-api/onboarding-api/device-onboarding.md
+          - margo-api-reference/workload-api/onboarding-api/client-onboarding.md
           - margo-api-reference/workload-api/onboarding-api/rootca-download.md
       - Application Package Definition:
           - margo-api-reference/workload-api/application-package-api/application-description.md

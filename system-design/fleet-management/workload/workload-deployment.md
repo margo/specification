@@ -40,4 +40,6 @@ The deployment status uses the following rules:
 - The state is `Failure` if at any point the desired state fails to be applied. When reporting a `Failure` state the error message and error code MUST be reported
 - The state is `Success` once the desired state has been applied completely 
 
+
+> Note: Drawing to be replaced with mermaid sequence diagram. 
 ![Workload Install Sequence Diagram (svg)](../../figures/workload-install-sequence.drawio.svg)

@@ -5,8 +5,8 @@ Devices MUST provide the workload orchestration service with its capabilities an
 ### Route and HTTP Methods
 
 ```http
-POST /device/{deviceId}/capabilities
-PUT /device/{deviceId}/capabilities
+POST /api/v1/device/{deviceId}/capabilities
+PUT /api/v1/device/{deviceId}/capabilities
 ```
 
 ### Route Parameters
@@ -17,7 +17,7 @@ PUT /device/{deviceId}/capabilities
 
 ### Request Body Fields
 
-> Action: Discusssion still needed on "types" and "properties" per type that would be required. This is relevant for both the peripherals and interfaces section.
+> Action: Discussion still needed on "types" and "properties" per type that would be required. This is relevant for both the peripherals and interfaces section.
 
 | Field      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
@@ -34,43 +34,82 @@ PUT /device/{deviceId}/capabilities
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
 | roles         | []string    | Y    | Element that defines the device role it can provide to the Margo environment. MUST be one of the following: Standalone Cluster, Cluster Leader, or Standalone Device |
-| resources            | []Resource    | Y    | Element that defines the device's resources available to the application deployed on the device. See the [Resource Fields](#resources-fields) section below. |
-| peripherals            | []Peripheral    | Y    | Element that defines the device's peripherals available to the application deployed on the device. See the [Peripheral Fields](#peripheral-fields) section below. |
-| interfaces            | []Interface    | Y    | Element that defines the device's interfaces that are available to the application deployed on the device. See the [Interface Fields](#interface-fields) section below. |
+| resources            | []Resource    | Y    | Element that defines the device's resources available to the application deployed on the device. See the [Resource Fields](#resources-attributes) section below. |
+| peripherals            | []Peripheral    | Y    | Element that defines the device's peripherals available to the application deployed on the device. See the [Peripheral Fields](#peripheral-attributes) section below. |
+| interfaces            | []CommunicationInterface    | Y    | Element that defines the device's interfaces that are available to the application deployed on the device. See the [Interface Fields](#communicationinterface-attributes) section below. |
 
-#### Resources Fields
+### Resources Attributes
+Resources of the specific device being reported to the WFM. Utilized to match with the required resources defined in the application description
 
-| Fields       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| cpus         | []CPU      | Y    | Element that defines the device's CPUs that are available to the application deployed on the device. See the [CPU Fields](#cpu-fields) section below.|
-| memory       | integer    | Y    | Defines the memory capacity available for applciations on the device. This MUST be defined in GBs|
-| storage      | integer    | Y    | Defines the storage capacity available for applications to utilize. This MUST be defined in GBs.|
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| cpu | CPU |  N  | CPU element specifying the CPU information of the device.  See the [CPU](#cpu-attributes) section below.|
+| memory | string |  N  | The amount of memory available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
+| storage | string |  N  | The amount of storage available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
+| peripherals | []Peripheral |  N  | Peripherals element specifying the peripherals available for applications to utilize on the device.  See the [Peripheral](#peripheral-attributes) section below.|
+| interfaces | []CommunicationInterface |  N  | Interfaces element specifying the communication interfaces available for applications to utilize on the device.  See the [Communication Interfaces](#communicationinterface-attributes) section below.|
 
-#### CPU Fields
 
-| Fields       | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| cpuArchitecture      | string    | Y    | Defines the CPUs architecture. i.e. ARM/Intel x86.|
-| cores        | integer    | Y    | Defines the cores available within the hosts CPU.|
-| frequency    | integer    | Y    | Defines the frequency of the CPU. Must be defined in Ghz.|
+### CPU Attributes
+CPU element defining the device's CPU characteristics.
 
-#### Peripheral Fields
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| cores | double |  Y  | Defines the cores available within the hosts CPU. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the device owner. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
+| architecture | []CpuArchitectureType |  N  | The CPU architecture supported by the device. This can be e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.|
 
-| Fields      | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| name      | string    | Y    | Name of the peripheral.|
-| type      | string    | Y    | Type of the peripheral. i.e. GPU|
-| modelNumber      | string    | Y    | Model number of the peripheral.|
-| properties      | map[string]string    | Y    | Properties of the peripheral.|
 
-#### Interface Fields
+### Peripheral Attributes
+Peripheral hardware of a device.
 
-| Fields      | Type            | Required?       | Description     |
-|-----------------|-----------------|-----------------|-----------------|
-| name      | string    | Y    | Name of the interface.|
-| type      | string    | Y    | Type of the interface. i.e. Ethernet NIC, |
-| modelNumber      | string    | Y    | Model number of the interface.|
-| properties      | map[string]string   | Y    | Properties of the interface to inform the WOS with additional information.|
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| type | PeripheralType |  Y  | The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker. See the [PeriperalType](#peripheraltype) definition for all permissible values.|
+| manufacturer | string |  N  | The name of the manufacturer.|
+| model | string |  N  | The model of the peripheral.|
+
+
+### CommunicationInterface Attributes
+Communication interface of a device.
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+| type | CommunicationInterfaceType |  N  | The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.|
+
+## Enumerations
+These enumerations are used as vocabularies for attribute values of the `DeviceCapabilities`.
+
+### CpuArchitectureType
+
+| Permissible Values | Description |
+| --- | --- |
+| amd64 | AMD 64-bit architecture.|
+| x86_64 | x86 64-bit architecture.|
+| arm64 | ARM 64-bit architecture.|
+| arm | ARM 32-bit architecture. |  
+
+### CommunicationInterfaceType
+
+| Permissible Values | Description |
+| --- | --- |
+| ethernet | This type stands for an Ethernet interface.|
+| wifi | This type stands for an WiFi interface.|
+| cellular | This type stands for cellular communication technologies such as 5G, LTE, 3G, 2G, ....|
+| bluetooth | This type stands for a Bluetooth or Bluetooth Low-Energy (BLE) interface. |  
+| usb | This type stands for a USB interface.|
+| canbus | This type stands for a CANBus interface.|
+| rs232 | This type stands for a RS232 interface. |  
+
+### PeripheralType
+
+| Permissible Values | Description |
+| --- | --- |
+| gpu | This type stands for a Graphics Processing Unit (GPU) peripheral.|
+| display | This type stands for a display peripheral.|
+| camera | This type stands for a camera peripheral.|
+| microphone | This type stands for a microphone peripheral. |
+| speaker | This type stands for a speaker peripheral. |
+
 
 ### Example Request
 
@@ -80,48 +119,24 @@ PUT /device/{deviceId}/capabilities
     "kind": "DeviceCapability",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
-        "vendor": "Northstar Industrial Applications",
+        "vendor": "Northstar Industrial devices",
         "modelNumber": "332ANZE1-N1",
         "serialNumber": "PF45343-AA",
         "roles": ["standalone cluster", "cluster lead"],
         "resources": {
-            "memory": "64.0 GB",
-            "storage": "2000 GB",
-            "cpus": [{
-                "architecture": "Intel x64",
-                "cores": 24,
-                "frequency": "6.2 GHz"
+            "memory": "59 Gi",
+            "storage": "1862 Gi",
+            "cpu": [{
+                "architecture": "x86_64",
+                "cores": 24
             }]
         },
         "peripherals": [{
-            "name": "NVIDIA GeForce RTX 4070 Ti SUPER OC Edition Graphics Card",
-            "type": "GPU",  
-            "modelNumber": "TUF-RTX4070TIS-O16G",
-            "properties": {
-                "manufacturer": "NVIDIA",
-                "series": "NVIDIA GeForce RTX 40 Series",
-                "gpu": "GeForce RTX 4070 Ti SUPER",
-                "ram": "16 GB",
-                "clockSpeed": "2640 MHz"
-            }
+            "type": "GPU",
+            "manufacturer": "NVIDIA",
         }],
-        "interfaces": [
-            {
-                "name": "RTL8125 NIC 2.5G Gigabit LAN Network Card",
-                "type": "Ethernet",
-                "modelNumber": "RTL8125",
-                "properties": {
-                    "maxSpeed": "2.5 Gbps"
-                }
-            },
-            {
-                "name": "WiFi 6E Intel AX411NGW M.2 Cnvio2",
-                "type":  "Wi-Fi",
-                "modelNumber": "AX411NGW",
-                "properties": {
-                    "bands": ["2.4 GHz", "5 GHz", "6GHz"],
-                    "maxSpeed": "2.4 Gbps"
-                }
+        "interfaces": [{
+            "type": ["ethernet", "wifi"]
             }]
     }
 }

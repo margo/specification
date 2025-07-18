@@ -69,6 +69,16 @@ Supported Device roles are shown below:
 
 Workload Fleet Manager (WFM) represents a software offering that enables End Users to configure, deploy, and manage edge [Workloads](#workload) as a fleet on their registered [Edge Devices](#edge-compute-device).
 
+##### Workload Fleet Management Client
+
+The Workload Fleet Management Agent is a service that runs on the [Edge Compute Device](#edge-compute-device) which communicates with the [Workload Fleet Manager](#workload-fleet-manager) to receive [Components](#component) that will be instantiated as [Workloads](#workload) and configurations to be applied on the [Edge Compute Device](#edge-compute-device).
+
+#### Device Fleet Manager
+
+Device Fleet Manager (DFM) represents a software offering that enables End Users to onboard, delete, and maintain [Edge Compute Devices](#edge-compute-device) within the ecosystem. This software is utilized in conjunction with the [Workload Fleet Manager](#workload-fleet-manager) software to provide users with the features required to manage their [Edge Device](#edge-compute-device) along with [Workloads](#workload) running on them.  
+
+> Note: The Device Fleet Manager is a future component of the Margo specification. This section will be expanded as the community defines device management functionality. 
+
 ##### Application Registry
 
 An Application Registry holds [Application](#application) Packages.
@@ -90,18 +100,6 @@ A Component Registry holds [Components](#component) (e.g., Helm Charts and Compo
 When an application gets deployed through a [Workload Fleet Manager](#workload-fleet-manager), the components (linked within an Application Description) are requested from the Component Registry.
 
 This can be implemented, for example, as an OCI Registry.
-
-#### Workload Fleet Management Client
-
-The Workload Fleet Management Agent is a service that runs on the [Edge Compute Device](#edge-compute-device) which communicates with the [Workload Fleet Manager](#workload-fleet-manager) to receive [Components](#component) that will be instantiated as [Workloads](#workload) and configurations to be applied on the [Edge Compute Device](#edge-compute-device).
-
-#### Device Fleet Manager
-
-Device Fleet Manager (DFM) represents a software offering that enables End Users to onboard, delete, and maintain [Edge Compute Devices](#edge-compute-device) within the ecosystem. This software is utilized in conjunction with the [Workload Fleet Manager](#workload-fleet-manager) software to provide users with the features required to manage their [Edge Device](#edge-compute-device) along with [Workloads](#workload) running on them.  
-
-#### Device Fleet Management Client
-
-The Device Fleet Management Agent is a service that runs on the [Edge Compute Device](#edge-compute-device) which communicates with the [Device Fleet Manager](#device-fleet-manager) to receive device configuration to be applied on the [Edge Compute Device](#edge-compute-device).
 
 #### Workload Marketplace
 
