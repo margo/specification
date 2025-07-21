@@ -2,8 +2,6 @@
 
 Provided below are a set of requirements that the Management Interface participants must follow to become Margo compliant. 
 
-
-
 ## Requirements
 
 - The Management Interface MUST provide the following functionality outlined within this specification:

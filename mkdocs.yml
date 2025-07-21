@@ -21,7 +21,6 @@ nav:
           - app-interoperability/publishing-workload-observability-data.md
           - app-interoperability/local-registries.md
       - Workload Fleet Managers:
-          - fleet-management/workload/management-interface-requirements.md
           - fleet-management/workload/workload-fleet-management-edge-onboarding.md
           - fleet-management/workload/device-capability-reporting.md
           - fleet-management/workload/workload-deployment.md
@@ -31,7 +30,7 @@ nav:
           - device-interoperability/collecting-workload-observability-data.md
   - Technical References:
       - Margo Management Interface:
-          - margo-api-reference/workload-api/api-security-details.md
+          - margo-api-reference/workload-api/api-req-security-details.md
           - margo-api-reference/workload-api/desired-state-api/desired-state.md
           - margo-api-reference/workload-api/device-api/device-capabilities.md
           - margo-api-reference/workload-api/device-api/deployment-status.md
