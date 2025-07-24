@@ -15,7 +15,7 @@ PUT /api/v1/device/{deviceId}/capabilities
 |----------|------|-----------|------------|
 | {deviceId} | string | Y | The device's Id registered with the workload orchestration web service during onboarding.|
 
-### Request Body Fields
+### Request Body Attributes
 
 > Action: Discussion still needed on "types" and "properties" per type that would be required. This is relevant for both the peripherals and interfaces section.
 
@@ -25,7 +25,7 @@ PUT /api/v1/device/{deviceId}/capabilities
 | kind            | string    | Y    | Must be `DeviceCapabilities`.|
 | properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-fields) section below. |
 
-#### Properties Fields
+### Properties Attributes
 
 | Field       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
@@ -35,8 +35,6 @@ PUT /api/v1/device/{deviceId}/capabilities
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
 | roles         | []string    | Y    | Element that defines the device role it can provide to the Margo environment. MUST be one of the following: Standalone Cluster, Cluster Leader, or Standalone Device |
 | resources            | []Resource    | Y    | Element that defines the device's resources available to the application deployed on the device. See the [Resource Fields](#resources-attributes) section below. |
-| peripherals            | []Peripheral    | Y    | Element that defines the device's peripherals available to the application deployed on the device. See the [Peripheral Fields](#peripheral-attributes) section below. |
-| interfaces            | []CommunicationInterface    | Y    | Element that defines the device's interfaces that are available to the application deployed on the device. See the [Interface Fields](#communicationinterface-attributes) section below. |
 
 ### Resources Attributes
 Resources of the specific device being reported to the WFM. Utilized to match with the required resources defined in the application description
@@ -64,7 +62,7 @@ Peripheral hardware of a device.
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | PeripheralType |  Y  | The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker. See the [PeriperalType](#peripheraltype) definition for all permissible values.|
+| type | PeripheralType |  Y  | The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker. See the [PeripheralType](#peripheraltype) definition for all permissible values.|
 | manufacturer | string |  N  | The name of the manufacturer.|
 | model | string |  N  | The model of the peripheral.|
 
@@ -74,7 +72,7 @@ Communication interface of a device.
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | CommunicationInterfaceType |  N  | The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.|
+| type | CommunicationInterfaceType |  Y  | The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.|
 
 ## Enumerations
 These enumerations are used as vocabularies for attribute values of the `DeviceCapabilities`.
@@ -124,20 +122,20 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
         "serialNumber": "PF45343-AA",
         "roles": ["standalone cluster", "cluster lead"],
         "resources": {
-            "memory": "59 Gi",
-            "storage": "1862 Gi",
             "cpu": [{
                 "architecture": "x86_64",
-                "cores": 24
-            }]
-        },
-        "peripherals": [{
-            "type": "GPU",
-            "manufacturer": "NVIDIA",
-        }],
-        "interfaces": [{
-            "type": ["ethernet", "wifi"]
-            }]
+                "cores": 24.0
+            }],
+            "memory": "59 Gi",
+            "storage": "1862 Gi"
+            "peripherals": [{
+                "type": "GPU",
+                "manufacturer": "NVIDIA",
+            }],
+            "interfaces": [{
+                "type": ["ethernet", "wifi"]
+                }]
+        }
     }
 }
 ```

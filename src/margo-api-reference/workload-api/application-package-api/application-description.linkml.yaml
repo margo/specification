@@ -28,7 +28,7 @@ classes:
         range: string
         rank: 10
       kind:
-        description: Specifies the object type; must be 'application'.
+        description: Specifies the object type; must be `ApplicationDescription`.
         range: string
         required: true
         equals_string: "ApplicationDescription" 
@@ -333,7 +333,7 @@ classes:
           See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.
         rank: 30
         range: CommunicationInterfaceType
-        required: false
+        required: true
 
   HelmDeploymentProfile:
     is_a: DeploymentProfile
