@@ -53,7 +53,7 @@ CPU element defining the device's CPU characteristics.
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| cores | double |  Y  | Defines the cores available within the hosts CPU. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the device owner. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
+| cores | integer |  Y  | Defines the cores available within the hosts CPU. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the device owner. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
 | architecture | []CpuArchitectureType |  N  | The CPU architecture supported by the device. This can be e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.|
 
 
@@ -114,7 +114,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 ```json
 {
     "apiVersion": "device.margo/v1",
-    "kind": "DeviceCapability",
+    "kind": "DeviceCapabilities",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
         "vendor": "Northstar Industrial devices",
@@ -124,7 +124,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
         "resources": {
             "cpu": [{
                 "architecture": "x86_64",
-                "cores": 24.0
+                "cores": 24
             }],
             "memory": "59 Gi",
             "storage": "1862 Gi"

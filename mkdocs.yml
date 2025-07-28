@@ -31,17 +31,15 @@ nav:
   - Technical References:
       - Margo Management Interface:
           - margo-api-reference/workload-api/api-req-security-details.md
-          - margo-api-reference/workload-api/desired-state-api/desired-state.md
-          - margo-api-reference/workload-api/device-api/device-capabilities.md
-          - margo-api-reference/workload-api/device-api/deployment-status.md
           - margo-api-reference/workload-api/onboarding-api/client-onboarding.md
-          - margo-api-reference/workload-api/onboarding-api/rootca-download.md
+          - margo-api-reference/workload-api/device-api/device-capabilities.md
+          - margo-api-reference/workload-api/desired-state-api/desired-state.md
+          - margo-api-reference/workload-api/device-api/deployment-status.md
       - Application Package Definition:
           - margo-api-reference/workload-api/application-package-api/application-description.md
       #- Observability: 
   - Make a Contribution:
       - how-to-contribute/contribution-tutorial.md
-      - how-to-contribute/contribution-navigation.md
 
 theme:
   name: material

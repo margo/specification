@@ -14,7 +14,7 @@ Do not attempt to implement this version of the Specification or reference this 
 
 ## Mission Statement
 
-Margo’s mission emphasizes unlocking innovation barriers in industrial automation through edge interoperability. This is achieved through creation of a reference implementation, open standard, and compliance testing toolkit to facilitate the interoperable orchestration of edge applications and devices. The Margo initiative aims to accelerate digital transformation by simplifying the deployment, scalability, and operation of industrial solutions, thereby enabling organizations to innovate and grow more efficiently.
+Margo’s mission emphasizes unlocking innovation barriers in industrial automation through edge interoperability. This is achieved through creation of a reference implementation, open standard, and compliance testing toolkit to facilitate the interoperable fleet management of edge applications and devices. The Margo initiative aims to accelerate digital transformation by simplifying the deployment, scalability, and operation of industrial solutions, thereby enabling organizations to innovate and grow more efficiently.
 
 Read more about Margo's [Mission Statement](https://margo.org/about/who-are-we/#mission) on our website.
 
