@@ -4,7 +4,7 @@ While applying a new desired state the device's management client MUST provide t
 
 ### Route and HTTP Methods
 
-```http
+```https
 POST /api/v1/device/{deviceId}/deployment/{deploymentId}/status
 ```
 

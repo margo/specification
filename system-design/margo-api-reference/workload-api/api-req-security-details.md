@@ -24,66 +24,55 @@ Provided below are a set of requirements that the Management Interface participa
     - Note: This requirement is a suggestion but not required via Margo conformance. 
 
 ## Authorization and Security Details
+> Note: The content documented below is still being finalized within the community, SUP process will be started shortly to finalize. 
 
-### Margo Web API Authentication Method
+### Certificates
+The following certificate strategies are utilized within the Margo Management Interface. 
 
-The Margo Web API communication pattern between the device's management client and the Workload Fleet Manager web service must use a secure communication channel. In order to facilitate this secure communication Margo requires the use of oAuth 2.0 for authentication.
+- Device Client and WFM server both are represented by an x.509 certificates
+    - PEM certificate format MUST be used 
+- These certificates are each manually placed in the counterpart's system to enable the onboarding process detailed below. 
+
+### Unique Identifiers
+To ensure each device's management client has a unique id, the Workload Fleet manager should produce a UUID per interface client. 
+
+- This unique identifier is produced during onboarding and enables authorization to specific content per client.  
+    - Unique identifier MUST be in the format of Universally Unique Identifier(UUIDv4)
+
+### Onboarding of the Management Interface Client
+
+- During the onboarding process the end user uploads the WFM and device's x.509 certificates manually to their respective services. 
+> Note: The Margo community is investigating solutions that will automate this process. Future updates will be completed.
+- Device sends a CSR with its public key inside, and a signature in the CSR itself.
+- Server extracts the public key, and verifies with it's internal authorized list.
+- Server then verifies the identity of the device via a challenge via sending a nonce.
+- Following a successful challenge, the WFM server provides client with the following details:
+    - Status of the onboarding (Success / fail)
+    - UUID associated with the device's x.509 certificate
+    - JWT token
+- Once this is complete, both parties are able to [signing payloads](#signing-payloads). 
+
+> Note: For further details regarding the onboarding, please see [device onboarding](../workload-api/onboarding-api/device-onboarding.md)
+
+## Margo Web API Authentication Method
+
+The Margo Web API communication pattern between the device's management client and the Workload Fleet Manager web service must use a secure communication channel. 
 
 #### API Authorization Strategy
 
-- During the [onboarding process](../../margo-api-reference/workload-api/onboarding-api/client-onboarding.md) the Workload Fleet Management's web service provides the management client with a client Id, client secret and token endpoint URL
-- The management client uses this information to [create a bearer token ](../../margo-api-reference/workload-api/api-security-details.md#authorization-header)for each request
-- The bearer token is set in the `Authorization` header for each web request sent to the Workload Fleet Management's web service requiring authorization.
-
-### Unique Identifiers
-To ensure each device's management client has a unique id, the Workload Fleet manager should produce a unique id, and present that to the user for usage at a later point. 
-
-- This unique identifier enables onboarding and ensures proper allocation of desired state files to the appropriate client. 
-- Unique identifier must be in the format of "GUID"
-
-### Certificates
-Using x.509 certificates
-
-Onboarding certificate? 
-
-Who is the rootCA? How do the various entities verify the authenticity of these x.509s?
+- During the [onboarding process](../../margo-api-reference/workload-api/onboarding-api/device-onboarding.md) the Workload Fleet Management's web service provides the management client with a UUID and JWT token. 
+- The JWT token is set in the `Authorization` header for each web request sent to the Workload Fleet Management's web service requiring authorization.
 
 #### Authorization Header
-For requests requiring authentication a bearer token MUST be present in the message's `Authorization` header.
+For requests requiring authentication a JWT token MUST be present in the message's `Authorization` header.This token is provided by the WFM during the onboarding process. 
 
-You can get the access token by sending a request to the Workload Fleet Manager web service's token URL, providing the device's client Id and secret.
-
-```bash
-curl -X POST \
--H "Content-Type: application/x-www-form-urlencoded" \
--d "grant_type=client_credentials&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>" \
-<WOS_Token_URL>
-```
-The request's response indicates the access token to use for subsequent requests.
-
-```json
-{
-  "access_token": "ACCESS_TOKEN",
-  "token_type": "Bearer",
-  "expires_in": 3600
-}
-```
-
-Set the `Authorization` headers value to `Bearer <ACCESS_TOKEN>` When making request requiring authorization. For example:
-
-```bash
-curl -H "Authorization: Bearer ACCESS_TOKEN" https://wos.example.com/device/2fc3d8e9-8c56-4270-b7d3-8ed30262e5e1
-```
+Set the `Authorization` headers value to `Bearer <JWT>` When making request requiring authorization. 
 
 #### Payload Security Method
 
 > Action: Certificate Rotation / Unique Identifier for device are still research areas needed.
 
 Because of limitations using mTLS with common OT infrastructure such as TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection Margo has adopted a certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes, the device's management client can ensure secure transport between the device's management client and the Workload Fleet Management's web service.
-
-- During the onboarding process the end user uploads the device's x.509 certificate to the Workload Fleet Manager solution 
-- The device's management client downloads the root CA certificate using the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/rootca-download.md)
-- Once this is complete, both parties are able to [secure their payloads](../../margo-api-reference/workload-api/api-security-details.md#signing-payloads). 
 
 ##### Details pertaining to the message Envelope:
 
@@ -94,7 +83,7 @@ Once the edge device has a message prepared for the Workload Fleet Management's 
     - actual payload
     - SHA of the payload, signed by the device certificate
     - Identifier for the certificate that corresponds to the private key used to sign it. 
-        - This identifier MUST be the GUID provided by the device manufacturer. Typically the hardware serial number. 
+        - This identifier MUST be the UUID provided by the WFM server. 
 - The envelope is sent as the payload to the Workload Fleet Management's web service. 
 - The Workload Fleet Management's web service treats the request's payload as envelope structure, and receives the certificate identifier.
 > Note: This certificate is the device certificate that was manually uploaded to the Workload Fleet Manager solution during onboarding. 

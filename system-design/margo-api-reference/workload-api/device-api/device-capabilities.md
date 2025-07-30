@@ -1,10 +1,12 @@
 # Device Capabilities
 
-Devices MUST provide the workload orchestration service with its capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint.
+Devices MUST provide the Workload Fleet Management service with its capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint.
+
+- To ensure the WFM is kept up to date, the device's client MUST send updated capabilities information if any changes occur to the information originally provided. i.e. additional memory is added to the device. 
 
 ### Route and HTTP Methods
 
-```http
+```https
 POST /api/v1/device/{deviceId}/capabilities
 PUT /api/v1/device/{deviceId}/capabilities
 ```
@@ -16,8 +18,6 @@ PUT /api/v1/device/{deviceId}/capabilities
 | {deviceId} | string | Y | The device's Id registered with the workload orchestration web service during onboarding.|
 
 ### Request Body Attributes
-
-> Action: Discussion still needed on "types" and "properties" per type that would be required. This is relevant for both the peripherals and interfaces section.
 
 | Field      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
