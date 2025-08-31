@@ -3,13 +3,13 @@
 ![Static Badge](https://img.shields.io/badge/Deliverable_Development_Status-Pre_Draft-blue)
 [![GitHub Pages](https://github.com/margo/specification/actions/workflows/pages.yml/badge.svg)](https://github.com/margo/specification/actions/workflows/pages.yml)
 
-# Individual Contributor License Agreement
-
-If you, as an individual, own the contribution, you must sign the Individual [Contributor License Agreement](https://github.com/margo/EasyCLA-public-feedback) (CLA). This signed CLA will be required before your contribution can be merged into the project repository. Please note that as an individual contributor, you are acting on your own behalf, and not on behalf of your employer.
-
-## Contributing
+# Contributing
 
 [Contribution flow process In Detail ](https://miro.com/app/board/uXjVJfhlCYM=/?share_link_id=610857134424) - This flow process delineates the systematic approach utilised by the Technical Working Group for the evaluation and processing of submissions made by non-member Margo. It encompasses a series of defined stages, ensuring that each submission is rigorously reviewed in alignment with established criteria and protocols. The process is designed to facilitate transparency, efficiency, and thoroughness, thereby fostering a robust framework for collaboration and innovation within the group.
+
+# Individual Contributor 
+
+If you, as an individual, own the contribution, you must sign the Individual [Contributor License Agreement](https://github.com/margo/EasyCLA-public-feedback) (CLA). This signed CLA will be required before your contribution can be merged into the project repository. Please note that as an individual contributor, you are acting on your own behalf, and not on behalf of your employer.
 
 # Submission Steps
 **Step 1:** The Contributor selects either Category 1 or Category 2 based on the type of submission proposal.
