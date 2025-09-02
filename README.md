@@ -30,7 +30,7 @@ If you, as an individual, own the contribution, you **MUST SIGN** the Individual
 
 ### **Success Paths**
 - **Cat 1**: PR approved by TWG members and merged by Chair
-- **Cat 2**: Reviewed and approved by the SUP committee
+- **Cat 2**: Reviewed and approved by the TWG Technical Leads
 
 ### **Closure Paths**
 - Chair closes issue (insufficient feedback/comments)
