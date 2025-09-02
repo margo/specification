@@ -13,7 +13,7 @@ If you, as an individual, own the contribution, you **MUST SIGN** the Individual
 
 # Submission Steps
 **Step 1:** The Contributor selects either Category 1 or Category 2 based on the type of submission proposal.
-  - [Category 1 (Cat 1)](https://github.com/margo/specification/tree/pre-draft?tab=readme-ov-file#choose-cat-1--submit-pr--easycla--review--approve--merge): Minor [issues](https://github.com/margo/specification/issues) outlining a bug or [pull request](https://github.com/margo/specification/pulls) submission to suggest a simple editorial change
+  - [Category 1 (Cat 1)](https://github.com/margo/specification/tree/pre-draft?tab=readme-ov-file#choose-cat-1--submit-pr--easycla--review--approve--merge): Minor [Bug Report](https://github.com/margo/specification/issues) outlining a bug or [pull request](https://github.com/margo/specification/pulls) submission to suggest a simple editorial change
   - [Category 2 (Cat 2)](https://github.com/margo/specification/tree/pre-draft?tab=readme-ov-file#choose-cat-2--specification-update-process--sup-process--easycla--review--approve--merge): Specification major enhancement proposals require following the [Specification Update Process](https://github.com/margo/specification-enhancements)
 
 > These workflows ensure quality control, proper licensing compliance, and structured review processes for both routine contributions and major specification enhancements within the MARGO project ecosystem.
