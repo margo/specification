@@ -13,5 +13,4 @@ The main goals of the management interface are as follows:
 
 Please follow the subsequent links to view more technical information regarding Margo's management interface:
 
-- During the [onboarding process](../../margo-api-reference/workload-api/onboarding-api/device-onboarding.md) the Workload Fleet Management's web service provides the management client with a UUID and JWT token. 
 - [Margo API Technical Reference](../margo-api-reference/workload-api/api-req-security-details.md)
