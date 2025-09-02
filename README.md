@@ -14,14 +14,13 @@ If you, as an individual, own the contribution, you **MUST SIGN** the Individual
 # Submission Steps
 **Step 1:** The Contributor selects either Category 1 or Category 2 based on the type of submission proposal.
   - [Category 1 (Cat 1)](https://github.com/margo/specification/tree/pre-draft?tab=readme-ov-file#choose-cat-1--submit-pr--easycla--review--approve--merge): Minor [Bug Report](https://github.com/margo/specification/issues) outlining a bug or [pull request](https://github.com/margo/specification/pulls) submission to suggest a simple editorial change
-  - [Category 2 (Cat 2)](https://github.com/margo/specification/tree/pre-draft?tab=readme-ov-file#choose-cat-2--specification-update-process--sup-process--easycla--review--approve--merge): Specification major enhancement proposals require following the [Specification Update Process](https://github.com/margo/specification-enhancements)
-
+  - [Category 2 (Cat 2)](https://github.com/margo/specification/tree/pre-draft?tab=readme-ov-file#choose-cat-2--specification-update-process--sup-process--easycla--review--approve--merge): Submit an [Enhancement Request](https://github.com/margo/specification/issues) detailing the suggestion and, optionally, submission of a completed specification update proposal document detailing the proposal's technical solution.
 > These workflows ensure quality control, proper licensing compliance, and structured review processes for both routine contributions and major specification enhancements within the MARGO project ecosystem.
 
-## Choose Cat 1: → Submit PR → EasyCLA → Review → Approve → Merge
+## Choose Cat 1: → EasyCLA -> Submit PR → Review → Approve → Merge
 <img width="3344" height="254" alt="image" src="https://github.com/user-attachments/assets/fbf91b76-1bd4-437c-ba31-a8f93588a4ac" />
 
-## Choose Cat 2: → [Specification Update Process](https://github.com/margo/specification-enhancements) → [SUP Process](https://github.com/margo/Margo-collaboration/blob/main/specification_update_processes/process-overview.md#guidelines-for-pull-requests) → EasyCLA → Review → Approve → Merge
+## Choose Cat 2: → Submit Enhancement Request | (optional steps) EasyCLA -> Submit specification update proposal document -> Review -> Approve -> Create specification PR
 <img width="3346" height="204" alt="image" src="https://github.com/user-attachments/assets/145cd908-9d04-4827-8b12-1e4df98522c2" />
 
 **ALL** Non-member PR submissions must sign the [Contributor License Agreement](https://github.com/margo/EasyCLA-public-feedback).  
@@ -29,8 +28,11 @@ If you, as an individual, own the contribution, you **MUST SIGN** the Individual
 ## Process Outcomes
 
 ### **Success Paths**
-- **Cat 1**: PR approved by TWG members and merged by Chair
-- **Cat 2**: Reviewed and approved by the TWG Technical Leads
+- **Cat 1**:
+  - PR approved by TWG members and merged into the appropriate release branch
+- **Cat 2**:
+  - Enhancement requests accepted and added to the roadmap 
+  - (Optional) Specification update proposal document submitted and approved by the TWG technical leads
 
 ### **Closure Paths**
 - Chair closes issue (insufficient feedback/comments)
