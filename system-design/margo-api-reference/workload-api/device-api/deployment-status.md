@@ -1,6 +1,6 @@
 # Deployment Status
 
-While applying a new desired state the device's management client MUST provide the Workload Fleet Manager API endpoint with an indication of the current workload deployment status. This is done calling the Device API's `device status` endpoint.
+While applying a new desired state, the device's management client MUST provide the Workload Fleet Manager service with an indication of the current workload deployment status. This is done by calling the Device API's `device status` endpoint.
 
 ### Route and HTTP Methods
 
