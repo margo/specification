@@ -18,17 +18,7 @@ Below is a breakdown of the three major categories these requirements fall under
 
 ## Basic functions for supporting the Management Interface
 ### Onboarding of the Management Interface Client
-> Note: The Margo community is investigating solutions that will automate this process. Future updates will be completed.
-
-- During the onboarding process the end user uploads the WFM and device's x.509 certificates manually to their respective services. 
-- Device sends a CSR with its public key inside, and a signature in the CSR itself.
-- Server extracts the public key, and verifies with it's internal authorized list.
-- Server then verifies the identity of the device via a challenge via sending a nonce.
-- Following a successful challenge, the WFM server provides client with the following details:
-    - Status of the onboarding (Success / fail)
-    - UUID associated with the device's x.509 certificate
-    - JWT token
-- Once this is complete, both parties are able to [signing payloads](#signing-payloads). 
+> Note: This section will be completed in a future SUP submission.
 #### Support for Extended Device Communications Downtime
 - Interface patterns MUST support extended device communication downtime. 
 - The Management Interface MUST allow an end user to configure the following:
@@ -36,7 +26,6 @@ Below is a breakdown of the three major categories these requirements fall under
 	- Polling Interval Period - describes a configurable time period indicating the hours in which the device's management client checks for updates to the device's desired state.
 	- Polling Interval Rate - describes the rate for how frequently the device's management client checks for updates to the device's desire state.
 - Running the device's management client as containerized services is preferred. By following Margo application packaging guidelines, it makes the management interface easier to lifecycle manage, however this is not required.
-    - Note: This requirement is a suggestion but not required via Margo conformance. 
 
 ## API Security Requirements
 > Note: The content documented below is still being finalized within the community, SUP process will be started shortly to finalize. 
@@ -88,21 +77,3 @@ The following steps are used to verify signed payload:
 2. Decrypt the digital signature using the public key to get the original hash value
 3. Generate a SHA-256 hash value for the requests's body
 4. Ensure the generated hash value matches the hash value from the message
-
-## Workload Management Functions
-### Set Workload(s) Desired State
-- The device's management client MUST retrieve the device's set of desired state files from the Workload Fleet Manager.
-    - Following the retrieval of the desired state(s), the device MUST orchestrate the changes locally via the provider. 
-- The Workload Fleet Management supplier's solution MUST maintain a storage repository to store the managed edge device's associated set of desired state files.
-    - Margo does not dictate how the desired state files are stored, other than ensuring they are available upon request via API definition.
-### Report the Workload's Deployment Status
-- The device's management client MUST provide the Workload's Deployment Status, in case there is a change indicated in the device's set of desired state files. 
-
-For details on the API and objects exchanged refer  [Desired State API](Margo-api-reference/desired-state-api/desired-state.md) and the [Deployment Status API](Margo-api-reference/device-api/deployment-status.md)
-
-## Device Specific Functions
-### Device Capability Update
-- The device MUST provide the WFM with a list of capabilities after the Management Interface is initialized. The device's management client must be informed of these capabilities by the device. 
-- Following the initial upload of device capabilities to the device's management client, the device MUST update the WFM with an updated list of capabilities in case the device detects a change in capabilities.
-
-For details on the API and objects exchanged refer  [Device Capability API](Margo-api-reference/device-api/device-capabilities.md)  
