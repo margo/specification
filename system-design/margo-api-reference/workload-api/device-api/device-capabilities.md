@@ -120,21 +120,29 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
         "vendor": "Northstar Industrial devices",
         "modelNumber": "332ANZE1-N1",
         "serialNumber": "PF45343-AA",
-        "roles": ["standalone cluster", "cluster lead"],
+        "roles": [
+            "standalone cluster",
+            "cluster lead"
+        ],
         "resources": {
-            "cpu": [{
-                "architecture": "x86_64",
-                "cores": 24
-            }],
+            "cpu": [
+                {
+                    "cores": 24,
+                    "architecture": "x86_64"
+                }
+            ],
             "memory": "59 Gi",
-            "storage": "1862 Gi"
-            "peripherals": [{
-                "type": "GPU",
-                "manufacturer": "NVIDIA",
-            }],
-            "interfaces": [{
-                "type": ["ethernet", "wifi"]
-                }]
+            "storage": "1862 Gi",
+            "peripherals": [
+                {
+                    "type": "GPU",
+                    "manufacturer": "NVIDIA"
+                }
+            ],
+            "interfaces": [
+                "ethernet",
+                "wifi"
+            ]
         }
     }
 }
