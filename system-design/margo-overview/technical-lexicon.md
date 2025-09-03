@@ -71,7 +71,7 @@ Workload Fleet Manager (WFM) represents a software offering that enables End Use
 
 ##### Workload Fleet Management Client
 
-The Workload Fleet Management Agent is a service that runs on the [Edge Compute Device](#edge-compute-device) which communicates with the [Workload Fleet Manager](#workload-fleet-manager) to receive [Components](#component) that will be instantiated as [Workloads](#workload) and configurations to be applied on the [Edge Compute Device](#edge-compute-device).
+The Workload Fleet Management client is a service that runs on the [Edge Compute Device](#edge-compute-device) which communicates with the [Workload Fleet Manager](#workload-fleet-manager) to receive [Components](#component) that will be instantiated as [Workloads](#workload) and configurations to be applied on the [Edge Compute Device](#edge-compute-device).
 
 #### Device Fleet Manager
 
