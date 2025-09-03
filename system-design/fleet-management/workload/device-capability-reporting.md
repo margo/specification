@@ -1,6 +1,6 @@
 # Device Capabilities
 
-The purpose of device capabilities reporting is to ensure the Workload Fleet Management solution has the information needed to pair workloads with compatible edge devices. The device's capabilities are reported to the WFM web service using the Margo Management API.
+The purpose of device capabilities reporting is to ensure the Workload Fleet Management (WFM) solution has the information needed to pair workloads with compatible edge devices. The device's capabilities are reported to the WFM web service using the Margo Management API.
 
 ### Device Capability Reporting
 
