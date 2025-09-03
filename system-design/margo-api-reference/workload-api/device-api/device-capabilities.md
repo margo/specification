@@ -2,7 +2,7 @@
 
 Devices MUST provide the Workload Fleet Management service with its capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint.
 
-- To ensure the WFM is kept up to date, the device's client MUST send updated capabilities information if any changes occur to the information originally provided. i.e. additional memory is added to the device. 
+To ensure the WFM is kept up to date, the device's client MUST send updated capabilities information if any changes occur to the information originally provided (i.e., additional memory is added to the device).
 
 ### Route and HTTP Methods
 
