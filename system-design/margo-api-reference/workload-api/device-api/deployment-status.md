@@ -89,4 +89,4 @@ POST /api/v1/device/{deviceId}/deployment/{deploymentId}/status
 | Code | Description |
 |------|-------------|
 | 201  | The deployment status was added, or updated, successfully |
-| 4XX-5XX | The requests was not completed sucessfully |
+| 4XX-5XX | The requests was not completed successfully |

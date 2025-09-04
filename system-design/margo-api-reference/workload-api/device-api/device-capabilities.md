@@ -41,11 +41,11 @@ Resources of the specific device being reported to the WFM. Utilized to match wi
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| cpu | CPU |  N  | CPU element specifying the CPU information of the device.  See the [CPU](#cpu-attributes) section below.|
-| memory | string |  N  | The amount of memory available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
-| storage | string |  N  | The amount of storage available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
-| peripherals | []Peripheral |  N  | Peripherals element specifying the peripherals available for applications to utilize on the device.  See the [Peripheral](#peripheral-attributes) section below.|
-| interfaces | []CommunicationInterface |  N  | Interfaces element specifying the communication interfaces available for applications to utilize on the device.  See the [Communication Interfaces](#communicationinterface-attributes) section below.|
+| cpu | CPU |  Y  | CPU element specifying the CPU information of the device.  See the [CPU](#cpu-attributes) section below.|
+| memory | string |  Y  | The amount of memory available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
+| storage | string |  Y  | The amount of storage available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
+| peripherals | []Peripheral |  Y  | Peripherals element specifying the peripherals available for applications to utilize on the device.  See the [Peripheral](#peripheral-attributes) section below.|
+| interfaces | []CommunicationInterface |  Y  | Interfaces element specifying the communication interfaces available for applications to utilize on the device.  See the [Communication Interfaces](#communicationinterface-attributes) section below.|
 
 
 ### CPU Attributes
@@ -140,8 +140,12 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
                 }
             ],
             "interfaces": [
-                "ethernet",
-                "wifi"
+                {
+                    "type": "ethernet"
+                },
+                {
+                    "type": "wifi"
+                }
             ]
         }
     }
@@ -153,4 +157,4 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | Code | Description |
 |------|-------------|
 | 201  | The device capabilities document was added, or updated, successfully |
-| 4XX-5XX | The requests was not completed sucessfully |
+| 4XX-5XX | The requests was not completed successfully |
