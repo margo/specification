@@ -32,19 +32,9 @@ Below is a breakdown of the three major categories these requirements fall under
 ### Margo Web API Authentication Method
 The Margo Web API communication pattern between the device's management client and the Workload Fleet Manager web service must use a secure communication channel. 
 ### Authentication and Authorization using Certificates
-The following certificate strategies are utilized within the Margo Management Interface.
-
-- Device Client and WFM server both are represented by an x.509 certificates
-    - PEM certificate format MUST be used 
-- These certificates are each manually placed in the counterpart's system to enable the onboarding process mentioned above. 
-- During the [onboarding process](Margo-api-reference/workload-api/onboarding-api/device-onboarding.md) the Workload Fleet Management's web service provides the management client with a UUID and JWT token. 
-- The JWT token is set in the `Authorization` header for each web request sent to the Workload Fleet Management's web service requiring authorization. This token is provided by the WFM during the onboarding process. 
-- Requests from the Device will have the `Authorization` headers value to `Bearer <JWT>`. 
+> Note: This section will be completed in a future SUP submission.
 ### Unique Identifiers for the Workload Fleet Manager and Device's Management Interface Relationship
-To ensure each device's management client has a unique id, the Workload Fleet manager should produce a UUID per interface client. 
-
-- This unique identifier is produced during onboarding and enables authorization to specific content per client.  
-    - Unique identifier MUST be in the format of Universally Unique Identifier(UUIDv4)
+> Note: This section will be completed in a future SUP submission.
 ### Payload Security Method
 > Action: Certificate Rotation (CRLs) / Unique Identifier for device are still research areas needed.
 
