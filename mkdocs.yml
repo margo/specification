@@ -25,7 +25,7 @@ nav:
           - fleet-management/workload/workload-deployment.md
           - fleet-management/workload/consuming-workload-observability-data.md
       - Edge Compute Devices:
-          - device-interoperability/device-requirements.md
+          - device-interoperability/devices.md
           - device-interoperability/collecting-workload-observability-data.md
   - Technical References:
       - Margo Management Interface:
@@ -37,6 +37,8 @@ nav:
           - margo-api-reference/workload-api/device-api/deployment-status.md
       - Application Package Definition:
           - margo-api-reference/workload-api/application-package-api/application-description.md
+      - Margo Devices:
+          - margo-api-reference/margo-devices/device-requirements.md
       #- Observability: 
   - Make a Contribution:
       - how-to-contribute/contribution-tutorial.md
