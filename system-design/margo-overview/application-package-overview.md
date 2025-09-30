@@ -74,5 +74,5 @@ sequenceDiagram
 
 Please follow the subsequent links to view more technical information regarding Margo application packaging:
 
-- [Application Package Definition](../app-interoperability/application-package-definition.md)
+- [Application Package](../app-interoperability/application-package-definition.md)
 - [Application Registry](../app-interoperability/workload-orch-to-app-reg-interaction.md)

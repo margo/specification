@@ -29,7 +29,7 @@ Below are details regarding the current focus groups, leads, meeting information
     - Tuesdays, 2pm CET
 - Associated Github Project to track activites
     - [Link to Project](https://github.com/orgs/margo/projects/3) 
-### FG: Application Package definitions
+### FG: Application Package
 - Focus Group Lead
     - Arne Broering(arne.broering@siemens.com)
 - Focus Group Meeting Details

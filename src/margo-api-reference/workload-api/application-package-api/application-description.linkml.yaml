@@ -249,7 +249,7 @@ classes:
         pattern: ^[0-9]+(Mi|Gi|Ki)$
         required: false
       storage:
-        description: The amount of storage required for the application to be run. This encompasses the installed application and the data it needs to store.
+        description: The amount of storage required for the application to run. This encompasses the installed application and the data it needs to store.
           The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of storage for the application
