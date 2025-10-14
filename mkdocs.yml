@@ -4,30 +4,30 @@ docs_dir: system-design
 nav:
   - What is Margo?: index.md
   - Personas & Definitions:
-      - margo-overview/personas.md
-      - margo-overview/personas-extended.md
-      - margo-overview/technical-lexicon.md
-      - margo-overview/software-composition.md
+      - personas-and-definitions/personas.md
+      - personas-and-definitions/persona-examples.md
+      - personas-and-definitions/technical-lexicon.md
+      - personas-and-definitions/software-composition.md
   - Overview:
-      - margo-overview/introduction-system-design.md
-      - margo-overview/application-package-overview.md
-      - margo-overview/workload-management-interface-overview.md
-      - margo-overview/devices-overview.md
-      - margo-overview/workload-observability-overview.md
+      - overview/envisioned-system-design.md
+      - overview/workloads.md
+      - overview/workload-fleet-management.md
+      - overview/edge-compute-devices.md
+      - overview/workload-observability.md
   - Concepts:
       - Workloads:
-          - app-interoperability/application-package-definition.md
-          - app-interoperability/workload-orch-to-app-reg-interaction.md # = Application Registry
-          - app-interoperability/publishing-workload-observability-data.md
-          - app-interoperability/local-registries.md
+          - concepts/workloads/application-package.md
+          - concepts/workloads/application-registry.md
+          - concepts/workloads/publishing-workload-observability-data.md
+          - concepts/workloads/local-registries.md
       - Workload Fleet Managers:
-          - fleet-management/workload/device-capability-reporting.md
-          - fleet-management/workload/workload-deployment.md
-          - fleet-management/workload/consuming-workload-observability-data.md
+          - concepts/workload-fleet-managers/device-capabilities.md
+          - concepts/workload-fleet-managers/workload-deployment.md
+          - concepts/workload-fleet-managers/consuming-workload-observability-data.md
       - Edge Compute Devices:
-          - device-interoperability/devices.md
-          - device-interoperability/collecting-workload-observability-data.md
-  - Technical References:
+          - concepts/edge-compute-devices/devices.md
+          - concepts/edge-compute-devices/collecting-workload-observability-data.md
+  - Specification (pre-draft):
       - Margo Management Interface:
           - margo-api-reference/workload-api/api-req-security-details.md
           - margo-api-reference/workload-api/onboarding-api/device-onboarding.md
@@ -36,12 +36,12 @@ nav:
           - margo-api-reference/workload-api/desired-state-api/desired-state.md
           - margo-api-reference/workload-api/device-api/deployment-status.md
       - Application Package:
-          - margo-api-reference/workload-api/application-package-api/application-description.md
+          - specification/application-package/application-description.md
       - Margo Devices:
-          - margo-api-reference/margo-devices/device-requirements.md
+          - specification/margo-devices/device-requirements.md
       #- Observability: 
   - Make a Contribution:
-      - how-to-contribute/contribution-tutorial.md
+      - make-a-contribution/contributing.md
 
 theme:
   name: material

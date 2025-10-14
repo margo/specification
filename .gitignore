@@ -6,6 +6,6 @@ myenv
 
 # Ignore the generated files:
 system-design/margo-api-reference/workload-api/desired-state-api/desired-state.md
-system-design/margo-api-reference/workload-api/application-package-api/application-description.md
+system-design/specification/application-package/application-description.md
 system-design/margo-api-reference/workload-api/desired-state-api/docs
 *.code-workspace

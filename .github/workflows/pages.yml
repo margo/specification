@@ -99,7 +99,7 @@ jobs:
         with:
           name: generated-documentation
           path: |
-            system-design/app-interoperability/application-package-definition.md
+            system-design/concepts/workloads/application-package.md
             system-design/margo-api-reference/workload-api/desired-state-api/desired-state.md
 
   pages:

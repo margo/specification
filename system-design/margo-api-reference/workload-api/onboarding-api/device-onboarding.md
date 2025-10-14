@@ -12,7 +12,7 @@ In order for the Workload Fleet Management software to manage the edge device's 
 - The device's management client receives the client Id, client secret and token endpoint URL used to generate a bearer token.
 - The device's management client receives the URL for the Git repository containing its desired state and an associated access token for authentication
 > Action: The Margo TWG is currently reviewing alternatives to GitOps. This page will be updated upon a finalization of a new strategy. 
-- The [device capabilities](./device-capability-reporting.md) information is sent from the device to the WFM service using the [Device API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)
+- The [device capabilities](../../../concepts/workload-fleet-managers/device-capabilities.md) information is sent from the device to the WFM service using the [Device API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)
 
 
 ### Configuring the Workload Fleet Management Web Service URL

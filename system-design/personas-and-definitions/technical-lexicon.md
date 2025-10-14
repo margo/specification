@@ -42,7 +42,7 @@ An application is a collection of one, or more, [Components](#component), as def
 #### Application Package
 
 An Application Package is used to distribute an [application](#application).
-According the [specification](../app-interoperability/application-package-definition.md), it is a folder in a Git repository referenced by URL, which contains the Application Description (that refers to contained and deployable Components) as well as associated resources (e.g., icons).
+According the [specification](../concepts/workloads/application-package.md), it is a folder in a Git repository referenced by URL, which contains the Application Description (that refers to contained and deployable Components) as well as associated resources (e.g., icons).
 
 #### Component
 

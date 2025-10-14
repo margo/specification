@@ -1,18 +1,18 @@
 # Application Registry
 
-This section describes the Application Registry and the exchange of an [application package](./application-package-definition.md) from an Application Developer to the Workload Fleet Manager (WFM). 
+This section describes the Application Registry and the exchange of an [application package](./application-package.md) from an Application Developer to the Workload Fleet Manager (WFM). 
 
-The Application Developer SHALL use a [Git repository](https://git-scm.com/) to share an [application package](./application-package-definition.md). This Git repository is considered the Application Registry. 
+The Application Developer SHALL use a [Git repository](https://git-scm.com/) to share an [application package](./application-package.md). This Git repository is considered the Application Registry. 
 
 The connectivity between the Workload Fleet Manager and the Application Registry SHALL be read-only. 
 
-Upon installation request from the End User, the Workload Fleet Manager SHALL retrieve the [application package](./application-package-definition.md) using a ``git pull`` request from the Application Registry. 
+Upon installation request from the End User, the Workload Fleet Manager SHALL retrieve the [application package](./application-package.md) using a ``git pull`` request from the Application Registry. 
 
 The Workload Fleet Manager reads in the application description file, ``margo.yaml``, and presents a user interface that allows the specification of parameters available according to ``margo.yaml``. 
 
-The End User then specifies the configuration parameters for the [application package](./application-package-definition.md). 
+The End User then specifies the configuration parameters for the [application package](./application-package.md). 
 
-Then, the [application package](./application-package-definition.md) is ready to be passed on to the installation process.  
+Then, the [application package](./application-package.md) is ready to be passed on to the installation process.  
 
 > **Note** 
 > The specifics of the installation process are still under discussion: this could be for example a GitOps based approach. 

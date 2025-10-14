@@ -4,11 +4,11 @@ The device owner MUST deploy, and configure, an OpenTelemetry collector on their
 
 For standalone and clustered devices there MUST be at least one OpenTelemetry collector deployed to collect the observability data required below. The Device owner MAY choose to deploy multiple OpenTelemetry collectors with each collector receiving different parts of the observability data required below as long as all required observability data is collected.
 
-![Deployment Model - Multi-Node Deployment](../figures/System-design-observability-deployment1.drawio.svg)
+![Deployment Model - Multi-Node Deployment](../../figures/System-design-observability-deployment1.drawio.svg)
 
 For multi-node capable clusters the device owner MAY chose to use the DaemonSet deployment model to ensure there is an OpenTelemetry collector running on each node.
 
-![Deployment Model - DaemonSet](../figures/System-design-observability-deployment2.drawio.svg)
+![Deployment Model - DaemonSet](../../figures/System-design-observability-deployment2.drawio.svg)
 
 For multi-node capable clusters the device owner MUST ensure the communication between workloads, and collector, from one node to a collector on a different node is secure.
 
@@ -22,7 +22,7 @@ The device owner MUST NOT attempt to inject auto-instrumentation (by using the [
 
 Device owners are NOT required to provide backends for consuming observability data on their devices.
 
-> **Note:** See the [workload observability overview](../margo-overview/workload-observability-overview.md) page for more information about workload observability.
+> **Note:** See the [workload observability overview](../overview/workload-observability.md) page for more information about workload observability.
 
 ## Container Platform Observability Requirements
 

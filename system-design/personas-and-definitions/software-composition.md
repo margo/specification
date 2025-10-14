@@ -272,8 +272,8 @@ C4Component
     UpdateElementStyle(atb1, $fontColor="white", $bgColor="blue", $borderColor="grey")
 ```
 
-[application-description]: ../margo-api-reference/workload-api/application-package-api/application-description.md
-[application-package]: ../app-interoperability/application-package-definition.md
+[application-description]: ../specification/application-package/application-description.md
+[application-package]: ../concepts/workloads/application-package.md
 [application-registry]: technical-lexicon.md#application-registry
 [component]: technical-lexicon.md#component
 [workload]: technical-lexicon.md#workload
@@ -281,5 +281,5 @@ C4Component
 [component-registry]: technical-lexicon.md#component-registry
 [deployment-definition]: ../margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment.md#applicationdeployment-definition
 [provider-model]: technical-lexicon.md#provider-model
-[wfma]: technical-lexicon#workload-fleet-management-agent
-[deployment-profile]: margo-api-reference/workload-api/application-package-api/application-description.md#deploymentprofile-attributes
+[wfma]: technical-lexicon.md#workload-fleet-management-agent
+[deployment-profile]: ../specification/application-package/application-description.md#deploymentprofile-attributes
