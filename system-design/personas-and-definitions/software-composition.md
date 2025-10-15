@@ -279,7 +279,7 @@ C4Component
 [workload]: technical-lexicon.md#workload
 [application]: technical-lexicon.md#application
 [component-registry]: technical-lexicon.md#component-registry
-[deployment-definition]: ../margo-api-reference/workload-api/desired-state-api/desired-state/?h=applicationdeployment.md#applicationdeployment-definition
+[deployment-definition]: ../../specification/margo-management-interface/desired-state/?h=applicationdeployment.md#applicationdeployment-definition
 [provider-model]: technical-lexicon.md#provider-model
 [wfma]: technical-lexicon.md#workload-fleet-management-agent
 [deployment-profile]: ../specification/application-package/application-description.md#deploymentprofile-attributes

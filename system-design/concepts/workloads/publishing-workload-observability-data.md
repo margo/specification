@@ -10,6 +10,6 @@ Workload suppliers SHOULD NOT expect their workloads to be auto-instrumented by 
 
 A workload supplier MAY choose an observability framework other than OpenTelemetry but it MUST be self-contained within the deployment of their workload. If an alternative approach is taken, it is NOT recommended workload suppliers publish their observability data outside the device/cluster by using any other means other than the Open Telemetry collector. If the workload supplier chooses to export data without using the OpenTelemetry collector they MUST NOT do this without the end user's approval.
 
-> **Note:** See the [workload observability overview](../overview/workload-observability.md) page for more information about workload observablity.
+> **Note:** See the [workload observability overview](../../overview/workload-observability.md) page for more information about workload observablity.
 >
 > **Action:** We may need to address in some form legacy workloads that are not currently using open telemetry and don't want to migrate their workload to use it.

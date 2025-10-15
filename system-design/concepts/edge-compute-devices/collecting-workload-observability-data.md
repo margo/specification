@@ -22,7 +22,7 @@ The device owner MUST NOT attempt to inject auto-instrumentation (by using the [
 
 Device owners are NOT required to provide backends for consuming observability data on their devices.
 
-> **Note:** See the [workload observability overview](../overview/workload-observability.md) page for more information about workload observability.
+> **Note:** See the [workload observability overview](../../overview/workload-observability.md) page for more information about workload observability.
 
 ## Container Platform Observability Requirements
 
