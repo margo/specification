@@ -100,7 +100,7 @@ jobs:
           name: generated-documentation
           path: |
             system-design/concepts/workloads/application-package.md
-            system-design/margo-api-reference/workload-api/desired-state-api/desired-state.md
+            system-design/specification/margo-management-interface/desired-state.md
 
   pages:
     needs:

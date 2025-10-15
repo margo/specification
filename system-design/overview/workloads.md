@@ -68,7 +68,7 @@ sequenceDiagram
 9. The frontend parses the [configuration](../specification/application-package/application-description.md#configuration-attributes) element of the selected application description.
 10. The frontend presents the parsed configuration to the user.
 11. The end user fills out the [configurable application parameters](../specification/application-package/application-description.md#defining-configurable-application-parameters) to be applied to the workload.
-12. The frontend creates an `ApplicationDeployment` definition (from the `ApplicationDescription` and the filled out parameters) and sends it to the Workload Fleet Manager, which executes it as the [desired state](../margo-api-reference/workload-api/desired-state-api/desired-state.md).
+12. The frontend creates an `ApplicationDeployment` definition (from the `ApplicationDescription` and the filled out parameters) and sends it to the Workload Fleet Manager, which executes it as the [desired state](../specification/margo-management-interface /desired-state.md).
 
 ## Relevant Links
 

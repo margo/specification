@@ -6,13 +6,13 @@ In order for the Workload Fleet Management software to manage the edge device's 
 **The onboarding process includes:**
 
 - The end user provides the the Workload Fleet Management web service's root URL to the device's management client
-- The device's management client downloads the Workload Fleet Manager's public root CA certificate using the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/rootca-download.md)
+- The device's management client downloads the Workload Fleet Manager's public root CA certificate using the [Onboarding API](../../specification/margo-management-interface/certificate-api.md)
 - Context and trust is established between the device's management client and the Workload Fleet Management web service
 - The device's management client uses the [Onboarding API](../../margo-api-reference/workload-api/onboarding-api/client-onboarding.md) to onboard with the Workload Fleet Management service.
 - The device's management client receives the client Id, client secret and token endpoint URL used to generate a bearer token.
 - The device's management client receives the URL for the Git repository containing its desired state and an associated access token for authentication
 > Action: The Margo TWG is currently reviewing alternatives to GitOps. This page will be updated upon a finalization of a new strategy. 
-- The [device capabilities](../../../concepts/workload-fleet-managers/device-capabilities.md) information is sent from the device to the WFM service using the [Device API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)
+- The [device capabilities](../../../concepts/workload-fleet-managers/device-capabilities.md) information is sent from the device to the WFM service using the [Device API](../../specification/margo-management-interface/device-capabilities.md)
 
 
 ### Configuring the Workload Fleet Management Web Service URL

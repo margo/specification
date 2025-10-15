@@ -13,4 +13,4 @@ The main goals of the management interface are as follows:
 
 Please follow the subsequent links to view more technical information regarding Margo's management interface:
 
-- [Margo API Technical Reference](../margo-api-reference/workload-api/api-req-security-details.md)
+- [Margo API Technical Reference](../specification/margo-management-interface/api-requirements-and-security.md)

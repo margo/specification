@@ -24,4 +24,4 @@ The following information MUST be provided:
 
 Please follow the subsequent links to view more technical information on device capability reporting:
 
-- [Device Capabilities API](../../margo-api-reference/workload-api/device-api/device-capabilities.md)
+- [Device Capabilities API](../../specification/margo-management-interface/device-capabilities.md)

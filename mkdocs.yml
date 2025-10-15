@@ -27,14 +27,14 @@ nav:
       - Edge Compute Devices:
           - concepts/edge-compute-devices/devices.md
           - concepts/edge-compute-devices/collecting-workload-observability-data.md
-  - Specification (pre-draft):
+  - Specification:
       - Margo Management Interface:
-          - margo-api-reference/workload-api/api-req-security-details.md
-          - margo-api-reference/workload-api/onboarding-api/device-onboarding.md
-          - margo-api-reference/workload-api/onboarding-api/rootca-download.md
-          - margo-api-reference/workload-api/device-api/device-capabilities.md
-          - margo-api-reference/workload-api/desired-state-api/desired-state.md
-          - margo-api-reference/workload-api/device-api/deployment-status.md
+          - specification/margo-management-interface/api-requirements-and-security.md
+          - specification/margo-management-interface/device-onboarding.md
+          - specification/margo-management-interface/certificate-api.md
+          - specification/margo-management-interface/device-capabilities.md
+          - specification/margo-management-interface/desired-state.md
+          - specification/margo-management-interface/deployment-status.md
       - Application Package:
           - specification/application-package/application-description.md
       - Margo Devices:
