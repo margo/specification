@@ -14,6 +14,7 @@ flowchart
    C[Application Registry] -- Application Description links to --> B
    B -- Component links to --> D[Container Registry]
    A -->|pulls in Application Package from| C
+   F[App Developer] -->|uploads Applications Packages to| C
    G["Marketplace (outside Margo's scope)"] -- points to Application Package --> C
 
 ```
