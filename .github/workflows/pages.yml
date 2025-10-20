@@ -139,7 +139,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: generated-documentation
-          path: system-design/
+          path: system-design/specification
 
       - name: Build Pages
         run: poetry run -- mkdocs build
