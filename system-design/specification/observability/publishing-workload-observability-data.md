@@ -4,7 +4,7 @@ Compliant workloads MAY choose to expose workload specific observability data by
 
 Workload suppliers choosing to expose metrics, traces or logs for consumption with OpenTelemetry MUST send the data to the OpenTelemetry collector using OTLP.
 
-The information required to communicate with the device's OTEL Collector is injected into each container using [environment variables](../../concepts/edge-compute-devices/collecting-workload-observability-data.md#connecting-to-the-opentelemetry-collector).
+The information required to communicate with the device's OTEL Collector is injected into each container using [environment variables](../observability/collecting-workload-observability-data.md#connecting-to-the-opentelemetry-collector).
 
 Workload suppliers SHOULD NOT expect their workloads to be auto-instrumented by anything outside of their control (by the [OpenTelemetry operator](https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection) for example).
 

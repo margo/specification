@@ -20,4 +20,4 @@ Below is a diagram that depicts the device layers along with some examples:
 Please follow the subsequent links to view more technical information regarding Margo compliant devices:
 
 - [Device Concepts](../concepts/edge-compute-devices/devices.md)
-- [Collecting Application Observability Data](../concepts/edge-compute-devices/collecting-workload-observability-data.md)
+- [Collecting Application Observability Data](../specification/observability/collecting-workload-observability-data.md)

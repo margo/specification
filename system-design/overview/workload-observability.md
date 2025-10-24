@@ -41,6 +41,6 @@ There are several reasons why OpenTelemetry was chosen:
 
 Please follow the subsequent links to view more technical information regarding Margo's workload observability:
 
-- How workload suppliers can [publish observability data](../concepts/workloads/publishing-workload-observability-data.md)
-- How devices must [collection workload observability data](../concepts/edge-compute-devices/collecting-workload-observability-data.md)
-- How workload fleet management solutions can [consume workload observability data](../concepts/workload-fleet-managers/consuming-workload-observability-data.md)
+- How workload suppliers can [publish observability data](../specification/observability/publishing-workload-observability-data.md)
+- How devices must [collection workload observability data](../specification/observability/collecting-workload-observability-data.md)
+- How workload fleet management solutions can [consume workload observability data](../specification/observability/consuming-workload-observability-data.md)

@@ -18,15 +18,12 @@ nav:
       - Workloads:
           - concepts/workloads/application-package.md
           - concepts/workloads/application-registry.md
-          - concepts/workloads/publishing-workload-observability-data.md
           - concepts/workloads/local-registries.md
       - Workload Fleet Managers:
           - concepts/workload-fleet-managers/device-capabilities.md
           - concepts/workload-fleet-managers/workload-deployment.md
-          - concepts/workload-fleet-managers/consuming-workload-observability-data.md
       - Edge Compute Devices:
           - concepts/edge-compute-devices/devices.md
-          - concepts/edge-compute-devices/collecting-workload-observability-data.md
   - Specification:
       - Margo Management Interface:
           - specification/margo-management-interface/api-requirements-and-security.md
@@ -39,7 +36,11 @@ nav:
           - specification/application-package/application-description.md
       - Margo Devices:
           - specification/margo-devices/device-requirements.md
-      #- Observability: 
+      - Observability: 
+        - specification/observability/publishing-workload-observability-data.md
+        - specification/observability/collecting-workload-observability-data.md
+        - specification/observability/consuming-workload-observability-data.md
+
   - Make a Contribution:
       - make-a-contribution/contributing.md
 
