@@ -1,6 +1,6 @@
 # Deployment Status
 
-While applying a new desired state, the device's management client MUST provide the Workload Fleet Manager service with an indication of the current workload deployment status. This is done by calling the Device API's `device status` endpoint.
+While applying a new desired state, the device's management client MUST provide the Workload Fleet Manager service with an indication of the current workload deployment status. This is done by calling the Device API's `deployment status` endpoint.
 
 ### Route and HTTP Methods
 
@@ -31,7 +31,7 @@ POST /api/v1/device/{deviceId}/deployment/{deploymentId}/status
 
 | Fields      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: Pending, Installing, Installed, Failed. The overall deployment status MUST inherit the current component's status until it has gone through installing each component.|
+| state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: Pending, Installing, Installed, Removing, Removed, Failed. The overall deployment status MUST inherit the current component's status until it has gone through installing each component.|
 | error      | Error    | N    | Element that defines the overall installation error if one occured. See the [Error Fields](#error-fields) section below.|
 
 #### Component Fields
@@ -39,7 +39,7 @@ POST /api/v1/device/{deviceId}/deployment/{deploymentId}/status
 | Attribute       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | name      | string    | Y    | Name of the deployment component, inherited via the deployment specification |
-| state     | string    | Y    | The component's current deployment state of the component. MUST be one of the following options: Pending, Installing, Installed, Failed |
+| state     | string    | Y    | The component's current deployment state of the component. MUST be one of the following options: Pending, Installing, Installed, Removing, Removed, Failed |
 | error     | Error    | N    | Element that defines the components installation error if one occured. See the [Error Fields](#error-fields) section below.  |
 
 #### Error Fields
