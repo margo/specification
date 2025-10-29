@@ -8,62 +8,114 @@ Below is a breakdown of the three major categories these requirements fall under
 1. Basic functions for supporting the Management Interface
     - Onboarding of the management interface client
 2. Workload management functions
-    - Set workload(s) desired state
-    - Report the workload's deployment status 
-3. Device or Client Specific Functions
-    - Device Bootstrap (To be further defined by Margo)
-    - Device Onboarding (To be further defined by Margo)
-    - Device Software Runtime Management (To be further defined by Margo)
+    - Set Desired State(s) assigned to particular device clients
+3. Device client specific functions
+    - Client Onboarding
     - Device Capability Reporting
+    - Workload Status deployment reporting
 
-## Basic functions for supporting the Management Interface
-### Onboarding of the Management Interface Client
-> Note: This section will be completed in a future SUP submission.
+### API Technical Overview
+#### REST API Definition
+The REST API is defined via the Open API Specification. 
+
+- Follow the link below to see the specification:
+    - [OPEN API SPEC](https://github.com/margo/specification-enhancements/blob/api-details-finalization-wip/submitted/api-details-finalization-SUP-folder/margo_workload_api_wip.yaml)
+> Note: This definition is a work in progress
+#### General Rest API information 
+Server-side TLS REST API MUST be utilized operating over HTTP1.1.
+
+- The motivation to utilize HTTP1.1 is to ensure maximum support for existing infrastructure within our install base. 
+- Server-side tls is utilized instead of mTLS due to possible issues with TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection. See [Security and Integrity](#security-and-integrity-information) section for more details.
+- This REST API should utilize a known root CA the client can download, which enables the TLS handshake and other onboarding credentials.  
+
+#### Authentication Mechanism
+Initial trust is accomplished via TLS version 1.3 or greater
+
+- The device establishes a secure HTTPS connection using server-side TLS.
+- It validates the server’s identity using the public root CA certificate.
+
+#### API Port Details
+
+This API is designed to minimize the ports required on the customer's infrastructure to enable cloud to edge communication. 
+    -The API MUST ONLY utilize port 443 for it's traffic. 
+
+#### Unique Identifiers
+
+The WFM MUST create create a URL safe client id to uniquely identify each client within the architecture. 
+
+- This client ID MAY be in the format of UUIDv4
+- Other URL safe string identifiers are permitted to be used
+
+> Note: This does introduce a change in philosophy regarding the unique identifier, changing towards a more flexible client id that is separate from device id. 
+
+#### Certificate Information
+Both the WFM and Device client MUST utilize a x.509 certificates to represent themselves within the API interactions.
+
+- These certificates are utilized to prove each participants identity, establish secure TLS session, and securely transport information in secure envelopes.
+- This proposal supports client authentication using X.509 certificates conforming to RFC 5280. Both RSA and ECC-based public key algorithms are accepted.
+
+> Note: Further investigation and clarity to come regarding Margo's position on the root CA mentioned. 
+
 #### Support for Extended Device Communications Downtime
-- Interface patterns MUST support extended device communication downtime. 
+Interface patterns MUST support extended device communication downtime. 
+
 - The Management Interface MUST allow an end user to configure the following:
 	- Downtime configuration - ensures the device's management client is not retrying communication when operating under a known downtime. Additionally, communication errors MUST be ignored during this configurable period. 
 	- Polling Interval Period - describes a configurable time period indicating the hours in which the device's management client checks for updates to the device's desired state.
 	- Polling Interval Rate - describes the rate for how frequently the device's management client checks for updates to the device's desire state.
 - Running the device's management client as containerized services is preferred. By following Margo application packaging guidelines, it makes the management interface easier to lifecycle manage, however this is not required.
 
-## API Security Requirements
-> Note: The content documented below is still being finalized within the community, SUP process will be started shortly to finalize. 
-### Margo Web API Authentication Method
-The Margo Web API communication pattern between the device's management client and the Workload Fleet Manager web service must use a secure communication channel. 
-### Authentication and Authorization using Certificates
-> Note: This section will be completed in a future SUP submission.
-### Unique Identifiers for the Workload Fleet Manager and Device's Management Interface Relationship
-> Note: This section will be completed in a future SUP submission.
 ### Payload Security Method
-> Action: Certificate Rotation (CRLs) / Unique Identifier for device are still research areas needed.
-
-Due to the limitations of utilizing mTLS with common OT infrastructure components, such as TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection, Margo has adopted a certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes, the device's management client can ensure secure transport between the device's management client and the Workload Fleet Management's web service.
-#### Details pertaining to the message Envelope:
-Once the edge device has a message prepared for the Workload Fleet Management's web service, it completes the following to secure the message.
-
-- The device's management client calculates a digest and signature of the payload
-- The device's management client adds an envelope around it that has:
-    - actual payload
-    - SHA of the payload, signed by the device certificate
-    - Identifier for the certificate that corresponds to the private key used to sign it. 
-        - This identifier MUST be the UUID provided by the WFM server. 
-- The envelope is sent as the payload to the Workload Fleet Management's web service. 
-- The Workload Fleet Management's web service treats the request's payload as envelope structure, and receives the certificate identifier.
-> Note: This certificate is the device certificate that was manually uploaded to the Workload Fleet Manager solution during onboarding. 
-- The Workload Fleet Management's web service computes digest from the payload, and verifies the signature using the device certification.
-- The payload is then processed by the Workload Fleet Management's web service.
-#### Signing Payloads
-The following steps are used to sign a payload:
-
-1. Generate a SHA-256 hash value for the request's body
-2. Create a digital signature by using the message source certificates's private key to encrypt the the hash value
-3. Base-64 encode the certificate's public key and the digital signature in the format of `<public key>;<digital signature>`
-3. Include the base-64 encoded string in the request's `X-Payload-Signature` header
-### Verifying Signed Payloads
-The following steps are used to verify signed payload:
-
-1. Retrieve the public key from the `X-Payload-Signature` header
-2. Decrypt the digital signature using the public key to get the original hash value
-3. Generate a SHA-256 hash value for the requests's body
-4. Ensure the generated hash value matches the hash value from the message
+#### Security and Integrity Information
+- Due to the limitations of utilizing mTLS with common OT infrastructure components, such as TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection, Margo has adopted a certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes (HTTP Request body), the device's management client can ensure secure transport between the device's management client and the Workload Fleet Management's web service.
+    - For API security, Server side TLS 1.3 (minimum) is used, where the keys are obtained from the Server's X.509 Certificate as defined in standard HTTP over TLS
+    - For API integrity, the device's management client is issued a client specific X.509 certificate.
+    - The issuer of the client X.509 certificate is trusted under the assumption that the root CA download to the Workload Fleet Management server occurs as a precondition to onboarding the devices 
+    - Similarly the issuer of the server X.509 certificate is  trusted under the assumption that the root CA download to the device's management client occurs over a "protected" connection as part of the yet to be defined device onboarding procedure
+#### Device Management Client
+- Once the device management client has a message prepared for the Workload Fleet Management's web service, it MUST complete the following to establish the integrity of the message as defined in RFC 9421 :
+    - The device's management client MUST create SHA256 hash Message-Digest of the base64 encoded payload (HTTP Request Body). This forms the 'Content-Digest' parameter in the HTTP Header.
+    ```
+        Content-Digest: sha-256=:<base64(SHA256(body))>:
+    ```
+    - The device management client MUST create a Signature Base String embedding the content-digest. An example is given below.
+    ```
+        @method: POST
+        @target-uri: https://api.example.com/resource
+        Content-Digest: sha-256=:<digest>:
+        @signature-params: ("@method" "@target-uri" "Content-Digest");created=1680575171;keyid="my-rsa-key"
+    ```
+    - The device management client MUST create the Signature field by signing the SHA256 hash of the Base64 encoded Signature Base String, using the client X.509 RSA Private Key 
+    - The devices's management client MUST insert the following in the HTTP1.1 Header :
+        - Content-Digest as formed above
+        - Signature-Input as given below, replacing the created and keyid parts appropriately :
+        ```
+            sig1=("@method" "@target-uri" "Content-Digest");created=<Put created timestamp here>;keyid="<put the Key-Name here>"
+        ```
+        - Signature as explained above
+        - The base64 encoded signature of the SHA256 has of the payload, signed with the private-key of the Client X.509 certificate
+        Note: The private-key is not stored in the X.509 certificate, it may be stored in a .pem file and this information is used while generating the X.509 certificate for the client
+#### Workload Fleet Manager Web-Service           
+- On receiving the message from the Device Client, The Workload Fleet Management's web service MUST do the following :
+    - It looks up the client certificate from the Client-ID in the API Request URL 
+    - The Workload Fleet Management's web service reads the following from the HTTP Request Header :
+        - Signature-Input
+        - Signature
+        - Content-Digest (if body is present)
+    - Use the Signature-Input in the header to determine which components were signed. Reconstruct the Signature Base canonical string using the actual values from the request including the SHA256 encoded content-digest from the received request body 
+    - Then extract the base64-encoded message signature from the Signature header, and also verifies the message signature string using the client's X.509 public-key.
+    - If the message signature in the HTTP Header and the verified message signature match, then the payload is then processed by the Workload Fleet Management's web service.
+    - If the two do not match, the Workload Fleet Manager will respond with HTTP Error 401 as given below, and discontinue the session
+      ```
+      HTTP/1.1 401 Unauthorized
+        Content-Type: application/json
+        {
+          "error": "Invalid signature",
+          "message": "The X-Body-Signature header does not match the content of the request body."
+        }
+      ```
+#### Open Source examples:
+- Full RFC 9421 implementation with support for RSA, ECDSA, HMAC
+     - [LINK](https://github.com/lestrrat-go/htmsig)
+- Feature-complete RFC 9421 implementation with RSA-PSS and RSA-v1_5 support
+     - [LINK](https://github.com/yaronf/httpsign)
