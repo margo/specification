@@ -7,15 +7,25 @@ To ensure the WFM is kept up to date, the device's client MUST send updated capa
 ### Route and HTTP Methods
 
 ```https
-POST /api/v1/device/{deviceId}/capabilities
-PUT /api/v1/device/{deviceId}/capabilities
+POST /api/v1/client/{clientId}/capabilities
+PUT /api/v1/client/{clientId}/capabilities
 ```
 
 ### Route Parameters
 
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
-| {deviceId} | string | Y | The device's Id registered with the workload orchestration web service during onboarding.|
+| {clientId} | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
+
+### Response Code
+
+| Code | Description |
+|------|-------------|
+| 201 OK | The device capabilities document was added, or updated, successfully |
+| 400 Bad Request | Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included. |
+| 401 Unauthorized | Signature verification failed. Ensure you are signing with the correct X.509 private key.  |
+| 403 Forbidden | Client certificate is not trusted or has been revoked. |
+| 422 Unprocessable Content | Request body includes a semantic error.  |
 
 ### Request Body Attributes
 
@@ -151,10 +161,3 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
     }
 }
 ```
-
-### Response Code
-
-| Code | Description |
-|------|-------------|
-| 201  | The device capabilities document was added, or updated, successfully |
-| 4XX-5XX | The requests was not completed successfully |

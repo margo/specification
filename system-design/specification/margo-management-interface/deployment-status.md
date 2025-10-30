@@ -5,19 +5,28 @@ While applying a new desired state, the device's management client MUST provide 
 ### Route and HTTP Methods
 
 ```https
-POST /api/v1/device/{deviceId}/deployment/{deploymentId}/status
+POST /api/v1/client/{clientId}/deployment/{deploymentId}/status
 ```
 
 ### Route Parameters
 
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
-| {deviceId} | string | Y | The device's Id registered with the Workload Fleet Manager solution during onboarding.|
-| {deploymentId} | string | Y | The deployment Id the status is being reported for |
+| {clientId} | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
+| {deploymentId} | string | Y | The UUID of the `ApplicationDeployment` YAML being reported.
+
+### Response Code
+
+| Code | Description |
+|------|-------------|
+| 200 OK  | The deployment status was added, or updated, successfully. |
+| 400 Bad Request | Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included. |
+| 401 Unauthorized | Signature verification failed. Ensure you are signing with the correct X.509 private key.  |
+| 403 Forbidden | Client certificate is not trusted or has been revoked. |
+| 422 Unprocessable Content | Request body includes a semantic error.  |
+
 
 ### Request Body Fields
-
-> Action: Need to figure out the options for error code and message. Are these to be free form?
 
 | Fields       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
@@ -83,10 +92,3 @@ POST /api/v1/device/{deviceId}/deployment/{deploymentId}/status
     ]
 }
 ```
-
-### Response Code
-
-| Code | Description |
-|------|-------------|
-| 201  | The deployment status was added, or updated, successfully |
-| 4XX-5XX | The requests was not completed successfully |
