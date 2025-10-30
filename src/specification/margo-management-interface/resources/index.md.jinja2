@@ -175,6 +175,16 @@ If a manifest references a digest using an unsupported algorithm, the client **M
 sha256:a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef
 ```
 
+> **Note:**
+> This API defines the digest format `sha256:<hex>` (lowercase) for JSON fields, URLs, and ETags.
+> This digest represents **content identity**, ensuring that each artifact (manifest, bundle, or `ApplicationDeployment` YAML) can be uniquely verified and referenced within the Desired State API.
+>
+> By contrast, the mechanism described in the [API Requirements and Security Details](../../specification/margo-management-interface/api-requirements-and-security.md) document - which follows [RFC 9421](https://datatracker.ietf.org/doc/html/rfc9421) - provides **HTTP message-level integrity** through signed payloads.
+> While both rely on the SHA-256 algorithm, they operate at different layers of the protocol:
+>
+> - The digest in this API defines immutable content identity for artifacts.
+> - The RFC 9421 mechanism ensures end-to-end message integrity and authenticity during HTTP transport.
+
 ## Protocol - ETag and Caching
 
 All Desired State endpoints implement standard HTTP caching semantics to optimize synchronization between the **Workload Fleet Manager (WFM)** and the **Workload Fleet Management Client**. ETags are used to detect content changes and avoid redundant data transfers. Two caching models are defined: one for the mutable **State Manifest**, and one for immutable, content-addressable resources such as individual deployments and bundles.
