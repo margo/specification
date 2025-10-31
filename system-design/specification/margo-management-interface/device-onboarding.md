@@ -1,18 +1,38 @@
 # Device Onboarding
 In order for the Workload Fleet Management software to manage the edge device's workloads, the device's management client must first complete onboarding.
 
-> Action: The details in this page are still under discussion and have not been finalized.
+## Onboarding API Details
 
-**The onboarding process includes:**
+### Route and HTTP Methods
+
+```https
+POST /api/v1/onboarding
+```
+### Response Code
+
+| Code | Description |
+|------|-------------|
+| 200 OK | Certificate already present, onboarding successful. |
+| 201 Created | New client onboarded successfully. |
+| 400 Invalid Certificate | Invalid certificate format or structure. |
+| 403 Forbidden | Client certificate is not trusted or has been rejected. |
+
+### Response Body
+
+```json
+{
+    "client_id": "<base-64 encoded UUID>"
+}
+```
+
+## Onboarding Sequence
 
 - The end user provides the the Workload Fleet Management web service's root URL to the device's management client
 - The device's management client downloads the Workload Fleet Manager's public root CA certificate using the [Onboarding API](../../specification/margo-management-interface/certificate-api.md)
 - Context and trust is established between the device's management client and the Workload Fleet Management web service
-- The device's management client uses the [Onboarding API](../../specification/margo-management-interface/certificate-api.md) to onboard with the Workload Fleet Management service.
-- The device's management client receives the client Id, client secret and token endpoint URL used to generate a bearer token.
-- The device's management client receives the URL for the Git repository containing its desired state and an associated access token for authentication
-> Action: The Margo TWG is currently reviewing alternatives to GitOps. This page will be updated upon a finalization of a new strategy. 
-- The [device capabilities](../../concepts/workload-fleet-managers/device-capabilities.md) information is sent from the device to the WFM service using the [Device API](../../specification/margo-management-interface/device-capabilities.md)
+- The device's management client uses the [Onboarding API](../../specification/margo-management-interface/certificate-api.md) to onboard with the Workload Fleet Management service by providing it's x.509 certificate
+- The device's management client receives it's unique client Id assigned via the Workload Fleet Manager
+- The [device capabilities](../../concepts/workload-fleet-managers/device-capabilities.md) information is sent from the device to the WFM using the [Device API](../../specification/margo-management-interface/device-capabilities.md)
 
 ## Onboarding Sequence diagram
 
@@ -65,19 +85,3 @@ sequenceDiagram
     - Verification of client cert out of scope of this. Pre specify
     - Step approves the client can join the server. Additional information can be tied to the certificate but are not required in this SUP. supporting information can also be transferred during this step approving this client can join the server. other things could be tied to the certificate. i.e. Cert supplied via Dell / serial number of device /
     - FDO bootstrapping off of ownership vouchers could be integrated here as well. 
-
-## Onboarding API Details
-> Action: This API needs to be defined
-
-### Route and HTTP Methods
-
-```http
-POST /onboarding/
-```
-### Request Body
-
-TBD
-
-### Response Body
-
-TBD

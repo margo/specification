@@ -20,6 +20,7 @@ nav:
           - concepts/workloads/application-registry.md
           - concepts/workloads/local-registries.md
       - Workload Fleet Managers:
+          - concepts/workload-fleet-managers/client-onboarding.md
           - concepts/workload-fleet-managers/device-capabilities.md
           - concepts/workload-fleet-managers/workload-deployment.md
       - Edge Compute Devices:

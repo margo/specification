@@ -1,12 +1,17 @@
 # Certificate API
 
-In order to facilitate secure communication between the device's management client and workload orchestration web service the workload orchestration web service's root CA certificate must be downloaded using the Onboarding API's `certificate` endpoint.
+In order to facilitate secure communication between the device's management client and the Workload Fleet Manager, the device must first retrieve the root CA certificate  using the Onboarding API's `certificate` endpoint.
 
 ### Route and HTTP Methods
 
 ```http
-GET /onboarding/certificate
+GET /api/v1/onboarding/certificate
 ```
+### Response Code
+
+| Code | Description |
+|------|-------------|
+| 200 OK | Root CA provided in response |
 
 ### Response Body
 
