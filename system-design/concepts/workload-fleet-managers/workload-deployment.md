@@ -1,45 +1,111 @@
 # Workload Deployment
 
-Margo uses an [OpenGitOps](https://opengitops.dev/) approach for managing the edge device's desired state. The workload orchestration solution vendor maintains Git repositories, under their control, to push updates to the desired state for each device being managed. The device's management client is responsible for monitoring the device's assigned Git repository for any changes to the desired state that MUST be applied.
-> Action: The use of GitOps patterns for pulling desired state is still being discussed/investigated. 
+This page describes how Margo manages the deployment and reconciliation of workloads on Edge Compute Devices.
 
+Workload deployment in Margo is based on a declarative Desired State model.
+A Workload Fleet Manager (WFM) defines the desired workloads for each Edge Compute Device, including what should run, how each workload should be configured, and the parameters needed for deployment and lifecycle management.
+Each device runs a Workload Fleet Management Client (WFM Client) that retrieves and applies this Desired State, while reporting progress and results back to the WFM.
+This model provides a consistent and observable way to manage workloads across distributed environments.
 
-### Desired State Requirements:
+### How it works
 
-> Note: Need to investigate best way to construct the Git Repository. Folder structure / Multiple applications per Edge Device/Cluster
-> Note: this is the recommendation from FluxCD <https://fluxcd.io/flux/guides/repository-structure/>
+The Workload Fleet Manager coordinates workloads across Edge Compute Devices.
+Operators use the WFM to define workloads, update deployments, and view rollout progress across devices.
+The WFM Client continuously reconciles the Desired State provided by the WFM with the workloads actually running on the device.
 
-- The workload orchestration solution MUST store the device's [desired state documents](../../specification/margo-management-interface/desired-state.md) within a Git repository the device's management client can access. 
-> Note: Git repository storage was selected to ensure secure storage and traceability pertaining to the workload's desire state(s).  
-- The device's management client MUST monitor the device's Git repository for updates to the desired state using the URL and access token provided by the workload orchestration solution during onboarding.
+The WFM and WFM Clients communicate through two key interfaces:
 
-### Workload Management Sequence of Operations
+- The [Desired State API](../../specification/margo-management-interface/desired-state.md), which distributes workload definitions to devices
+- The [Deployment Status API](../../specification/margo-management-interface/deployment-status.md), which collects deployment updates from devices
 
-#### Desired State lifecycle:
+Together, these interfaces establish a feedback loop between the centralized manager and the distributed devices, ensuring workload consistency and visibility at scale.
 
-1. The workload orchestration solution creates the [desired state documents](../../specification/margo-management-interface/desired-state.md) based on the end user's inputs when installing, updating or deleting an application.
-2. The workload orchestration solution pushes updates to the device's Git repository reflecting the changes to the desired state.
-3. The device's management client monitors its assigned Git repository for changes.
-4. When the device's management client notices a difference between the current (running) state and the desired state, it MUST pull down and attempt to apply the new desired state.
+### Desired State
 
-#### Applying the Desired State:
+The Desired State defines the workloads that should run on each Edge Compute Device and the details of how they are deployed.
+It is represented by a [State Manifest](../../specification/margo-management-interface/desired-state.md#endpoints-state-manifest) that lists all workloads assigned to a device.
+The WFM exposes this manifest through the Desired State API.
 
-1. The device attempts to apply the desired state to become new current state
-2. While the new desired state is being applied, the device's management client MUST report progress on state changes (see the [deployment state](#deployment-status) section below) using the [Device API](../../specification/margo-management-interface/deployment-status.md)
+Each workload is defined by an [ApplicationDeployment](../../specification/margo-management-interface/desired-state.md#applicationdeployment-yaml-definition), which describes:
 
-#### Deployment Status
+- The Components that make up the workload, such as Helm charts or Compose-based container bundles
+- Configuration parameters and deployment profiles that control workload behavior
+- Target information identifying which devices or groups of devices the deployment applies to
 
-The deployment status is sent to the workload orchestration web service using the [Device API](../../specification/margo-management-interface/deployment-status.md) when there is a change in the deployment state. This informs the workload orchestration web service of the current state as the new desired state is applied.
+The WFM can provide ApplicationDeployments in two formats:
 
-The deployment status uses the following rules:
+- Individual YAML files, allowing incremental synchronization
+- A bundle archive that contains multiple ApplicationDeployments for bulk distribution
 
-- The state is `Pending` once the device management client has received the updated desired state but has not started applying it. When reporting this state indicate the reason.
-    - Such as waiting on Policy agent
-    - Waiting on other applications in the 'Order of operations' to be completed.
-- The state is `Installing` once the device management client has started the process of applying the desired state.
-- The state is `Failure` if at any point the desired state fails to be applied. When reporting a `Failure` state the error message and error code MUST be reported
-- The state is `Success` once the desired state has been applied completely 
+All files retrieved as part of the Desired State—manifests, ApplicationDeployment YAMLs, and bundle archives—are treated as immutable artifacts.
+Each artifact is referenced by a SHA-256 digest. The WFM Client validates these digests before applying updates to ensure authenticity and consistency.
 
+### Reconciliation process
 
-> Note: Drawing to be replaced with mermaid sequence diagram. 
-![Workload Install Sequence Diagram (svg)](../../figures/workload-install-sequence.drawio.svg)
+Each WFM Client maintains the Desired State on its Edge Compute Device by running a continuous reconciliation loop.
+
+1. **Retrieve the manifest:**
+   The WFM Client periodically checks the WFM for updates to its State Manifest.
+   When a new manifest version is available, the client initiates synchronization.
+
+2. **Retrieve artifacts:**
+   The WFM Client downloads the referenced ApplicationDeployment YAMLs or bundle archive.
+
+3. **Verify integrity:**
+   The WFM Client verifies that each artifact matches the digest declared in the manifest.
+   If verification fails, the update is halted and the current workloads remain unchanged.
+
+4. **Apply the Desired State:**
+   The WFM Client compares the current workloads with those defined in the Desired State:
+
+      - Adds or updates workloads that have changed
+      - Removes workloads that are no longer listed
+      - Keeps workloads that remain valid and current
+
+5. **Report status:**
+   As the synchronization proceeds, the WFM Client reports its deployment status to the WFM through the Deployment Status API.
+
+This continuous process allows the WFM to maintain awareness of workload rollout progress and ensures devices converge toward the Desired State.
+
+### Deployment status
+
+The Deployment Status API provides feedback from devices to the Workload Fleet Manager.
+The WFM Client reports progress, success, or failure during installation, update, and removal operations.
+This feedback allows the WFM to present an aggregated view of deployment health and state across the managed fleet.
+
+A deployment status report includes:
+
+- The identifier of the ApplicationDeployment
+- The current deployment state, which may be:
+
+    - Pending - the Desired State has been received but not yet applied
+    - Installing - the workload is being deployed
+    - Installed - the workload has been successfully applied
+    - Removing or Removed - the workload is being or has been uninstalled
+    - Failed - an error occurred during deployment
+
+- Optional component-level progress information
+- Error codes and messages, when applicable
+
+This information enables real-time monitoring and supports troubleshooting and auditing of workload operations.
+
+### Sequence diagram
+
+```mermaid
+sequenceDiagram
+    participant WFM as Workload Fleet Manager
+    participant Client as WFM Client (running on Edge Compute Device)
+
+    loop Periodic synchronization
+        Client->>WFM: Retrieve Desired State (Desired State API)
+        alt Desired State unchanged
+            WFM-->>Client: No update available
+        else Desired State updated
+            WFM-->>Client: Provide new State Manifest
+            Client->>WFM: Retrieve ApplicationDeployments or bundle
+            Client->>Client: Apply workloads from Desired State
+            Client->>WFM: Report deployment status (Deployment Status API)
+        end
+    end
+
+```
