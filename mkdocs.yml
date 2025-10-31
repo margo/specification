@@ -28,8 +28,8 @@ nav:
   - Specification:
       - Margo Management Interface:
           - specification/margo-management-interface/api-requirements-and-security.md
-          - specification/margo-management-interface/device-onboarding.md
           - specification/margo-management-interface/certificate-api.md
+          - specification/margo-management-interface/device-onboarding.md
           - specification/margo-management-interface/device-capabilities.md
           - specification/margo-management-interface/desired-state.md
           - specification/margo-management-interface/deployment-status.md
