@@ -2,7 +2,7 @@
 
 In order to facilitate secure communication between the device's management client and the Workload Fleet Manager, the device must first retrieve the root CA certificate  using the Onboarding API's `certificate` endpoint.
 
-### Route and HTTP Methods
+## Route and HTTP Methods
 
 ```http
 GET /api/v1/onboarding/certificate
@@ -11,9 +11,9 @@ GET /api/v1/onboarding/certificate
 
 | Code | Description |
 |------|-------------|
-| 200 OK | Root CA provided in response |
+| 200 OK | Root CA certificate |
 
-### Response Body
+## Example Response Body
 
 ```json
 {

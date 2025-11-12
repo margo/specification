@@ -3,21 +3,20 @@ In order for the Workload Fleet Management software to manage the edge device's 
 
 ## Onboarding API Details
 
-### Route and HTTP Methods
+## Route and HTTP Methods
 
 ```https
 POST /api/v1/onboarding
 ```
-### Response Code
+### Response Codes
 
 | Code | Description |
 |------|-------------|
-| 200 OK | Certificate already present, onboarding successful. |
 | 201 Created | New client onboarded successfully. |
 | 400 Invalid Certificate | Invalid certificate format or structure. |
-| 403 Forbidden | Client certificate is not trusted or has been rejected. |
+| 403 Forbidden | Client certificate is not trusted or client rejected. |
 
-### Response Body
+## Example Response Body
 
 ```json
 {
@@ -77,11 +76,3 @@ sequenceDiagram
     Client->>Server: POST /client/{clientId}/deployment/{deploymentId}/status
     Server-->>Client: 201 Created
 ```
-
-#### Sequence Diagram Notes
-- Following Step 3: Root CA is now trusted in the TLS handshake
-- Diagram depicts a standard TLS flow, but additional steps in the handshake can occur.
-- (After post /onboarding) 
-    - Verification of client cert out of scope of this. Pre specify
-    - Step approves the client can join the server. Additional information can be tied to the certificate but are not required in this SUP. supporting information can also be transferred during this step approving this client can join the server. other things could be tied to the certificate. i.e. Cert supplied via Dell / serial number of device /
-    - FDO bootstrapping off of ownership vouchers could be integrated here as well. 

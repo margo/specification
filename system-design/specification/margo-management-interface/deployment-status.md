@@ -2,10 +2,10 @@
 
 While applying a new desired state, the device's management client MUST provide the Workload Fleet Manager service with an indication of the current workload deployment status. This is done by calling the Device API's `deployment status` endpoint.
 
-### Route and HTTP Methods
+## Route and HTTP Methods
 
 ```https
-POST /api/v1/client/{clientId}/deployment/{deploymentId}/status
+POST /api/v1/clients/{clientId}/deployment/{deploymentId}/status
 ```
 
 ### Route Parameters
@@ -15,7 +15,7 @@ POST /api/v1/client/{clientId}/deployment/{deploymentId}/status
 | {clientId} | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
 | {deploymentId} | string | Y | The UUID of the `ApplicationDeployment` YAML being reported.
 
-### Response Code
+### Response Codes
 
 | Code | Description |
 |------|-------------|
@@ -26,24 +26,24 @@ POST /api/v1/client/{clientId}/deployment/{deploymentId}/status
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
 
-### Request Body Fields
+## Request Body Attributes
 
 | Fields       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version of the API the object definition follows.|
-| kind            | string    | Y    | Must be `DeploymentStatus`.|
+| apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
+| kind            | string    | Y    | Must be `DeploymentStatusManifest`.|
 | deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Fleet Management Software. |
 | status          | []status    | Y    | Element that defines overall deployment status. See the [Status Fields](#status-fields) section below.|
 | components      | []components    | Y    | Element that defines the individual component's deployment status. See the [Component Fields](#component-fields) section below.|
 
-#### Status Fields
+#### Status Attributes
 
 | Fields      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: Pending, Installing, Installed, Removing, Removed, Failed. The overall deployment status MUST inherit the current component's status until it has gone through installing each component.|
 | error      | Error    | N    | Element that defines the overall installation error if one occured. See the [Error Fields](#error-fields) section below.|
 
-#### Component Fields
+#### Component Attributes
 
 | Attribute       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
@@ -51,19 +51,19 @@ POST /api/v1/client/{clientId}/deployment/{deploymentId}/status
 | state     | string    | Y    | The component's current deployment state of the component. MUST be one of the following options: Pending, Installing, Installed, Removing, Removed, Failed |
 | error     | Error    | N    | Element that defines the components installation error if one occured. See the [Error Fields](#error-fields) section below.  |
 
-#### Error Fields
+#### Error Attributes
 
 | Fields       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | code      | string    | Y    | Associated error code following a component failure during installation. |
 | message   | string    | Y    | Associated error message that provides further details to the WOS about the error that was encountered. |
 
-### Example Request
+## Example Deployment Status Manifest Request
 
 ```json
 {
-    "apiVersion": "deployment.margo/v1",
-    "kind": "DeploymentStatus",
+    "apiVersion": "deployment.margo.org/v1alpha1",
+    "kind": "DeploymentStatusManifest",
     "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
     "status": {
         "state": "pending",

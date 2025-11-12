@@ -1,14 +1,14 @@
 # Device Capabilities
 
-Devices MUST provide the Workload Fleet Management service with its capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint.
+Devices MUST provide the Workload Fleet Management service with its capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint. Reporting the device capabilities is the final step in the onboarding of the device's client. 
 
 To ensure the WFM is kept up to date, the device's client MUST send updated capabilities information if any changes occur to the information originally provided (i.e., additional memory is added to the device).
 
-### Route and HTTP Methods
+## Route and HTTP Methods
 
 ```https
-POST /api/v1/client/{clientId}/capabilities
-PUT /api/v1/client/{clientId}/capabilities
+POST /api/v1/clients/{clientId}/capabilities
+PUT /api/v1/clients/{clientId}/capabilities
 ```
 
 ### Route Parameters
@@ -17,7 +17,7 @@ PUT /api/v1/client/{clientId}/capabilities
 |----------|------|-----------|------------|
 | {clientId} | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
 
-### Response Code
+### Response Codes
 
 | Code | Description |
 |------|-------------|
@@ -27,12 +27,12 @@ PUT /api/v1/client/{clientId}/capabilities
 | 403 Forbidden | Client certificate is not trusted or has been revoked. |
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
-### Request Body Attributes
+## Request Body Attributes
 
 | Field      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version of the API the object definition follows.|
-| kind            | string    | Y    | Must be `DeviceCapabilities`.|
+| apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
+| kind            | string    | Y    | Must be `DeviceCapabilitiesManifest`.|
 | properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-fields) section below. |
 
 ### Properties Attributes
@@ -84,10 +84,10 @@ Communication interface of a device.
 | --- | --- | --- | --- |
 | type | CommunicationInterfaceType |  Y  | The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.|
 
-## Enumerations
+### Enumerations
 These enumerations are used as vocabularies for attribute values of the `DeviceCapabilities`.
 
-### CpuArchitectureType
+#### CpuArchitectureType
 
 | Permissible Values | Description |
 | --- | --- |
@@ -96,7 +96,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | arm64 | ARM 64-bit architecture.|
 | arm | ARM 32-bit architecture. |  
 
-### CommunicationInterfaceType
+#### CommunicationInterfaceType
 
 | Permissible Values | Description |
 | --- | --- |
@@ -108,7 +108,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | canbus | This type stands for a CANBus interface.|
 | rs232 | This type stands for a RS232 interface. |  
 
-### PeripheralType
+#### PeripheralType
 
 | Permissible Values | Description |
 | --- | --- |
@@ -119,12 +119,12 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | speaker | This type stands for a speaker peripheral. |
 
 
-### Example Request
+## Example Device Capabilities Manifest Request
 
 ```json
 {
-    "apiVersion": "device.margo/v1",
-    "kind": "DeviceCapabilities",
+    "apiVersion": "device.margo.org/v1alpha1",
+    "kind": "DeviceCapabilitiesManifest",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
         "vendor": "Northstar Industrial devices",
