@@ -1,7 +1,7 @@
 # API Requirements and Security Details
 ## General Requirements
 - The Workload Fleet Management supplier MUST implement the server side of the API specification contract.
-- The Device Owner MUST implement the client side of the API specification contract.
+- The Device supplier, via it's WFM Client, MUST implement the client side of the API specification contract.
 
 Below is a breakdown of the three major categories these requirements fall under:
 
@@ -26,13 +26,15 @@ Server-side TLS REST API MUST be utilized operating over HTTP1.1.
 
 - The motivation to utilize HTTP1.1 is to ensure maximum support for existing infrastructure within our install base. 
 - Server-side tls is utilized instead of mTLS due to possible issues with TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection. See [Security and Integrity](#security-and-integrity-information) section for more details.
-- This REST API should utilize a known root CA the client can download, which enables the TLS handshake and other onboarding credentials.  
+- The client MUST trust the WFM's server certificate through a pre-provisioned or securely obtained root CA.
+    - The Certificate API MAY be used to retrieve this CA over an already trusted channel.
 
 #### Authentication Mechanism
 Initial trust is accomplished via TLS version 1.3 or greater
 
 - The device establishes a secure HTTPS connection using server-side TLS.
 - It validates the server’s identity using the public root CA certificate.
+- Client authentication is achieved using application-layer HTTP Message Signatures (RFC 9421), as defined in the [Payload Security](#payload-security-method) section.
 
 #### API Port Details
 
@@ -51,8 +53,16 @@ The WFM MUST create create a URL safe client id to uniquely identify each client
 #### Certificate Information
 Both the WFM and Device client MUST utilize a x.509 certificates to represent themselves within the API interactions.
 
-- These certificates are utilized to prove each participants identity, establish secure TLS session, and securely transport information in secure envelopes.
-- This proposal supports client authentication using X.509 certificates conforming to RFC 5280. Both RSA and ECC-based public key algorithms are accepted.
+- The WFM's certificate is used to authenticate the server during TLS. The WFM Client’s certificate is used to authenticate the client and sign request payloads at the application layer, not during the TLS handshake. 
+- All client certificates MUST conform to RFC 5280 standards. 
+- Signature algorithm requirements:
+    - Implementations MUST support the following set of allowable signature algorithms:
+        - ecdsa-p256-sha256
+        - ecdsa-p384-sha384
+        - rsa-v1_5-sha256
+        - rsa-pss-sha256
+    - Additional algorithms MAY be supported, but the above list defines the minimum baseline for interoperability.
+    - The server MUST support all required algorithms (see above), so it can verify any compliant client, while clients MAY choose any of the required algorithms that fits their hardware capabilities.
 
 > Note: Further investigation and clarity to come regarding Margo's position on the root CA mentioned. 
 
@@ -67,34 +77,40 @@ Interface patterns MUST support extended device communication downtime.
 
 ### Payload Security Method
 #### Security and Integrity Information
-- Due to the limitations of utilizing mTLS with common OT infrastructure components, such as TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection, Margo has adopted a certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes (HTTP Request body), the device's management client can ensure secure transport between the device's management client and the Workload Fleet Management's web service.
-    - For API security, Server side TLS 1.3 (minimum) is used, where the keys are obtained from the Server's X.509 Certificate as defined in standard HTTP over TLS
-    - For API integrity, the device's management client is issued a client specific X.509 certificate.
-    - The issuer of the client X.509 certificate is trusted under the assumption that the root CA download to the Workload Fleet Management server occurs as a precondition to onboarding the devices 
-    - Similarly the issuer of the server X.509 certificate is  trusted under the assumption that the root CA download to the device's management client occurs over a "protected" connection as part of the yet to be defined device onboarding procedure
+Due to the limitations of utilizing mTLS with common OT infrastructure components, such as TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection, Margo has adopted a certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes (HTTP Request body), the device's management client can ensure secure transport between the device's management client and the Workload Fleet Management's web service.
+
+- For API security, Server side TLS 1.3 (minimum) is used, where the keys are obtained from the Server's X.509 Certificate as defined in standard HTTP over TLS
+- For API integrity, the device's management client is issued a client specific X.509 certificate.
+- The issuer of the client X.509 certificate is trusted under the assumption that the root CA download to the Workload Fleet Management server occurs as a precondition to onboarding the devices 
+- Similarly the issuer of the server X.509 certificate is  trusted under the assumption that the root CA download to the device's management client occurs over a "protected" connection as part of the yet to be defined device onboarding procedure
 #### Device Management Client
-- Once the device management client has a message prepared for the Workload Fleet Management's web service, it MUST complete the following to establish the integrity of the message as defined in RFC 9421 :
-    - The device's management client MUST create SHA256 hash Message-Digest of the base64 encoded payload (HTTP Request Body). This forms the 'Content-Digest' parameter in the HTTP Header.
+Once the device management client has a message prepared for the Workload Fleet Management's web service, it MUST establish message integrity as defined in RFC 9421 by performing the following steps:
+
+- The device's management client MUST generate a SHA256 digest of the HTTP request body. Encode the digest in Base64 and include in the Content-Digest header. 
+```
+    Content-Digest: sha-256=:<base64(SHA256(body))>:
+```
+- The device management client MUST create a Signature Base String including @method, @target-uri, and Content-Digest. An example is given below.
+```
+    @method: POST
+    @target-uri: https://api.example.com/resource
+    Content-Digest: sha-256=:<digest>:
+    @signature-params: ("@method" "@target-uri" "Content-Digest");created=1680575171;keyid="my-rsa-key"
+```
+- The device management client MUST generate the Signature field by signing the raw byte array of the Signature Base String using the clients X.509 private key. The resulting signature in Base64 is included in the Signature header. 
+- The devices's management client MUST insert the following in the HTTP1.1 Header:
+    - Content-Digest as formed above
+    - Signature-Input as given below, replacing the created and keyid parts appropriately:
     ```
-        Content-Digest: sha-256=:<base64(SHA256(body))>:
+        sig1=("@method" "@target-uri" "Content-Digest");created=<Put created timestamp here>;keyid="<put the Key-Name here>"
     ```
-    - The device management client MUST create a Signature Base String embedding the content-digest. An example is given below.
+    - Signature:
     ```
-        @method: POST
-        @target-uri: https://api.example.com/resource
-        Content-Digest: sha-256=:<digest>:
-        @signature-params: ("@method" "@target-uri" "Content-Digest");created=1680575171;keyid="my-rsa-key"
+        sig1=:<base64(signature)>:
     ```
-    - The device management client MUST create the Signature field by signing the SHA256 hash of the Base64 encoded Signature Base String, using the client X.509 RSA Private Key 
-    - The devices's management client MUST insert the following in the HTTP1.1 Header :
-        - Content-Digest as formed above
-        - Signature-Input as given below, replacing the created and keyid parts appropriately :
-        ```
-            sig1=("@method" "@target-uri" "Content-Digest");created=<Put created timestamp here>;keyid="<put the Key-Name here>"
-        ```
-        - Signature as explained above
-        - The base64 encoded signature of the SHA256 has of the payload, signed with the private-key of the Client X.509 certificate
-        Note: The private-key is not stored in the X.509 certificate, it may be stored in a .pem file and this information is used while generating the X.509 certificate for the client
+
+> Note: The server MUST use the 'created' value to detect and prevent replay attacks. 
+
 #### Workload Fleet Manager Web-Service           
 - On receiving the message from the Device Client, The Workload Fleet Management's web service MUST do the following :
     - It looks up the client certificate from the Client-ID in the API Request URL 

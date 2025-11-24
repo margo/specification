@@ -4,6 +4,8 @@ Devices MUST provide the Workload Fleet Management service with its capabilities
 
 To ensure the WFM is kept up to date, the device's client MUST send updated capabilities information if any changes occur to the information originally provided (i.e., additional memory is added to the device).
 
+- Requests to this endpoint MUST be authenticated using the HTTP Message Signature method as defined in the [Payload Security](../margo-management-interface/api-requirements-and-security.md#payload-security-method) section.
+
 ## Route and HTTP Methods
 
 ```https

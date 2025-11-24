@@ -10,11 +10,20 @@ The onboarding process includes several core functions:
 
 ## Trust Establishment
 
-Initial trust is established between the device’s management client and the Workload Fleet Management (WFM) web service using server-side TLS. The device downloads the WFM’s public root CA certificate via the onboarding API, or receives it via out-of-band strategies and injects into it's trusted certificate store. This enables secure TLS handshakes and certificate validation without requiring mutual TLS (mTLS), which was deliberately avoided due to infrastructure compatibility constraints. Instead, Margo relies on certificate-based trust, balancing security with operational simplicity.
+Initial trust is established between the device's Workload Fleet Management (WFM) Client and the WFM using server-side TLS.
+Before the WFM Client can connect securely, it must obtain the WFM's root CA certificate. This trust anchor may be:
+
+- downloaded via the Certificate API, provided that an existing trusted channel is available, or
+- delivered out-of-band (e.g. preloaded by the device owner or transferred via USB)
+
+Importing the WFM's root CA certificate enables the WFM Client to authenticate the WFM during TLS connections. Mutual TLS (mTLS) is deliberately avoided, as some deployment environments include network components or intermediaries that may not support or forward client-certificate authentication.
+Instead, transport security and server authentication are provided by server-side TLS, while client authentication and request integrity are performed at the application layer: the WFM Client uses its own X.509 certificate to create HTTP message signatures for each request. This approach maintains strong, certificate-based authenticity and integrity while accommodating a wide range of network architectures.
+
 
 ## Certificates required
 
-Both the WFM server and device clients use X.509 certificates for identity and secure communication. The WFM's certificate authenticates the server during TLS sessions, while each device's client is issued a unique certificate for signing payloads. These certificates ensure that every interaction is verifiable and tamper-proof. Private keys remain securely stored on the device, and all signing operations occur locally, reducing exposure to key compromise.
+Both the WFM server and the WFM Client use X.509 certificates, but for different purposes. The WFM's certificate authenticates the server during TLS sessions. Each device client possesses a unique X.509 certificate used to sign its HTTP requests, enabling the WFM to verify the origin and integrity of every message. These certificates provide complementary security properties: TLS ensures transport confidentiality and server authenticity, while application-layer signatures provide client authentication and payload integrity. Private keys remain securely stored on the device, and all signing operations occur locally, reducing exposure to key compromise.
+
 
 ## Unique Identifiers
 

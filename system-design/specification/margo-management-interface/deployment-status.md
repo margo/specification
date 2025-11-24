@@ -2,10 +2,12 @@
 
 While applying a new desired state, the device's management client MUST provide the Workload Fleet Manager service with an indication of the current workload deployment status. This is done by calling the Device API's `deployment status` endpoint.
 
+- Requests to this endpoint MUST be authenticated using the HTTP Message Signature method as defined in the [Payload Security](../margo-management-interface/api-requirements-and-security.md#payload-security-method) section.
+
 ## Route and HTTP Methods
 
 ```https
-POST /api/v1/clients/{clientId}/deployment/{deploymentId}/status
+POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 ```
 
 ### Route Parameters
@@ -40,7 +42,7 @@ POST /api/v1/clients/{clientId}/deployment/{deploymentId}/status
 
 | Fields      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: Pending, Installing, Installed, Removing, Removed, Failed. The overall deployment status MUST inherit the current component's status until it has gone through installing each component.|
+| state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: pending, installing, installed, removing, removed, failed. The overall deployment status MUST reflect the most severe of the components states, following this precedence: failed > removing > installing > pending > removing > installed.|
 | error      | Error    | N    | Element that defines the overall installation error if one occured. See the [Error Fields](#error-fields) section below.|
 
 #### Component Attributes
@@ -48,15 +50,19 @@ POST /api/v1/clients/{clientId}/deployment/{deploymentId}/status
 | Attribute       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | name      | string    | Y    | Name of the deployment component, inherited via the deployment specification |
-| state     | string    | Y    | The component's current deployment state of the component. MUST be one of the following options: Pending, Installing, Installed, Removing, Removed, Failed |
+| state     | string    | Y    | The component's current deployment state of the component. MUST be one of the following options: pending, installing, installed, removing, removed, failed |
 | error     | Error    | N    | Element that defines the components installation error if one occured. See the [Error Fields](#error-fields) section below.  |
+
+> Note: The components array MUST contain one entry for each "component" defined in the referenced ApplicationDeployment manifest. 
 
 #### Error Attributes
 
 | Fields       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | code      | string    | Y    | Associated error code following a component failure during installation. |
-| message   | string    | Y    | Associated error message that provides further details to the WOS about the error that was encountered. |
+| message   | string    | Y    | Associated error message that provides further details to the WFM about the error that was encountered. |
+
+> Note: Error codes adn messages are implementation specific. 
 
 ## Example Deployment Status Manifest Request
 
@@ -86,7 +92,7 @@ POST /api/v1/clients/{clientId}/deployment/{deploymentId}/status
             "state": "pending",
             "error": {
                 "code": "",
-                "message ": ""
+                "message": ""
             }
         }
     ]
