@@ -33,6 +33,7 @@ nav:
           - specification/margo-management-interface/device-capabilities.md
           - specification/margo-management-interface/desired-state.md
           - specification/margo-management-interface/deployment-status.md
+          - specification/margo-management-interface/api-definition-swagger.md
       - Application Package:
           - specification/application-package/application-description.md
       - Margo Devices:
@@ -80,6 +81,12 @@ markdown_extensions:
 
 extra_css:
   - css/margo.css
+  - assets/swagger-ui.css
+
+extra_javascript:
+  - assets/swagger-ui-bundle.js
+  - assets/swagger-ui-standalone-preset.js
+
 
 extra:
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice
@@ -107,3 +114,4 @@ plugins:
         variable_start_string: =@=
         variable_end_string: =@=
   - privacy
+
