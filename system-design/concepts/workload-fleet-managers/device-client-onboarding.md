@@ -33,9 +33,11 @@ The Workload Fleet Manager assigns a globally unique identifier to the device's 
 
 After onboarding, the device client reports its capabilities to the WFM server using the device capability reporting API.
 
+## Relevant Links
 
-## The following pages provide further specification details on the concepts described above:
+Please follow the subsequent links to view more technical information on the concepts described above:
+
 - [API Security Details](../../specification/margo-management-interface/api-requirements-and-security.md)
 - [Certificate API](../../specification/margo-management-interface/certificate-api.md)
-- [Device Onboarding API](../../specification/margo-management-interface/device-onboarding.md)
+- [Device Onboarding API](../../specification/margo-management-interface/device-client-onboarding.md)
 - [Device Capabilities](../../specification/margo-management-interface/device-capabilities.md)

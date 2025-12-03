@@ -7,7 +7,7 @@ A Workload Fleet Manager (WFM) defines the desired workloads for each Edge Compu
 Each device runs a Workload Fleet Management Client (WFM Client) that retrieves and applies this Desired State, while reporting progress and results back to the WFM.
 This model provides a consistent and observable way to manage workloads across distributed environments.
 
-### How it works
+## How it works
 
 The Workload Fleet Manager coordinates workloads across Edge Compute Devices.
 Operators use the WFM to define workloads, update deployments, and view rollout progress across devices.
@@ -20,7 +20,7 @@ The WFM and WFM Clients communicate through two key interfaces:
 
 Together, these interfaces establish a feedback loop between the centralized manager and the distributed devices, ensuring workload consistency and visibility at scale.
 
-### Desired State
+## Desired State
 
 The Desired State defines the workloads that should run on each Edge Compute Device and the details of how they are deployed.
 It is represented by a [State Manifest](../../specification/margo-management-interface/desired-state.md#endpoints-state-manifest) that lists all workloads assigned to a device.
@@ -40,7 +40,7 @@ The WFM can provide ApplicationDeployments in two formats:
 All files retrieved as part of the Desired State—manifests, ApplicationDeployment YAMLs, and bundle archives—are treated as immutable artifacts.
 Each artifact is referenced by a SHA-256 digest. The WFM Client validates these digests before applying updates to ensure authenticity and consistency.
 
-### Reconciliation process
+## Reconciliation process
 
 Each WFM Client maintains the Desired State on its Edge Compute Device by running a continuous reconciliation loop.
 
@@ -67,7 +67,7 @@ Each WFM Client maintains the Desired State on its Edge Compute Device by runnin
 
 This continuous process allows the WFM to maintain awareness of workload rollout progress and ensures devices converge toward the Desired State.
 
-### Deployment status
+## Deployment status
 
 The Deployment Status API provides feedback from devices to the Workload Fleet Manager.
 The WFM Client reports progress, success, or failure during installation, update, and removal operations.
@@ -89,7 +89,7 @@ A deployment status report includes:
 
 This information enables real-time monitoring and supports troubleshooting and auditing of workload operations.
 
-### Sequence diagram
+## Sequence diagram
 
 ```mermaid
 sequenceDiagram

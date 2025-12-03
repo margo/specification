@@ -35,7 +35,7 @@ PUT /api/v1/clients/{clientId}/capabilities
 |-----------------|-----------------|-----------------|-----------------|
 | apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
 | kind            | string    | Y    | Must be `DeviceCapabilitiesManifest`.|
-| properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-fields) section below. |
+| properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-attributes) section below. |
 
 ### Properties Attributes
 

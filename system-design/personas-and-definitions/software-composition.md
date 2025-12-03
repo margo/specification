@@ -167,7 +167,7 @@ The application and contained components are typically configurable with the opt
 
 ### 2. Software Deployment
 
-When a device gets the instruction to run an [Application][application] (over a desired-state specified with an [`ApplicationDeployment` object][deployment-definition]), its [Workload Fleet Management Agent][wfma] interacts with the [providers][provider-model].
+When a device gets the instruction to run an [Application][application] (over a desired-state specified with an [`ApplicationDeployment` object][deployment-definition]), its [Workload Fleet Management Client][wfmc] interacts with the [providers][provider-model].
 That way all [Workloads][workload] needed for an [Application][application] should get started and the desired state should be reached.
 
 ```mermaid
@@ -200,9 +200,9 @@ C4Context
 
 In this stage the [providers][provider-model] are responsible for managing the individual [Workloads][workload].
 
-On a Helm v3 [Deployment Profiles][deployment-profile], a [Workload Fleet Management Agent][wfma] implementation could utilize the Helm API to start the individual Helm Charts.
+On a Helm v3 [Deployment Profiles][deployment-profile], a [Workload Fleet Management Client][wfma] implementation could utilize the Helm API to start the individual Helm Charts.
 
-On a Compose [Deployment Profiles][deployment-profile], a [Workload Fleet Management Agent][wfma] implementation could utilize the Compose CLI to start the individual [Workloads][workload].
+On a Compose [Deployment Profiles][deployment-profile], a [Workload Fleet Management Client][wfma] implementation could utilize the Compose CLI to start the individual [Workloads][workload].
 
 The following diagram shows the result of reaching the desired state for an [Application][application] with a Helm v3 [Deployment Profile][deployment-profile] (the result of `helm install`).
 
@@ -213,7 +213,7 @@ C4Component
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
     System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Fleet Management Agent") {
+        System_Boundary(woa1, "Workload Fleet Management Client") {
             Component(atb1, "Application Deployment 1", "ApplicationDeployment", "YAML document")
         }
 
@@ -248,7 +248,7 @@ C4Component
     UpdateLayoutConfig($c4BoundaryInRow="3", $c4ShapeInRow="1")
 
     System_Boundary(dev1, "Device 1") {
-        System_Boundary(woa1, "Workload Fleet Management Agent") {
+        System_Boundary(woa1, "Workload Fleet Management Client") {
             Component(atb1, "Application Deployment 1", "ApplicationDeployment", "YAML document")
         }
 
@@ -279,7 +279,7 @@ C4Component
 [workload]: technical-lexicon.md#workload
 [application]: technical-lexicon.md#application
 [component-registry]: technical-lexicon.md#component-registry
-[deployment-definition]: ../../specification/margo-management-interface/desired-state/?h=applicationdeployment.md#applicationdeployment-definition
+[deployment-definition]: ../specification/margo-management-interface/desired-state.md#applicationdeployment-yaml-definition
 [provider-model]: technical-lexicon.md#provider-model
-[wfma]: technical-lexicon.md#workload-fleet-management-agent
+[wfmc]: technical-lexicon.md#workload-fleet-management-client
 [deployment-profile]: ../specification/application-package/application-description.md#deploymentprofile-attributes

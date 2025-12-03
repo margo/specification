@@ -35,15 +35,15 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 | apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
 | kind            | string    | Y    | Must be `DeploymentStatusManifest`.|
 | deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Fleet Management Software. |
-| status          | []status    | Y    | Element that defines overall deployment status. See the [Status Fields](#status-fields) section below.|
-| components      | []components    | Y    | Element that defines the individual component's deployment status. See the [Component Fields](#component-fields) section below.|
+| status          | []status    | Y    | Element that defines overall deployment status. See the [Status Attributes](#status-attributes) section below.|
+| components      | []components    | Y    | Element that defines the individual component's deployment status. See the [Component Attributes](#component-attributes) section below.|
 
 #### Status Attributes
 
 | Fields      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: pending, installing, installed, removing, removed, failed. The overall deployment status MUST reflect the most severe of the components states, following this precedence: failed > removing > installing > pending > removing > installed.|
-| error      | Error    | N    | Element that defines the overall installation error if one occured. See the [Error Fields](#error-fields) section below.|
+| error      | Error    | N    | Element that defines the overall installation error if one occured. See the [Error Attributes](#error-attributes) section below.|
 
 #### Component Attributes
 
@@ -51,7 +51,7 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 |-----------------|-----------------|-----------------|-----------------|
 | name      | string    | Y    | Name of the deployment component, inherited via the deployment specification |
 | state     | string    | Y    | The component's current deployment state of the component. MUST be one of the following options: pending, installing, installed, removing, removed, failed |
-| error     | Error    | N    | Element that defines the components installation error if one occured. See the [Error Fields](#error-fields) section below.  |
+| error     | Error    | N    | Element that defines the components installation error if one occured. See the [Error Attributes](#error-attributes) section below.  |
 
 > Note: The components array MUST contain one entry for each "component" defined in the referenced ApplicationDeployment manifest. 
 
