@@ -39,7 +39,7 @@ Initial trust is accomplished via TLS version 1.3 or greater
 #### API Port Details
 
 This API is designed to minimize the ports required on the customer's infrastructure to enable cloud to edge communication. 
-    -The API MUST ONLY utilize port 443 for it's traffic. 
+    -The API MUST ONLY utilize port 443 for its traffic. 
 
 #### Unique Identifiers
 
