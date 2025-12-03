@@ -51,8 +51,6 @@ sequenceDiagram
     Client->>Server: POST /clients/{clientId}/capabilities
     Server-->>Client: 201 Created
     Note over Client,Server: Enrollment is complete
-
-    Note over Client,Server: Assumed Desired state has been transmitted via WFM(out of scope for this SUP)
     Note over Client,Server: 📡 Secure API Usage with Signed Payloads
     Client->>Server: POST /clients/{clientId}/deployments/{deploymentId}/status
     Server-->>Client: 201 Created
@@ -95,7 +93,7 @@ POST /api/v1/onboarding
 
 ```json
 {
-    "clientId": "<base-64 encoded UUID>"
+    "clientId": "<base-64 encoded UUID or other URL safe string identifier>"
 }
 ```
 

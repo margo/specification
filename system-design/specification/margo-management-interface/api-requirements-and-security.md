@@ -48,7 +48,6 @@ The WFM MUST create create a URL safe client id to uniquely identify each client
 - This client ID MAY be in the format of UUIDv4
 - Other URL safe string identifiers are permitted to be used
 
-> Note: This does introduce a change in philosophy regarding the unique identifier, changing towards a more flexible client id that is separate from device id. 
 
 #### Certificate Information
 Both the WFM and Device client MUST utilize X.509 certificates to represent themselves within the API interactions.
