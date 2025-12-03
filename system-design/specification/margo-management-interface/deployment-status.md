@@ -62,7 +62,7 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 | code      | string    | Y    | Associated error code following a component failure during installation. |
 | message   | string    | Y    | Associated error message that provides further details to the WFM about the error that was encountered. |
 
-> Note: Error codes adn messages are implementation specific. 
+> Note: Error codes and messages are implementation-specific. 
 
 ## Example Deployment Status Manifest Request
 

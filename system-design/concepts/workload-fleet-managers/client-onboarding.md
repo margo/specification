@@ -1,6 +1,6 @@
 # Device Client Onboarding
 
-To enable workload management, the device's client must first establish trust and complete an onboarding process with the End Users selected Workload Fleet Manager. This onboarding process enables late binding, which is a critical Margo non-functional requirement that enables a device to bind to any Margo compatible Workload Fleet Manager. 
+To enable workload management, the device's client first establishes trust and completes an onboarding process with the End Users' selected Workload Fleet Manager. This onboarding process enables late binding, which is a critical Margo non-functional requirement that enables a device to bind to any Margo-compatible Workload Fleet Manager. 
 
 The onboarding process includes several core functions:
 
@@ -11,10 +11,10 @@ The onboarding process includes several core functions:
 ## Trust Establishment
 
 Initial trust is established between the device's Workload Fleet Management (WFM) Client and the WFM using server-side TLS.
-Before the WFM Client can connect securely, it must obtain the WFM's root CA certificate. This trust anchor may be:
+Before the WFM Client can connect securely, it obtains the WFM's root CA certificate. This trust anchor can be:
 
 - downloaded via the Certificate API, provided that an existing trusted channel is available, or
-- delivered out-of-band (e.g. preloaded by the device owner or transferred via USB)
+- delivered out-of-band (e.g., preloaded by the device owner or transferred via USB)
 
 Importing the WFM's root CA certificate enables the WFM Client to authenticate the WFM during TLS connections. Mutual TLS (mTLS) is deliberately avoided, as some deployment environments include network components or intermediaries that may not support or forward client-certificate authentication.
 Instead, transport security and server authentication are provided by server-side TLS, while client authentication and request integrity are performed at the application layer: the WFM Client uses its own X.509 certificate to create HTTP message signatures for each request. This approach maintains strong, certificate-based authenticity and integrity while accommodating a wide range of network architectures.

@@ -39,11 +39,11 @@ Initial trust is accomplished via TLS version 1.3 or greater
 #### API Port Details
 
 This API is designed to minimize the ports required on the customer's infrastructure to enable cloud to edge communication. 
-    -The API MUST ONLY utilize port 443 for its traffic. 
+    - The API MUST ONLY utilize port 443 for its traffic. 
 
 #### Unique Identifiers
 
-The WFM MUST create create a URL safe client id to uniquely identify each client within the architecture. 
+The WFM MUST create a URL-safe client ID to uniquely identify each client within the architecture. 
 
 - This client ID MAY be in the format of UUIDv4
 - Other URL safe string identifiers are permitted to be used
@@ -76,16 +76,16 @@ Interface patterns MUST support extended device communication downtime.
 
 ### Payload Security Method
 #### Security and Integrity Information
-Due to the limitations of utilizing mTLS with common OT infrastructure components, such as TLS terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection, Margo has adopted a certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes (HTTP Request body), the device's management client can ensure secure transport between the device's management client and the Workload Fleet Management's web service.
+Due to the limitations of utilizing mTLS with common OT infrastructure components, such as TLS-terminating HTTPS load-balancer or a HTTPS proxy doing lawful inspection, Margo has adopted a certificate-based payload signing approach to protect payloads from being tampered with. By utilizing the certificates to create payload envelopes (HTTP Request body), the device's management client can ensure secure transport between the device's management client and the Workload Fleet Management's web service.
 
-- For API security, Server side TLS 1.3 (minimum) is used, where the keys are obtained from the Server's X.509 Certificate as defined in standard HTTP over TLS
-- For API integrity, the device's management client is issued a client specific X.509 certificate.
+- For API security, server-side TLS 1.3 (minimum) is used, where the keys are obtained from the Server's X.509 Certificate as defined in standard HTTP over TLS
+- For API integrity, the device's management client is issued a client-specific X.509 certificate.
 - The issuer of the client X.509 certificate is trusted under the assumption that the root CA download to the Workload Fleet Management server occurs as a precondition to onboarding the devices 
-- Similarly the issuer of the server X.509 certificate is  trusted under the assumption that the root CA download to the device's management client occurs over a "protected" connection as part of the yet to be defined device onboarding procedure
+- Similarly, the issuer of the server X.509 certificate is  trusted under the assumption that the root CA download to the device's management client occurs over a "protected" connection as part of the yet to be defined device onboarding procedure
 #### Device Management Client
 Once the device management client has a message prepared for the Workload Fleet Management's web service, it MUST establish message integrity as defined in RFC 9421 by performing the following steps:
 
-- The device's management client MUST generate a SHA256 digest of the HTTP request body. Encode the digest in Base64 and include in the Content-Digest header. 
+- The device's management client MUST generate a SHA256 digest of the HTTP request body. Encode the digest in Base64 and include it in the Content-Digest header. 
 ```
     Content-Digest: sha-256=:<base64(SHA256(body))>:
 ```
@@ -111,15 +111,15 @@ Once the device management client has a message prepared for the Workload Fleet 
 > Note: The server MUST use the 'created' value to detect and prevent replay attacks. 
 
 #### Workload Fleet Manager Web-Service           
-- On receiving the message from the Device Client, The Workload Fleet Management's web service MUST do the following :
+- On receiving the message from the Device Client, the Workload Fleet Management's web service MUST do the following :
     - It looks up the client certificate from the Client-ID in the API Request URL 
-    - The Workload Fleet Management's web service reads the following from the HTTP Request Header :
+    - The Workload Fleet Management's web service reads the following from the HTTP Request Header:
         - Signature-Input
         - Signature
         - Content-Digest (if body is present)
-    - Use the Signature-Input in the header to determine which components were signed. Reconstruct the Signature Base canonical string using the actual values from the request including the SHA256 encoded content-digest from the received request body 
-    - Then extract the base64-encoded message signature from the Signature header, and also verifies the message signature string using the client's X.509 public-key.
-    - If the message signature in the HTTP Header and the verified message signature match, then the payload is then processed by the Workload Fleet Management's web service.
+    - Use the Signature-Input in the header to determine which components were signed. Reconstruct the Signature Base canonical string using the actual values from the request, including the SHA256 encoded content-digest from the received request body 
+    - Then extract the base64-encoded message signature from the Signature header and verifies the message signature string using the client's X.509 public-key.
+    - If the message signature in the HTTP Header and the verified message signature match, then the payload is processed by the Workload Fleet Management's web service.
     - If the two do not match, the Workload Fleet Manager will respond with HTTP Error 401 as given below, and discontinue the session
       ```
       HTTP/1.1 401 Unauthorized

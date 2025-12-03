@@ -121,7 +121,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | speaker | This type stands for a speaker peripheral. |
 
 
-## Example Device Capabilities Manifest Request
+## Example Device Capabilities Payload
 
 ```json
 {

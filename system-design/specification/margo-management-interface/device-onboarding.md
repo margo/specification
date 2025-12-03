@@ -20,11 +20,11 @@ sequenceDiagram
     participant Client
     participant Server
 
-    Note over Client,Server: 🔐 Initial Trust Establishment. 
+    Note over Client,Server: 🔐 Initial Trust Establishment
     Note over Client,Server: The device's management client obtains the WFM's root CA certificate either out-of-band or via the Certificate API over an existing trusted channel.
     Client->>Server: GET /onboarding/certificate
-    Server-->>Client: base64-encoded Root CA certificate
-    Client-->>Client: injecting Root CA into trusted store
+    Server-->>Client: Base64-encoded Root CA certificate
+    Client-->>Client: Injecting Root CA into trusted store
 
     Note over Client,Server: 🔒 Standard TLS Handshake Start
     Client->>Server: TLS ClientHello (TLS versions, cipher suites, random)
@@ -38,11 +38,11 @@ sequenceDiagram
     WFMUser->>Server: Opportunity for user to approve or reject client onboarding
     alt Public key trusted/user approved
         Note over Server: Server verifies client certificate and assigns UUID
-        Server-->>Client: 201 Created { clientId }
+        Server-->>Client: 201 Created {clientId}
     else Client rejected
         Server-->>Client: 400 Bad Request {error: "Invalid certificate"}
     else Client rejected
-        Server-->>Client: 403 Forbidden{ error: "Client rejected"}
+        Server-->>Client: 403 Forbidden {error: "Client rejected"}
     end
 
     Note over Client,Server: Device Client onboarding Ends
