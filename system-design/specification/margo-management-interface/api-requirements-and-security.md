@@ -51,7 +51,7 @@ The WFM MUST create create a URL safe client id to uniquely identify each client
 > Note: This does introduce a change in philosophy regarding the unique identifier, changing towards a more flexible client id that is separate from device id. 
 
 #### Certificate Information
-Both the WFM and Device client MUST utilize a x.509 certificates to represent themselves within the API interactions.
+Both the WFM and Device client MUST utilize X.509 certificates to represent themselves within the API interactions.
 
 - The WFM's certificate is used to authenticate the server during TLS. The WFM Client’s certificate is used to authenticate the client and sign request payloads at the application layer, not during the TLS handshake. 
 - All client certificates MUST conform to RFC 5280 standards. 
