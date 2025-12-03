@@ -9,7 +9,7 @@ In order for the Workload Fleet Management software to manage the edge device's 
 - The device's management client downloads the Workload Fleet Manager's public root CA certificate using the [Certificate API](../../specification/margo-management-interface/certificate-api.md)
 - Context and trust is established between the device's management client and the Workload Fleet Management web service
 - The device's management client uses the [Onboarding API](../../specification/margo-management-interface/certificate-api.md) to onboard with the Workload Fleet Management service by providing its X.509 certificate
-- The device's management client receives it's unique client Id assigned via the Workload Fleet Manager
+- The device's management client receives its unique client Id assigned via the Workload Fleet Manager
 - The [device capabilities](../../concepts/workload-fleet-managers/device-capabilities.md) information is sent from the device to the WFM using the [Device API](../../specification/margo-management-interface/device-capabilities.md)
 
 ## Onboarding Sequence diagram
