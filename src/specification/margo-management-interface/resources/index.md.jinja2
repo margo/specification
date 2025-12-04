@@ -223,7 +223,7 @@ This section defines the end-to-end workflow followed by a client to retrieve, v
 
   - If the manifest is unchanged, the WFM responds with `304 Not Modified`.
   - If the manifest has changed (`200 OK`), the client:
-    - Verifies the `manifestVersion` is strictly greater than the stored version. If not, the update MUST be rejected and logged as a security event.
+    - Verifies the `manifestVersion` is strictly greater than the stored version. If not, the update MUST be rejected and SHOULD be logged as a security event. The specific requirements for logging security events are not currently defined and will be addressed in a future version of the specification.
     - Parses the manifest and decides whether to fetch the bundle or individual deployments.
     - Downloads and verifies digests for all referenced `ApplicationDeployment` YAMLs.
   - The client reconciles its local workloads:
