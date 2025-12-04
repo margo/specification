@@ -3,7 +3,7 @@ id: http://specification.margo.org/desired_state_schema
 name: DesiredState
 description: >-
   Each workload is represented as an `ApplicationDeployment` YAML file that specifies its components, configuration, and parameters.
-  This definition is shared across the Desired State and Deployment Status APIs.
+  This resource is delivered via the Desired State API and referenced by `id` in the Deployment Status API.
 version: 1.0 #Arne: update later
 prefixes:
   linkml: https://w3id.org/linkml/
