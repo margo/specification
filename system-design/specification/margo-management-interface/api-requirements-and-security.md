@@ -108,7 +108,7 @@ Once the device management client has a message prepared for the Workload Fleet 
         sig1=:<base64(signature)>:
     ```
 
-> Note: The server MUST use the 'created' value to detect and prevent replay attacks. 
+> Note: The server MUST use the `created` timestamp from the signature input to detect and prevent replay attacks. Requests with a `created` timestamp older than a configurable validity window (e.g., 5 minutes) or in the future (allowing for clock skew) MUST be rejected.
 
 #### Workload Fleet Manager Web-Service           
 - On receiving the message from the Device Client, the Workload Fleet Management's web service MUST do the following :
