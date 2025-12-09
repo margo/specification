@@ -4,6 +4,8 @@ While applying a new desired state, the device's management client MUST provide 
 
 - Requests to this endpoint MUST be authenticated using the HTTP Message Signature method as defined in the [Payload Security](../margo-management-interface/api-requirements-and-security.md#payload-security-method) section.
 
+> Note: This assumes consistent connection to the WFM, we will address intermittent or extended disconnection scenarios in the future. 
+
 ## Route and HTTP Methods
 
 ```https

@@ -63,7 +63,6 @@ Both the WFM and Device client MUST utilize X.509 certificates to represent them
     - Additional algorithms MAY be supported, but the above list defines the minimum baseline for interoperability.
     - The server MUST support all required algorithms (see above), so it can verify any compliant client, while clients MAY choose any of the required algorithms that fits their hardware capabilities.
 
-> Note: Further investigation and clarity to come regarding Margo's position on the root CA mentioned. 
 
 #### Support for Extended Device Communications Downtime
 Interface patterns MUST support extended device communication downtime. 
