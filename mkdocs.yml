@@ -3,28 +3,6 @@ docs_dir: system-design
 
 nav:
   - What is Margo?: index.md
-  - Personas & Definitions:
-      - personas-and-definitions/personas.md
-      - personas-and-definitions/persona-examples.md
-      - personas-and-definitions/technical-lexicon.md
-      - personas-and-definitions/software-composition.md
-  - Overview:
-      - overview/envisioned-system-design.md
-      - overview/applications.md
-      - overview/workload-fleet-management.md
-      - overview/edge-compute-devices.md
-      - overview/workload-observability.md
-  - Concepts:
-      - Applications:
-          - concepts/applications/application-package.md
-          - concepts/applications/application-registry.md
-          - concepts/applications/local-registries.md
-      - Workload Fleet Managers:
-          - concepts/workload-fleet-managers/device-client-onboarding.md
-          - concepts/workload-fleet-managers/device-capabilities.md
-          - concepts/workload-fleet-managers/workload-deployment.md
-      - Edge Compute Devices:
-          - concepts/edge-compute-devices/devices.md
   - Specification:
       - Margo Management Interface:
           - specification/margo-management-interface/api-requirements-and-security.md
@@ -43,9 +21,6 @@ nav:
         - specification/observability/publishing-workload-observability-data.md
         - specification/observability/collecting-workload-observability-data.md
         - specification/observability/consuming-workload-observability-data.md
-
-  - Make a Contribution:
-      - make-a-contribution/contributing.md
 
 theme:
   name: material
