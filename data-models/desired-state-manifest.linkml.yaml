@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/desired-state-manifest-schema
+name: DesiredStateManifest
+description: >-
+  Each workload is represented as an `ApplicationDeployment` YAML file that specifies its components, configuration, and parameters.
+version: 1.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+
+default_prefix: margo
+default_range: string
+
+classes:
+  DesiredStateManifest:
+    description: >-
+      Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the device.
+    attributes:
+      manifestVersion:
+        range: integer
+        minimum_value: 1
+        required: true
+      bundle:
+        description: >-
+          Package optimization containing multiple ApplicationDeployment YAMLs.
+        range: Bundle
+        required: true
+      deployments:
+        description: List of deployment objects describing each workload.
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        range: Deployment
+        required: true
+
+  Bundle:
+    description: >-
+      Describes an archive containing all referenced ApplicationDeployment YAMLs.
+      If there are zero deployments (i.e., the deployments array is empty), this field MUST be present with the value null.
+      An empty archive MUST NOT be served.
+    attributes:
+      mediaType:
+        description: >-
+          MUST be application/vnd.margo.bundle.v1+tar+gzip,
+          which denotes a gzip-compressed tar archive (commonly delivered as a .tar.gz) whose root contains one or more ApplicationDeployment YAML files.
+          Servers MUST set the HTTP Content-Type to this media type.
+          The archive MUST contain exactly the set of YAML files referenced by deployments.
+        range: string
+        equals_string: "application/vnd.margo.bundle.v1+tar+gzip"
+        required: true
+      digest:
+        description: >-
+          Digest of the bundle archive.
+          MUST equal the digest computed over the exact sequence of bytes in the bundle endpoint's HTTP 200 OK response body.
+          See Protocol - Digest for further details.
+        range: DigestType
+        required: true
+      sizeBytes:
+        description: >-
+          Optional unsigned 64-bit advisory estimate of the decoded payload length in bytes for the bundle archive.
+          Provided for bandwidth estimation and update planning.
+          MUST NOT be used for integrity verification.
+        range: SizeBytesType
+      url:
+        description: >-
+          Content-addressable retrieval endpoint for the bundle of the form /api/v1/clients/{clientId}/bundles/{digest} where {digest} equals bundle.digest.
+        range: UrlType
+        required: true
+
+  Deployment:
+    description: List of deployment objects describing each workload.
+    attributes:
+      deploymentId:
+        description: >-
+          The UUID of the deployment.
+          MUST equal metadata.annotations.id in the ApplicationDeployment.
+        range: string
+        required: true
+      digest:
+        description: >-
+         Digest of the corresponding ApplicationDeployment YAML file.
+          MUST equal the digest computed over the exact sequence of bytes in the individual deployment endpoint's HTTP 200 OK response body.
+          See Protocol - Digest for further details.
+        range: DigestType
+        required: true
+      sizeBytes:
+        description: >-
+          Optional unsigned 64-bit advisory estimate of the decoded payload length in bytes for the ApplicationDeployment YAML.
+          Provided for bandwidth estimation and update planning.
+          MUST NOT be used for integrity verification.
+        range: SizeBytesType
+      url:
+        description: >-
+          Content-addressable retrieval endpoint for the ApplicationDeployment YAML of the form /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest} where {digest} equals deployments[].digest.
+        range: UrlType
+        required: true
+
+types:
+  DigestType:
+    description: >-
+      Hash that identifies an element by its content.
+      Digests have to follow the pattern: "<hash-algorightm>:<hash-value>".
+      For example: "sha256:8a9b07...".
+    uri: xsd:string
+    base: string
+    repr: str
+    pattern: "^[a-zA-Z0-9_-]+:[0-9a-fA-F]+$"
+  SizeBytesType:
+    description: Size of an element in bytes.
+    uri: xsd:nonNegativeInteger
+    base: integer
+    minimum_value: 0
+  UrlType:
+    description: Endpoint (URL without schema and domain) associated to an element.
+    uri: xsd:anyURI
+    base: URI
+    repr: str
+    pattern: "^/[a-zA-Z0-9-._~:/?#\\[\\]@!$&'()*+,;=]+$"
+

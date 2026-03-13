@@ -1,0 +1,15 @@
+{
+    "manifestVersion": 101,
+    "bundle": {
+        "mediaType": "application/vnd.margo.bundle.v1+tar+gzip",
+        "digest": "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "url": "/api/v1/clients/1234/bundles/sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "deployments": [
+        {
+            "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
+            "digest": "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "url": "/api/v1/clients/1234/deployments/a3e2f5dc-912e-494f-8395-52cf3769bc06/sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+        }
+    ]
+}
