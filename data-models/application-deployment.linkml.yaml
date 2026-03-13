@@ -1,13 +1,13 @@
 # yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
-id: http://specification.margo.org/desired_state_schema
-name: DesiredState
+id: https://specification.margo.org/application_deployment_schema
+name: ApplicationDeployment
 description: >-
   Each workload is represented as an `ApplicationDeployment` YAML file that specifies its components, configuration, and parameters.
   This resource is delivered via the Desired State API and referenced by `id` in the Deployment Status API.
 version: 1.0 #Arne: update later
 prefixes:
   linkml: https://w3id.org/linkml/
-  margo: http://specification.margo.org/
+  margo: https://specification.margo.org/
 imports:
   - linkml:types
 
@@ -15,38 +15,34 @@ default_prefix: margo
 default_range: string
 
 classes:
-  DesiredState:
+  ApplicationDeployment:
     description: A class representing the desired state of an entity.
     attributes:
       apiVersion:
         description: Identifier of the version of the API the object definition follows.
         required: true
         range: string
-        rank: 10
       kind:
         description: Must be `ApplicationDeployment`.
         equals_string: "ApplicationDeployment"
         required: true
         range: string
-        rank: 20
+        designates_type: true
       metadata:
         description: >-
           Metadata element specifying characteristics about the application deployment.
           See the [Metadata Attributes](#metadata-attributes) section below.
         range: Metadata
         required: true
-        rank: 30
       spec:
         description: >-
           Spec element that defines deployment profile and parameters associated with the application deployment.
           See the [Spec Attributes](#spec-attributes) section below.
         range: Spec
         required: true
-        rank: 40
 
   Metadata:
     description: Metadata associated with the desired state.
-    rank: 10
     attributes:
       annotations:
         description: >-
@@ -55,21 +51,17 @@ classes:
           See the [Annotation Attributes](#annotations-attributes) section below.
         range: Annotations
         required: true
-        rank: 10
       name:
         description: >-
           When deploying to Kubernetes, the manifests name.
           The name is chosen by the workload orchestration vendor and is not displayed anywhere.
         required: true
-        rank: 20
       namespace:
         description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the workload orchestration solution vendor.
         required: true
-        rank: 30
 
   Annotations:
     description: A class representing annotations.
-    rank: 20
     attributes:
       applicationId:
         description: >-
@@ -81,24 +73,20 @@ classes:
           The applicationId MUST match the associated application package Metadata "id" attribute.
         required: true
         pattern: "^[-a-z0-9]{1,200}$"
-        rank: 10
       id:
         description: >-
           The unique identifier UUID of the deployment specification.
           Needs to be assigned by the Workload Orchestration Software.
         required: true
         pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-        rank: 20
 
   Spec:
     description: Specification details of the desired state.
-    rank: 30
     attributes:
       deploymentProfile:
         description: Section that defines deployment details including type and components.
         range: DeploymentProfile
         required: true
-        rank: 10
       parameters:
         description: Describes the configured parameters applied via the end-user.
         range: Parameter
@@ -106,11 +94,9 @@ classes:
         multivalued: true
         inlined: true
         inlined_as_list: false
-        rank: 20
 
   DeploymentProfile:
     description: A class representing a deployment profile.
-    rank: 40
     # abstract: true
     slots:
       - type
@@ -118,36 +104,28 @@ classes:
 
   HelmDeploymentProfile:
     is_a: DeploymentProfile
-    rank: 40
     slot_usage:
       type:
         equals_string: "helm.v3"
-        rank: 10
       components:
         range: HelmComponent
-        rank: 20
 
   ComposeDeploymentProfile:
     is_a: DeploymentProfile
-    rank: 40
     slot_usage:
       type:
         equals_string: "compose"
-        rank: 10
       components:
         range: ComposeComponent
-        rank: 20
 
   Component:
     description: A class representing a component of a deployment profile.
-    rank: 50
     # abstract: true
     attributes:
       name:
         description: The name of the component.
         # identifier: true
         required: true
-        rank: 10
       properties:
         description: Properties associated with the component.
         range: Property
@@ -155,71 +133,56 @@ classes:
         multivalued: true
         inlined: true
         inlined_as_list: false
-        rank: 20
 
   HelmComponent:
     is_a: Component
-    rank: 50
 
   ComposeComponent:
     is_a: Component
-    rank: 50
 
   Property:
-    rank: 80
     attributes:
       name:
         identifier: true
         range: string
-        rank: 10
       value:
         range: string
-        rank: 20
         required: true
 
   Parameter:
     description: A class representing a single parameter.
-    rank: 60
     attributes:
       name:
         identifier: true
         required: true
-        rank: 10
       value:
         description: The value of the parameter.
         required: true
-        rank: 20
       targets:
         description: The targets associated with the parameter.
         range: Target
         multivalued: true
         required: true
-        rank: 30
 
   Target:
     description: A class representing a target for a parameter.
-    rank: 70
     attributes:
       pointer:
         description: The pointer indicating the location of the target.
         required: true
-        rank: 10
       components:
         description: The components associated with the target.
         multivalued: true
         required: true
-        rank: 20
 
 slots:
   type:
     description: The type of deployment profile (e.g., helm.v3, compose).
     range: string
     required: true
-    rank: 10
 
   components:
     description: Components of the application
     range: Component
     multivalued: true
     required: true
-    rank: 20
