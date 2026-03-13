@@ -1,0 +1,221 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/device-capabilities
+name: DeviceCapabilities
+title: Device Capabilities Schema
+description: >-
+  Schema for defining device capabilities.
+  The purpose of the Device Capabilities is that WFMs can match application deployments with the capabilities of the target devices.
+version: 1.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+
+default_prefix: margo
+
+
+classes:
+  DeviceCapabilitiesManifest:
+    description: Capabilities of a device on which applications can be deployed.
+    attributes:
+      apiVersion:
+        description: Identifier of the version the API resource follows.
+        range: string
+        required: true
+      kind:
+        description: Must be `DeviceCapabilitiesManifest`.
+        range: string
+        required: true
+        equals_string: "DeviceCapabilitiesManifest"
+        designates_type: true
+      properties:
+        description: >-
+          Element that defines characteristics about the device.
+          See the [Properties Attributes](#properties-attributes) section below.
+        required: true
+        range: Properties
+
+  Properties:
+    attributes:
+      id:
+        description: Unique deviceID assigned to the device via the Device Owner.
+        range: string
+        required: true
+      vendor:
+        description: Defines the device vendor.
+        range: string
+        required: true
+      modelNumber:
+        description: Defines the model number of the device.
+        range: string
+        required: true
+      serialNumber:
+        description: Defines the serial number of the device.
+        range: string
+        required: true
+      roles:
+        description: >-
+          Element that defines the device role it can provide to the Margo environment.
+          MUST be one of the following: Standalone Cluster, or Standalone Device
+        required: true
+        multivalued: true
+        inlined: false
+        range: DeviceRole
+      resources:
+        description: >-
+          Element that defines the device's resources available to the application deployed on the device.
+          See the [Resources Attributes](#resources-attributes) section below.
+        required: true
+        range: Resources
+
+  Resources:
+    description: >-
+      Resources of the specific device being reported to the WFM.
+      Utilized to match with the required resources defined in the application description
+    attributes:
+      cpu:
+        description: CPU element specifying the CPU information of the device. See the [CPU](#cpu) section below.
+        required: true
+        range: Cpu
+      memory:
+        description: >-
+          The amount of memory available for applications to utilize on the device.
+          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
+          This is defined by the device owner.
+        required: true
+        range: string
+      storage:
+        description: >-
+          The amount of storage available for applications to utilize on the device.
+          The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
+          This is defined by the device owner.
+        required: true
+        range: string
+      peripherals:
+        description: >-
+          Peripherals element specifying the peripherals available for applications to utilize on the device.
+          See the [Peripheral](#peripherals-attributes) section below.
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        range: DevicePeripheral
+      interfaces:
+        description: >-
+          Interfaces element specifying the communication interfaces available for applications to utilize on the device.
+          See the [Communication Interfaces](#interfaces-attributes) section below.
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        range: DeviceInterface
+
+  Cpu:
+    description: CPU element defining the device's CPU characteristics.
+    attributes:
+      cores:
+        description: >-
+          Defines the cores available within the hosts CPU.
+          Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
+          This is defined by the device owner.
+          After deployment of the application, the device MUST provide this number of CPU cores for the application.
+        required: true
+        range: integer
+      architecture:
+        description: >-
+          The CPU architecture supported by the device.
+          This can be e.g. amd64, x86_64, arm64, arm.
+          See the [CpuArchitectureType](#cpu-architectures) definition for all permissible values.
+        range: CpuArchitectureType
+
+  DevicePeripheral:
+    description: Peripheral hardware of a device.
+    attributes:
+      type:
+        description: >-
+          The type of peripheral.
+          This can be e.g. GPU, display, camera, microphone, speaker.
+          See the [PeripheralType](#peripheral-types) definition for all permissible values.
+        required: true
+        range: PeripheralType
+      manufacturer:
+        description: The name of the manufacturer.
+        range: string
+      model:
+        description: The model of the peripheral.
+        range: string
+
+  DeviceInterface:
+    description: Communication interface of a device.
+    attributes:
+      type:
+        description: >-
+          The type of a communication interface.
+          This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
+          See the [CommunicationInterfaceType](#communication-interface-types) definition for all permissible values.
+        range: CommunicationInterfaceType
+
+
+enums:
+  DeviceRole:
+    permissible_values:
+      Standalone Cluster:
+        description: >-
+          Select this role to run Helm applications.
+          See [Edge compute devices](../../concepts/edge-compute-devices/devices#standalone-cluster-role-details) for more information.
+      Standalone Device:
+        description: >-
+          Select this role to run Compose applications.
+          See [Edge compute devices](../../concepts/edge-compute-devices/devices#standalone-device-role-details) for more information.
+
+  CpuArchitectureType:
+    permissible_values:
+      amd64:
+        description: AMD 64-bit architecture.
+      x86_64:
+        description: x86 64-bit architecture.
+      arm64:
+        description: ARM 64-bit architecture.
+      arm:
+        description: ARM 32-bit architecture.
+      riscv64:
+        description: RISC-V 64-bit architecture.
+      other:
+        description: >-
+          Any other CPU architecture not listed here. The application developer MUST provide a description of the architecture in the deployment profile's `description` field.
+  
+  CommunicationInterfaceType:
+    permissible_values:
+      ethernet:
+        description: This type stands for an Ethernet interface.
+      wifi:
+        description: This type stands for an WiFi interface.
+      cellular:
+        description: This type stands for cellular communication technologies such as 5G, LTE, 3G, 2G, ....
+      bluetooth:
+        description: This type stands for a Bluetooth or Bluetooth Low-Energy (BLE) interface.
+      usb:
+        description: This type stands for a USB interface.
+      canbus:
+        description: This type stands for a CANBus interface.
+      rs232:
+        description: This type stands for a RS232 interface.
+      other:
+        description: This type stands for any other communication interface not listed here. The application developer MUST provide a description of the interface in the deployment profile's `description` field.
+  
+  PeripheralType:
+    permissible_values:
+      gpu:
+        description: This type stands for a Graphics Processing Unit (GPU) peripheral.
+      display:
+        description: This type stands for a display peripheral.
+      camera:
+        description: This type stands for a camera peripheral.
+      microphone:
+        description: This type stands for a microphone peripheral.
+      speaker:
+        description: This type stands for a speaker peripheral.
+      other:
+        description: This type stands for any other peripheral not listed here. The application developer MUST provide a description of the peripheral in the deployment profile's `description` field.
+
