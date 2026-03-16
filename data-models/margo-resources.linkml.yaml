@@ -1,0 +1,176 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/device-resources
+name: DeviceResources
+description: >-
+  TBD
+version: 1.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+
+default_prefix: margo
+default_range: string
+
+classes:
+  Resources:
+    description: >-
+      Required resources element specifying the resources required to install the application.
+    slots:
+      - cpu
+      - memory
+      - storage
+      - peripherals
+      - interfaces
+
+  CPU:
+    description: >-
+      CPU element specifying the CPU requirements for the application.
+    attributes:
+      cores:
+        description: The required amount of CPU cores the application must use to run in its full functionality.
+          Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
+          This is defined by the application developer.
+          After deployment of the application, the device MUST provide this number of CPU cores for the application.
+        rank: 10
+        range: double
+        required: true
+      architectures:
+        description: The CPU architectures supported by the application. This can be e.g. amd64, x86_64, arm64, arm.
+          See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.
+          Multiple arcitecture types can be specified, as the deployment profile may support multiple CPU architectures.
+        rank: 20
+        range: CpuArchitectureType
+        required: false
+        multivalued: true
+        inlined: false
+
+  Peripheral:
+    description: Peripheral hardware of a device.
+    attributes:
+      type:
+        description: The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker.
+          See the [PeriperalType](#peripheraltype) definition for all permissible values.
+        rank: 20
+        range: PeripheralType
+        required: true
+      manufacturer:
+        description: The name of the manufacturer. If `manufacturer` is specified as a requirement here, it may be difficult to find devices that can host the  application. Please use these requirements with caution.
+        rank: 30
+        range: string
+        required: false
+      model:
+        description: The model of the peripheral. If `model` is specified as a requirement here, it may be difficult to find devices that can host the application. Please use these requirements with caution.
+        rank: 40
+        range: string
+        required: false
+
+  CommunicationInterface:
+    description: >-
+      Communication interface of a device.
+    attributes:
+      type:
+        description: The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
+          See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.
+        rank: 30
+        range: CommunicationInterfaceType
+        required: true
+
+slots:
+  cpu:
+    description: >-
+      CPU element specifying the CPU requirements for the application.
+      See the [CPU](#cpu-attributes) section below.
+    range: CPU
+    required: false
+
+  memory:
+    description: The minimum amount of memory required.
+      The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
+      This is defined by the application developer.
+      After deployment of the application, the device MUST provide this amount of memory for the application.
+    range: string
+    pattern: ^[0-9]+(Mi|Gi|Ki)$
+    required: false
+
+  storage:
+    description: The amount of storage required for the application to run. This encompasses the installed application and the data it needs to store.
+      The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
+      This is defined by the application developer.
+      After deployment of the application, the device MUST provide this amount of storage for the application
+    range: string
+    pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
+    required: false
+
+  peripherals:
+    description: >-
+      Peripherals element specifying the peripherals required to run the application.
+      See the [Peripheral](#peripheral-attributes) section below.
+    range: Peripheral
+    multivalued: true
+    inlined: true
+    inlined_as_list: true
+    required: false
+
+  interfaces:
+    description: >-
+      Interfaces element specifying the communication interfaces required to run the application.
+      See the [Communication Interfaces](#communicationinterface-attributes) section below.
+    range: CommunicationInterface
+    multivalued: true
+    inlined: true
+    inlined_as_list: true
+    required: false
+
+enums:
+  CpuArchitectureType:
+    permissible_values:
+      amd64:
+        description: AMD 64-bit architecture.
+      x86_64:
+        description: x86 64-bit architecture.
+      arm64:
+        description: ARM 64-bit architecture.
+      arm:
+        description: ARM 32-bit architecture.
+      riscv64:
+        description: RISC-V 64-bit architecture.
+      other:
+        description: >-
+          Any other CPU architecture not listed here. The application developer MUST provide a description of the architecture in the deployment profile's `description` field.
+
+  CommunicationInterfaceType:
+    permissible_values:
+      ethernet:
+        description: This type stands for an Ethernet interface.
+      wifi:
+        description: This type stands for an WiFi interface.
+      cellular:
+        description: This type stands for cellular communication technologies such as 5G, LTE, 3G, 2G, ....
+      bluetooth:
+        description: This type stands for a Bluetooth or Bluetooth Low-Energy (BLE) interface.
+      usb:
+        description: This type stands for a USB interface.
+      canbus:
+        description: This type stands for a CANBus interface.
+      rs232:
+        description: This type stands for a RS232 interface.
+      other:
+        description: This type stands for any other communication interface not listed here. The application developer MUST provide a description of the interface in the deployment profile's `description` field.
+
+  PeripheralType:
+    permissible_values:
+      gpu:
+        description: This type stands for a Graphics Processing Unit (GPU) peripheral.
+      display:
+        description: This type stands for a display peripheral.
+      camera:
+        description: This type stands for a camera peripheral.
+      microphone:
+        description: This type stands for a microphone peripheral.
+      speaker:
+        description: This type stands for a speaker peripheral.
+      other:
+        description: This type stands for any other peripheral not listed here. The application developer MUST provide a description of the peripheral in the deployment profile's `description` field.
+
