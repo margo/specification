@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/deployments
+name: Deployments
+description: >-
+  TBD
+version: 1.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+
+default_prefix: margo
+default_range: string
+
+
+classes:
+  DeploymentProfile:
+    description: Represents a deployment configuration for the application.
+    slots:
+      - type
+      - components
+
+  HelmDeploymentProfile:
+    is_a: DeploymentProfile
+    slot_usage:
+      type:
+        equals_string: "helm.v3"
+      components:
+        range: HelmComponent
+
+  ComposeDeploymentProfile:
+    is_a: DeploymentProfile
+    slot_usage:
+      type:
+        equals_string: "compose"
+      components:
+        range: ComposeComponent
+
+  Component:
+    description: A class representing a component of a deployment profile.
+    attributes:
+      name:
+        description: >-
+          A unique name used to identify the component package. For helm installations the name will be used as the chart name.
+          The name must be lower case letters and numbers and MAY contain dashes. 
+          Uppercase letters, underscores and periods MUST NOT be used.
+        required: true
+        range: string
+      properties:
+        description: >-
+           A dictionary element specifying the component packages's deployment details. 
+           See the [Component Properties](#componentproperties-attributes) section below.
+        range: ComponentProperties 
+        required: true
+
+  HelmComponent:
+    is_a: Component
+
+  ComposeComponent:
+    is_a: Component
+  
+  ComponentProperties:
+    description: Properties dictionary for component deployment details.
+    attributes:
+      repository:
+        description: Repository location for the component.
+        range: string
+      revision:
+        description: Revision version for the component.
+        range: string
+      wait:
+        description: If True, indicates the device waits for the component installation to complete.
+        range: boolean
+      timeout:
+        description: Time to wait for component installation to complete, formatted as "##m##s".
+        range: string
+      packageLocation:
+        description: URL indicating the Compose package's location.
+        range: string
+      keyLocation:
+        description: URL for the public key used to validate a digitally signed package.
+        range: string
+
+  Parameter:
+    description: Defines a configurable parameter for the application.
+    attributes:
+      name: 
+        description: Name of the parameter.
+        identifier: true
+        required: true
+        range: string
+      value:
+        description: >-
+          The parameter's default value. 
+          Accepted data types are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].
+        any_of: #support for arrays still TBD
+          - range: boolean
+          - range: integer
+          - range: double
+          - range: string
+      targets:
+        description: >-
+          Used to indicate which component the value should be applied to when installing, or updating, the application. 
+          See the [Target](#target-attributes) section below.
+        range: Target
+        required: true
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+
+  Target:
+    description: Specifies where the parameter applies in the deployment.
+    attributes:
+      pointer:
+        description: >-
+          The name of the parameter in the deployment configuration. 
+          For Helm deployments, this is the dot notation for the matching element in the `values.yaml` file. This follows the same naming convention you would use with the `--set` command line argument with the `helm install` command. 
+          For compose deployments, this is the name of the environment variable to set.
+        range: string
+        required: true
+      components:
+        description: >-
+          Indicates which deployment profile [component](#component-attributes the parameter target applies to. 
+          The component name specified here MUST match a component name in the [deployment profiles](#deploymentprofile-attributes) section.
+        range: string
+        multivalued: true
+        required: true
+
+
+slots:
+  type:
+    description: >-
+          Defines the type of this deployment configuration for the application. 
+          The allowed values are `helm.v3`, to indicate the deployment profile's format is Helm version 3, 
+          and `compose` to indicate the deployment profile's format is a Compose file. 
+          When installing the application on a device supporting the Kubernetes platform, all `helm.v3` components, 
+          and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. 
+          When installing the application on a device supporting Compose, all `compose` components, 
+          and only `compose` components, will be provided to the device in the same order they are listed in the application description file. 
+          The device will install the components in the same order they are listed in the application description file.
+    range: string
+    required: true
+    pattern: ^(helm\.v3|compose)$
+
+  components:
+    description: >-
+      Component element indicating the components to deploy when installing the application. 
+      See the [Component](#component-attributes) section below.
+    range: Component
+    multivalued: true
+    required: true
+    inlined: true
+    inlined_as_list: true
+

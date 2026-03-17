@@ -10,6 +10,7 @@ prefixes:
   margo: https://specification.margo.org/
 imports:
   - linkml:types
+  - margo-deployments.linkml
 
 default_prefix: margo
 default_range: string
@@ -49,18 +50,20 @@ classes:
           Defines the application ID and unique identifier associated to the deployment specification.
           Needs to be assigned by the Workload Orchestration Software.
           See the [Annotation Attributes](#annotations-attributes) section below.
-        range: Annotations
+        range: DeploymentAnnotations
         required: true
       name:
         description: >-
           When deploying to Kubernetes, the manifests name.
           The name is chosen by the workload orchestration vendor and is not displayed anywhere.
         required: true
+        range: string
       namespace:
         description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the workload orchestration solution vendor.
         required: true
+        range: string
 
-  Annotations:
+  DeploymentAnnotations:
     description: A class representing annotations.
     attributes:
       applicationId:
@@ -71,12 +74,14 @@ classes:
           Uppercase letters, underscores and periods MUST NOT be used.
           The id MUST NOT be more than 200 characters.
           The applicationId MUST match the associated application package Metadata "id" attribute.
+        range: string
         required: true
         pattern: "^[-a-z0-9]{1,200}$"
       id:
         description: >-
           The unique identifier UUID of the deployment specification.
           Needs to be assigned by the Workload Orchestration Software.
+        range: string
         required: true
         pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
@@ -95,94 +100,3 @@ classes:
         inlined: true
         inlined_as_list: false
 
-  DeploymentProfile:
-    description: A class representing a deployment profile.
-    # abstract: true
-    slots:
-      - type
-      - components
-
-  HelmDeploymentProfile:
-    is_a: DeploymentProfile
-    slot_usage:
-      type:
-        equals_string: "helm.v3"
-      components:
-        range: HelmComponent
-
-  ComposeDeploymentProfile:
-    is_a: DeploymentProfile
-    slot_usage:
-      type:
-        equals_string: "compose"
-      components:
-        range: ComposeComponent
-
-  Component:
-    description: A class representing a component of a deployment profile.
-    # abstract: true
-    attributes:
-      name:
-        description: The name of the component.
-        # identifier: true
-        required: true
-      properties:
-        description: Properties associated with the component.
-        range: Property
-        required: true
-        multivalued: true
-        inlined: true
-        inlined_as_list: false
-
-  HelmComponent:
-    is_a: Component
-
-  ComposeComponent:
-    is_a: Component
-
-  Property:
-    attributes:
-      name:
-        identifier: true
-        range: string
-      value:
-        range: string
-        required: true
-
-  Parameter:
-    description: A class representing a single parameter.
-    attributes:
-      name:
-        identifier: true
-        required: true
-      value:
-        description: The value of the parameter.
-        required: true
-      targets:
-        description: The targets associated with the parameter.
-        range: Target
-        multivalued: true
-        required: true
-
-  Target:
-    description: A class representing a target for a parameter.
-    attributes:
-      pointer:
-        description: The pointer indicating the location of the target.
-        required: true
-      components:
-        description: The components associated with the target.
-        multivalued: true
-        required: true
-
-slots:
-  type:
-    description: The type of deployment profile (e.g., helm.v3, compose).
-    range: string
-    required: true
-
-  components:
-    description: Components of the application
-    range: Component
-    multivalued: true
-    required: true
