@@ -1,0 +1,6 @@
+{
+    "root": "data-models",
+    "targetclass": "ApplicationDescription",
+    "schemafile": "application-description.linkml.yaml",
+    "markdowndoc": "application-description.md"
+}
