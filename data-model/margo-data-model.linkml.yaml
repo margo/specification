@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/data-model
+name: DataModel
+title: Margo Data Model
+description: >-
+  Margo specification involves complex, interrelated data structures that are used for multiple, different purposes.
+
+  This data model documents the mentioned data structures and their relationships.
+version: 1.0
+prefixes:
+  margo: https://specification.margo.org/
+imports:
+  - application-deployment.linkml
+  - application-description.linkml
+  - desired-state-manifest.linkml
+  - device-capabilities.linkml
+
+default_prefix: margo
+
+subsets:
+  api_resources:
+    title: API Resources

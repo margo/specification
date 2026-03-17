@@ -36,7 +36,7 @@ classes:
         description: >-
           Metadata element specifying characteristics about the application deployment.
           See the [Metadata Attributes](#metadata-attributes) section below.
-        range: Metadata
+        range: ApplicationMetadata
         required: true
       deploymentProfiles:
         description: >-
@@ -62,7 +62,7 @@ classes:
           See the [Configuration](#configuration-attributes) section below.
         range: Configuration
 
-  Metadata:
+  ApplicationMetadata:
     description: Metadata about the application.
     attributes:
       id:
@@ -99,7 +99,7 @@ classes:
         description: >-
           Application element specifying the application specific metadata.
           See the [Application Metadata](#applicationmetadata-attributes) section below.
-        range: ApplicationMetadata
+        range: CatalogApplicationMetadata
       author:
         description: >-
           Author element specifying metadata about the application's author.
@@ -118,7 +118,7 @@ classes:
         inlined: true
         inlined_as_list: true
 
-  ApplicationMetadata:
+  CatalogApplicationMetadata:
     description: Metadata specific to the application.
     attributes:
       descriptionFile:

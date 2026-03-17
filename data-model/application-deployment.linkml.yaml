@@ -33,7 +33,7 @@ classes:
         description: >-
           Metadata element specifying characteristics about the application deployment.
           See the [Metadata Attributes](#metadata-attributes) section below.
-        range: Metadata
+        range: DeploymentMetadata
         required: true
       spec:
         description: >-
@@ -42,7 +42,7 @@ classes:
         range: Spec
         required: true
 
-  Metadata:
+  DeploymentMetadata:
     description: Metadata associated with the desired state.
     attributes:
       annotations:
