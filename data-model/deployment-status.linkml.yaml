@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/deployment-status
+name: DeploymentStatus
+description: >-
+  TBD
+version: 1.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+
+default_prefix: margo
+default_range: string
+
+
+classes:
+  DeploymentStatusManifest:
+    attributes:
+      apiVersion:
+        range: string
+        required: true
+      kind:
+        range: string
+        required: true
+        equals_string: "DeploymentStatusManifest"
+        designates_type: true
+      deploymentId:
+        range: string
+        required: true
+      status:
+        range: Status
+        required: true
+      components:
+        range: ComponentStatus
+        required: true
+        multivalued: true
+
+  Status:
+    slots:
+      - state
+      - error
+
+  Error:
+    attributes:
+      code:
+        range: string
+      message:
+        range: string
+
+  ComponentStatus:
+    is_a: Status
+    description: >-
+      Status of a component deployment.
+    attributes:
+      name:
+        range: string
+        required: true
+
+
+slots:
+  state:
+    range: State
+    required: true
+
+  error:
+    range: Error
+
+
+enums:
+  State:
+    permissible_values:
+      pending:
+      installing:
+      installed:
+      failed:
+      removing:
+      removed:
+
