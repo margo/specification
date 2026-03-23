@@ -3,8 +3,10 @@ id: https://specification.margo.org/application-schema
 name: ApplicationDescription
 title: Application Description Schema
 description: >-
-  Schema for defining application metadata, deployment profiles, and parameters.
   The purpose of the Application Description is to enable an application's discovery, configuration, and deployment on edge devices.
+  To deploy an application the end user specifies values for the [parameters](#defining-configurable-application-parameters) given in 
+  an Application Description (e.g., through a UI of the WFM) to instantiate an `ApplicationDeployment`, 
+  which defines the [desired state](../margo-management-interface/desired-state.md) for an application.
 version: 1.0
 prefixes:
   linkml: https://w3id.org/linkml/
@@ -270,7 +272,8 @@ classes:
         range: boolean
       schema:
         description: The name of the schema definition to use to validate the parameter's value. See the [Schema](#schema-attributes) section below.
-        range: string
+        range: Schema
+        inlined: false
         required: true
 
   Schema:
@@ -280,6 +283,7 @@ classes:
         description: The name of the schema rule. This used in the [setting](#setting-attributes) to link the setting to the schema rule.
         range: string
         required: true
+        identifier: true
       dataType:
         description: >-
           Indicates the expected data type for the user provided value.
