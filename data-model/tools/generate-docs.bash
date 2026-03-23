@@ -29,6 +29,7 @@ ${RUN} linkml generate doc \
   --directory="${TGT_DIR}" \
   --template-directory="${ROOT_DIR}/data-model/resources/markdown-templates" \
   --preserve-names \
+  --example-directory="${ROOT_DIR}/data-model/resources/examples/valid" \
   "${ROOT_DIR}/data-model/margo-data-model.linkml.yaml"
 
 mkdir -p system-design/data-model
