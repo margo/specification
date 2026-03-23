@@ -1,0 +1,51 @@
+{%- macro format_range(slot) -%}
+    {%- if slot.multivalued -%}
+        {%- if slot.inlined -%}
+            {%- if slot.inlined_as_list -%}
+                []{{ slot.range }}
+            {%- else -%}
+                {%- if slot.name == "properties" -%}
+                    map[string][string]
+                {%- else -%}
+                    map[string][{{ slot.range }}]
+                {%- endif -%}
+            {%- endif -%}
+        {%- else -%}
+            []string
+        {%- endif -%}
+    {%- else -%}
+        {{ slot.range }}
+    {%- endif -%}
+{%- endmacro -%}
+
+# {%- if schema.title %}{{ schema.title }}{% else %}{{ schema.name }}{% endif %}
+
+{% if schema.description %}{{ schema.description }}{% endif %}
+
+{% for cls in schemaview.all_classes() -%}
+{%- if not cls.startswith("ComponentProperties") and not cls.startswith("Helm") and not cls.startswith("Compose") +%}
+## {{ cls }} Attributes
+
+Detailed class view: [{{ cls }}](../data-model/{{ cls }}.md)
+
+| Attribute | Type | Required? | Description |
+| --- | --- | --- | --- |
+{% for slot in schemaview.class_slots(cls)|sort(attribute='rank') -%}
+| {{ slot }} | {{ format_range(schemaview.get_slot(slot)) }} | {% if schemaview.get_slot(slot).required == True %} Y {% else %} N {% endif %} | {{ schemaview.get_slot(slot).description }}|
+{% endfor %}
+{% endif -%} 
+{%- endfor -%}
+
+{% if gen.example_object_blobs(schema.name) -%}
+## Examples
+
+Following examples have been automatically validated against the schema of this class.
+
+{% for name, blob in gen.example_object_blobs(schema.name) -%}
+??? example "{{ name }}"
+
+    ```yaml
+    {{ blob | indent(4) }}
+    ```
+{% endfor %}
+{% endif %}

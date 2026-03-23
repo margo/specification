@@ -249,16 +249,21 @@ The class must not satisfy any of:
 
 {% if gen.example_object_blobs(element.name) -%}
 ## Examples
-{% for name, blob in gen.example_object_blobs(element.name) -%}
-### Example: {{ name }}
 
-```yaml
-{{ blob }}
-```
+Following examples have been automatically validated against the schema of this class.
+
+{% for name, blob in gen.example_object_blobs(element.name) -%}
+??? example "{{ name }}"
+
+    ```yaml
+    {{ blob | indent(4) }}
+    ```
 {% endfor %}
 {% endif %}
 
-??? note "Only relevant for contributors of the specification"
+---
+
+??? note "This section is only relevant for contributors of the specification"
 
     ## LinkML Source
 
