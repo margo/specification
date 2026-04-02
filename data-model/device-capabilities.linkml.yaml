@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
 id: https://specification.margo.org/device-capabilities
 name: DeviceCapabilities
-title: Device Capabilities Schema
+title: Device Capabilities
 description: >-
   Schema for defining device capabilities.
   The purpose of the Device Capabilities is that WFMs can match application deployments with the capabilities of the target devices.

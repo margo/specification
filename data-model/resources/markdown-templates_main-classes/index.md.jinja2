@@ -28,9 +28,11 @@ The MarkDown document template is available in https://github.com/margo/specific
 
 {% if schema.description %}{{ schema.description }}{% endif %}
 
+## Object structure
+
 {% for cls in schemaview.all_classes() -%}
 {%- if not cls.startswith("ComponentProperties") and not cls.startswith("Helm") and not cls.startswith("Compose") +%}
-## {{ cls }} Attributes
+### {{ cls }} Attributes
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
