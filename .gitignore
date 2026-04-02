@@ -10,3 +10,5 @@ system-design/specification/applications/application-description.md
 src/specification/applications/docs
 src/specification/margo-management-interface/docs
 *.code-workspace
+generated
+merged

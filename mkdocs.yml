@@ -1,5 +1,5 @@
 site_name: Specification (pre-draft)
-docs_dir: system-design
+docs_dir: merged
 
 nav:
   - What is Margo?: index.md
@@ -8,9 +8,11 @@ nav:
           - specification/margo-management-interface/api-requirements-and-security.md
           - specification/margo-management-interface/certificate-api.md
           - specification/margo-management-interface/device-client-onboarding.md
-          - specification/margo-management-interface/device-capabilities.md
+          - specification/margo-management-interface/device-capabilities-api.md
+          - Device Capabilities: specification/margo-management-interface/device-capabilities.md
           - specification/margo-management-interface/desired-state.md
-          - specification/margo-management-interface/deployment-status.md
+          - specification/margo-management-interface/deployment-status-api.md
+          - Deployment Status: specification/margo-management-interface/deployment-status.md
           - specification/margo-management-interface/management-interface-swagger.md
       - Applications:
           - specification/applications/application-description.md
@@ -21,13 +23,13 @@ nav:
           - specification/observability/publishing-workload-observability-data.md
           - specification/observability/collecting-workload-observability-data.md
           - specification/observability/consuming-workload-observability-data.md
-  - Data Model:
-      - data-model/index.md
-      - ApplicationDescription: data-model/ApplicationDescription.md
-      - ApplicationDeployment: data-model/ApplicationDeployment.md
-      - DeviceCapabilitiesManifest: data-model/DeviceCapabilitiesManifest.md
-      - DesiredStateManifest: data-model/DesiredStateManifest.md
-      - DeploymentStatusManifest: data-model/DeploymentStatusManifest.md
+      - Data Model:
+          - Overview: data-model/index.md
+          - ApplicationDescription: data-model/ApplicationDescription.md
+          - ApplicationDeployment: data-model/ApplicationDeployment.md
+          - DeviceCapabilitiesManifest: data-model/DeviceCapabilitiesManifest.md
+          - DesiredStateManifest: data-model/DesiredStateManifest.md
+          - DeploymentStatusManifest: data-model/DeploymentStatusManifest.md
   - Make a Contribution:
       - make-a-contribution/contributing.md
 
