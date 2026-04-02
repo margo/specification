@@ -21,6 +21,6 @@ fi
 
 mkdir -p "${TGT_DIR}"
 
-for schema in "application-deployment" "application-description" "desired-state-manifest" "device-capabilities"; do
+for schema in "application-deployment" "application-description" "deployment-status" "desired-state-manifest" "device-capabilities"; do
   ${RUN} linkml generate json-schema "${ROOT_DIR}/data-model/${schema}.linkml.yaml" >"${TGT_DIR}/${schema}.schema.json"
 done

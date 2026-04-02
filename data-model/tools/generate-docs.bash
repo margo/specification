@@ -80,3 +80,14 @@ cp "${ROOT_DIR}/generated/diagrams/DataModel-ClassDiagram.png" "${MERGED_DIR}/fi
 "${THIS_DIR}/generate-openapi.bash"
 mv "${ROOT_DIR}/generated/openapi/workload-management-api-1.0.0.openapi.yaml" "${MERGED_DIR}/specification/margo-management-interface/workload-management-api-1.0.0.yaml"
 
+# JSON Schemas: copy for download
+JSON_SCHEMA_DIR="${ROOT_DIR}/generated/json-schemas"
+MERGED_JSON_SCHEMA_DIR="${MERGED_DIR}/json-schemas"
+
+mkdir -p "${MERGED_JSON_SCHEMA_DIR}"
+
+for schema_file in "${JSON_SCHEMA_DIR}"/*.schema.json; do
+  if [ -f "${schema_file}" ]; then
+    cp "${schema_file}" "${MERGED_JSON_SCHEMA_DIR}/"
+  fi
+done

@@ -24,6 +24,8 @@ The MarkDown document template is available in https://github.com/margo/specific
     {%- endif -%}
 {%- endmacro -%}
 
+{%- set schema_basename = schema.source_file.split('/')[-1].replace('.linkml.yaml', '') -%}
+
 # {%- if schema.title %}{{ schema.title }}{% else %}{{ schema.name }}{% endif %}
 
 {% if schema.description %}{{ schema.description }}{% endif %}
@@ -57,3 +59,8 @@ Following examples have been automatically validated against the schema of this 
     ```
 {% endfor %}
 {% endif %}
+
+## JSON Schema
+
+<p><a href="/json-schemas/{{ schema_basename }}.schema.json" target="_blank" rel="noopener noreferrer">View JSON Schema in new tab</a> or <a href="/json-schemas/{{ schema_basename }}.schema.json" download>download</a></p>
+
