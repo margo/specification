@@ -40,6 +40,7 @@ ${RUN} linkml generate plantuml "${ROOT_DIR}/data-model/margo-data-model.linkml.
   sed "s/@enduml/DesiredStateManifest ..> ApplicationDeployment\n@enduml/" >"${TMP_PLANTUML_FILE}"
 
 curl -H "Content-Type: test/plain" --data-binary @"${TMP_PLANTUML_FILE}" https://kroki.io/plantuml/svg -o "${TGT_DIR}/DataModel-ClassDiagram.svg"
+curl -H "Content-Type: test/plain" --data-binary @"${TMP_PLANTUML_FILE}" https://kroki.io/plantuml/png -o "${TGT_DIR}/DataModel-ClassDiagram.png"
 
 if [ "$#" -lt 1 ]; then
   exit
