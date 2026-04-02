@@ -1,6 +1,6 @@
-<!--
+{#
 # Subset: {{ gen.name(element) }} {% if element.deprecated %} <span style="color: red;"><strong> (DEPRECATED) </strong></span> {% endif %}
--->
+#}
 # Subset: {{ element.title }} {% if element.deprecated %} <span style="color: red;"><strong> (DEPRECATED) </strong></span> {% endif %}
 
 {%- if header -%}
@@ -14,9 +14,9 @@ _{{ element_description_line }}_
 {% endfor %}
 {% endif %}
 
-<!--
+{#
 URI: {{ gen.link(element) }}
--->
+#}
 
 {% include "common_metadata.md.jinja2" %}
 

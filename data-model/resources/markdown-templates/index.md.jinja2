@@ -8,11 +8,11 @@ The MarkDown document template is available in https://github.com/margo/specific
 
 {% if schema.description %}{{ schema.description }}{% endif %}
 
-<!--
+{#
 URI: {{ schema.id }}
 
 Name: {{ schema.name }}
--->
+#}
 
 {% if include_top_level_diagram %}
 
@@ -56,7 +56,7 @@ These are the classes directly participating in Margo interfaces (e.g. APIs):
     {% endfor %}
     {% endif %}
 
-<!-- 
+{#
 ## Slots
 
 | Slot | Description |
@@ -88,4 +88,4 @@ These are the classes directly participating in Margo interfaces (e.g. APIs):
 {% for ss in schemaview.all_subsets().values()|sort(attribute='name') -%}
 | {{ gen.link(ss, True) }} | {{ ss.description|enshorten }} |
 {% endfor %}
--->
+#}
