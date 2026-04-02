@@ -32,13 +32,13 @@ The MarkDown document template is available in https://github.com/margo/specific
 {%- if not cls.startswith("ComponentProperties") and not cls.startswith("Helm") and not cls.startswith("Compose") +%}
 ## {{ cls }} Attributes
 
-Detailed class view: [{{ cls }}](../data-model/{{ cls }}.md)
-
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 {% for slot in schemaview.class_slots(cls)|sort(attribute='rank') -%}
 | {{ slot }} | {{ format_range(schemaview.get_slot(slot)) }} | {% if schemaview.get_slot(slot).required == True %} Y {% else %} N {% endif %} | {{ schemaview.get_slot(slot).description }}|
 {% endfor %}
+
+Detailed class view: [{{ cls }}](../../data-model/{{ cls }}.md)
 {% endif -%} 
 {%- endfor -%}
 
