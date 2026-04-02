@@ -75,6 +75,8 @@ extra_css:
 extra_javascript:
   - assets/swagger-ui-bundle.js
   - assets/swagger-ui-standalone-preset.js
+  - assets/svg-pan-zoom.min.js
+  - assets/svg-pan-zoom-init.js
 
 extra:
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice
