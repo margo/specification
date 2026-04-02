@@ -80,4 +80,3 @@ cp "${ROOT_DIR}/generated/diagrams/DataModel-ClassDiagram.png" "${MERGED_DIR}/fi
 "${THIS_DIR}/generate-openapi.bash"
 mv "${ROOT_DIR}/generated/openapi/workload-management-api-1.0.0.openapi.yaml" "${MERGED_DIR}/specification/margo-management-interface/workload-management-api-1.0.0.yaml"
 
-${RUN} mkdocs build
