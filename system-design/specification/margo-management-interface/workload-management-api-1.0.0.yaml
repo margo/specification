@@ -85,7 +85,7 @@ paths:
       - PayloadSignature: []
       summary: Complete onboarding with client certificate
 
-  /api/v1/clients/{clientId}/capabilities:
+  /api/v1/clients/{clientId}/capabilities/{deviceId}:
     post:
       summary: Report device capabilities
       security:
@@ -96,6 +96,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
       requestBody:
         required: true
         content:
@@ -111,6 +116,8 @@ paths:
           description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
         '403':
           description: Client certificate is not trusted or has been revoked.
+        '404':
+          description: No client with the given `clientID` was found.
         '422':
           description: Request body includes a semantic error.
     put:
@@ -123,6 +130,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
       requestBody:
         required: true
         content:
@@ -138,9 +150,36 @@ paths:
           description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
         '403':
           description: Client certificate is not trusted or has been revoked.
+        '404':
+          description: No client with the given `clientID` was found.
         '422':
           description: Request body includes a semantic error.
-
+    delete:
+      summary: Remove device (Unregister)
+      security:
+        - PayloadSignature: []
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      responses:
+        '204':
+          description: Device capabilities removed successfully
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+        '401':
+          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+        '404':
+          description: Client or device not found.
   /api/v1/clients/{clientId}/bundles/{digest}:
     get:
       summary: Retrieve bundle information for a specific device and digest
@@ -440,10 +479,10 @@ components:
           enum: [DeviceCapabilitiesManifest]
         properties:
           type: object
-          required: [id, vendor, modelNumber, serialNumber, roles, resources]
+          required: [id, vendor, modelNumber, serialNumber, roles]
           properties:
             id:
-              type: string
+              $ref: '#/components/schemas/DeviceId'
             vendor:
               type: string
             modelNumber:
@@ -454,7 +493,7 @@ components:
               type: array
               items:
                 type: string
-                enum: [Standalone Cluster, Cluster Leader, Standalone Device]
+                enum: [Standalone Cluster, Cluster Leader, Standalone Device, Gateway]
             resources:
               type: object
               required: [cpu, memory, storage, peripherals, interfaces]
@@ -480,6 +519,18 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/DeviceCommunicationInterface'
+    DeviceId:
+      # format: "{id}[/{id}[/{id}...]]"
+      # Top-level id is required and must include only Unreserved Characters as specified in RFC3986.
+      # Subsequent ids are optional, but if present must include only Unreserved Characters as specified in RFC3986.
+      type: string
+      pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$'
+    DeviceId_with_asterisk:
+      # format: "{id}[/{id}[/{id}...]/*]"
+      # Top-level id is required and must include only Unreserved Characters as specified in RFC3986.
+      # Subsequent ids are optional, but if present must include only Unreserved Characters as specified in RFC3986.
+      type: string
+      pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
 
     ComponentStatus:
       type: object
@@ -495,12 +546,14 @@ components:
           properties:
             code:
               type: string
+            source:
+              type: string
             message:
               type: string
 
     DeploymentStatusManifest:
       type: object
-      required: [apiVersion, kind, deploymentId, status, components]
+      required: [apiVersion, kind, deploymentId, deviceId, status, components]
       properties:
         apiVersion:
           type: string
@@ -509,6 +562,8 @@ components:
           enum: [DeploymentStatusManifest]
         deploymentId:
           type: string
+        deviceId:
+          $ref: '#/components/schemas/DeviceId'
         status:
           type: object
           required: [state]
@@ -520,6 +575,8 @@ components:
               type: object
               properties:
                 code:
+                  type: string
+                source:
                   type: string
                 message:
                   type: string
@@ -569,25 +626,29 @@ components:
           $ref: '#/components/schemas/appDeploymentSpec'
     appDeploymentMetadata:
       type: object
-      required: [name]
+      required: [annotations, name, namespace, deviceId]
       properties:
-        id:
-          type: string
-          description: Unique identifier for the application deployment
         name:
           type: string
           description: Name of the resource
         namespace:
           type: string
           description: Namespace of the resource
-        labels:
-          type: object
-          additionalProperties: { type: string }
-          description: Labels for the resource
         annotations:
           type: object
-          additionalProperties: { type: string }
           description: Annotations for the resource
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the deployment specification
+              pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            applicationId:
+              type: string
+              description: Unique identifier for the application
+              pattern: "^[-a-z0-9]{1,200}$"
+        deviceId:
+          $ref: '#/components/schemas/DeviceId_with_asterisk'
+          description: Device ID of the target device for the deployment
     helmApplicationDeploymentProfileComponent:
       type: object
       description: Helm Application Deployment Profile Component

@@ -6,6 +6,7 @@ metadata:
         id: a3e2f5dc-912e-494f-8395-52cf3769bc06
     name: com-northstartida-digitron-orchestrator-deployment
     namespace: margo-poc
+    deviceId: edge-01
 spec:
     deploymentProfile:
         type: helm

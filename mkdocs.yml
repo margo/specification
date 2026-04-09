@@ -25,6 +25,8 @@ nav:
           - concepts/workload-fleet-managers/workload-deployment.md
       - Edge Compute Devices:
           - concepts/edge-compute-devices/devices.md
+      - Gateways:
+          - concepts/gateways/gateways.md
   - Specification:
       - Margo Management Interface:
           - specification/margo-management-interface/api-requirements-and-security.md
