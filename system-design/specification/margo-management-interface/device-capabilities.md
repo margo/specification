@@ -94,7 +94,6 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | Permissible Values | Description |
 | --- | --- |
 | amd64 | AMD 64-bit architecture.|
-| x86_64 | x86 64-bit architecture.|
 | arm64 | ARM 64-bit architecture.|
 | arm | ARM 32-bit architecture. |  
 

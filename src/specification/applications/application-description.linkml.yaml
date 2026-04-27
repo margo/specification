@@ -289,7 +289,7 @@ classes:
         range: double
         required: true
       architectures:
-        description: The CPU architectures supported by the application. This can be e.g. amd64, x86_64, arm64, arm.
+        description: The CPU architectures supported by the application. This can be e.g. amd64, arm64, arm.
           See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.
           Multiple arcitecture types can be specified, as the deployment profile may support multiple CPU architectures.
         rank: 20
@@ -715,8 +715,6 @@ enums:
     permissible_values:
       amd64:
         description: AMD 64-bit architecture.
-      x86_64:
-        description: x86 64-bit architecture.
       arm64:
         description: ARM 64-bit architecture.
       arm:

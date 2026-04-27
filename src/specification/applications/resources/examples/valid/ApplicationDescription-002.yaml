@@ -42,7 +42,6 @@ deploymentProfiles:
         cores: 1.5
         architectures: 
           - amd64 
-          - x86_64
       memory: 1024Mi
       storage: 10Gi
       peripherals:
