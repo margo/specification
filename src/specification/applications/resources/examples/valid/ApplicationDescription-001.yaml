@@ -21,8 +21,8 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  - type: helm.v3
-    id: com-northstartida-hello-world-helm.v3-a
+  - type: helm
+    id: com-northstartida-hello-world-helm-a
     components:
       - name: hello-world
         properties:  

@@ -67,20 +67,34 @@ which defines the [desired state](../margo-management-interface/desired-state.md
 {%- endif %}
 
 
+{%- if c.name.startswith("DeploymentProfile") %}
+#### Helm Exceptions
 
+Applications can be deployed as Helm charts using either Helm [version 3](https://helm.sh/docs/v3/topics/charts) or [version 4](https://helm.sh/docs/topics/charts) using Chart APIVersion v2 only.
+
+In order to facility the require deployment options for Helm charts, Margo does not support Helm functions requiring direct communication with the Kubernetes API.
+
+Your Helm based application MUST NOT rely on the following Helm functions:
+- [Lookup](https://helm.sh/docs/chart_template_guide/functions_and_pipelines#using-the-lookup-function): The `lookup` template function queries live resources in the target Kubernetes cluster at render time, for example to fetch ConfigMaps, Secrets, or other objects. This requires direct API access and cluster credentials during rendering.
+- [Hooks](https://helm.sh/docs/topics/charts_hooks/): Hooks (pre/post install, upgrade, delete, rollback, test, etc.) execute additional Kubernetes resources or jobs at specific points in the release lifecycle. Helm waits for these resources to reach a ready state by monitoring them via the Kubernetes API, and the hooks themselves may perform privileged or arbitrary operations in the cluster.
+- [CRD management via helm](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/): Installing or managing Custom Resource Definitions (CRDs) with Helm requires checking for the presence of CRDs and registering new APIs with the cluster, which involves API calls and may require elevated permissions.
+
+**Note:** This function list is based on the current Helm v3 and v4 implementations. Additional functions may be added later if Helm introduced new functions requiring communication with the Kuberentes API to work.
+
+{%- endif %}
 
 {%- if c.name.startswith("ComponentProperties") %}
 
 ### ComponentProperties Attributes
 The expected properties for the suppported deployment types are indicated below.
 
-- Properties for `helm.v3` components
+- Properties for `helm` components
 
 | Attribute      | Type  | Required?     | Description    |
 | --- | --- | --- | --- |
 | repository     | string |  Y  | The URL indicating the helm chart's location.|
 | revision      | string |  Y  | The helm chart's full version.|
-| wait | bool  | N  | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Fleet Management Client MUST support `True` and MAY support `False`. Only applies if multiple `helm.v3` components are provided.|
+| wait | bool  | N  | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Fleet Management Client MUST support `True` and MAY support `False`. Only applies if multiple `helm` components are provided.|
 | timeout | string      | N   | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait. |  
 
 - Properties for `compose` components

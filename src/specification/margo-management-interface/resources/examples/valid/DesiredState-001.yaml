@@ -8,7 +8,7 @@ metadata:
     namespace: margo-poc
 spec:
     deploymentProfile:
-        type: helm.v3
+        type: helm
         components:
             - name: database-services
               properties:

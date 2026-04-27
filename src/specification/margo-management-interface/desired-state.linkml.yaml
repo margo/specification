@@ -121,7 +121,7 @@ classes:
     rank: 40
     slot_usage:
       type:
-        equals_string: "helm.v3"
+        equals_string: "helm"
         rank: 10
       components:
         range: HelmComponent
@@ -212,7 +212,7 @@ classes:
 
 slots:
   type:
-    description: The type of deployment profile (e.g., helm.v3, compose).
+    description: The type of deployment profile (e.g., helm, compose).
     range: string
     required: true
     rank: 10
