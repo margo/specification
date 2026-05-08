@@ -8,6 +8,6 @@ Gateways can be divided into 3 types:
 
 * **Transparent gateways** are not visible by the WFM. They provide a Margo client for each device they connect, making them appear as Margo devices to the WFM.
 * **See-thru gateways** expose the devices they connect to the WFM and are known to the WFM. They host a single Margo client for all the devices they connect and provide the capabilities of each device independently. 
-* **Opaque gateways** hide the devices they connect to the WFM, making themselves appear as a single Margo device with combined capabilities of all the devices they connect.
+* **Opaque gateways** hide the devices they connect to the WFM, making themselves appear as a single Margo device with the combined capabilities of all the devices they connect.
 
 ![Gateway Types](../../figures/gateway-types.drawio.svg)

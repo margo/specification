@@ -19,7 +19,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
 | {clientId} | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
-| {deviceId} | string | Y | The unique identifier of the device reporting the capabilities. <br/>It must have the following format: "{id}[/{id}[/{id}...]]". The top-level `id` is required and must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). The subsequent `id`s are optional, but if present they must must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). <br/>Using multiple ids in the endpoint does not register multiple devices in a single request, but indicates a hierarchy of devices, with a parent/child relationship. |
+| {deviceId} | string | Y | The unique identifier of the device reporting the capabilities. <br/>It must have the following format: "{id}[/{id}[/{id}...]]". The top-level `id` is required and must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). The subsequent `id`s are optional, but if present they must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). <br/>Using multiple ids in the endpoint does not register multiple devices in a single request, but indicates a hierarchy of devices, with a parent/child relationship. |
 
 ### Response Codes
 
@@ -30,7 +30,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | 400 Bad Request | Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included. |
 | 401 Unauthorized | Signature verification failed. Ensure you are signing with the correct X.509 private key.  |
 | 403 Forbidden | Client certificate is not trusted or has been revoked. |
-| 404 Not Found | PUT, POST:  No client with the given `clientID` was found. <br/> DELETE: No client with the given `clientID` was found or no device with the given `deviceId` was found for the client. |
+| 404 Not Found | POST, PUT:  No client with the given `clientID` was found. <br/> DELETE: No client with the given `clientID` was found or no device with the given `deviceId` was found for the client. |
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
 ## Request Body Attributes
@@ -45,7 +45,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 
 | Field       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner. It must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a device behind a gateway, it takes the form of a path with the id of the parent gateway and the id of the child device, i.e., "{deviceId}/{deviceId}". The top-level {deviceId} must be unique for a given {clientId}, and the children {deviceId} must be unique for a given parent {deviceId}. |
+| id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner. It must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a device behind a gateway, it takes the form of a path with the id of the parent gateway and the id of the child device, i.e., "{deviceId}/{deviceId}". |
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
@@ -173,11 +173,11 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 Opaque gateways MUST report the combined capabilities of all the devices they connect to the WFM.
 
-> Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 4 cores, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. In addition since the gateway can deploy compose application on its child-devices it will report the role of "standalone device".
+> Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. In addition since the gateway can deploy compose applications on its child-devices it will report the role of "standalone device".
 
 ## See-thru gateways
 
-See-thru gateways MUST report their capabilities and the capabilities of each device they connect to the WFM. This done by calling the `device capabilities` endpoint for the gateway itself and each device. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
+See-thru gateways MUST report their capabilities and the capabilities of each device they connect to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
 
 When reporting its own capabilities, a see-thru gateway MUST report the role "Gateway". 
 
