@@ -1,7 +1,7 @@
 apiVersion: margo.org/v1-alpha1
 kind: ApplicationDescription
+id: com-northstartida-digitron-orchestrator
 metadata:
-  id: com-northstartida-digitron-orchestrator
   name: Digitron orchestrator
   description: The Digitron orchestrator application
   version: 1.2.1 
