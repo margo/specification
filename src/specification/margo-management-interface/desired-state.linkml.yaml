@@ -29,6 +29,13 @@ classes:
         required: true
         range: string
         rank: 20
+      id:
+        description: >-
+          The unique identifier UUID of the deployment specification.
+          Needs to be assigned by the Workload Orchestration Software.
+        required: true
+        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        rank: 25
       metadata:
         description: >-
           Metadata element specifying characteristics about the application deployment.
@@ -86,9 +93,11 @@ classes:
         description: >-
           The unique identifier UUID of the deployment specification.
           Needs to be assigned by the Workload Orchestration Software.
-        required: true
         pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         rank: 20
+        status: deprecated
+        deprecated: "This field has been moved to root level in DesiredState object"
+        deprecated_element_has_possible_replacement: DesiredState:id
 
   Spec:
     description: Specification details of the desired state.
