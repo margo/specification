@@ -85,7 +85,7 @@ GET /api/v1/clients/{clientId}/deployments
 | `bundle.sizeBytes` | number | N | Optional unsigned 64-bit advisory estimate of the decoded payload length in bytes for the bundle archive. Provided for bandwidth estimation and update planning. MUST NOT be used for integrity verification. |
 | `bundle.url` | string | Y | Content-addressable retrieval endpoint for the bundle of the form `/api/v1/clients/{clientId}/bundles/{digest}` where `{digest}` equals `bundle.digest`. |
 | `deployments` | array | Y | List of deployment objects describing each workload. |
-| `deployments[].deploymentId` | string | Y | The UUID of the deployment. MUST equal [`metadata.annotations.id`](#annotations-attributes) in the `ApplicationDeployment`. |
+| `deployments[].deploymentId` | string | Y | The UUID of the deployment. MUST equal top-level `id` attribute in the `ApplicationDeployment`. |
 | `deployments[].digest` | string | Y | Digest of the corresponding `ApplicationDeployment` YAML file. MUST equal the digest computed over the exact sequence of bytes in the [individual deployment endpoint's](#endpoints-individual-deployment-yaml) HTTP `200 OK` response body. See [Protocol - Digest](#protocol-digest) for further details. |
 | `deployments[].sizeBytes` | number | N | Optional unsigned 64-bit advisory estimate of the decoded payload length in bytes for the `ApplicationDeployment` YAML. Provided for bandwidth estimation and update planning. MUST NOT be used for integrity verification. |
 | `deployments[].url` | string | Y | Content-addressable retrieval endpoint for the `ApplicationDeployment` YAML of the form `/api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}` where `{digest}` equals `deployments[].digest`. |
@@ -113,7 +113,7 @@ GET /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}
 | Parameter | Type | Required? | Description |
 | --------- | ---- | --------- | ----------- |
 | `{clientId}` | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
-| `{deploymentId}` | string | Y | The UUID of the served `ApplicationDeployment` YAML. This MUST equal to `metadata.annotations.id`. |
+| `{deploymentId}` | string | Y | The UUID of the served `ApplicationDeployment` YAML. This MUST equal to top-level `id` attribute in the ApplicationDeployment. |
 | `{digest}` | string | Y | Content-addressable digest of the served `ApplicationDeployment` YAML. See [Protocol - Digest](#protocol-digest) for further details. |
 
 ### Response Codes

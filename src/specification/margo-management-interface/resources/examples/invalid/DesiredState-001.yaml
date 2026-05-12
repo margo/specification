@@ -1,4 +1,4 @@
-# Demonstrates validation of metadata.annotations.id
+# Demonstrates validation of kind field
 # Invalid kind of Kubernetes custom resource.
 apiVersion: application.margo.org/v1alpha1
 # `kind` != `ApplicationDeployment`

@@ -1,4 +1,4 @@
-# Demonstrates validation of metadata.annotations.id
+# Demonstrates validation of id field
 # Not a valid UUID.
 apiVersion: application.margo.org/v1alpha1
 kind: ApplicationDeployment

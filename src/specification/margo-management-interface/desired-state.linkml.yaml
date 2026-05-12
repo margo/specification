@@ -57,7 +57,7 @@ classes:
     attributes:
       annotations:
         description: >-
-          Defines the application ID and unique identifier associated to the deployment specification.
+          Defines the meta information associated to the deployment specification.
           Needs to be assigned by the Workload Orchestration Software.
           See the [Annotation Attributes](#annotations-attributes) section below.
         range: Annotations
@@ -97,7 +97,6 @@ classes:
         rank: 20
         status: deprecated
         deprecated: "This field has been moved to root level in DesiredState object"
-        deprecated_element_has_possible_replacement: DesiredState:id
 
   Spec:
     description: Specification details of the desired state.

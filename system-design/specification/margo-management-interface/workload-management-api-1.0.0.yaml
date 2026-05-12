@@ -262,7 +262,7 @@ paths:
           required: true
           schema:
             type: string
-          description: UUID of the ApplicationDeployment (metadata.annotations.id)
+          description: UUID of the ApplicationDeployment
         - name: digest
           in: path
           required: true
@@ -397,7 +397,7 @@ components:
         deploymentId:
           type: string
           description: >
-            The unique UUID from the ApplicationDeployment's metadata.annotations.id.
+            The unique UUID from the ApplicationDeployment.
         digest:
           type: string
           description: >
