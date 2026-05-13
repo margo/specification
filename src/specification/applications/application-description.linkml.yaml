@@ -403,7 +403,7 @@ classes:
         rank: 40
         range: string
       packageLocation:
-        description: URL indicating the Compose package's location. The URL indicating the Compose package's location. It should be direct path to compose.yaml or compose.yaml file archived in tar.gz
+        description: The URL indicating the Compose package's location. It should be direct path to compose.yaml or compose.yaml file archived in tar.gz
         rank: 50
         range: string
       keyLocation:
