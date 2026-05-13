@@ -32,7 +32,7 @@ classes:
       id:
         description: >-
           The unique identifier UUID of the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
+          Needs to be assigned by the Workload Fleet Manager.
         required: true
         range: string
         pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
@@ -59,7 +59,7 @@ classes:
       annotations:
         description: >-
           Defines the meta information associated to the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
+          Needs to be assigned by the Workload Fleet Manager.
           See the [Annotation Attributes](#annotations-attributes) section below.
         range: Annotations
         required: true
@@ -67,12 +67,12 @@ classes:
       name:
         description: >-
           When deploying to Kubernetes, the manifests name.
-          The name is chosen by the workload orchestration vendor and is not displayed anywhere.
+          The name is chosen by the Workload Fleet Management vendor and is not displayed anywhere.
         required: true
         range: string
         rank: 20
       namespace:
-        description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the workload orchestration solution vendor.
+        description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the Workload Fleet Management vendor.
         required: true
         range: string
         rank: 30

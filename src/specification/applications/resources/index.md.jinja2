@@ -34,7 +34,8 @@ which defines the [desired state](../margo-management-interface/desired-state.md
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 {% for slot in schemaview.class_slots("ApplicationDescription")|sort(attribute='rank') -%}
-| {{ slot }} | {{ format_range(schemaview.get_slot(slot)) }} | {% if schemaview.get_slot(slot).required == True %} Y {% else %} N {% endif %} | {{ schemaview.get_slot(slot).description }}|
+{% set slot_def = schemaview.induced_slot(slot, "ApplicationDescription") -%}
+| {{ slot }} | {{ format_range(slot_def) }} | {% if slot_def.required == True %} Y {% else %} N {% endif %} | {{ slot_def.description }}|
 {% endfor -%}
 
 {% for c in gen.all_class_objects()|sort(attribute='rank') %}
