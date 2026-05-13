@@ -626,7 +626,7 @@ components:
           properties:
             packageLocation:
               type: string
-              description: Package location of the component
+              description: The URL indicating the Compose package's location. It should be direct path to compose.yaml or compose.yaml file archived in tar.gz
             keyLocation:
               type: string
               description: Key location of the component
