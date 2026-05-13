@@ -34,6 +34,7 @@ classes:
           The unique identifier UUID of the deployment specification.
           Needs to be assigned by the Workload Orchestration Software.
         required: true
+        range: string
         pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         rank: 25
       metadata:
@@ -68,10 +69,12 @@ classes:
           When deploying to Kubernetes, the manifests name.
           The name is chosen by the workload orchestration vendor and is not displayed anywhere.
         required: true
+        range: string
         rank: 20
       namespace:
         description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the workload orchestration solution vendor.
         required: true
+        range: string
         rank: 30
 
   Annotations:
@@ -87,16 +90,9 @@ classes:
           The id MUST NOT be more than 200 characters.
           The applicationId MUST match the associated application package Metadata "id" attribute.
         required: true
+        range: string
         pattern: "^[-a-z0-9]{1,200}$"
         rank: 10
-      id:
-        description: >-
-          The unique identifier UUID of the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
-        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-        rank: 20
-        status: deprecated
-        deprecated: "This field has been moved to root level in DesiredState object"
 
   Spec:
     description: Specification details of the desired state.

@@ -78,16 +78,6 @@ classes:
     description: Metadata about the application.
     rank: 10
     attributes:
-      id:
-        description: >-
-          An identifier for the application. The id is used to help create unique identifiers where required, 
-          such as namespaces. The id must be lower case letters and numbers and MAY contain dashes. 
-          Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters.
-        rank: 10
-        range: string
-        pattern: ^[a-z0-9-]{1,200}$
-        status: deprecated
-        deprecated: This field has been moved to the root-level of Application Description object
       name:
         description: >-
           The application's official name. 

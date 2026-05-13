@@ -1,0 +1,62 @@
+# Demonstrates validation of kind field
+# Invalid kind of Kubernetes custom resource.
+apiVersion: margo.org/v1-alpha1
+# `kind` != `ApplicationDescription`
+kind: SomethingErroneous
+id: com-northstartida-hello-world
+metadata:
+  name: Hello World
+  description: A basic hello world application
+  version: "1.0"
+  catalog:
+    application:
+      icon: ./resources/hw-logo.png
+      tagline: Northstar Industrial Application's hello world application.
+      descriptionFile: ./resources/description.md
+      releaseNotes: ./resources/release-notes.md
+      licenseFile: ./resources/license.pdf
+      site: http://www.northstar-ida.com
+      tags: ["monitoring"]
+    author:
+      - name: Roger Wilkershank
+        email: rpwilkershank@northstar-ida.com
+    organization:
+      - name: Northstar Industrial Applications
+        site: http://northstar-ida.com
+deploymentProfiles:
+  - type: helm.v3
+    id: com-northstartida-hello-world-helm.v3-a
+    components:
+      - name: hello-world
+        properties:
+          repository: oci://northstarida.azurecr.io/charts/hello-world
+          revision: 1.0.1
+          wait: true
+parameters:
+  greeting:
+    value: Hello
+    targets:
+      - pointer: global.config.appGreeting
+        components: ["hello-world"]
+  greetingAddressee:
+    value: World
+    targets:
+      - pointer: global.config.appGreetingAddressee
+        components: ["hello-world"]
+configuration:
+  sections:
+    - name: General Settings
+      settings:
+        - parameter: greeting
+          name: Greeting
+          description: The greeting to use.
+          schema: requireText
+        - parameter: greetingAddressee
+          name: Greeting Addressee
+          description: The person, or group, the greeting addresses.
+          schema: requireText
+  schema:
+    - name: requireText
+      dataType: string
+      maxLength: 45
+      allowEmpty: false

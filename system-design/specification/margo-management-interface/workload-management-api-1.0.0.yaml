@@ -574,12 +574,6 @@ components:
       type: object
       required: [name]
       properties:
-        id:
-          type: string
-          description: |
-            This object has been moved to root level of appDeploymentManifest
-            object.
-          deprecated: true
         name:
           type: string
           description: Name of the resource
