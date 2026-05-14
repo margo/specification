@@ -34,7 +34,7 @@ sequenceDiagram
     Note over Client,Server: 🔒 Standard TLS Handshake completed
     WFMUser->>Server: Opportunity for user to manually upload client certificate
     Note over Client,Server: Device Client onboarding begins
-    Client->>Server: POST /onboarding with public certificate of the device (could exchange additional info)
+    Client->>Server: POST /onboarding using the device's public certificate (could exchange additional info)
     WFMUser->>Server: Opportunity for user to approve or reject client onboarding
     alt Public key trusted/user approved
         Note over Server: Server verifies client certificate and assigns UUID
