@@ -45,7 +45,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 
 | Field       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner. It must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a device behind a gateway, it takes the form of a path with the id of the parent gateway and the id of the child device, i.e., "{deviceId}/{deviceId}". |
+| id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner. It must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a device behind a gateway, the id field takes the form of a path with the id of the parent gateway, the id of the child device, and the ids of any intermediate devices, i.e., "{gatewayId}/[{intermediateDeviceId/.../]{deviceId}". |
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
