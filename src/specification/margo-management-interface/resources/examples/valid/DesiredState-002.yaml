@@ -1,65 +1,65 @@
 apiVersion: application.margo.org/v1alpha1
 kind: ApplicationDeployment
+id: ad9b614e-8912-45f4-a523-372358765def
 metadata:
-    annotations:
-        applicationId: com-northstartida-digitron-orchestrator
-        id: ad9b614e-8912-45f4-a523-372358765def
-    name: com-northstartida-digitron-orchestrator-deployment
-    namespace: margo-poc
+  annotations:
+    applicationId: com-northstartida-digitron-orchestrator
+  name: com-northstartida-digitron-orchestrator-deployment
+  namespace: margo-poc
 spec:
-    deploymentProfile:
-        type: compose
-        components:
-            - name: digitron-orchestrator-docker
-              properties:
-                keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
-                packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
-    parameters:
-        adminName:
-            value: Some One
-            targets:
-                - pointer: ADMIN_NAME
-                  components:
-                    - digitron-orchestrator-docker
-        adminPrincipalName:
-            value: someone@somewhere.com
-            targets:
-                - pointer: ADMIN_PRINCIPALNAME
-                  components:
-                    - digitron-orchestrator-docker
-        idpClientId:
-            value: 123-ABC
-            targets:
-                - pointer: IDP_CLIENT_ID
-                  components:
-                    - digitron-orchestrator-docker
-        idpName:
-            value: Azure AD
-            targets:
-                - pointer: IDP_NAME
-                  components:
-                    - digitron-orchestrator-docker
-        idpProvider:
-            value: aad
-            targets:
-                - pointer: IDP_PROVIDER
-                  components:
-                    - digitron-orchestrator-docker
-        idpUrl:
-            value: https://123-abc.com
-            targets:
-                - pointer: IDP_URL
-                  components:
-                    - digitron-orchestrator-docker
-        pollFrequency:
-            value: "120"
-            targets:
-                - pointer: POLL_FREQUENCY
-                  components:
-                    - digitron-orchestrator-docker
-        siteId:
-            value: SID-123-ABC
-            targets:
-                - pointer: SITE_ID
-                  components:
-                    - digitron-orchestrator-docker
+  deploymentProfile:
+    type: compose
+    components:
+      - name: digitron-orchestrator-docker
+        properties:
+          keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
+          packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
+  parameters:
+    adminName:
+      value: Some One
+      targets:
+        - pointer: ADMIN_NAME
+          components:
+            - digitron-orchestrator-docker
+    adminPrincipalName:
+      value: someone@somewhere.com
+      targets:
+        - pointer: ADMIN_PRINCIPALNAME
+          components:
+            - digitron-orchestrator-docker
+    idpClientId:
+      value: 123-ABC
+      targets:
+        - pointer: IDP_CLIENT_ID
+          components:
+            - digitron-orchestrator-docker
+    idpName:
+      value: Azure AD
+      targets:
+        - pointer: IDP_NAME
+          components:
+            - digitron-orchestrator-docker
+    idpProvider:
+      value: aad
+      targets:
+        - pointer: IDP_PROVIDER
+          components:
+            - digitron-orchestrator-docker
+    idpUrl:
+      value: https://123-abc.com
+      targets:
+        - pointer: IDP_URL
+          components:
+            - digitron-orchestrator-docker
+    pollFrequency:
+      value: "120"
+      targets:
+        - pointer: POLL_FREQUENCY
+          components:
+            - digitron-orchestrator-docker
+    siteId:
+      value: SID-123-ABC
+      targets:
+        - pointer: SITE_ID
+          components:
+            - digitron-orchestrator-docker
