@@ -1,6 +1,6 @@
 {
     "apiVersion": "device.margo.org/v1alpha1",
-    "kind": "SomeIncorrectKind",
+    "kind": "DeviceCapabilitiesManifest",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
         "vendor": "Northstar Industrial devices",

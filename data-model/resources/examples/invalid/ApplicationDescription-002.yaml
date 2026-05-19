@@ -1,6 +1,8 @@
+# Demonstrates validation of application id
 apiVersion: margo.org/v1-alpha1
 kind: ApplicationDescription
-id: com-northstartida-hello-world
+# id is over 200 characters long (it is 201 characters long)
+id: too-lengthy-an-identifier-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz
 metadata:
   name: Hello World
   description: A basic hello world application

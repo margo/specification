@@ -11,7 +11,7 @@ description: >-
   The structure of the ApplicationDescription object to be provided in the YAML document
   specified in this page.
   Some examples are provided also [at the bottom of this page](#examples).
-version: 1.0
+version: "1.0"
 prefixes:
   linkml: https://w3id.org/linkml/
   margo: https://specification.margo.org/
@@ -21,7 +21,6 @@ imports:
   - margo-deployments.linkml
 
 default_prefix: margo
-
 
 # Class Definitions
 classes:
@@ -38,6 +37,13 @@ classes:
         required: true
         equals_string: "ApplicationDescription"
         designates_type: true
+      id:
+        description: >-
+          A unique identifier for the application. The id must be lower case letters and numbers and MAY contain dashes.
+          Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters.
+        range: string
+        required: true
+        pattern: ^[a-z0-9-]{1,200}$
       metadata:
         description: >-
           Metadata element specifying characteristics about the application deployment.
@@ -71,14 +77,6 @@ classes:
   ApplicationMetadata:
     description: Metadata about the application.
     attributes:
-      id:
-        description: >-
-          An identifier for the application. The id is used to help create unique identifiers where required,
-          such as namespaces. The id must be lower case letters and numbers and MAY contain dashes.
-          Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters.
-        range: string
-        required: true
-        pattern: ^[a-z0-9-]{1,200}$
       name:
         description: >-
           The application's official name.
@@ -248,7 +246,7 @@ classes:
         required: true
       settings:
         description: >-
-          Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the user.
+          Settings are used to provide instructions to the Workload Fleet Manager vendor for displaying parameters to the user.
           A user MUST be able to provide values for all settings.
           See the [Setting](#setting-attributes) section below.
         range: Setting
@@ -397,4 +395,3 @@ classes:
         range: string
         multivalued: true
         required: true
-

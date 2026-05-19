@@ -5,7 +5,7 @@ title: Application Description Schema
 description: >-
   Schema for defining application metadata, deployment profiles, and parameters. 
   The purpose of the Application Description is to enable an application's discovery, configuration, and deployment on edge devices.
-version: 1.0 
+version: 1.0
 prefixes:
   linkml: https://w3id.org/linkml/
   margo: https://specification.margo.org/
@@ -13,7 +13,6 @@ imports:
   - linkml:types
 
 default_prefix: margo
-
 
 # Class Definitions
 classes:
@@ -29,7 +28,7 @@ classes:
         description: Specifies the object type; must be `ApplicationDescription`.
         range: string
         required: true
-        equals_string: "ApplicationDescription" 
+        equals_string: "ApplicationDescription"
         rank: 20
       metadata:
         description: >-
@@ -42,7 +41,7 @@ classes:
         description: >-
           Deployment profiles element specifying the types of deployments the application supports. 
           See the [Deployment](#deploymentprofile-attributes) section below.
-        range: DeploymentProfile 
+        range: DeploymentProfile
         multivalued: true
         inlined: true
         inlined_as_list: true
@@ -52,7 +51,7 @@ classes:
         description: >-
           Parameters element specifying the configurable parameters to use when installing, or updating, the application.
           See the [Parameter](#parameter-attributes) section below.
-        range: Parameter 
+        range: Parameter
         multivalued: true
         inlined: true
         inlined_as_list: false
@@ -110,7 +109,7 @@ classes:
           Application element specifying the application specific metadata. 
           See the [Application Metadata](#applicationmetadata-attributes) section below.
         rank: 10
-        range: ApplicationMetadata 
+        range: ApplicationMetadata
       author:
         description: >-
           Author element specifying metadata about the application's author. 
@@ -238,7 +237,7 @@ classes:
         rank: 10
       memory:
         description: The minimum amount of memory required.
-          The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). 
+          The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of memory for the application.
         rank: 20
@@ -246,8 +245,9 @@ classes:
         pattern: ^[0-9]+(Mi|Gi|Ki)$
         required: false
       storage:
-        description: The amount of storage required for the application to run. This encompasses the installed application and the data it needs to store.
-          The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). 
+        description:
+          The amount of storage required for the application to run. This encompasses the installed application and the data it needs to store.
+          The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this amount of storage for the application
         rank: 30
@@ -281,15 +281,17 @@ classes:
     rank: 62
     attributes:
       cores:
-        description: The required amount of CPU cores the application must use to run in its full functionality. 
+        description:
+          The required amount of CPU cores the application must use to run in its full functionality.
           Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
           This is defined by the application developer.
-          After deployment of the application, the device MUST provide this number of CPU cores for the application. 
+          After deployment of the application, the device MUST provide this number of CPU cores for the application.
         rank: 10
         range: double
         required: true
       architectures:
-        description: The CPU architectures supported by the application. This can be e.g. amd64, arm64, arm.
+        description:
+          The CPU architectures supported by the application. This can be e.g. amd64, arm64, arm.
           See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.
           Multiple arcitecture types can be specified, as the deployment profile may support multiple CPU architectures.
         rank: 20
@@ -298,13 +300,14 @@ classes:
         multivalued: true
         inlined: true
         inlined_as_list: true
-      
+
   Peripheral:
     description: Peripheral hardware of a device.
     rank: 65
     attributes:
       type:
-        description: The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker.
+        description:
+          The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker.
           See the [PeriperalType](#peripheraltype) definition for all permissible values.
         rank: 20
         range: PeripheralType
@@ -324,9 +327,10 @@ classes:
     description: >-
       Communication interface of a device.
     rank: 66
-    attributes:   
+    attributes:
       type:
-        description: The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
+        description:
+          The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
           See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.
         rank: 30
         range: CommunicationInterfaceType
@@ -368,9 +372,9 @@ classes:
         rank: 10
       properties:
         description: >-
-           A dictionary element specifying the component packages's deployment details. 
-           See the [Component Properties](#componentproperties-attributes) section below.
-        range: ComponentProperties 
+          A dictionary element specifying the component packages's deployment details. 
+          See the [Component Properties](#componentproperties-attributes) section below.
+        range: ComponentProperties
         required: true
         rank: 20
 
@@ -381,7 +385,7 @@ classes:
   ComposeComponent:
     is_a: Component
     #rank: 76
-  
+
   ComponentProperties:
     description: Properties dictionary for component deployment details.
     rank: 80
@@ -415,7 +419,7 @@ classes:
     description: Defines a configurable parameter for the application.
     rank: 90
     attributes:
-      name: 
+      name:
         description: Name of the parameter.
         rank: 10
         identifier: true
@@ -503,7 +507,7 @@ classes:
         required: true
       settings:
         description: >-
-          Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the user. 
+          Settings are used to provide instructions to the Workload Fleet Manager vendor for displaying parameters to the user. 
           A user MUST be able to provide values for all settings. 
           See the [Setting](#setting-attributes) section below.
         rank: 20
@@ -560,8 +564,8 @@ classes:
         required: true
       #validationRule:
       #  description: >-
-      #    Defines the validation rules to use to validate the user provided parameter value. 
-      #    The rules are based on the schema's data type and are listed below. 
+      #    Defines the validation rules to use to validate the user provided parameter value.
+      #    The rules are based on the schema's data type and are listed below.
       #    The value MUST be validated against any validation rules defined in the schema.
       #  rank: 30
       #  range: ValidationRule
@@ -686,14 +690,14 @@ classes:
 slots:
   type:
     description: >-
-          Defines the type of this deployment configuration for the application. 
-          The allowed values are `helm`, to indicate the deployment profile's format is Helm version 3 or Version 4 using Chart APIVersion v2 (see [special exceptions below](#helm-exceptions)), 
-          and `compose` to indicate the deployment profile's format is a Compose file. 
-          When installing the application on a device supporting the Kubernetes platform, all `helm` components, 
-          and only `helm` components, will be provided to the device in same order they are listed in the application description file. 
-          When installing the application on a device supporting Compose, all `compose` components, 
-          and only `compose` components, will be provided to the device in the same order they are listed in the application description file. 
-          The device will install the components in the same order they are listed in the application description file.
+      Defines the type of this deployment configuration for the application. 
+      The allowed values are `helm`, to indicate the deployment profile's format is Helm version 3 or Version 4 using Chart APIVersion v2 (see [special exceptions below](#helm-exceptions)), 
+      and `compose` to indicate the deployment profile's format is a Compose file. 
+      When installing the application on a device supporting the Kubernetes platform, all `helm` components, 
+      and only `helm` components, will be provided to the device in same order they are listed in the application description file. 
+      When installing the application on a device supporting Compose, all `compose` components, 
+      and only `compose` components, will be provided to the device in the same order they are listed in the application description file. 
+      The device will install the components in the same order they are listed in the application description file.
     range: string
     required: true
     pattern: ^(helm|compose)$
@@ -724,7 +728,7 @@ enums:
       other:
         description: >-
           Any other CPU architecture not listed here. The application developer MUST provide a description of the architecture in the deployment profile's `description` field.
-  
+
   CommunicationInterfaceType:
     permissible_values:
       ethernet:
@@ -743,7 +747,7 @@ enums:
         description: This type stands for a RS232 interface.
       other:
         description: This type stands for any other communication interface not listed here. The application developer MUST provide a description of the interface in the deployment profile's `description` field.
-  
+
   PeripheralType:
     permissible_values:
       gpu:
@@ -758,4 +762,3 @@ enums:
         description: This type stands for a speaker peripheral.
       other:
         description: This type stands for any other peripheral not listed here. The application developer MUST provide a description of the peripheral in the deployment profile's `description` field.
-

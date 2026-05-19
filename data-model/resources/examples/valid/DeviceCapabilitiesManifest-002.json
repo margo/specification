@@ -1,21 +1,21 @@
 {
     "apiVersion": "device.margo.org/v1alpha1",
-    "kind": "SomeIncorrectKind",
+    "kind": "DeviceCapabilitiesManifest",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
         "vendor": "Northstar Industrial devices",
-        "modelNumber": "332ANZE1-N1",
-        "serialNumber": "PF45343-AA",
+        "modelNumber": "910ANZE1-N1",
+        "serialNumber": "UP85343-AA",
         "roles": [
             "Standalone Device"
         ],
         "resources": {
             "cpu": {
-                "cores": 2.4,
+                "cores": 2,
                 "architecture": "x86_64"
             },
-            "memory": "59 Gi",
-            "storage": "1862 Gi",
+            "memory": "1 Gi",
+            "storage": "10 Gi",
             "peripherals": [
                 {
                     "type": "gpu",

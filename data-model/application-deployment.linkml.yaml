@@ -29,6 +29,13 @@ classes:
         required: true
         range: string
         designates_type: true
+      id:
+        description: >-
+          The unique identifier of the deployment specification.
+          Needs to be assigned by the Workload Fleet Manager.
+        range: string
+        required: true
+        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
       metadata:
         description: >-
           Metadata element specifying characteristics about the application deployment.
@@ -47,8 +54,6 @@ classes:
     attributes:
       annotations:
         description: >-
-          Defines the application ID and unique identifier associated to the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
           See the [Annotation Attributes](#annotations-attributes) section below.
         range: DeploymentAnnotations
         required: true
@@ -77,13 +82,6 @@ classes:
         range: string
         required: true
         pattern: "^[-a-z0-9]{1,200}$"
-      id:
-        description: >-
-          The unique identifier UUID of the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
-        range: string
-        required: true
-        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
   Spec:
     description: Specification details of the desired state.
@@ -99,4 +97,3 @@ classes:
         multivalued: true
         inlined: true
         inlined_as_list: false
-

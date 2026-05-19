@@ -51,7 +51,7 @@ classes:
       annotations:
         description: >-
           Defines the application ID and unique identifier associated to the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
+          Needs to be assigned by the Workload Fleet Manager.
           See the [Annotation Attributes](#annotations-attributes) section below.
         range: Annotations
         required: true
@@ -85,7 +85,7 @@ classes:
       id:
         description: >-
           The unique identifier UUID of the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
+          Needs to be assigned by the Workload Fleet Manager.
         required: true
         pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         rank: 20

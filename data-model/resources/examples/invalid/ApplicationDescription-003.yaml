@@ -1,3 +1,4 @@
+# Demonstrates validation of deployment profile type
 apiVersion: margo.org/v1-alpha1
 kind: ApplicationDescription
 id: com-northstartida-hello-world
@@ -21,7 +22,8 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  - type: helm.v3
+  # incorrect type, it should be one of helm.v3 or compose
+  - type: helmchart
     id: com-northstartida-hello-world-helm.v3-a
     components:
       - name: hello-world
