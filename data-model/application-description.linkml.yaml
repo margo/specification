@@ -199,7 +199,7 @@ classes:
     is_a: DeploymentProfileDescription
     slot_usage:
       type:
-        equals_string: "helm.v3"
+        equals_string: "helm"
       components:
         range: HelmComponent
 

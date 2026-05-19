@@ -13,7 +13,6 @@ imports:
 default_prefix: margo
 default_range: string
 
-
 classes:
   DeploymentProfile:
     description: Represents a deployment configuration for the application.
@@ -25,7 +24,7 @@ classes:
     is_a: DeploymentProfile
     slot_usage:
       type:
-        equals_string: "helm.v3"
+        equals_string: "helm"
       components:
         range: HelmComponent
 
@@ -49,9 +48,9 @@ classes:
         range: string
       properties:
         description: >-
-           A dictionary element specifying the component packages's deployment details. 
-           See the [Component Properties](#componentproperties-attributes) section below.
-        range: ComponentProperties 
+          A dictionary element specifying the component packages's deployment details.
+          See the [Component Properties](#componentproperties-attributes) section below.
+        range: ComponentProperties
         required: true
 
   HelmComponent:
@@ -59,7 +58,7 @@ classes:
 
   ComposeComponent:
     is_a: Component
-  
+
   ComponentProperties:
     description: Properties dictionary for component deployment details.
     attributes:
@@ -85,7 +84,7 @@ classes:
   Parameter:
     description: Defines a configurable parameter for the application.
     attributes:
-      name: 
+      name:
         description: Name of the parameter.
         identifier: true
         required: true
@@ -127,21 +126,20 @@ classes:
         multivalued: true
         required: true
 
-
 slots:
   type:
     description: >-
-          Defines the type of this deployment configuration for the application. 
-          The allowed values are `helm.v3`, to indicate the deployment profile's format is Helm version 3, 
-          and `compose` to indicate the deployment profile's format is a Compose file. 
-          When installing the application on a device supporting the Kubernetes platform, all `helm.v3` components, 
-          and only `helm.v3` components, will be provided to the device in same order they are listed in the application description file. 
-          When installing the application on a device supporting Compose, all `compose` components, 
-          and only `compose` components, will be provided to the device in the same order they are listed in the application description file. 
-          The device will install the components in the same order they are listed in the application description file.
+      Defines the type of this deployment configuration for the application.
+      The allowed values are `helm`, to indicate the deployment profile's format is Helm version 3,
+      and `compose` to indicate the deployment profile's format is a Compose file.
+      When installing the application on a device supporting the Kubernetes platform, all `helm` components,
+      and only `helm` components, will be provided to the device in same order they are listed in the application description file.
+      When installing the application on a device supporting Compose, all `compose` components,
+      and only `compose` components, will be provided to the device in the same order they are listed in the application description file.
+      The device will install the components in the same order they are listed in the application description file.
     range: string
     required: true
-    pattern: ^(helm\.v3|compose)$
+    pattern: ^(helm|compose)$
 
   components:
     description: >-
@@ -152,4 +150,3 @@ slots:
     required: true
     inlined: true
     inlined_as_list: true
-

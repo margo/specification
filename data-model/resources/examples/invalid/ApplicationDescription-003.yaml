@@ -22,9 +22,9 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  # incorrect type, it should be one of helm.v3 or compose
+  # incorrect type, it should be one of helm or compose
   - type: helmchart
-    id: com-northstartida-hello-world-helm.v3-a
+    id: com-northstartida-hello-world-helm-a
     components:
       - name: hello-world
         properties:
@@ -35,13 +35,13 @@ parameters:
   greeting:
     value: Hello
     targets:
-    - pointer: global.config.appGreeting
-      components: ["hello-world"]
+      - pointer: global.config.appGreeting
+        components: ["hello-world"]
   greetingAddressee:
     value: World
     targets:
-    - pointer: global.config.appGreetingAddressee
-      components: ["hello-world"]
+      - pointer: global.config.appGreetingAddressee
+        components: ["hello-world"]
 configuration:
   sections:
     - name: General Settings

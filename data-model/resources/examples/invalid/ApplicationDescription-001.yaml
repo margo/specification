@@ -24,8 +24,8 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  - type: helm.v3
-    id: com-northstartida-hello-world-helm.v3-a
+  - type: helm
+    id: com-northstartida-hello-world-helm-a
     components:
       - name: hello-world
         properties:
@@ -36,13 +36,13 @@ parameters:
   greeting:
     value: Hello
     targets:
-    - pointer: global.config.appGreeting
-      components: ["hello-world"]
+      - pointer: global.config.appGreeting
+        components: ["hello-world"]
   greetingAddressee:
     value: World
     targets:
-    - pointer: global.config.appGreetingAddressee
-      components: ["hello-world"]
+      - pointer: global.config.appGreetingAddressee
+        components: ["hello-world"]
 configuration:
   sections:
     - name: General Settings

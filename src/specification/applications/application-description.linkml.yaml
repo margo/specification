@@ -372,7 +372,7 @@ classes:
         rank: 10
       properties:
         description: >-
-          A dictionary element specifying the component packages's deployment details. 
+          A dictionary element specifying the component packages's deployment details.
           See the [Component Properties](#componentproperties-attributes) section below.
         range: ComponentProperties
         required: true
@@ -690,13 +690,13 @@ classes:
 slots:
   type:
     description: >-
-      Defines the type of this deployment configuration for the application. 
-      The allowed values are `helm`, to indicate the deployment profile's format is Helm version 3 or Version 4 using Chart APIVersion v2 (see [special exceptions below](#helm-exceptions)), 
-      and `compose` to indicate the deployment profile's format is a Compose file. 
-      When installing the application on a device supporting the Kubernetes platform, all `helm` components, 
-      and only `helm` components, will be provided to the device in same order they are listed in the application description file. 
-      When installing the application on a device supporting Compose, all `compose` components, 
-      and only `compose` components, will be provided to the device in the same order they are listed in the application description file. 
+      Defines the type of this deployment configuration for the application.
+      The allowed values are `helm`, to indicate the deployment profile's format is Helm version 3 or Version 4 using Chart APIVersion v2 (see [special exceptions below](#helm-exceptions)),
+      and `compose` to indicate the deployment profile's format is a Compose file.
+      When installing the application on a device supporting the Kubernetes platform, all `helm` components,
+      and only `helm` components, will be provided to the device in same order they are listed in the application description file.
+      When installing the application on a device supporting Compose, all `compose` components,
+      and only `compose` components, will be provided to the device in the same order they are listed in the application description file.
       The device will install the components in the same order they are listed in the application description file.
     range: string
     required: true
