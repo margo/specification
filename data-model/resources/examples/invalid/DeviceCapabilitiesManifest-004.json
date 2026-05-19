@@ -12,7 +12,7 @@
         "resources": {
             "cpu": {
                 "cores": 2.4,
-                "architecture": "x86_64"
+                "architecture": "amd64"
             },
             "memory": "59 Gi",
             "storage": "1862 Gi",

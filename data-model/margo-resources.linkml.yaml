@@ -29,7 +29,8 @@ classes:
       CPU element specifying the CPU requirements for the application.
     attributes:
       cores:
-        description: The required amount of CPU cores the application must use to run in its full functionality.
+        description:
+          The required amount of CPU cores the application must use to run in its full functionality.
           Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
           This is defined by the application developer.
           After deployment of the application, the device MUST provide this number of CPU cores for the application.
@@ -37,7 +38,8 @@ classes:
         range: double
         required: true
       architectures:
-        description: The CPU architectures supported by the application. This can be e.g. amd64, x86_64, arm64, arm.
+        description:
+          The CPU architectures supported by the application. This can be e.g. amd64, arm64, arm.
           See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.
           Multiple arcitecture types can be specified, as the deployment profile may support multiple CPU architectures.
         rank: 20
@@ -50,7 +52,8 @@ classes:
     description: Peripheral hardware of a device.
     attributes:
       type:
-        description: The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker.
+        description:
+          The type of peripheral. This can be e.g. GPU, display, camera, microphone, speaker.
           See the [PeriperalType](#peripheraltype) definition for all permissible values.
         rank: 20
         range: PeripheralType
@@ -71,7 +74,8 @@ classes:
       Communication interface of a device.
     attributes:
       type:
-        description: The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
+        description:
+          The type of a communication interface. This can be e.g. Ethernet, WiFi, Cellular, Bluetooth, USB, CANBus, RS232.
           See the [CommunicationInterfaceType](#communicationinterfacetype) definition for all permissible values.
         rank: 30
         range: CommunicationInterfaceType
@@ -95,7 +99,8 @@ slots:
     required: false
 
   storage:
-    description: The amount of storage required for the application to run. This encompasses the installed application and the data it needs to store.
+    description:
+      The amount of storage required for the application to run. This encompasses the installed application and the data it needs to store.
       The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
       This is defined by the application developer.
       After deployment of the application, the device MUST provide this amount of storage for the application
@@ -128,8 +133,6 @@ enums:
     permissible_values:
       amd64:
         description: AMD 64-bit architecture.
-      x86_64:
-        description: x86 64-bit architecture.
       arm64:
         description: ARM 64-bit architecture.
       arm:
@@ -173,4 +176,3 @@ enums:
         description: This type stands for a speaker peripheral.
       other:
         description: This type stands for any other peripheral not listed here. The application developer MUST provide a description of the peripheral in the deployment profile's `description` field.
-
