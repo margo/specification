@@ -4,7 +4,7 @@ metadata:
   id: com-northstartida-digitron-orchestrator
   name: Digitron orchestrator
   description: The Digitron orchestrator application
-  version: 1.2.1 
+  version: 1.2.1
   catalog:
     application:
       icon: ./resources/ndo-logo.png
@@ -27,7 +27,7 @@ deploymentProfiles:
       The device where this application is installed needs to have a screen and a keyboard (as indicated in the required peripherals).
     components:
       - name: database-services
-        properties: 
+        properties:
           repository: oci://quay.io/charts/realtime-database-services
           revision: 2.3.7
           wait: true
@@ -38,7 +38,7 @@ deploymentProfiles:
           revision: 1.0.9
           wait: true
     requiredResources:
-      cpu: 
+      cpu:
         cores: 1.5
         architectures: 
           - amd64 
@@ -63,19 +63,19 @@ parameters:
     targets:
       - pointer: idp.name
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_NAME
+      - pointer: IDP_NAME
         components: ["digitron-orchestrator-docker"]
   idpProvider:
     targets:
       - pointer: idp.provider
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_PROVIDER
+      - pointer: IDP_PROVIDER
         components: ["digitron-orchestrator-docker"]
   idpClientId:
     targets:
       - pointer: idp.clientId
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_CLIENT_ID
+      - pointer: IDP_CLIENT_ID
         components: ["digitron-orchestrator-docker"]
   idpUrl:
     targets:
@@ -83,35 +83,35 @@ parameters:
         components: ["digitron-orchestrator"]
       - pointer: idp.providerMetadata
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_URL
+      - pointer: IDP_URL
         components: ["digitron-orchestrator-docker"]
   adminName:
     targets:
       - pointer: administrator.name
         components: ["digitron-orchestrator"]
-      - pointer: ENV.ADMIN_NAME
+      - pointer: ADMIN_NAME
         components: ["digitron-orchestrator-docker"]
   adminPrincipalName:
     targets:
       - pointer: administrator.userPrincipalName
         components: ["digitron-orchestrator"]
-      - pointer: ENV.ADMIN_PRINCIPALNAME
+      - pointer: ADMIN_PRINCIPALNAME
         components: ["digitron-orchestrator-docker"]
   pollFrequency:
     value: 30
-    targets: 
+    targets:
       - pointer: settings.pollFrequency
         components: ["digitron-orchestrator", "database-services"]
-      - pointer: ENV.POLL_FREQUENCY
+      - pointer: POLL_FREQUENCY
         components: ["digitron-orchestrator-docker"]
   siteId:
     targets:
       - pointer: settings.siteId
         components: ["digitron-orchestrator", "database-services"]
-      - pointer: ENV.SITE_ID
+      - pointer: SITE_ID
         components: ["digitron-orchestrator-docker"]
   cpuLimit:
-    value: 1 
+    value: 1
     targets:
       - pointer: settings.limits.cpu
         components: ["digitron-orchestrator"]
@@ -193,7 +193,7 @@ configuration:
       maxValue: 360
       allowEmpty: false
     - name: optionalText
-      dataType: string  
+      dataType: string
       minLength: 5
       allowEmpty: true
     - name: cpuRange
