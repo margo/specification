@@ -1,0 +1,47 @@
+- name: application-deployment
+  description: Generates markdown for ApplicationDeployment
+  doc_template_dir: spec/resources/markdown-templates_main-classes
+  input:
+    schema: spec/data-model/application-deployment.linkml.yaml
+  output:
+    md: spec/generated/markdown_main-classes/application-deployment.md
+
+- name: application-description
+  description: Generates markdown for ApplicationDescription
+  doc_template_dir: spec/resources/markdown-templates_main-classes
+  input:
+    schema: spec/data-model/application-description.linkml.yaml
+  output:
+    md: spec/generated/markdown_main-classes/application-description.md
+
+- name: deployment-status
+  description: Generates markdown for DeploymentStatus
+  doc_template_dir: spec/resources/markdown-templates_main-classes
+  input:
+    schema: spec/data-model/deployment-status.linkml.yaml
+  output:
+    md: spec/generated/markdown_main-classes/deployment-status.md
+
+- name: desired-state-manifest
+  description: Generates markdown for DesiredStateManifest
+  doc_template_dir: spec/resources/markdown-templates_main-classes
+  input:
+    schema: spec/data-model/desired-state-manifest.linkml.yaml
+  output:
+    md: spec/generated/markdown_main-classes/desired-state-manifest.md
+
+- name: device-capabilities
+  description: Generates markdown for DeviceCapabilities
+  doc_template_dir: spec/resources/markdown-templates_main-classes
+  input:
+    schema: spec/data-model/device-capabilities.linkml.yaml
+  output:
+    md: spec/generated/markdown_main-classes/device-capabilities.md
+
+- name: data-model
+  description: Generates markdown for entire Margo data model
+  doc_template_dir: spec/resources/markdown-templates_main-classes
+  input:
+    schema: spec/data-model/margo.linkml.yaml
+  output:
+    directory: build/data-model

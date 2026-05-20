@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
-id: https://specification.margo.org/device/deployment/status
+id: https://specification.margo.org/deployment-status
 name: DeploymentStatus
 description: >-
   Defines the schema for reporting the operational status of a specific deployment and its individual components. 
@@ -11,13 +11,16 @@ prefixes:
   margo: https://specification.margo.org/
 imports:
   - linkml:types
-  - device/types.linkml
+  - types.linkml
 
 default_prefix: margo
 default_range: string
 
 classes:
   DeploymentStatusManifest:
+    examples:
+      - value: "examples/DeploymentStatusManifest-001.yaml"
+        description: ""
     attributes:
       apiVersion:
         range: string

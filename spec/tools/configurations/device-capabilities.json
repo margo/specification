@@ -1,6 +1,0 @@
-{
-    "root": "spec/data-models",
-    "targetclass": "DeviceCapabilities",
-    "schemafile": "device/capabilities.linkml.yaml",
-    "markdowndoc": "device-capabilities.md"
-}

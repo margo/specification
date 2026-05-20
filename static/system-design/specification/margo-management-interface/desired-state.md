@@ -328,7 +328,7 @@ spec:
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| type | string |  Y  | The type of deployment profile (e.g., helm.v3, compose).|
+| type | string |  Y  | The type of deployment profile (e.g., helm, compose).|
 | components | Component |  Y  | Components of the application|
 
 
@@ -382,7 +382,7 @@ metadata:
     namespace: margo-poc
 spec:
     deploymentProfile:
-        type: helm.v3
+        type: helm
         components:
             - name: database-services
               properties:

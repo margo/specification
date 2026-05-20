@@ -1,106 +1,83 @@
 #!/usr/bin/env bash
+
+# doc generation is around 3-4 steps procecdure
+# 1. take linkml
+# 2. take markdown templates
+# 3. convert linkml to json
+# 4. feed this json to markdown templates to render templates to actual docs
+
 set -eu
 
-# ── Paths ────────────────────────────────────────────────────────────────────
-THIS_DIR="$(dirname "$(readlink -f "$0")")"
 ROOT_DIR="$(git rev-parse --show-toplevel)"
+CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/markdown.config.yaml"
+
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-if command -v poetry &>/dev/null; then
+EXAMPLES_DIR="${ROOT_DIR}/spec/resources/examples/valid"
+
+for cmd in yq linkml; do
+  command -v "$cmd" >/dev/null || {
+    echo "Missing dependency: $cmd"
+    exit 1
+  }
+done
+
+if command -v poetry >/dev/null 2>&1; then
   RUN="poetry run"
 else
-  for cmd in linkml mkdocs; do
-    command -v "$cmd" &>/dev/null || { echo "Missing: $cmd"; exit 1; }
-  done
   RUN=""
 fi
 
-DATA_MODEL="${ROOT_DIR}/spec/data-model"
-TEMPLATES="${ROOT_DIR}/spec/resources/markdown-templates"
-EXAMPLES="${ROOT_DIR}/spec/resources/examples/valid"
-BUILD_DIR="${ROOT_DIR}/build"
+length=$(yq '. | length' "$CONFIG_FILE")
 
-# ── Setup build dir ──────────────────────────────────────────────────────────
-mkdir -p "${BUILD_DIR}"
-cp -RH "${ROOT_DIR}/static/system-design/"* "${BUILD_DIR}/"
+for ((i=0; i<length; i++)); do
+  name=$(yq -r ".[$i].name" "$CONFIG_FILE")
 
-# ── Main class docs ──────────────────────────────────────────────────────────
-TGT_DIR="${ROOT_DIR}/spec/generated/markdown_main-classes"
-mkdir -p "$TGT_DIR"
+  schema_rel=$(yq -r ".[$i].input.schema" "$CONFIG_FILE")
+  template_rel=$(yq -r ".[$i].doc_template_dir" "$CONFIG_FILE")
 
-$RUN linkml generate doc --directory="$TMP_DIR" \
-  --template-directory="${TEMPLATES}_main-classes" \
-  --preserve-names \
-  --stacktrace \
-  --example-directory="$EXAMPLES" \
-  "${DATA_MODEL}/application/description.linkml.yaml"
-mv "$TMP_DIR/index.md" "${TGT_DIR}/description.md"
+  schema="${ROOT_DIR}/${schema_rel}"
+  template="${ROOT_DIR}/${template_rel}"
 
-$RUN linkml generate doc --directory="$TMP_DIR" \
-  --template-directory="${TEMPLATES}_main-classes" \
-  --preserve-names \
-  --stacktrace \
-  --example-directory="$EXAMPLES" \
-  "${DATA_MODEL}/application/deployment.linkml.yaml"
-mv "$TMP_DIR/index.md" "${TGT_DIR}/deployment.md"
+  output_md=$(yq -r ".[$i].output.md // empty" "$CONFIG_FILE")
+  output_dir=$(yq -r ".[$i].output.directory // empty" "$CONFIG_FILE")
 
-$RUN linkml generate doc --directory="$TMP_DIR" \
-  --template-directory="${TEMPLATES}_main-classes" \
-  --preserve-names \
-  --stacktrace \
-  --example-directory="$EXAMPLES" \
-  "${DATA_MODEL}/device/deployment-status.linkml.yaml"
-mv "$TMP_DIR/index.md" "${TGT_DIR}/deployment-status.md"
+  echo "Generating markdown: ${name}"
 
-$RUN linkml generate doc --directory="$TMP_DIR" \
-  --template-directory="${TEMPLATES}_main-classes" \
-  --preserve-names \
-  --stacktrace \
-  --example-directory="$EXAMPLES" \
-  "${DATA_MODEL}/device/desired-state-manifest.linkml.yaml"
-mv "$TMP_DIR/index.md" "${TGT_DIR}/desired-state-manifest.md"
+  if [[ -n "$output_md" ]]; then
+    output_file="${ROOT_DIR}/${output_md}"
 
-$RUN linkml generate doc --directory="$TMP_DIR" \
-  --template-directory="${TEMPLATES}_main-classes" \
-  --preserve-names \
-  --stacktrace \
-  --example-directory="$EXAMPLES" \
-  "${DATA_MODEL}/device/capabilities.linkml.yaml"
-mv "$TMP_DIR/index.md" "${TGT_DIR}/capabilities.md"
-rm -rf "${TMP_DIR:?}/"*
+    mkdir -p "$(dirname "$output_file")"
 
-MGMT="${BUILD_DIR}/specification/margo-management-interface"
-mv "${TGT_DIR}/deployment-status.md"  "$MGMT/"
-mv "${TGT_DIR}/device-capabilities.md" "$MGMT/"
-mv "${TGT_DIR}/application-description.md" "${BUILD_DIR}/specification/applications/"
+    rm -rf "${TMP_DIR:?}"/*
 
-# ── Whole data model docs ────────────────────────────────────────────────────
-TGT_DIR="${ROOT_DIR}/spec/generated/markdown"
-mkdir -p "$TGT_DIR"
+    ${RUN} linkml generate doc \
+      --directory="$TMP_DIR" \
+      --template-directory="$template" \
+      --preserve-names \
+      --stacktrace \
+      --example-directory="$EXAMPLES_DIR" \
+      "$schema"
 
-$RUN linkml generate doc \
-  --directory="$TGT_DIR" \
-  --template-directory="$TEMPLATES" \
-  --preserve-names --stacktrace \
-  --example-directory="$EXAMPLES" \
-  "${DATA_MODEL}/margo.linkml.yaml"
+    mv "${TMP_DIR}/index.md" "$output_file"
 
-mv "$TGT_DIR"/* "${BUILD_DIR}/data-model/"
+    echo "Success -> ${output_md}"
+  fi
 
-# ── Diagrams ─────────────────────────────────────────────────────────────────
-"${THIS_DIR}/generate-class-diagram.bash"
-cp "${ROOT_DIR}/spec/generated/diagrams/DataModel-ClassDiagram".{svg,png} \
-  "${BUILD_DIR}/figures/"
+  if [[ -n "$output_dir" ]]; then
+    output_path="${ROOT_DIR}/${output_dir}"
 
-# ── OpenAPI ──────────────────────────────────────────────────────────────────
-"${THIS_DIR}/generate-openapi.bash"
-mv "${ROOT_DIR}/spec/generated/openapi/workload-management-api.openapi.template.yaml" \
-   "${MGMT}/workload-management-api-1.0.0.yaml"
+    mkdir -p "$output_path"
 
-# ── JSON Schemas ─────────────────────────────────────────────────────────────
-MERGED_JSON_DIR="${BUILD_DIR}/json-schemas"
-mkdir -p "$MERGED_JSON_DIR"
-for f in "${ROOT_DIR}/spec/generated/json-schemas/"*.schema.json; do
-  [[ -f "$f" ]] && cp "$f" "$MERGED_JSON_DIR/"
+    ${RUN} linkml generate doc \
+      --directory="$output_path" \
+      --template-directory="$template" \
+      --preserve-names \
+      --stacktrace \
+      --example-directory="$EXAMPLES_DIR" \
+      "$schema"
+
+    echo "Success -> ${output_dir}"
+  fi
 done

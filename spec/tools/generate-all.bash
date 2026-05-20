@@ -2,10 +2,39 @@
 
 set -eu
 
-THIS_SCRIPT="$(readlink -f "${0}")"
-THIS_DIR="$(dirname "${THIS_SCRIPT}")"
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+BUILD_DIR="${ROOT_DIR}/build"
 
-"${THIS_DIR}/generate-class-diagram.bash"
-"${THIS_DIR}/generate-json-schemas.bash"
-"${THIS_DIR}/generate-openapi.bash"
-"${THIS_DIR}/generate-docs.bash"
+mkdir -p "${BUILD_DIR}"
+
+# Static assets
+cp -RH "${ROOT_DIR}/static/system-design/"* "${BUILD_DIR}/"
+
+# Generated artifacts
+"${ROOT_DIR}/spec/tools/generate-class-diagram.bash"
+"${ROOT_DIR}/spec/tools/generate-json-schema.bash"
+"${ROOT_DIR}/spec/tools/generate-docs.bash"
+"${ROOT_DIR}/spec/tools/generate-openapi.bash"
+
+# Publish markdown
+mkdir -p "${BUILD_DIR}/data-model"
+cp -R "${ROOT_DIR}/spec/generated/markdown/"* \
+      "${BUILD_DIR}/data-model/"
+
+# Publish diagrams
+mkdir -p "${BUILD_DIR}/figures"
+cp "${ROOT_DIR}/spec/generated/diagrams/"*.svg \
+   "${BUILD_DIR}/figures/"
+
+# Publish OpenAPI
+MGMT="${BUILD_DIR}/specification/margo-management-interface"
+mkdir -p "$MGMT"
+
+cp "${ROOT_DIR}/spec/generated/openapi/"*.yaml \
+   "$MGMT/"
+
+# Publish JSON schemas
+mkdir -p "${BUILD_DIR}/json-schemas"
+
+cp "${ROOT_DIR}/spec/generated/json-schemas/"*.json \
+   "${BUILD_DIR}/json-schemas/"

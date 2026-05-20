@@ -1,0 +1,17 @@
+# this configuration will be used to validate examples provided in this repo,
+# against the official schemas
+- name: application-description
+  description: Validate ApplicationDescription examples
+  schema: spec/data-model/application-description.linkml.yaml
+  target_class: ApplicationDescription
+  examples:
+    valid: spec/resources/examples/valid
+    invalid: spec/resources/examples/invalid
+
+- name: application-deployment
+  description: Validate ApplicationDeployment examples
+  schema: spec/data-model/application-deployment.linkml.yaml
+  target_class: ApplicationDeployment
+  examples:
+    valid: spec/resources/examples/valid
+    invalid: spec/resources/examples/invalid

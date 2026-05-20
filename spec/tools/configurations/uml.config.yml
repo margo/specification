@@ -1,0 +1,70 @@
+- name: DataModel-ClassDiagram
+  schema: spec/data-model/margo.linkml.yaml
+  classes_to_render: [] # will render all the classes
+  pipeline:
+    - explicitly_add_uml_relationship: "DeploymentAnnotations ..> ApplicationDescription"
+    - explicitly_add_uml_relationship: "DeploymentStatusManifest ..> ApplicationDeployment"
+    - explicitly_add_uml_relationship: "DesiredStateManifest ..> ApplicationDeployment"
+  output:
+    svg: spec/generated/diagrams/DataModel.svg
+
+- name: ApplicationDescription-ClassDiagram
+  schema: spec/data-model/application-description.linkml.yaml
+  classes_to_render:
+    - ApplicationDescription
+    - ApplicationMetadata
+    - Parameter
+    - Configuration
+    - DeploymentProfileDescription
+  pipeline:
+    - delete_uml_block: "Component.*{$"
+  output:
+    svg: spec/generated/diagrams/ApplicationDescription.svg
+
+- name: DeploymentStatusManifest-ClassDiagram
+  schema: spec/data-model/margo.linkml.yaml
+  classes_to_render:
+    - DeploymentStatusManifest
+    - ApplicationDeployment
+    - DeploymentProfile
+  pipeline:
+    - explicitly_add_uml_relationship: "DeploymentStatusManifest ..> ApplicationDeployment"
+    - explicitly_add_uml_relationship: "ComponentStatus ..> Component"
+  output:
+    svg: spec/generated/diagrams/DeploymentStatusManifest.svg
+
+- name: DesiredStateManifest-ClassDiagram
+  schema: spec/data-model/margo.linkml.yaml
+  classes_to_render:
+    - DesiredStateManifest
+  pipeline:
+    - explicitly_add_uml_relationship: "DesiredStateManifest ..> ApplicationDeployment"
+  output:
+    svg: spec/generated/diagrams/DesiredStateManifest.svg
+
+- name: DeviceCapabilities-ClassDiagram
+  schema: spec/data-model/margo.linkml.yaml
+  classes_to_render:
+    - DeviceCapabilitiesManifest
+    - Properties
+    - Resources
+  pipeline: []
+  output:
+    svg: spec/generated/diagrams/DeviceCapabilities.svg
+
+- name: ApplicationDeployment-ClassDiagram
+  schema: spec/data-model/application-deployment.linkml.yaml
+  classes_to_render:
+    - ApplicationDeployment
+    - DeploymentMetadata
+    - DeploymentAnnotations
+    - Spec
+    - Parameter
+    - DeploymentProfile
+    - ComposeDeploymentProfile
+    - HelmDeploymentProfile
+    - Component
+  pipeline:
+    - explicitly_add_uml_relationship: "DeploymentAnnotations ..> ApplicationDescription"
+  output:
+    svg: spec/generated/diagrams/ApplicationDeployment.svg

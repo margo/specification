@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
-id: https://specification.margo.org/application/description
-name: ApplicationDescription
-title: Application Description
+id: https://specification.margo.org/application-description
+name: ApplicationDescriptionSchema
+title: Application Description Schemas
 description: >-
   The purpose of the Application Description is to enable an application's discovery, configuration, and deployment on edge devices.
   To deploy an application the end user specifies values for the [parameters](#defining-configurable-application-parameters) given in
@@ -17,7 +17,7 @@ prefixes:
   margo: https://specification.margo.org/
 imports:
   - linkml:types
-  - application/types.linkml
+  - types.linkml
 
 default_prefix: margo
 
@@ -25,6 +25,9 @@ default_prefix: margo
 classes:
   ApplicationDescription:
     description: Root class for an application description.
+    examples:
+      - value: "examples/ApplicationDescription-001.yaml"
+        description: ""
     attributes:
       apiVersion:
         description: Identifier of the version of the API the object definition follows.

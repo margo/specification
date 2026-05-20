@@ -1,6 +1,0 @@
-{
-    "root": "spec/data-models",
-    "targetclass": "DesiredStateManifest",
-    "schemafile": "device/desired-state-manifest.linkml.yaml",
-    "markdowndoc": "desired-state-manifest.md"
-}

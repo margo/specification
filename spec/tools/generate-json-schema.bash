@@ -3,9 +3,9 @@
 set -eu
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/openapi.config.yaml"
+CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/json-schema.config.yaml"
 
-for cmd in yq python3; do
+for cmd in yq linkml; do
   command -v "$cmd" >/dev/null || {
     echo "Missing dependency: $cmd"
     exit 1
@@ -24,19 +24,16 @@ for ((i=0; i<length; i++)); do
   name=$(yq -r ".[$i].name" "$CONFIG_FILE")
 
   schema_rel=$(yq -r ".[$i].input.schema" "$CONFIG_FILE")
-  template_rel=$(yq -r ".[$i].input.template" "$CONFIG_FILE")
-  output_rel=$(yq -r ".[$i].output.yaml" "$CONFIG_FILE")
+  output_rel=$(yq -r ".[$i].output.json_schema" "$CONFIG_FILE")
 
   schema="${ROOT_DIR}/${schema_rel}"
-  template="${ROOT_DIR}/${template_rel}"
   output="${ROOT_DIR}/${output_rel}"
 
   mkdir -p "$(dirname "$output")"
 
-  echo "Generating OpenAPI: ${name}"
+  echo "Generating JSON Schema: ${name}"
 
-  ${RUN} python3 "${ROOT_DIR}/spec/tools/openapigen.py" \
-    --template "$template" \
+  ${RUN} linkml generate json-schema \
     "$schema" \
     > "$output"
 

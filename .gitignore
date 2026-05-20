@@ -12,3 +12,7 @@ src/specification/margo-management-interface/docs
 *.code-workspace
 generated
 merged
+build
+**/generated
+venv
+.vscode
