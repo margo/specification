@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/data-model
+name: DataModel
+title: Margo Data Model
+description: >-
+  Margo specification involves complex, interrelated data structures that are used for multiple, different purposes.
+
+  This data model documents the mentioned data structures and their relationships.
+
+  ??? info "General information about the Margo data model"
+
+      The Margo data model has been modelled with **[LinkML](https://linkml.io)**
+      a **modelling language** that does not only offer very poserfull modelling capabilities,
+      but also very useful conversion and validation tooling.
+
+      All **examples** shown on the documentation of the classes (see
+      [ApplicationDescription](ApplicationDescription.md#examples) for an example) are being automatically validated
+      against the model before a new version of the specification gets published.
+
+      The whole [**HTML documentation** of the data model](.) is also automatically generated from the model.
+      This documentation provides some graphics that help visualicing the relationship between classes.
+
+      Also following **OpenAPI** v3.0.3 YAML specifications are being automatically generated from the model:
+
+      - [workload-management-api.openapi.template.yaml](../specification/margo-management-interface/management-interface-swagger/)
+version: "1.0"
+prefixes:
+  margo: https://specification.margo.org/
+imports:
+  - application/deployment.linkml
+  - application/description.linkml
+  - device/capabilities.linkml
+  - device/desired-state-manifest.linkml
+  - device/deployment-status.linkml
+
+default_prefix: margo
+
+subsets:
+  api_resources:
+    title: API Resources

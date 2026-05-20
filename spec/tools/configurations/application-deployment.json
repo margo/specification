@@ -1,0 +1,21 @@
+{
+    "uml": [{
+        "linkml": {
+            "file": "spec/data-models/application/deployment.linkml.yaml",
+            "targetclass": "ApplicationDeployment"
+        },
+        "output": "spec/generated/diagrams/deployment.Class"
+    }],
+    "markdown": [{
+        "linkml": {
+            "file": "spec/data-models/application/deployment.linkml.yaml"
+        },
+        "output": "spec/generated/markdown/application-deployment.md"
+    }],
+    "openapi": [{
+        "linkml": {
+            "file": "spec/data-models/application/deployment.linkml.yaml"
+        },
+        "output": "spec/generated/markdown/application-deployment.md"
+    }]
+}

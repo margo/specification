@@ -1,5 +1,5 @@
 site_name: Specification (pre-draft)
-docs_dir: merged
+docs_dir: build/docs
 
 nav:
   - What is Margo?: index.md
@@ -52,8 +52,8 @@ theme:
   font:
     text: IBM Plex Sans
     code: IBM Plex Mono
-  logo: assets/margo_white.svg
-  favicon: assets/favicon.ico
+  logo: static/assets/margo_white.svg
+  favicon: static/assets/favicon.ico
   palette:
     scheme: margo
 
@@ -69,14 +69,14 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 extra_css:
-  - css/margo.css
-  - assets/swagger-ui.css
+  - static/css/margo.css
+  - static/assets/swagger-ui.css
 
 extra_javascript:
-  - assets/swagger-ui-bundle.js
-  - assets/swagger-ui-standalone-preset.js
-  - assets/svg-pan-zoom.min.js
-  - assets/svg-pan-zoom-init.js
+  - static/assets/swagger-ui-bundle.js
+  - static/assets/swagger-ui-standalone-preset.js
+  - static/assets/svg-pan-zoom.min.js
+  - static/assets/svg-pan-zoom-init.js
 
 extra:
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice

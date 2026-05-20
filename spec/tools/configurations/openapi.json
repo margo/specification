@@ -1,0 +1,18 @@
+[
+  {
+    "description": "Generates aggregated openapi spec for Margo Models",
+    "linkml": {
+      "file": "spec/data-models/application/deployment.linkml.yaml",
+      "targetclass": "ApplicationDeployment"
+    },
+    "output": "spec/generated/diagrams/deployment.Class"
+  },
+  {
+    "description": "Generates class diagram for ApplicationDescription",
+    "linkml": {
+      "file": "spec/data-models/application/description.linkml.yaml",
+      "targetclass": "ApplicationDescription"
+    },
+    "output": "spec/generated/diagrams/description.Class"
+  }
+]
