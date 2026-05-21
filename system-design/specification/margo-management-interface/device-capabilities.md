@@ -19,7 +19,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
 | {clientId} | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
-| {deviceId} | string | Y | The unique identifier of the device reporting the capabilities. <br/>It must have the following format: "{id}[/{id}[/{id}...]]". The top-level `id` is required and must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). The subsequent `id`s are optional, but if present they must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). <br/>Using multiple ids in the endpoint does not register multiple devices in a single request, but indicates a hierarchy of devices, with a parent/child relationship. |
+| {deviceId} | string | Y | The unique identifier of the device reporting the capabilities. <br/>It must have the following format: "{id}[/{id}[/{id}...]]". The top-level `id` is required and must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). If reporting capabilties for a child device, the subsequent `id`s are required and must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). <br/>Using multiple ids in the endpoint does not register multiple devices in a single request, but indicates a hierarchy of devices, with a parent/child relationship. |
 
 ### Response Codes
 
@@ -45,7 +45,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 
 | Field       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner. It must include only Unreserved Characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a device behind a gateway, the id field takes the form of a path with the id of the parent gateway, the id of the child device, and the ids of any intermediate devices, i.e., "{gatewayId}/[{intermediateDeviceId/.../]{deviceId}". |
+| id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner. It must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a device behind a gateway, the id field takes the form of a path with the id of the parent gateway, the id of the child device, and the ids of any intermediate devices, i.e., "{gatewayId}/[{intermediateDeviceId/.../]{deviceId}". |
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
@@ -177,7 +177,7 @@ Opaque gateways MUST report the combined capabilities of all the devices they co
 
 ## See-thru gateways
 
-See-thru gateways MUST report their capabilities and the capabilities of each device they connect to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
+See-thru gateways MUST report their capabilities and the capabilities of each device they connect to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device behind the gateway. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
 
 When reporting its own capabilities, a see-thru gateway MUST report the role "Gateway". 
 

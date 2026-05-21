@@ -521,13 +521,13 @@ components:
                     $ref: '#/components/schemas/DeviceCommunicationInterface'
     DeviceId:
       # format: "{id}[/{id}[/{id}...]]"
-      # Top-level id is required and must include only Unreserved Characters as specified in RFC3986.
-      # Subsequent ids are optional, but if present must include only Unreserved Characters as specified in RFC3986.
+      # Top-level id is required and must include only unreserved characters as specified in RFC3986.
+      # Subsequent ids are optional, but if present must include only unreserved characters as specified in RFC3986.
       type: string
       pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$'
     DeviceId_with_asterisk:
       # format: "{id}[/{id}[/{id}...]/*]"
-      # Top-level id is required and must include only Unreserved Characters as specified in RFC3986.
+      # Top-level id is required and must include only unreserved characters as specified in RFC3986.
       # Subsequent ids are optional, but if present must include only Unreserved Characters as specified in RFC3986.
       type: string
       pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
