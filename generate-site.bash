@@ -4,19 +4,18 @@ set -eu
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 BUILD_DIR="${ROOT_DIR}/build"
-
 mkdir -p "${BUILD_DIR}"
 
-# Static assets
-cp -RH "${ROOT_DIR}/static/system-design/"* "${BUILD_DIR}/"
+# Copy static system-design docs into the build directory
+cp -RH "${ROOT_DIR}/static/system-design/"* "${BUILD_DIR}/docs/system-design"
 
-# Generated artifacts
+# Generate artifacts from source
 "${ROOT_DIR}/spec/tools/generate-class-diagram.bash"
 "${ROOT_DIR}/spec/tools/generate-json-schema.bash"
 "${ROOT_DIR}/spec/tools/generate-docs.bash"
 "${ROOT_DIR}/spec/tools/generate-openapi.bash"
 
-# Publish markdown
+# Move the generated docs into the build directory
 mkdir -p "${BUILD_DIR}/data-model"
 cp -R "${ROOT_DIR}/spec/generated/markdown/"* \
       "${BUILD_DIR}/data-model/"
