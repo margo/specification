@@ -5,7 +5,9 @@ title: Device Capabilities Schema
 description: >-
   Schema for defining device capabilities.
   The purpose of the Device Capabilities is that WFMs can match application deployments with the capabilities of the target devices.
-version: "1.0"
+
+  Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md
+version: "1.0.0"
 prefixes:
   linkml: https://w3id.org/linkml/
   margo: https://specification.margo.org/
@@ -14,11 +16,14 @@ imports:
   - types.linkml
 
 default_prefix: margo
+# default_range: string  # https://github.com/linkml/linkml/issues/1483
 
 # Class Definitions
 classes:
   DeviceCapabilitiesManifest:
-    description: Capabilities of a device on which applications can be deployed.
+    description: >-
+      Capabilities of a device on which applications can be deployed.
+      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#request-body-attributes
     examples:
       - value: "examples/DeviceCapabilities-001.yaml"
         description: ""
@@ -37,10 +42,16 @@ classes:
         description: >-
           Element that defines characteristics about the device.
           See the [Properties Attributes](#properties-attributes) section below.
+
+          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#properties-attributes
         required: true
         range: Properties
 
   Properties:
+    description: >-
+      Device properties reported to the WFM.
+
+      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#properties-attributes
     attributes:
       id:
         description: Unique deviceID assigned to the device via the Device Owner.
@@ -61,7 +72,9 @@ classes:
       roles:
         description: >-
           Element that defines the device role it can provide to the Margo environment.
-          MUST be one of the following: Standalone Cluster, or Standalone Device
+          MUST be one of the following: Standalone Cluster, Cluster Leader, or Standalone Device.
+
+          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#enumerations
         required: true
         multivalued: true
         inlined: false
@@ -70,18 +83,34 @@ classes:
         description: >-
           Element that defines the device's resources available to the application deployed on the device.
           See the [Resources Attributes](#resources-attributes) section below.
+
+          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#resources-attributes
         required: true
         range: Resources
 
 # Enumeration Definitions
 enums:
   DeviceRole:
+    description: >-
+      Role a device can provide to the Margo environment.
+
+      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#enumerations
     permissible_values:
       Standalone Cluster:
         description: >-
           Select this role to run Helm applications.
           See [Edge compute devices](../../concepts/edge-compute-devices/devices#standalone-cluster-role-details) for more information.
+
+          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/concepts/edge-compute-devices/devices.md#standalone-cluster-role-details
       Standalone Device:
         description: >-
           Select this role to run Compose applications.
           See [Edge compute devices](../../concepts/edge-compute-devices/devices#standalone-device-role-details) for more information.
+
+          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/concepts/edge-compute-devices/devices.md#standalone-cluster-role-details
+
+      Cluster Leader:
+        description: >-
+          Select this role for the leader node of a multi-node Helm cluster.
+          See [Edge compute devices](../../concepts/edge-compute-devices/devices#cluster-leader-role-details) for more information.
+          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/concepts/edge-compute-devices/devices.md#cluster-leader-role-details
