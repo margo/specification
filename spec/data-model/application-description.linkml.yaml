@@ -28,9 +28,9 @@ default_range: string # https://github.com/linkml/linkml/issues/1483
 classes:
   ApplicationDescription:
     description: Root class for an application description.
-    examples:
-      - value: "examples/ApplicationDescription-001.yaml"
-        description: ""
+    # examples:
+    #   - value: "../resources/examples/valid/ApplicationDescription-001.yaml"
+    #     description: ""
     attributes:
       apiVersion:
         description: Identifier of the version of the API the object definition follows.

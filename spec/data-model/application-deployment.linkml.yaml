@@ -21,9 +21,11 @@ classes:
     description: >-
       A class representing the desired state of an entity.
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#applicationdeployment-yaml-definition
-    examples:
-      - value: "examples/ApplicationDeployment-001.yaml"
-        description: ""
+    # examples:
+    #   - value: "../resources/examples/valid/ApplicationDeployment-001-compose.yaml"
+    #     description: "A compose application deployment"
+    #   - value: "../resources/examples/valid/ApplicationDeployment-002-helm.yaml"
+    #     description: "A helm application deployment"
     attributes:
       apiVersion:
         description: Identifier of the version of the API the object definition follows.

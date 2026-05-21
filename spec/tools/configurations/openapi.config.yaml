@@ -4,4 +4,4 @@
     schema: spec/data-model/margo.linkml.yaml
     template: spec/tools/workload-management-api.openapi.template.yaml
   output:
-    yaml: spec/generated/openapi/workload-management-api.openapi.yaml
+    yaml: spec/generated/openapi/workload-management-api-1.0.0.yaml

@@ -32,5 +32,5 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 
 ## Request Body
 
-[DeploymentStatus](./deployment status.md) document describing the status of an application deployment.
+[DeploymentStatus](./deployment-status.md) document describing the status of an application deployment.
 

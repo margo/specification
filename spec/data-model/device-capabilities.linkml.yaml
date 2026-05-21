@@ -24,9 +24,11 @@ classes:
     description: >-
       Capabilities of a device on which applications can be deployed.
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#request-body-attributes
-    examples:
-      - value: "examples/DeviceCapabilities-001.yaml"
-        description: ""
+    # examples:
+    #   - value: "../resources/examples/valid/DeviceCapabilitiesManifest-001-standalone_cluster.json"
+    #     description: "Manifest showing standalone cluster capabilities"
+    #   - value: "../resources/examples/valid/DeviceCapabilitiesManifest-001-standalone_device.json"
+    #     description: "Manifest showing standalone device capabilities"
     attributes:
       apiVersion:
         description: Identifier of the version the API resource follows.

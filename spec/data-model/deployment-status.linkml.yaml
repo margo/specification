@@ -22,9 +22,9 @@ classes:
     description: >-
       Manifest sent by the device client to report the deployment status of a workload.
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#request-body-attributes
-    examples:
-      - value: "examples/DeploymentStatusManifest-001.yaml"
-        description: ""
+    # examples:
+    #   - value: "../resources/examples/valid/DeploymentStatusManifest-001.yaml"
+    #     description: ""
     attributes:
       apiVersion:
         range: string

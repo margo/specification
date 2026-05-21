@@ -44,4 +44,4 @@
   input:
     schema: spec/data-model/margo.linkml.yaml
   output:
-    directory: build/data-model
+    directory: spec/generated/markdown_main-classes/all-data-models

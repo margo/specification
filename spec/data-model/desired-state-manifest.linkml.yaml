@@ -22,9 +22,9 @@ classes:
       Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the device.
 
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---state-manifest
-    examples:
-      - value: "examples/DesiredStateManifest-001.yaml"
-        description: ""
+    # examples:
+    #   - value: "../resources/examples/valid/DesiredStateManifest-001.yaml"
+    #     description: ""
     attributes:
       manifestVersion:
         description: >-

@@ -42,7 +42,7 @@ The MarkDown document template is available in https://github.com/margo/specific
 | {{ slot }} | {{ format_range(schemaview.get_slot(slot)) }} | {% if schemaview.get_slot(slot).required == True %} Y {% else %} N {% endif %} | {{ schemaview.get_slot(slot).description }}|
 {% endfor %}
 
-Detailed class view: [{{ cls }}](../../data-model/{{ cls }}.md)
+Detailed class view: [{{ cls }}](/data-model/{{ cls }}.md)
 {% endif -%} 
 {%- endfor -%}
 
@@ -62,4 +62,4 @@ Following examples have been automatically validated against the schema of this 
 
 ## JSON Schema
 
-<p><a href="/json-schemas/{{ schema_basename }}.schema.json" target="_blank" rel="noopener noreferrer">View JSON Schema in new tab</a> or <a href="/json-schemas/{{ schema_basename }}.schema.json" download>download</a></p>
+<p>`<a href="/json-schemas/{{ schema_basename }}.schema.json" target="_blank" rel="noopener noreferrer">View JSON Schema in new tab</a>` or <a href="/json-schemas/{{ schema_basename }}.schema.json" download>download</a></p>
