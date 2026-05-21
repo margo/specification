@@ -60,7 +60,7 @@ jobs:
 
       - name: Run tests
         run: |
-          doc-generation/check-examples.bash
+          spec/data-model/tools/check-examples.bash
 
   documents:
     needs:
@@ -90,17 +90,18 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --all-extras
 
-      - name: Generate MarkDown documentation
+      - name: Generate all artifacts
         run: |
-          doc-generation/generate-documentation.bash
+          generate-site.bash
 
-      - name: Share generated documentation with later jobs
+      - name: Share generated artifacts with later jobs
         uses: actions/upload-artifact@v4
         with:
-          name: generated-documentation
+          name: generated-artifacts
           path: |
-            system-design/specification/applications/application-description.md
-            system-design/specification/margo-management-interface/desired-state.md
+            build/docs/system-design/specification/applications/application-description.md
+            build/docs/system-design/specification/margo-management-interface/desired-state.md
+            build/docs/system-design/specification/margo-management-interface/workload-management-api-1.0.0.yaml
 
   pages:
     needs:
@@ -135,11 +136,15 @@ jobs:
       - name: Install the project dependencies
         run: poetry install
 
-      - name: Get generated documentation from previous jobs
+      - name: Get generated artifacts from previous jobs
         uses: actions/download-artifact@v4
         with:
-          name: generated-documentation
-          path: system-design/specification
+          name: generated-artifacts
+          path: build/docs/system-design/specification
+
+      - name: Generate merged documentation tree
+        run: |
+          data-model/tools/generate-docs.bash
 
       - name: Build Pages
         run: poetry run -- mkdocs build

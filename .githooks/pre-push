@@ -50,7 +50,7 @@ do
 
         # Check test examples
         set -e
-        doc-generation/check-examples.bash
+        spec/data-model/tools/check-examples.bash
         set +e
 
 	fi
