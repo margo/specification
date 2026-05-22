@@ -100,7 +100,10 @@ classes:
         required: true
         rank: 10
       parameters:
-        description: Describes the configured parameters applied via the end-user.
+        description: >-
+          Describes the configured parameters applied via the end-user.
+          Defined as a map where each key is the parameter name matching a parameter defined in the ApplicationDescription
+          (e.g., `mysqlDatabase:`, `greeting:`, `idpName:`, `myAppEndpoint:`); unrecognized keys are ignored.
         range: Parameter
         required: true
         multivalued: true

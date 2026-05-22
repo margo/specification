@@ -324,9 +324,13 @@ spec:
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-{% for slot in gen.get_direct_slots(c)|sort(attribute='rank') -%}
+{%- for slot in gen.get_direct_slots(c)|sort(attribute='rank') -%}
+{%- set parameters_slot = schemaview.get_slot("parameters") -%}
+{%- set is_map_key = parameters_slot and parameters_slot.range == c.name and not parameters_slot.inlined_as_list and slot.identifier %}
+{%- if not is_map_key %}
 | {{ slot.name }} | {{ format_range(slot) }} | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
-{% endfor %}
+{%- endif %}
+{%- endfor %}
 {%- endif %}
 {%- endfor %}
 
