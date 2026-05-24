@@ -397,7 +397,7 @@ components:
         deploymentId:
           type: string
           description: >
-            The unique UUID from the ApplicationDeployment.
+            Unique identifier for the application deployment.
         digest:
           type: string
           description: >
