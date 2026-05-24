@@ -262,7 +262,7 @@ paths:
           required: true
           schema:
             type: string
-          description: UUID of the ApplicationDeployment
+          description: Unique identifier for the application deployment
         - name: digest
           in: path
           required: true
