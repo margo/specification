@@ -8,21 +8,19 @@ nav:
           - system-design/specification/margo-management-interface/api-requirements-and-security.md
           - system-design/specification/margo-management-interface/certificate-api.md
           - system-design/specification/margo-management-interface/device-client-onboarding.md
-          - system-design/specification/margo-management-interface/device-capabilities-api.md
-          - Device Capabilities: system-design/specification/margo-management-interface/device-capabilities.md
+          - system-design/specification/margo-management-interface/device-capabilities.md
           - system-design/specification/margo-management-interface/desired-state.md
-          - system-design/specification/margo-management-interface/deployment-status-api.md
-          - Deployment Status: system-design/specification/margo-management-interface/deployment-status.md
+          - system-design/specification/margo-management-interface/deployment-status.md
           - system-design/specification/margo-management-interface/management-interface-swagger.md
       - Applications:
           - system-design/specification/applications/application-description.md
-          - system-design/specification/applications/application-registry.md
+          - specification/applications/application-registry.md
       - Margo Devices:
-          - system-design/specification/margo-devices/device-requirements.md
+          - specification/margo-devices/device-requirements.md
       - Observability:
-          - system-design/specification/observability/publishing-workload-observability-data.md
-          - system-design/specification/observability/collecting-workload-observability-data.md
-          - system-design/specification/observability/consuming-workload-observability-data.md
+          - specification/observability/publishing-workload-observability-data.md
+          - specification/observability/collecting-workload-observability-data.md
+          - specification/observability/consuming-workload-observability-data.md
       - Data Model:
           - Overview: data-model/index.md
           - ApplicationDescription: data-model/ApplicationDescription.md
@@ -30,8 +28,6 @@ nav:
           - DeviceCapabilitiesManifest: data-model/DeviceCapabilitiesManifest.md
           - DesiredStateManifest: data-model/DesiredStateManifest.md
           - DeploymentStatusManifest: data-model/DeploymentStatusManifest.md
-  - Make a Contribution:
-      - make-a-contribution/contributing.md
 
 theme:
   name: material
