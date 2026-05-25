@@ -6,7 +6,7 @@
     - explicitly_add_uml_relationship: "DeploymentStatusManifest ..> ApplicationDeployment"
     - explicitly_add_uml_relationship: "DesiredStateManifest ..> ApplicationDeployment"
   output:
-    svg: spec/generated/diagrams/DataModel.svg
+    svg: spec/generated/diagrams/AllClasses.svg
 
 - name: ApplicationDescription-ClassDiagram
   schema: spec/data-model/application-description.linkml.yaml
@@ -16,6 +16,11 @@
     - Parameter
     - Configuration
     - DeploymentProfileDescription
+    - TextValidationSchema
+    - BooleanValidationSchema
+    - NumericIntegerValidationSchema
+    - NumericDoubleValidationSchema
+    - SelectValidationSchema
   pipeline:
     - delete_uml_block: "Component.*{$"
   output:
