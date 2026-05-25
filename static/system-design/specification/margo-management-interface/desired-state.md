@@ -307,7 +307,6 @@ spec:
 | name | string |  Y  | When deploying to Kubernetes, the manifests name. The name is chosen by the workload orchestration vendor and is not displayed anywhere.|
 | namespace | string |  Y  | When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the workload orchestration solution vendor.|
 
-
 #### Annotations Attributes
 
 | Attribute | Type | Required? | Description |
@@ -315,14 +314,12 @@ spec:
 | applicationId | string |  Y  | An identifier for the application. The id is used to help create unique identifiers where required, such as namespaces. The id must be lower case letters and numbers and MAY contain dashes. Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters. The applicationId MUST match the associated application package Metadata "id" attribute.|
 | id | string |  Y  | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Orchestration Software.|
 
-
 #### Spec Attributes
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 | deploymentProfile | DeploymentProfile |  Y  | Section that defines deployment details including type and components.|
-| parameters | map[string][Parameter] |  Y  | Describes the configured parameters applied via the end-user.|
-
+| parameters | map[string][Parameter] |  Y  | Describes the configured parameters applied via the end-user. Defined as a map where each key is the parameter name matching a parameter defined in the ApplicationDescription (e.g., `mysqlDatabase:`, `greeting:`, `idpName:`, `myAppEndpoint:`); unrecognized keys are ignored.|
 
 #### DeploymentProfile Attributes
 
@@ -331,12 +328,10 @@ spec:
 | type | string |  Y  | The type of deployment profile (e.g., helm, compose).|
 | components | Component |  Y  | Components of the application|
 
-
 #### ComposeDeploymentProfile Attributes
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-
 
 #### Component Attributes
 
@@ -345,21 +340,17 @@ spec:
 | name | string |  Y  | The name of the component.|
 | properties | map[string][string] |  Y  | Properties associated with the component.|
 
-
 #### ComposeComponent Attributes
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 
-
 #### Parameter Attributes
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| name | string |  Y  | None|
 | value | string |  Y  | The value of the parameter.|
 | targets | Target |  Y  | The targets associated with the parameter.|
-
 
 #### Target Attributes
 
@@ -367,7 +358,6 @@ spec:
 | --- | --- | --- | --- |
 | pointer | string |  Y  | The pointer indicating the location of the target.|
 | components | string |  Y  | The components associated with the target.|
-
 
 ### Example: Cluster Enabled Application Deployment Specification
 
