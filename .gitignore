@@ -18,3 +18,5 @@ build
 **/.venv
 **/*egg*
 .vscode
+**/__pycache__
+**/.coverage

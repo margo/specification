@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"    # ← was "setuptools.backends.legacy:build"
+
+[project]
+name = "margo-linkml-to-openapi"
+version = "1.0.0"
+description = "Inject OpenAPI schemas generated from LinkML source files"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+    "linkml>=1.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov",
+]
+
+[project.scripts]
+linkml-to-openapi = "src.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

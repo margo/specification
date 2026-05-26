@@ -1,7 +1,6 @@
 - name: workload-management-api
   description: Generates aggregated OpenAPI specification for Margo models
   input:
-    # schema: spec/data-model/margo.linkml.yaml
     template: spec/resources/openapi_templates/workload-management-api.template.yaml
   output:
     yaml: spec/generated/openapi/workload-management-api-1.0.0.yaml

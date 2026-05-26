@@ -25,10 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  certificate:
-                    $ref: "#/components/schemas/CACertificate"
+                $ref: "#/components/schemas/CACertificate"
 
   /api/v1/onboarding:
     post:
