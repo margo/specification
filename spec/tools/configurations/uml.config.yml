@@ -73,3 +73,10 @@
     - explicitly_add_uml_relationship: "DeploymentAnnotations ..> ApplicationDescription"
   output:
     svg: spec/generated/diagrams/ApplicationDeployment.svg
+
+- name: DeviceOnboarding-ClassDiagram
+  schema: spec/data-model/device-onboarding.linkml.yaml
+  classes_to_render: []
+  pipeline: []
+  output:
+    svg: spec/generated/diagrams/DeviceOnboarding.svg

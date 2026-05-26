@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/onboarding
+name: OnboardingSchema
+title: Onboarding Schema
+description: >-
+  Schema for defining the device onboarding data model.
+  The purpose of device onboarding is to establish a trusted identity
+  for an edge compute device within the Margo ecosystem, enabling it
+  to participate in workload management.
+
+  Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md
+version: "1.0.0"
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+  - types.linkml
+
+default_prefix: margo
+
+# Class Definitions
+classes:
+  CACertificate:
+    description: >-
+      The Root CA certificate issued by the Workload Fleet Manager.
+      Devices use this certificate to establish trust with the WFM
+      before presenting their own client certificate.
+
+      Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#root-ca-certificate
+    attributes:
+      certificate:
+        description: >-
+          Base64-encoded Root CA certificate text.
+        range: string
+        required: true
+
+  OnboardingRequest:
+    description: >-
+      Manifest submitted by a device to establish its trusted identity
+      with the Workload Fleet Manager. Only capabilities that are exposed
+      and accessible for use in the Margo context MUST be represented
+      in the submitted certificate.
+
+      Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#request-body-attributes
+    attributes:
+      apiVersion:
+        description: Identifier of the version the API resource follows.
+        range: string
+        required: true
+      kind:
+        description: Must be `OnboardingRequest`.
+        range: string
+        required: true
+        equals_string: "OnboardingRequest"
+        designates_type: true
+      certificate:
+        description: >-
+          Base64-encoded client certificate representing the device identity.
+          MUST reflect only capabilities that are exposed and accessible
+          for use in the Margo context.
+
+          Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#certificate-attributes
+        range: string
+        required: true
+
+  OnboardingResponse:
+    description: >-
+      Identity record assigned to a device upon successful onboarding.
+      The clientId uniquely identifies the device within the Margo
+      ecosystem and is used in all subsequent interactions with the
+      Workload Fleet Manager.
+
+      Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#response-body-attributes
+    attributes:
+      clientId:
+        description: >-
+          Unique identifier assigned to the device by the Workload Fleet Manager
+          upon successful onboarding.
+        range: string
+        required: true
+
+# Enumeration Definitions
+enums:
+  OnboardingKind:
+    description: >-
+      Permitted values for the kind field in an onboarding manifest.
+
+      Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#enumerations
+    permissible_values:
+      OnboardingRequest:
+        description: >-
+          Identifies the manifest as a device onboarding request.

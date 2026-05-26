@@ -374,35 +374,35 @@ components:
     CACertificate:
       x-linkml-source-type: class
       x-linkml-source: CACertificate
-      x-linkml-schema: ../data-model/device-onboarding.linkml.yaml
+      x-linkml-schema: ../../data-model/margo.linkml.yaml
 
     DeviceOnboardingManifest:
       x-linkml-source-type: class
       x-linkml-source: OnboardingRequest
-      x-linkml-schema: ../data-model/device-onboarding.linkml.yaml
+      x-linkml-schema: ../../data-model/margo.linkml.yaml
 
     DeviceClientId:
       x-linkml-source-type: class
       x-linkml-source: OnboardingResponse
-      x-linkml-schema: ../data-model/device-onboarding.linkml.yaml
+      x-linkml-schema: ../../data-model/margo.linkml.yaml
 
     DeviceCapabilitiesManifest:
       x-linkml-source-type: class
       x-linkml-source: DeviceCapabilitiesManifest
-      x-linkml-schema: ../data-model/device-capabilities.linkml.yaml
+      x-linkml-schema: ../../data-model/margo.linkml.yaml
 
     DesiredStateManifest:
       x-linkml-source-type: class
       x-linkml-source: DesiredStateManifest
-      x-linkml-schema: ../data-model/desired-state.linkml.yaml
+      x-linkml-schema: ../../data-model/margo.linkml.yaml
 
     DeploymentStatusManifest:
       x-linkml-source-type: class
       x-linkml-source: DeploymentStatusManifest
-      x-linkml-schema: ../data-model/deployment-status.linkml.yaml
+      x-linkml-schema: ../../data-model/margo.linkml.yaml
 
     # Enums are also pulled from LinkML
     DeviceRole:
       x-linkml-source-type: enum
       x-linkml-source: DeviceRole
-      x-linkml-schema: ../data-model/device-capabilities.linkml.yaml
+      x-linkml-schema: ../../data-model/margo.linkml.yaml

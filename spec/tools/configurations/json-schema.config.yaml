@@ -32,3 +32,10 @@
     schema: spec/data-model/device-capabilities.linkml.yaml
   output:
     json_schema: spec/generated/json-schemas/device-capabilities.schema.json
+
+- name: device-onboarding
+  description: Generate JSON Schema for DeviceOnboarding
+  input:
+    schema: spec/data-model/device-onboarding.linkml.yaml
+  output:
+    json_schema: spec/generated/json-schemas/device-onboarding.schema.json

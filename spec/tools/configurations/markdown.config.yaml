@@ -38,6 +38,14 @@
   output:
     md: spec/generated/markdown_main-classes/device-capabilities.md
 
+- name: device-onboarding
+  description: Generates markdown for DeviceOnboarding
+  doc_template_dir: spec/resources/markdown-templates_main-classes
+  input:
+    schema: spec/data-model/device-onboarding.linkml.yaml
+  output:
+    md: spec/generated/markdown_main-classes/device-onboarding.md
+
 - name: data-model
   description: Generates markdown for entire Margo data model
   doc_template_dir: spec/resources/markdown-templates_main-classes
