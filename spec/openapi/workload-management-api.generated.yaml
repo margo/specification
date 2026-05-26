@@ -1,0 +1,866 @@
+openapi: 3.0.3
+info:
+  title: Margo Workload Management API
+  version: 1.0.0
+  description: API for managing workloads on Margo-compliant edge devices. Includes
+    the APIs for exchanging desired state and current state. Communication is secured
+    using server-side TLS (TLS 1.3 preferred), and payloads are signed using X.509
+    certificates.
+servers:
+- url: https://wfm.margo.org/
+  description: Workload Fleet Manager API
+security:
+- PayloadSignature: []
+paths:
+  /api/v1/onboarding/certificate:
+    get:
+      summary: Download Root CA certificate
+      security: []
+      responses:
+        '200':
+          description: Root CA certificate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CACertificate'
+  /api/v1/onboarding:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceOnboardingManifest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceClientId'
+          description: New client onboarded successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid certificate format or structure.
+        '403':
+          description: Client certificate not trusted or client rejected.
+      security:
+      - PayloadSignature: []
+      summary: Complete onboarding with client certificate
+  /api/v1/clients/{clientId}/capabilities:
+    post:
+      summary: Report device capabilities
+      security:
+      - PayloadSignature: []
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCapabilitiesManifest'
+      responses:
+        '201':
+          description: Capabilities reported successfully
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256
+            hash of the payload is included.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Signature verification failed. Ensure you are signing with
+            the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Request body includes a semantic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update device capabilities (Update)
+      security:
+      - PayloadSignature: []
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCapabilitiesManifest'
+      responses:
+        '201':
+          description: Capabilities reported successfully
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256
+            hash of the payload is included.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Signature verification failed. Ensure you are signing with
+            the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+        '422':
+          description: Request body includes a semantic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/clients/{clientId}/bundles/{digest}:
+    get:
+      summary: Retrieve bundle information for a specific device and digest
+      security:
+      - PayloadSignature: []
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique identifier of the device-client
+      - name: digest
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Content-addressable digest of the bundle archive. MUST conform
+          to the 'digest' attribute in the Digest Specification and MUST equal the
+          digest computed over the exact sequence of bytes (per Exact Bytes Rule)
+          in the HTTP 200 OK response body. If the server cannot produce content whose
+          digest matches this value it MUST return 404 Not Found.
+      - in: header
+        name: If-None-Match
+        required: false
+        schema:
+          type: string
+        description: Quoted ETag (same as digest) previously returned for this bundle.
+      responses:
+        '200':
+          description: Bundle archive (immutable)
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: New ETag for the returned manifest
+            Cache-Control:
+              schema:
+                type: string
+              description: public, max-age=31536000, immutable
+          content:
+            application/vnd.margo.bundle.v1+tar+gzip:
+              schema:
+                type: string
+                format: binary
+                description: Gzip-compressed tar containing one YAML file per deployment.
+        '304':
+          description: Representation not modified
+        '404':
+          description: Bundle not found for the given digest
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/clients/{clientId}/deployments:
+    get:
+      summary: Retrieve the complete desired state for all workloads assigned to a
+        device
+      security:
+      - PayloadSignature: []
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the Edge Compute Device making the request
+      - name: If-None-Match
+        in: header
+        required: false
+        schema:
+          type: string
+        description: 'ETag value of the last successfully synced manifest. The ETag
+          is returned to the client from the /deployments endpoint, it is the digest
+          of the state manifest.
+
+          '
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+        description: 'Indicates which manifest formats the client supports. Supported
+          values: application/vnd.margo.manifest.v1+json.
+
+          '
+      responses:
+        '200':
+          description: Manifest returned in the negotiated format
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: Format of the returned manifest
+            ETag:
+              schema:
+                type: string
+              description: New ETag for the returned manifest
+          content:
+            application/vnd.margo.manifest.v1+json:
+              schema:
+                $ref: '#/components/schemas/DesiredStateManifest'
+        '304':
+          description: Not Modified - Manifest has not changed
+        '406':
+          description: Not Acceptable - Server cannot generate a response matching
+            the Accept header
+  /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}:
+    get:
+      summary: Retrieve an individual ApplicationDeployment YAML file
+      security:
+      - PayloadSignature: []
+      description: 'This endpoint is used by the client to fetch the YAML for a single
+        ApplicationDeployment after it has processed a new State Manifest and identified
+        a small number of new or updated deployments. This allows for highly efficient,
+        incremental updates without needing to download the full bundle. To make individual
+        workload retrievals race-free and cache-friendly, this endpoint is content-addressable:
+        the digest of the expected YAML is part of the URL. This guarantees immutability
+        of the fetched resource and prevents a time-of-check / time-of-use race where
+        a deployment changes between manifest retrieval and content fetch.
+
+        '
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique identifier of the Edge Compute Device
+      - name: deploymentId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: UUID of the ApplicationDeployment (metadata.annotations.id)
+      - name: digest
+        in: path
+        required: true
+        schema:
+          type: string
+        description: 'Content-addressable digest of the ApplicationDeployment YAML
+          file. MUST conform to the Digest Specification and MUST equal the digest
+          computed over the exact sequence of bytes (per Exact Bytes Rule) in the
+          HTTP 200 OK response body. If the server cannot produce content whose digest
+          matches this value it MUST return 404 Not Found.
+
+          '
+      - name: If-None-Match
+        in: header
+        required: false
+        schema:
+          type: string
+        description: 'Optional ETag for caching. The ETag is returned to the client
+          from the /deployments endpoint, it is the digest of the state manifest.
+
+          '
+      - name: Accept-Encoding
+        in: header
+        required: false
+        schema:
+          type: string
+        description: Indicates supported compression formats (e.g., gzip, br)
+      responses:
+        '200':
+          description: 'The response body is the raw ApplicationDeployment YAML file
+            (Content-Type: application/yaml). The content MUST match the {digest}
+            path segment; the server MUST return 404 if it does not have the exact
+            digest referenced.
+
+            '
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: application/yaml
+            ETag:
+              schema:
+                type: string
+              description: 'The ETag is returned to the client from the /deployments
+                endpoint, it is the digest of the state manifest.
+
+                '
+            Cache-Control:
+              schema:
+                type: string
+              description: public, max-age=31536000, immutable
+            Vary:
+              schema:
+                type: string
+              description: Accept-Encoding
+          content:
+            application/yaml:
+              schema:
+                type: string
+                description: Raw YAML content of the ApplicationDeployment
+        '404':
+          description: Deployment not found for the given digest
+  /api/v1/clients/{clientId}/deployments/{deploymentId}/status:
+    post:
+      summary: Report deployment status
+      security:
+      - PayloadSignature: []
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: deploymentId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentStatusManifest'
+      responses:
+        '200':
+          description: The deployment status was added, or updated, successfully.
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256
+            hash of the base64-encoded payload is included.
+        '401':
+          description: Signature verification failed. Ensure you are signing with
+            the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+        '422':
+          description: Request body includes a semantic error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    PayloadSignature:
+      type: apiKey
+      in: header
+      name: X-Payload-Signature
+      description: 'Base64-encoded payload signature using SHA-256 and device certificate.
+        Format: public_key;digital_signature
+
+        '
+  schemas:
+    ErrorResponse:
+      type: object
+      description: Generic error response body returned on 4xx responses. Provides
+        a human-readable message describing the failure reason.
+      properties:
+        error:
+          type: string
+          description: Human-readable error message.
+          example: Invalid certificate
+      required:
+      - error
+    CACertificate:
+      additionalProperties: false
+      description: The Root CA certificate issued by the Workload Fleet Manager. Devices
+        use this certificate to establish trust with the WFM before presenting their
+        own client certificate. Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#root-ca-certificate
+      properties:
+        certificate:
+          description: Base64-encoded Root CA certificate text.
+          type: string
+      required:
+      - certificate
+      title: CACertificate
+      type: object
+    DeviceOnboardingManifest:
+      additionalProperties: false
+      description: Manifest submitted by a device to establish its trusted identity
+        with the Workload Fleet Manager. Only capabilities that are exposed and accessible
+        for use in the Margo context MUST be represented in the submitted certificate.
+        Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#request-body-attributes
+      properties:
+        apiVersion:
+          description: Identifier of the version the API resource follows.
+          type: string
+        certificate:
+          description: Base64-encoded client certificate representing the device identity.
+            MUST reflect only capabilities that are exposed and accessible for use
+            in the Margo context. Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#certificate-attributes
+          type: string
+        kind:
+          description: Must be `OnboardingRequest`.
+          enum:
+          - OnboardingRequest
+          type: string
+      required:
+      - apiVersion
+      - kind
+      - certificate
+      title: OnboardingRequest
+      type: object
+    DeviceClientId:
+      additionalProperties: false
+      description: Identity record assigned to a device upon successful onboarding.
+        The clientId uniquely identifies the device within the Margo ecosystem and
+        is used in all subsequent interactions with the Workload Fleet Manager. Pre-data-model
+        reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#response-body-attributes
+      properties:
+        clientId:
+          description: Unique identifier assigned to the device by the Workload Fleet
+            Manager upon successful onboarding.
+          type: string
+      required:
+      - clientId
+      title: OnboardingResponse
+      type: object
+    DeviceCapabilitiesManifest:
+      additionalProperties: false
+      description: Capabilities of a device on which applications can be deployed.
+        Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#request-body-attributes
+      properties:
+        apiVersion:
+          description: Identifier of the version the API resource follows.
+          type: string
+        kind:
+          description: Must be `DeviceCapabilitiesManifest`.
+          enum:
+          - DeviceCapabilitiesManifest
+          type: string
+        properties:
+          allOf:
+          - $ref: '#/components/schemas/Properties'
+          description: Element that defines characteristics about the device. See
+            the [Properties Attributes](#properties-attributes) section below. Pre-data-model
+            reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#properties-attributes
+      required:
+      - apiVersion
+      - kind
+      - properties
+      title: DeviceCapabilitiesManifest
+      type: object
+    DesiredStateManifest:
+      additionalProperties: false
+      description: Manifest from the Workload Fleet Manager, representing the complete
+        desired workload configuration assigned to the device. Pre-data-model reference
+        https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---state-manifest
+      properties:
+        bundle:
+          allOf:
+          - $ref: '#/components/schemas/Bundle'
+          description: Package optimization containing multiple ApplicationDeployment
+            YAMLs. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
+        deployments:
+          description: List of deployment objects describing each workload.
+          items:
+            $ref: '#/components/schemas/Deployment'
+          type: array
+        manifestVersion:
+          description: Monotonically increasing unsigned 64-bit integer in the inclusive
+            range [1, 2^64-1]. Prevents rollback attacks. Pre-data-model reference
+            https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
+          minimum: 1
+          type: integer
+      required:
+      - manifestVersion
+      - bundle
+      - deployments
+      title: DesiredStateManifest
+      type: object
+    DeploymentStatusManifest:
+      additionalProperties: false
+      description: Manifest sent by the device client to report the deployment status
+        of a workload. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#request-body-attributes
+      properties:
+        apiVersion:
+          type: string
+        components:
+          description: Per-component status list. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#component-attributes
+          items:
+            $ref: '#/components/schemas/ComponentStatus'
+          type: array
+        deploymentId:
+          description: The unique identifier of the deployment whose status is being
+            reported.
+          type: string
+        kind:
+          enum:
+          - DeploymentStatusManifest
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+      required:
+      - apiVersion
+      - kind
+      - deploymentId
+      - status
+      - components
+      title: DeploymentStatusManifest
+      type: object
+    DeviceRole:
+      description: Role a device can provide to the Margo environment. Pre-data-model
+        reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#enumerations
+      enum:
+      - Standalone Cluster
+      - Standalone Device
+      - Cluster Leader
+      title: DeviceRole
+      type: string
+    Properties:
+      additionalProperties: false
+      description: Device properties reported to the WFM. Pre-data-model reference
+        https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#properties-attributes
+      properties:
+        id:
+          description: Unique deviceID assigned to the device via the Device Owner.
+          type: string
+        modelNumber:
+          description: Defines the model number of the device.
+          type: string
+        resources:
+          allOf:
+          - $ref: '#/components/schemas/Resources'
+          description: Element that defines the device's resources available to the
+            application deployed on the device. See the [Resources Attributes](#resources-attributes)
+            section below. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#resources-attributes
+        roles:
+          description: 'Element that defines the device role it can provide to the
+            Margo environment. MUST be one of the following: Standalone Cluster, Cluster
+            Leader, or Standalone Device. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#enumerations'
+          items:
+            $ref: '#/components/schemas/DeviceRole'
+          type: array
+        serialNumber:
+          description: Defines the serial number of the device.
+          type: string
+        vendor:
+          description: Defines the device vendor.
+          type: string
+      required:
+      - id
+      - vendor
+      - modelNumber
+      - serialNumber
+      - roles
+      - resources
+      title: Properties
+      type: object
+    Resources:
+      additionalProperties: false
+      description: Required resources element specifying the resources required to
+        install the application. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#resources-attributes
+      properties:
+        cpu:
+          description: CPU element specifying the CPU requirements for the application.
+            See the [CPU](#cpu-attributes) section below. Pre-data-model reference
+            https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#cpu-attributes
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/CPU'
+        interfaces:
+          description: Interfaces element specifying the communication interfaces
+            required to run the application. See the [Communication Interfaces](#communicationinterface-attributes)
+            section below. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#communicationinterface-attributes
+          items:
+            $ref: '#/components/schemas/CommunicationInterface'
+          type: array
+          nullable: true
+        memory:
+          description: The minimum amount of memory required. The value is given in
+            binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This
+            is defined by the application developer. After deployment of the application,
+            the device MUST provide this amount of memory for the application.
+          pattern: ^[0-9]+(Mi|Gi|Ki)$
+          type: string
+          nullable: true
+        peripherals:
+          description: Peripherals element specifying the peripherals required to
+            run the application. See the [Peripheral](#peripheral-attributes) section
+            below.
+          items:
+            $ref: '#/components/schemas/Peripheral'
+          type: array
+          nullable: true
+        storage:
+          description: The amount of storage required for the application to run.  This
+            encompasses the installed application and the data it needs to store.
+            The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes,  `Gi`
+            = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This
+            is defined by the application developer. After deployment of the application,
+            the device MUST provide this amount  of storage for the application
+          pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
+          type: string
+          nullable: true
+      title: Resources
+      type: object
+    CPU:
+      additionalProperties: false
+      description: CPU element specifying the CPU requirements for the application.
+        Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#cpu-attributes
+      properties:
+        architectures:
+          description: The CPU architectures supported by the application. This can
+            be e.g. amd64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype)
+            definition for all permissible values. Multiple arcitecture types can
+            be specified, as the deployment profile may support multiple CPU architectures.
+          items:
+            $ref: '#/components/schemas/CpuArchitectureType'
+          type: array
+          nullable: true
+        cores:
+          description: The required amount of CPU cores the application must use to
+            run in its full functionality. Specified as decimal units of CPU cores
+            (e.g., `0.5` is half a core). This is defined by the application developer.
+            After deployment of the application, the device MUST provide this number
+            of CPU cores for the application.
+          type: number
+      required:
+      - cores
+      title: CPU
+      type: object
+    CpuArchitectureType:
+      description: Permissible CPU architecture values. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#cpuarchitecturetype
+      enum:
+      - amd64
+      - arm64
+      - arm
+      - riscv64
+      - other
+      title: CpuArchitectureType
+      type: string
+    CommunicationInterface:
+      additionalProperties: false
+      description: Communication interface of a device. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#communicationinterface-attributes
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/CommunicationInterfaceType'
+          description: The type of a communication interface. This can be e.g. Ethernet,
+            WiFi, Cellular, Bluetooth, USB, CANBus, RS232. See the [CommunicationInterfaceType](#communicationinterfacetype)
+            definition for all permissible values.
+      required:
+      - type
+      title: CommunicationInterface
+      type: object
+    CommunicationInterfaceType:
+      description: Permissible communication interface types. Pre-data-model reference
+        https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#communicationinterfacetype
+      enum:
+      - ethernet
+      - wifi
+      - cellular
+      - bluetooth
+      - usb
+      - canbus
+      - rs232
+      - other
+      title: CommunicationInterfaceType
+      type: string
+    Peripheral:
+      additionalProperties: false
+      description: Peripheral hardware of a device. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#peripheral-attributes
+      properties:
+        manufacturer:
+          description: The name of the manufacturer. If `manufacturer` is specified
+            as a  requirement here, it may be difficult to find devices that can host  the  application.
+            Please use these requirements with caution.
+          type: string
+          nullable: true
+        model:
+          description: The model of the peripheral. If `model` is specified as a requirement
+            here, it may be difficult to find devices that can host the application.
+            Please use these requirements with caution.
+          type: string
+          nullable: true
+        type:
+          allOf:
+          - $ref: '#/components/schemas/PeripheralType'
+          description: The type of peripheral. This can be e.g. GPU, display, camera,
+            microphone, speaker. See the [PeriperalType](#peripheraltype) definition
+            for all permissible values.
+      required:
+      - type
+      title: Peripheral
+      type: object
+    PeripheralType:
+      description: 'Permissible peripheral types.
+
+        Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#peripheraltype'
+      enum:
+      - gpu
+      - display
+      - camera
+      - microphone
+      - speaker
+      - other
+      title: PeripheralType
+      type: string
+    Bundle:
+      additionalProperties: false
+      description: Describes an archive containing all referenced ApplicationDeployment
+        YAMLs. If there are zero deployments (i.e., the deployments array is empty),
+        this field MUST be present with the value null. An empty archive MUST NOT
+        be served. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---deployment-bundle
+      properties:
+        digest:
+          description: Digest of the bundle archive. MUST equal the digest computed
+            over the exact sequence of bytes in the bundle endpoint's HTTP 200 OK
+            response body. See Protocol - Digest for further details. Pre-data-model
+            reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
+          pattern: ^[a-zA-Z0-9_-]+:[0-9a-fA-F]+$
+          type: string
+        mediaType:
+          description: MUST be application/vnd.margo.bundle.v1+tar+gzip, which denotes
+            a gzip-compressed tar archive (commonly delivered as a .tar.gz) whose
+            root contains one or more ApplicationDeployment YAML files. Servers MUST
+            set the HTTP Content-Type to this media type. The archive MUST contain
+            exactly the set of YAML files referenced by deployments.
+          type: string
+        sizeBytes:
+          description: Optional unsigned 64-bit advisory estimate of the decoded payload
+            length in bytes for the bundle archive. Provided for bandwidth estimation
+            and update planning. MUST NOT be used for integrity verification.
+          minimum: 0
+          type: integer
+          nullable: true
+        url:
+          description: Content-addressable retrieval endpoint for the bundle of the
+            form /api/v1/clients/{clientId}/bundles/{digest} where {digest} equals
+            bundle.digest. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---deployment-bundle
+          format: uri
+          pattern: ^/[a-zA-Z0-9-._~:/?#\[\]@!$&'()*+,;=]+$
+          type: string
+      required:
+      - mediaType
+      - digest
+      - url
+      title: Bundle
+      type: object
+    Deployment:
+      additionalProperties: false
+      description: List of deployment objects describing each workload. Pre-data-model
+        reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
+      properties:
+        deploymentId:
+          description: The UUID of the deployment. MUST equal metadata.annotations.id
+            in the ApplicationDeployment.
+          type: string
+        digest:
+          description: Digest of the corresponding ApplicationDeployment YAML file.
+            MUST equal the digest computed over the exact sequence of bytes in the
+            individual deployment endpoint's HTTP 200 OK response body. See Protocol
+            - Digest for further details. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
+          pattern: ^[a-zA-Z0-9_-]+:[0-9a-fA-F]+$
+          type: string
+        sizeBytes:
+          description: Optional unsigned 64-bit advisory estimate of the decoded payload
+            length in bytes for the ApplicationDeployment YAML. Provided for bandwidth
+            estimation and update planning. MUST NOT be used for integrity verification.
+          minimum: 0
+          type: integer
+          nullable: true
+        url:
+          description: Content-addressable retrieval endpoint for the ApplicationDeployment
+            YAML of the form /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}
+            where {digest} equals deployments[].digest. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---individual-deployment-yaml
+          format: uri
+          pattern: ^/[a-zA-Z0-9-._~:/?#\[\]@!$&'()*+,;=]+$
+          type: string
+      required:
+      - deploymentId
+      - digest
+      - url
+      title: Deployment
+      type: object
+    ComponentStatus:
+      additionalProperties: false
+      description: Status of a component deployment. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#component-attributes
+      properties:
+        error:
+          description: Optional error details when the state is `failed`. Pre-data-model
+            reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/Error'
+        name:
+          type: string
+        state:
+          allOf:
+          - $ref: '#/components/schemas/State'
+          description: Current deployment state. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
+      required:
+      - name
+      - state
+      title: ComponentStatus
+      type: object
+    Error:
+      additionalProperties: false
+      description: Error details associated with a failed deployment state. Pre-data-model
+        reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+      title: Error
+      type: object
+    State:
+      description: Permissible deployment states. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
+      enum:
+      - pending
+      - installing
+      - installed
+      - failed
+      - removing
+      - removed
+      title: State
+      type: string
+    Status:
+      additionalProperties: false
+      description: Overall deployment state and optional error details. Pre-data-model
+        reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
+      properties:
+        error:
+          description: Optional error details when the state is `failed`. Pre-data-model
+            reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
+          nullable: true
+          allOf:
+          - $ref: '#/components/schemas/Error'
+        state:
+          allOf:
+          - $ref: '#/components/schemas/State'
+          description: Current deployment state. Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
+      required:
+      - state
+      title: Status
+      type: object

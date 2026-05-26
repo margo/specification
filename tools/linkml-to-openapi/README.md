@@ -47,16 +47,16 @@ linkml-to-openapi <template.yaml> <output.yaml>
 ```bash
 # Example
 linkml-to-openapi \
-  ../../resources/openapi_templates/workload-management-api.template.yaml \
-  ../../openapi/workload-management-api.generated.yaml
+  ../spec/resources/openapi-templates/workload-management-api.template.yaml \
+  ../spec/openapi/workload-management-api.generated.yaml
 ```
 
 ### With debug logging
 
 ```bash
 linkml-to-openapi -v \
-  ../../resources/openapi_templates/workload-management-api.template.yaml \
-  ../../openapi/workload-management-api.generated.yaml
+  ../../spec/resources/openapi-templates/workload-management-api.template.yaml \
+  ../../spec/openapi/workload-management-api.generated.yaml
 ```
 
 ### List available definitions in a LinkML file

@@ -5,7 +5,7 @@ trap 'rm -f "$TMP"' EXIT
 set -eu
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/uml.config.yml"
+CONFIG_FILE="${ROOT_DIR}/tools/configurations/uml.config.yml"
 KROKI="https://kroki.io/plantuml/"
 
 # Ensure all binary dependencies are present

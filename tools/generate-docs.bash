@@ -9,7 +9,7 @@
 set -eu
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/markdown.config.yaml"
+CONFIG_FILE="${ROOT_DIR}/tools/configurations/markdown.config.yaml"
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT

@@ -3,7 +3,6 @@ id: https://specification.margo.org/types
 name: BasicTypesSchema
 description: >-
   Shared schemas.
-
   Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#deploymentprofile-attributes
   Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#resources-attributes
 version: "1.0.0"
@@ -20,7 +19,6 @@ classes:
   DeploymentProfile:
     description: >-
       Represents a deployment configuration for the application.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#deploymentprofile-attributes
     slots:
       - type
@@ -45,7 +43,6 @@ classes:
   Component:
     description: >-
       A class representing a component of a deployment profile.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#component-attributes
     attributes:
       name:
@@ -59,7 +56,6 @@ classes:
         description: >-
           A dictionary element specifying the component packages's deployment details.
           See the [Component Properties](#componentproperties-attributes) section below.
-
           Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#component-attributes
         range: ComponentProperties
         required: true
@@ -124,7 +120,6 @@ classes:
   Target:
     description: >-
       Specifies where the parameter applies in the deployment.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#target-attributes
     attributes:
       pointer:
@@ -145,7 +140,6 @@ classes:
   Resources:
     description: >-
       Required resources element specifying the resources required to install the application.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#resources-attributes
     slots:
       - cpu
@@ -157,7 +151,6 @@ classes:
   CPU:
     description: >-
       CPU element specifying the CPU requirements for the application.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#cpu-attributes
     attributes:
       cores:
@@ -183,7 +176,6 @@ classes:
   Peripheral:
     description: >-
       Peripheral hardware of a device.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#peripheral-attributes
     attributes:
       type:
@@ -208,7 +200,6 @@ classes:
   CommunicationInterface:
     description: >-
       Communication interface of a device.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#communicationinterface-attributes
     attributes:
       type:
@@ -230,7 +221,6 @@ slots:
       When installing the application on a device supporting Compose, all `compose` components,
       and only `compose` components, will be provided to the device in the same order they are listed in the application description file.
       The device will install the components in the same order they are listed in the application description file.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#deploymentprofile-attributes
     range: string
     required: true
@@ -240,7 +230,6 @@ slots:
     description: >-
       Component element indicating the components to deploy when installing the application. 
       See the [Component](#component-attributes) section below.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#component-attributes
     range: Component
     multivalued: true
@@ -252,7 +241,6 @@ slots:
     description: >-
       CPU element specifying the CPU requirements for the application.
       See the [CPU](#cpu-attributes) section below.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#cpu-attributes
     range: CPU
 
@@ -290,7 +278,6 @@ slots:
     description: >-
       Interfaces element specifying the communication interfaces required to run the application.
       See the [Communication Interfaces](#communicationinterface-attributes) section below.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#communicationinterface-attributes
     range: CommunicationInterface
     multivalued: true
@@ -302,7 +289,6 @@ enums:
   CpuArchitectureType:
     description: >-
       Permissible CPU architecture values.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#cpuarchitecturetype
     permissible_values:
       amd64:
@@ -320,7 +306,6 @@ enums:
   CommunicationInterfaceType:
     description: >-
       Permissible communication interface types.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/device-capabilities.md#communicationinterfacetype
     permissible_values:
       ethernet:

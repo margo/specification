@@ -3,7 +3,7 @@
 set -eu
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/examples.config.yaml"
+CONFIG_FILE="${ROOT_DIR}/tools/configurations/examples.config.yaml"
 
 VERBOSITY="${1:-info}"
 

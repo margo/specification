@@ -45,7 +45,6 @@ classes:
       components:
         description: >-
           Per-component status list.
-
           Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#component-attributes
         range: ComponentStatus
         required: true
@@ -54,7 +53,6 @@ classes:
   Status:
     description: >-
       Overall deployment state and optional error details.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
     slots:
       - state
@@ -63,7 +61,6 @@ classes:
   Error:
     description: >-
       Error details associated with a failed deployment state.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
     attributes:
       code:
@@ -85,7 +82,6 @@ slots:
   state:
     description: >-
       Current deployment state.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
     range: State
     required: true
@@ -93,7 +89,6 @@ slots:
   error:
     description: >-
       Optional error details when the state is `failed`.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
     range: Error
 
@@ -101,7 +96,6 @@ enums:
   State:
     description: >-
       Permissible deployment states.
-
       Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
     permissible_values:
       pending:

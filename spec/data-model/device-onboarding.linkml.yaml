@@ -7,7 +7,6 @@ description: >-
   The purpose of device onboarding is to establish a trusted identity
   for an edge compute device within the Margo ecosystem, enabling it
   to participate in workload management.
-
   Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md
 version: "1.0.0"
 prefixes:
@@ -26,7 +25,6 @@ classes:
       The Root CA certificate issued by the Workload Fleet Manager.
       Devices use this certificate to establish trust with the WFM
       before presenting their own client certificate.
-
       Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#root-ca-certificate
     attributes:
       certificate:
@@ -41,7 +39,6 @@ classes:
       with the Workload Fleet Manager. Only capabilities that are exposed
       and accessible for use in the Margo context MUST be represented
       in the submitted certificate.
-
       Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#request-body-attributes
     attributes:
       apiVersion:
@@ -59,7 +56,6 @@ classes:
           Base64-encoded client certificate representing the device identity.
           MUST reflect only capabilities that are exposed and accessible
           for use in the Margo context.
-
           Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#certificate-attributes
         range: string
         required: true
@@ -70,7 +66,6 @@ classes:
       The clientId uniquely identifies the device within the Margo
       ecosystem and is used in all subsequent interactions with the
       Workload Fleet Manager.
-
       Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#response-body-attributes
     attributes:
       clientId:
@@ -85,7 +80,6 @@ enums:
   OnboardingKind:
     description: >-
       Permitted values for the kind field in an onboarding manifest.
-
       Pre-data-model reference https://github.com/margo/specification/blob/main/system-design/specification/margo-management-interface/device-onboarding.md#enumerations
     permissible_values:
       OnboardingRequest:

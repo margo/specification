@@ -37,10 +37,10 @@ cp -RH "${ROOT_DIR}/static/figures"/* "${BUILD_DOCS}/figures/" 2>/dev/null || tr
 cp "${ROOT_DIR}/static/system-design/index.md" "${BUILD_DOCS}/" 2>/dev/null || true
 
 # Generate artifacts from source
-"${ROOT_DIR}/spec/tools/generate-class-diagram.bash"
-"${ROOT_DIR}/spec/tools/generate-json-schema.bash"
-"${ROOT_DIR}/spec/tools/generate-docs.bash"
-"${ROOT_DIR}/spec/tools/generate-openapi.bash"
+"${ROOT_DIR}/tools/generate-class-diagram.bash"
+"${ROOT_DIR}/tools/generate-json-schema.bash"
+"${ROOT_DIR}/tools/generate-docs.bash"
+"${ROOT_DIR}/tools/generate-openapi.bash"
 
 # Copy generated data-model docs to root data-model/ directory (as expected by mkdocs.yml)
 cp "${ROOT_DIR}/spec/generated/markdown_main-classes/all-data-models/"* \

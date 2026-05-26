@@ -3,7 +3,7 @@
 set -eu
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/json-schema.config.yaml"
+CONFIG_FILE="${ROOT_DIR}/tools/configurations/json-schema.config.yaml"
 
 for cmd in yq linkml; do
   command -v "$cmd" >/dev/null || {

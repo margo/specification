@@ -1,57 +1,110 @@
 <!--
 IMPORTANT NOTE: This MarkDown document has been generated from the
 Margo data model and should not be manually changed!
-The LinkML schema for this schema is available in https://github.com/margo/specification/tree/pre-draft/data-model/
-The MarkDown document template is available in https://github.com/margo/specification/tree/pre-draft/data-model/resources/markdown-templates_main-classes/index.md.jinja2
+The LinkML schema is available at: https://github.com/margo/specification/tree/pre-draft/data-model/
+The template is available at: https://github.com/margo/specification/tree/pre-draft/data-model/resources/markdown-templates_main-classes/index.md.jinja2
 -->
+
 {%- macro format_range(slot) -%}
     {%- if slot.multivalued -%}
         {%- if slot.inlined -%}
             {%- if slot.inlined_as_list -%}
-                []{{ slot.range }}
+                `[]{{ slot.range }}`
             {%- else -%}
-                {%- if slot.name == "properties" -%}
-                    map[string][string]
-                {%- else -%}
-                    map[string][{{ slot.range }}]
-                {%- endif -%}
+                `map[string][{{ slot.range }}]`
             {%- endif -%}
         {%- else -%}
-            []string
+            `[]{{ slot.range }}`
         {%- endif -%}
     {%- else -%}
-        {{ slot.range }}
+        {%- if slot.range -%}
+            `{{ slot.range }}`
+        {%- else -%}
+            `string`
+        {%- endif -%}
     {%- endif -%}
+{%- endmacro -%}
+
+{%- macro required_badge(slot) -%}
+    {%- if slot.required == True -%}✅ Yes{%- else -%}No{%- endif -%}
 {%- endmacro -%}
 
 {%- set schema_basename = schema.source_file.split('/')[-1].replace('.linkml.yaml', '') -%}
 
-# {%- if schema.title %}{{ schema.title }}{% else %}{{ schema.name }}{% endif %}
-
-{% if schema.description %}{{ schema.description }}{% endif %}
-
-## Object structure
-
-{% for cls in schemaview.all_classes() -%}
-{%- if not cls.startswith("ComponentProperties") and not cls.startswith("Helm") and not cls.startswith("Compose") +%}
-### {{ cls }} Attributes
-
-| Attribute | Type | Required? | Description |
-| --- | --- | --- | --- |
-{% for slot in schemaview.class_slots(cls)|sort(attribute='rank') -%}
-| {{ slot }} | {{ format_range(schemaview.get_slot(slot)) }} | {% if schemaview.get_slot(slot).required == True %} Y {% else %} N {% endif %} | {{ schemaview.get_slot(slot).description }}|
-{% endfor %}
-
-Detailed class view: [{{ cls }}](/data-model/{{ cls }}.md)
-{% endif -%} 
+{%- set main_classes = [] -%}
+{%- for cls in schemaview.all_classes() -%}
+    {%- if not cls.startswith("ComponentProperties")
+        and not cls.startswith("Helm")
+        and not cls.startswith("Compose") -%}
+        {%- set _ = main_classes.append(cls) -%}
+    {%- endif -%}
 {%- endfor -%}
 
-{% if gen.example_object_blobs(schema.name) -%}
+# {% if schema.title %}{{ schema.title }}{% else %}{{ schema.name }}{% endif %}
+
+{% if schema.description %}
+{{ schema.description }}
+{% endif %}
+
+---
+
+## Table of Contents
+
+{% for cls in main_classes %}
+- [{{ cls }}](#{{ cls | lower | replace(' ', '-') }}-attributes)
+{% endfor %}
+
+---
+
+## Classes
+
+{% for cls in main_classes %}
+### {{ cls }}
+
+{% set cls_def = schemaview.get_class(cls) %}
+{% if cls_def.description %}
+{{ cls_def.description }}
+{% endif %}
+
+{% set slots = schemaview.class_slots(cls) | sort(attribute='rank') %}
+{% if slots %}
+| Attribute | Type | Required | Description |
+| --- | --- | --- | --- |
+{% for slot_name in slots -%}
+{%- set slot = schemaview.get_slot(slot_name) -%}
+| `{{ slot_name }}` | {{ format_range(slot) }} | {{ required_badge(slot) }} | {{ slot.description if slot.description else '—' }} |
+{% endfor %}
+{% else %}
+_No attributes defined._
+{% endif %}
+
+🔗 [Detailed view]({{ cls }}.md)
+
+---
+{% endfor %}
+
+## Enumerations
+
+{% for enum_name, enum_def in schemaview.all_enums().items() %}
+### {{ enum_name }}
+
+{% if enum_def.description %}{{ enum_def.description }}{% endif %}
+
+| Value | Description |
+| --- | --- |
+{% for pv_name, pv in enum_def.permissible_values.items() %}
+| `{{ pv_name }}` | {{ pv.description if pv.description else '—' }} |
+{% endfor %}
+
+---
+{% endfor %}
+
+{% if gen.example_object_blobs(schema.name) %}
 ## Examples
 
-Following examples have been automatically validated against the schema of this class.
+The following examples have been automatically validated against the schema.
 
-{% for name, blob in gen.example_object_blobs(schema.name) -%}
+{% for name, blob in gen.example_object_blobs(schema.name) %}
 ??? example "{{ name }}"
 
     ```yaml
@@ -59,7 +112,3 @@ Following examples have been automatically validated against the schema of this 
     ```
 {% endfor %}
 {% endif %}
-
-## JSON Schema
-
-<p>`<a href="/json-schemas/{{ schema_basename }}.schema.json" target="_blank" rel="noopener noreferrer">View JSON Schema in new tab</a>` or <a href="/json-schemas/{{ schema_basename }}.schema.json" download>download</a></p>

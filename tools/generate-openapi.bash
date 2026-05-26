@@ -3,7 +3,7 @@
 set -eu
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
-CONFIG_FILE="${ROOT_DIR}/spec/tools/configurations/openapi.config.yaml"
+CONFIG_FILE="${ROOT_DIR}/tools/configurations/openapi.config.yaml"
 
 # ── Dependency checks ────────────────────────────────────────────────────────
 for cmd in yq python3; do
