@@ -169,13 +169,15 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 ## Gateways considerations
 
+> Note: See [Gateways](../../concepts/gateways/gateways.md) page in the concepts section for more information about gateways.
+
 ### Opaque gateways
 
 Opaque gateways MUST report the combined capabilities of all the devices they connect to the WFM.
 
 > Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. In addition since the gateway can deploy compose applications on its child-devices it will report the role of "standalone device".
 
-## See-thru gateways
+### See-thru gateways
 
 See-thru gateways MUST report their capabilities and the capabilities of each device they connect to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device behind the gateway. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
 
