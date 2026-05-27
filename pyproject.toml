@@ -17,6 +17,7 @@ dependencies = [
   'mkdocs-material>=9.5.44',
   'linkml>=1.8.5',
   "openapi-spec-validator (>=0.8.4,<0.9.0)",
+  "pymdown-extensions>=10.0",
 ]
 
 [tool.poetry]

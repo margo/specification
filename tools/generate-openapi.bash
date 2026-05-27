@@ -13,6 +13,10 @@ for cmd in yq python3; do
   }
 done
 
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e "${ROOT_DIR}/tools/linkml-to-openapi"
+
 # ── Runner: prefer poetry if available ───────────────────────────────────────
 if command -v poetry >/dev/null 2>&1; then
   RUN="poetry run"

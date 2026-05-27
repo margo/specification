@@ -20,4 +20,3 @@ GET /api/v1/onboarding/certificate
 ## Response Body
 
 <!-- linkml:inject class="CACertificate" -->
-<!-- .... class="CACertificate" render="markdown-table" render-children="true" render-examples="true" -->

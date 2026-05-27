@@ -5,15 +5,15 @@ nav:
   - What is Margo?: index.md
   - Specification:
       - Margo Management Interface:
-          - system-design/specification/margo-management-interface/api-requirements-and-security.md
-          - system-design/specification/margo-management-interface/certificate-api.md
-          - system-design/specification/margo-management-interface/device-client-onboarding.md
-          - system-design/specification/margo-management-interface/device-capabilities.md
-          - system-design/specification/margo-management-interface/desired-state.md
-          - system-design/specification/margo-management-interface/deployment-status.md
-          - system-design/specification/margo-management-interface/management-interface-swagger.md
+          - specification/margo-management-interface/api-requirements-and-security.md
+          - specification/margo-management-interface/certificate-api.md
+          - specification/margo-management-interface/device-client-onboarding.md
+          - specification/margo-management-interface/device-capabilities.md
+          - specification/margo-management-interface/desired-state.md
+          - specification/margo-management-interface/deployment-status.md
+          - specification/margo-management-interface/management-interface-swagger.md
       - Applications:
-          - system-design/specification/applications/application-description.md
+          - specification/applications/application-description.md
           - specification/applications/application-registry.md
       - Margo Devices:
           - specification/margo-devices/device-requirements.md

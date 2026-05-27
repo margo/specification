@@ -73,13 +73,14 @@ echo ""
 SUCCESS=0
 FAILURE=0
 
-for input_file in "${INPUT_DIR}"/*.md; do
-  [[ -f "${input_file}" ]] || continue
+while IFS= read -r input_file; do
+  # Preserve subdirectory structure relative to INPUT_DIR
+  relative="${input_file#${INPUT_DIR}/}"
+  output_file="${OUTPUT_DIR}/${relative}"
 
-  filename="$(basename "${input_file}")"
-  output_file="${OUTPUT_DIR}/${filename}"
+  mkdir -p "$(dirname "${output_file}")"
 
-  echo "  Processing: ${filename}"
+  [[ -n "${VERBOSE}" ]] && echo "  Processing: ${relative}"
 
   if python3 "${INJECT_SCRIPT}" \
       --input         "${input_file}" \
@@ -89,9 +90,10 @@ for input_file in "${INPUT_DIR}"/*.md; do
     SUCCESS=$((SUCCESS + 1))
   else
     FAILURE=$((FAILURE + 1))
-    echo "  ✗ Failed: ${filename}"
+    echo "  ✗ Failed: ${relative}"
+    exit 1
   fi
-done
+done < <(find "${INPUT_DIR}" -name "*.md" | sort)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Summary

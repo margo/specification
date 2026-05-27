@@ -31,4 +31,4 @@ PUT /api/v1/clients/{clientId}/capabilities
 
 ## Request Body Attributes
 
-<!-- linkml:inject class="DeviceCapabilities" -->
+<!-- linkml:inject class="DeviceCapabilitiesManifest" -->

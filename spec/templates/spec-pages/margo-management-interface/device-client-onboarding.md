@@ -65,8 +65,7 @@ POST /api/v1/onboarding
 ```
 ## Request Body Attributes
 
-<!-- linkml class="DeviceOnboarding" render="markdown-table" render-children="true" render-examples="true" -->
-
+<!-- linkml:inject class="OnboardingRequest" -->
 
 ### Response Codes
 
@@ -78,5 +77,5 @@ POST /api/v1/onboarding
 
 ## Response Body Attributes
 
-<!-- linkml:inject class="DeviceClientId" -->
+<!-- linkml:inject class="OnboardingResponse" -->
 

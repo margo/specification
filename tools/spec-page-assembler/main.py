@@ -54,14 +54,32 @@ def process_file(
         attrs = parse_attrs(raw)
 
         # ── class injection ──────────────────────────────────────────────
+        # if "class" in attrs:
+        #     class_file = generated_dir / f"{attrs['class']}.md"
+        #     if not class_file.exists():
+        #         logger.error("Generated file not found: %s", class_file)
+        #         errors += 1
+        #         return f"{raw}\n> ⚠️ `{attrs['class']}.md` not found.\n"
+        #     content = class_file.read_text(encoding="utf-8").strip()
+        #     logger.info("  ✓ Injected class: %s", attrs["class"])
+        #     return f"{raw}\n{content}\n"
         if "class" in attrs:
-            class_file = generated_dir / f"{attrs['class']}.md"
+            class_name = attrs["class"]
+
+            # 1. Look for top-level file first (schema-level page)
+            class_file = generated_dir / f"{class_name}.md"
+
+            # 2. Fall back to all-data-models/ (individual class page)
             if not class_file.exists():
-                logger.error("Generated file not found: %s", class_file)
+                class_file = generated_dir / "all-data-models" / f"{class_name}.md"
+
+            if not class_file.exists():
+                logger.error("Generated file not found: %s", class_name)
                 errors += 1
-                return f"{raw}\n> ⚠️ `{attrs['class']}.md` not found.\n"
+                return f"{raw}\n> ⚠️ `{class_name}.md` not found.\n"
+
             content = class_file.read_text(encoding="utf-8").strip()
-            logger.info("  ✓ Injected class: %s", attrs["class"])
+            logger.info("  ✓ Injected class: %s", class_name)
             return f"{raw}\n{content}\n"
 
         # ── example injection ────────────────────────────────────────────

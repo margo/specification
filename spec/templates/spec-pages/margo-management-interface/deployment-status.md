@@ -32,4 +32,4 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 
 ## Request Body Attributes
 
-<!-- linkml:inject class="DeploymentStatus" -->
+<!-- linkml:inject class="DeploymentStatusManifest" -->
