@@ -1,55 +1,55 @@
 - name: application-deployment
   description: Generates markdown for ApplicationDeployment
-  doc_template_dir: spec/resources/markdown-templates_main-classes
+  doc_template_dir: spec/templates/class-pages/main-classes
   input:
-    schema: spec/data-model/application-deployment.linkml.yaml
+    schema: spec/data-models/application-deployment.linkml.yaml
   output:
-    md: spec/generated/markdown_main-classes/application-deployment.md
+    md: spec/generated/class-pages/application-deployment.md
 
 - name: application-description
   description: Generates markdown for ApplicationDescription
-  doc_template_dir: spec/resources/markdown-templates_main-classes
+  doc_template_dir: spec/templates/class-pages/main-classes
   input:
-    schema: spec/data-model/application-description.linkml.yaml
+    schema: spec/data-models/application-description.linkml.yaml
   output:
-    md: spec/generated/markdown_main-classes/application-description.md
+    md: spec/generated/class-pages/application-description.md
 
 - name: deployment-status
   description: Generates markdown for DeploymentStatus
-  doc_template_dir: spec/resources/markdown-templates_main-classes
+  doc_template_dir: spec/templates/class-pages/main-classes
   input:
-    schema: spec/data-model/deployment-status.linkml.yaml
+    schema: spec/data-models/deployment-status.linkml.yaml
   output:
-    md: spec/generated/markdown_main-classes/deployment-status.md
+    md: spec/generated/class-pages/deployment-status.md
 
 - name: desired-state-manifest
   description: Generates markdown for DesiredStateManifest
-  doc_template_dir: spec/resources/markdown-templates_main-classes
+  doc_template_dir: spec/templates/class-pages/main-classes
   input:
-    schema: spec/data-model/desired-state-manifest.linkml.yaml
+    schema: spec/data-models/desired-state-manifest.linkml.yaml
   output:
-    md: spec/generated/markdown_main-classes/desired-state-manifest.md
+    md: spec/generated/class-pages/desired-state-manifest.md
 
 - name: device-capabilities
   description: Generates markdown for DeviceCapabilities
-  doc_template_dir: spec/resources/markdown-templates_main-classes
+  doc_template_dir: spec/templates/class-pages/main-classes
   input:
-    schema: spec/data-model/device-capabilities.linkml.yaml
+    schema: spec/data-models/device-capabilities.linkml.yaml
   output:
-    md: spec/generated/markdown_main-classes/device-capabilities.md
+    md: spec/generated/class-pages/device-capabilities.md
 
 - name: device-onboarding
   description: Generates markdown for DeviceOnboarding
-  doc_template_dir: spec/resources/markdown-templates_main-classes
+  doc_template_dir: spec/templates/class-pages/main-classes
   input:
-    schema: spec/data-model/device-onboarding.linkml.yaml
+    schema: spec/data-models/device-onboarding.linkml.yaml
   output:
-    md: spec/generated/markdown_main-classes/device-onboarding.md
+    md: spec/generated/class-pages/device-onboarding.md
 
-- name: data-model
+- name: data-models
   description: Generates markdown for entire Margo data model
-  doc_template_dir: spec/resources/markdown-templates_main-classes
+  doc_template_dir: spec/templates/class-pages/main-classes
   input:
-    schema: spec/data-model/margo.linkml.yaml
+    schema: spec/data-models/margo.linkml.yaml
   output:
-    directory: spec/generated/markdown_main-classes/all-data-models
+    directory: spec/generated/class-pages/all-data-models

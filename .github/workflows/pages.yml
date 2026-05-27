@@ -60,7 +60,7 @@ jobs:
 
       - name: Run tests
         run: |
-          spec/data-model/tools/check-examples.bash
+          spec/data-models/tools/check-examples.bash
 
   documents:
     needs:
@@ -144,7 +144,7 @@ jobs:
 
       - name: Generate merged documentation tree
         run: |
-          data-model/tools/generate-docs.bash
+          data-models/tools/generate-docs.bash
 
       - name: Build Pages
         run: poetry run -- mkdocs build

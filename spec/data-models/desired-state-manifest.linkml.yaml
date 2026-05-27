@@ -4,7 +4,7 @@ name: DesiredStateManifestSchema
 description: >-
   Each workload is represented as an `ApplicationDeployment` YAML file that specifies its components, configuration, and parameters.
 
-  Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md
+  pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md
 version: "1.0.0"
 prefixes:
   linkml: https://w3id.org/linkml/
@@ -20,22 +20,22 @@ classes:
   DesiredStateManifest:
     description: >-
       Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the device.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---state-manifest
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---state-manifest
     # examples:
-    #   - value: "../resources/examples/valid/DesiredStateManifest-001.yaml"
+    #   - value: "../examples/valid/DesiredStateManifest-001.yaml"
     #     description: ""
     attributes:
       manifestVersion:
         description: >-
           Monotonically increasing unsigned 64-bit integer in the inclusive range [1, 2^64-1]. Prevents rollback attacks.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
         range: integer
         minimum_value: 1
         required: true
       bundle:
         description: >-
           Package optimization containing multiple ApplicationDeployment YAMLs.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
         range: Bundle
         required: true
       deployments:
@@ -52,7 +52,7 @@ classes:
       Describes an archive containing all referenced ApplicationDeployment YAMLs.
       If there are zero deployments (i.e., the deployments array is empty), this field MUST be present with the value null.
       An empty archive MUST NOT be served.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---deployment-bundle
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---deployment-bundle
     attributes:
       mediaType:
         description: >-
@@ -68,7 +68,7 @@ classes:
           Digest of the bundle archive.
           MUST equal the digest computed over the exact sequence of bytes in the bundle endpoint's HTTP 200 OK response body.
           See Protocol - Digest for further details.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
         range: DigestType
         required: true
       sizeBytes:
@@ -80,14 +80,14 @@ classes:
       url:
         description: >-
           Content-addressable retrieval endpoint for the bundle of the form /api/v1/clients/{clientId}/bundles/{digest} where {digest} equals bundle.digest.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---deployment-bundle
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---deployment-bundle
         range: UrlType
         required: true
 
   Deployment:
     description: >-
       List of deployment objects describing each workload.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#response-body-attributes
     attributes:
       deploymentId:
         description: >-
@@ -100,7 +100,7 @@ classes:
           Digest of the corresponding ApplicationDeployment YAML file.
           MUST equal the digest computed over the exact sequence of bytes in the individual deployment endpoint's HTTP 200 OK response body.
           See Protocol - Digest for further details.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
         range: DigestType
         required: true
       sizeBytes:
@@ -112,7 +112,7 @@ classes:
       url:
         description: >-
           Content-addressable retrieval endpoint for the ApplicationDeployment YAML of the form /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest} where {digest} equals deployments[].digest.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---individual-deployment-yaml
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#endpoints---individual-deployment-yaml
         range: UrlType
         required: true
 
@@ -122,7 +122,7 @@ types:
       Hash that identifies an element by its content.
       Digests have to follow the pattern: "<hash-algorithm>:<hash-value>".
       For example: "sha256:8a9b07...".
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#protocol---digest
     uri: xsd:string
     base: string
     repr: str

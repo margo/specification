@@ -5,7 +5,7 @@ description: >-
   Defines the schema for reporting the operational status of a specific deployment and its individual components. 
   It tracks the progression of an installation through various lifecycles (such as pending, installing, 
   installed, or failed) and captures detailed error messaging if a failure occurs.
-  Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md
+  pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md
 version: "1.0.0"
 prefixes:
   linkml: https://w3id.org/linkml/
@@ -21,9 +21,9 @@ classes:
   DeploymentStatusManifest:
     description: >-
       Manifest sent by the device client to report the deployment status of a workload.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#request-body-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#request-body-attributes
     # examples:
-    #   - value: "../resources/examples/valid/DeploymentStatusManifest-001.yaml"
+    #   - value: "../examples/valid/DeploymentStatusManifest-001.yaml"
     #     description: ""
     attributes:
       apiVersion:
@@ -45,7 +45,7 @@ classes:
       components:
         description: >-
           Per-component status list.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#component-attributes
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#component-attributes
         range: ComponentStatus
         required: true
         multivalued: true
@@ -53,7 +53,7 @@ classes:
   Status:
     description: >-
       Overall deployment state and optional error details.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
     slots:
       - state
       - error
@@ -61,7 +61,7 @@ classes:
   Error:
     description: >-
       Error details associated with a failed deployment state.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
     attributes:
       code:
         range: string
@@ -72,7 +72,7 @@ classes:
     is_a: Status
     description: >-
       Status of a component deployment.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#component-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#component-attributes
     attributes:
       name:
         range: string
@@ -82,21 +82,21 @@ slots:
   state:
     description: >-
       Current deployment state.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
     range: State
     required: true
 
   error:
     description: >-
       Optional error details when the state is `failed`.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#error-attributes
     range: Error
 
 enums:
   State:
     description: >-
       Permissible deployment states.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/deployment-status.md#status-attributes
     permissible_values:
       pending:
       installing:

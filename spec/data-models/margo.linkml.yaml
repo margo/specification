@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
-id: https://specification.margo.org/data-model
+id: https://specification.margo.org/data-models
 name: DataModelSchema
 title: Margo Data Model Schema
 description: >-

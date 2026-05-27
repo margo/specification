@@ -22,12 +22,12 @@ nav:
           - specification/observability/collecting-workload-observability-data.md
           - specification/observability/consuming-workload-observability-data.md
       - Data Model:
-          - Overview: data-model/index.md
-          - ApplicationDescription: data-model/ApplicationDescription.md
-          - ApplicationDeployment: data-model/ApplicationDeployment.md
-          - DeviceCapabilitiesManifest: data-model/DeviceCapabilitiesManifest.md
-          - DesiredStateManifest: data-model/DesiredStateManifest.md
-          - DeploymentStatusManifest: data-model/DeploymentStatusManifest.md
+          - Overview: data-models/index.md
+          - ApplicationDescription: data-models/ApplicationDescription.md
+          - ApplicationDeployment: data-models/ApplicationDeployment.md
+          - DeviceCapabilitiesManifest: data-models/DeviceCapabilitiesManifest.md
+          - DesiredStateManifest: data-models/DesiredStateManifest.md
+          - DeploymentStatusManifest: data-models/DeploymentStatusManifest.md
 
 theme:
   name: material

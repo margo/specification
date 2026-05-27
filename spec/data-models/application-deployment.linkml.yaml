@@ -4,7 +4,7 @@ name: ApplicationDeploymentSchema
 description: >-
   Each workload is represented as an `ApplicationDeployment` YAML file that specifies its components, configuration, and parameters.
   This resource is delivered via the Desired State API and referenced by `id` in the Deployment Status API.
-  Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#applicationdeployment-yaml-definition
+  pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#applicationdeployment-yaml-definition
 version: "1.0.0"
 prefixes:
   linkml: https://w3id.org/linkml/
@@ -20,11 +20,11 @@ classes:
   ApplicationDeployment:
     description: >-
       A class representing the desired state of an entity.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#applicationdeployment-yaml-definition
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#applicationdeployment-yaml-definition
     # examples:
-    #   - value: "../resources/examples/valid/ApplicationDeployment-001-compose.yaml"
+    #   - value: "../examples/valid/ApplicationDeployment-001-compose.yaml"
     #     description: "A compose application deployment"
-    #   - value: "../resources/examples/valid/ApplicationDeployment-002-helm.yaml"
+    #   - value: "../examples/valid/ApplicationDeployment-002-helm.yaml"
     #     description: "A helm application deployment"
     attributes:
       apiVersion:
@@ -48,7 +48,7 @@ classes:
         description: >-
           Metadata element specifying characteristics about the application deployment.
           See the [Metadata Attributes](#metadata-attributes) section below.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#metadata-attributes
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#metadata-attributes
         range: DeploymentMetadata
         required: true
       spec:
@@ -61,12 +61,12 @@ classes:
   DeploymentMetadata:
     description: >-
       Metadata associated with the desired state.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#metadata-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#metadata-attributes
     attributes:
       annotations:
         description: >-
           See the [Annotation Attributes](#annotations-attributes) section below.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#annotations-attributes
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#annotations-attributes
         range: DeploymentAnnotations
         required: true
       name:
@@ -83,7 +83,7 @@ classes:
   DeploymentAnnotations:
     description: >-
       A class representing annotations.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#annotations-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#annotations-attributes
     attributes:
       applicationId:
         description: >-
@@ -100,12 +100,12 @@ classes:
   Spec:
     description: >-
       Specification details of the desired state.
-      Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#spec-attributes
+      pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#spec-attributes
     attributes:
       deploymentProfile:
         description: >-
           Section that defines deployment details including type and components.
-          Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#deploymentprofile-attributes
+          pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/margo-management-interface/desired-state.md#deploymentprofile-attributes
         range: DeploymentProfile
         required: true
       parameters:

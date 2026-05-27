@@ -1,41 +1,41 @@
 - name: application-deployment
   description: Generate JSON Schema for ApplicationDeployment
   input:
-    schema: spec/data-model/application-deployment.linkml.yaml
+    schema: spec/data-models/application-deployment.linkml.yaml
   output:
     json_schema: spec/generated/json-schemas/application-deployment.schema.json
 
 - name: application-description
   description: Generate JSON Schema for ApplicationDescription
   input:
-    schema: spec/data-model/application-description.linkml.yaml
+    schema: spec/data-models/application-description.linkml.yaml
   output:
     json_schema: spec/generated/json-schemas/application-description.schema.json
 
 - name: deployment-status
   description: Generate JSON Schema for DeploymentStatus
   input:
-    schema: spec/data-model/deployment-status.linkml.yaml
+    schema: spec/data-models/deployment-status.linkml.yaml
   output:
     json_schema: spec/generated/json-schemas/deployment-status.schema.json
 
 - name: desired-state-manifest
   description: Generate JSON Schema for DesiredStateManifest
   input:
-    schema: spec/data-model/desired-state-manifest.linkml.yaml
+    schema: spec/data-models/desired-state-manifest.linkml.yaml
   output:
     json_schema: spec/generated/json-schemas/desired-state-manifest.schema.json
 
 - name: device-capabilities
   description: Generate JSON Schema for DeviceCapabilities
   input:
-    schema: spec/data-model/device-capabilities.linkml.yaml
+    schema: spec/data-models/device-capabilities.linkml.yaml
   output:
     json_schema: spec/generated/json-schemas/device-capabilities.schema.json
 
 - name: device-onboarding
   description: Generate JSON Schema for DeviceOnboarding
   input:
-    schema: spec/data-model/device-onboarding.linkml.yaml
+    schema: spec/data-models/device-onboarding.linkml.yaml
   output:
     json_schema: spec/generated/json-schemas/device-onboarding.schema.json

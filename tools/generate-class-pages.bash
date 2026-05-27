@@ -14,7 +14,7 @@ CONFIG_FILE="${ROOT_DIR}/tools/configurations/markdown.config.yaml"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-EXAMPLES_DIR="${ROOT_DIR}/spec/resources/examples/valid"
+EXAMPLES_DIR="${ROOT_DIR}/spec/examples/valid"
 
 for cmd in yq linkml; do
   command -v "$cmd" >/dev/null || {

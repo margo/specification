@@ -50,7 +50,7 @@ do
 
         # Check test examples
         set -e
-        spec/data-model/tools/check-examples.bash
+        spec/data-models/tools/check-examples.bash
         set +e
 
 	fi

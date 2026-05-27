@@ -11,7 +11,7 @@ description: >-
   The structure of the ApplicationDescription object to be provided in the YAML document
   specified in this page.
   Some examples are provided also [at the bottom of this page](#examples).
-  Pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/applications/application-registry.md
+  pre-data-model reference https://github.com/margo/specification/blob/3519aa7be4b565b2e2395134b99778fdc0379ace/system-design/specification/applications/application-registry.md
   for the application registry specification.
 version: "1.0"
 prefixes:
@@ -29,7 +29,7 @@ classes:
   ApplicationDescription:
     description: Root class for an application description.
     # examples:
-    #   - value: "../resources/examples/valid/ApplicationDescription-001.yaml"
+    #   - value: "../examples/valid/ApplicationDescription-001.yaml"
     #     description: ""
     attributes:
       apiVersion:
