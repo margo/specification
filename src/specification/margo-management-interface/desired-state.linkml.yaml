@@ -75,12 +75,8 @@ classes:
     attributes:
       applicationId:
         description: >-
-          An identifier for the application.
-          The id is used to help create unique identifiers where required, such as namespaces.
-          The id must be lower case letters and numbers and MAY contain dashes.
-          Uppercase letters, underscores and periods MUST NOT be used.
-          The id MUST NOT be more than 200 characters.
-          The applicationId MUST match the associated application package Metadata "id" attribute.
+          It MUST match the associated application description Metadata "id" attribute.
+          It can be used to help create unique identifiers where required, such as namespaces.
         required: true
         range: string
         pattern: "^[-a-z0-9]{1,200}$"
