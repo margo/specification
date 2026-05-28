@@ -417,7 +417,7 @@ classes:
     description: >-
       Defines a configurable parameter for the application.
       This object is used to build a property bag, i.e. `parameters`, defined in application description.
-      See `parameters` attribute under [ApplicationDescription Attributes](application-description.md#top-level-attributes) section for better understanding.
+      See `parameters` attribute under [ApplicationDescription Attributes](#top-level-attributes) section for better understanding.
     rank: 90
     attributes:
       name: 
