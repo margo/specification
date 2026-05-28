@@ -50,7 +50,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
 | roles         | []string    | Y    | Element that defines the device role it can provide to the Margo environment. MUST be one of the following: Standalone Cluster, Cluster Leader, Standalone Device, or Gateway |
-| resources            | []Resource    | *    | Element that defines the device's resources available to the application deployed on the device. See the [Resource Fields](#resources-attributes) section below. <br/> * The element is required if the device has any of the following roles: Standalone Cluster, Cluster Leader, Standalone Device. |
+| resources            | Resource    | *    | Element that defines the device's resources available to the application deployed on the device. See the [Resource Fields](#resources-attributes) section below. <br/> * The element is required if the device has any of the following roles: Standalone Cluster, Cluster Leader, Standalone Device. |
 
 ### Resources Attributes
 Resources of the specific device being reported to the WFM. Utilized to match with the required resources defined in the application description
@@ -137,7 +137,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
         "serialNumber": "PF45343-AA",
         "roles": [
             "standalone cluster",
-            "cluster lead"
+            "cluster leader"
         ],
         "resources": {
             "cpu": [
@@ -184,3 +184,149 @@ See-thru gateways MUST report their capabilities and the capabilities of each de
 When reporting its own capabilities, a see-thru gateway MUST report the role "Gateway". 
 
 If a see-thru gateway is capable of hosting edge applications it MUST report the corresponding role(s) (i.e., "Standalone Device", "Standalone Cluster, and/or "Cluster Leader") and the resources available for these deployments.
+
+#### Examples
+
+* See-thru gateway, without hosting capabilities, reporting its capabilities to the WFM:
+
+    ```
+    POST /api/v1/clients/{clientId}/capabilities/gateway1
+    ```
+    ```json
+    {
+        "apiVersion": "device.margo.org/v1alpha1",
+        "kind": "DeviceCapabilitiesManifest",
+        "properties": {
+            "id": "gateway1",
+            "vendor": "Gateway Vendor",
+            "modelNumber": "GW-1000",
+            "serialNumber": "GW12345678",
+            "roles": [
+                "Gateway"
+            ]
+        }
+    }
+    ```
+
+* See-thru gateway, with hosting capabilities, reporting its capabilities to the WFM:
+
+    ```
+    POST /api/v1/clients/{clientId}/capabilities/gateway1
+    ```
+    ```json
+    {
+        "apiVersion": "device.margo.org/v1alpha1",
+        "kind": "DeviceCapabilitiesManifest",
+        "properties": {
+            "id": "gateway1",
+            "vendor": "Gateway Vendor",
+            "modelNumber": "GW-1000",
+            "serialNumber": "GW12345678",
+            "roles": [
+                "Gateway",
+                "Standalone Device"
+            ],
+            "resources": {
+                "cpu": [
+                    {
+                        "cores": 4,
+                        "architecture": "x86_64"
+                    }
+                ],
+                "memory": "12 Gi",
+                "storage": "200 Gi",
+                "peripherals": [],
+                "interfaces": [
+                    {
+                        "type": "ethernet"
+                    }
+                ]
+            }
+        }
+    }
+
+* See-thru gateway reporting the capabilities of a child device to the WFM:
+
+    ```
+    POST /api/v1/clients/{clientId}/capabilities/gateway1/deviceA
+    ```
+    ```json
+    {
+        "apiVersion": "device.margo.org/v1alpha1",
+        "kind": "DeviceCapabilitiesManifest",
+        "properties": {
+            "id": "gateway1/deviceA",
+            "vendor": "Device A Vendor",
+            "modelNumber": "DA-2000",
+            "serialNumber": "DA12345678",
+            "roles": [
+                "Standalone Cluster",
+                "Cluster Leader"
+            ],
+            "resources": {
+                "cpu": [
+                    {
+                        "cores": 24,
+                        "architecture": "x86_64"
+                    }
+                ],
+                "memory": "59 Gi",
+                "storage": "1862 Gi",
+                "peripherals": [
+                    {
+                        "type": "GPU",
+                        "manufacturer": "NVIDIA"
+                    }
+                ],
+                "interfaces": [
+                    {
+                        "type": "ethernet"
+                    }
+                ]
+            }
+        }
+    }
+    ```
+
+* See-thru gateway reporting the capabilities of a child device with deeper hierarchy to the WFM:
+
+    ```
+    POST /api/v1/clients/{clientId}/capabilities/gateway1/path1/deviceA
+    ```
+    ```json
+    {
+        "apiVersion": "device.margo.org/v1alpha1",
+        "kind": "DeviceCapabilitiesManifest",
+        "properties": {
+            "id": "gateway1/path1/deviceA",
+            "vendor": "Device A Vendor",
+            "modelNumber": "DA-1000",
+            "serialNumber": "DA12345678",
+            "roles": [
+                "Standalone Device"
+            ],
+            "resources": {
+                "cpu": [
+                    {
+                        "cores": 2,
+                        "architecture": "arm64"
+                    }
+                ],
+                "memory": "6 Gi",
+                "storage": "30 Gi",
+                "peripherals": [],
+                "interfaces": [
+                    {
+                        "type": "ethernet"
+                    }
+                ]
+            }
+        }
+    }
+    ```
+
+* See-thru gateway informing the WFM that a child device is no longer available:
+
+    ```
+    DELETE /api/v1/clients/{clientId}/capabilities/gateway1/deviceA
+    ```
