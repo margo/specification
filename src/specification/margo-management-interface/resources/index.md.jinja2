@@ -272,12 +272,11 @@ This section defines the structure and YAML schema of an `ApplicationDeployment`
 apiVersion: application.margo.org/v1alpha1
 kind: ApplicationDeployment
 id: 
-metadata:
-  annotations:
-    applicationId: 
+metadata: 
   name: 
   namespace: 
 spec:
+    applicationId:
     deploymentProfile:
         type: 
         components:

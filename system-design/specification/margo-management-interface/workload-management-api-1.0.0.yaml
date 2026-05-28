@@ -584,10 +584,6 @@ components:
           type: object
           additionalProperties: { type: string }
           description: Labels for the resource
-        annotations:
-          type: object
-          additionalProperties: { type: string }
-          description: Annotations for the resource
     helmApplicationDeploymentProfileComponent:
       type: object
       description: Helm Application Deployment Profile Component
@@ -688,8 +684,18 @@ components:
     appDeploymentSpec:
       type: object
       description: Application Deployment specification
-      required: [appPackageRef, deploymentProfile]
+      required: [applicationId, deploymentProfile]
       properties:
+        applicationId:
+          type: string
+          description: >-
+            An identifier for the application.
+            The id is used to help create unique identifiers where required, such as namespaces.
+            The id must be lower case letters and numbers and MAY contain dashes.
+            Uppercase letters, underscores and periods MUST NOT be used.
+            The id MUST NOT be more than 200 characters.
+            The applicationId MUST match the associated application package Metadata "id" attribute.
+          pattern: "^[-a-z0-9]{1,200}$"
         deploymentProfile:
           $ref: '#/components/schemas/appDeploymentProfile'
           description: Deployment profile

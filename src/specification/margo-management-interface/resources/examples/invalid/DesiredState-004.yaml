@@ -5,11 +5,10 @@ kind: ApplicationDeployment
 # id is not a valid UUID
 id: this-is-definitively-not-a-uuid
 metadata:
-    annotations:
-        applicationId: com-northstartida-digitron-orchestrator
     name: com-northstartida-digitron-orchestrator-deployment
     namespace: margo-poc
 spec:
+    applicationId: com-northstartida-digitron-orchestrator
     deploymentProfile:
         type: helm
         components:

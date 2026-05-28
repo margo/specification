@@ -56,30 +56,22 @@ classes:
     description: Metadata associated with the desired state.
     rank: 10
     attributes:
-      annotations:
-        description: >-
-          Defines the meta information associated to the deployment specification.
-          Needs to be assigned by the Workload Fleet Manager.
-          See the [Annotation Attributes](#annotations-attributes) section below.
-        range: Annotations
-        required: true
-        rank: 10
       name:
         description: >-
           When deploying to Kubernetes, the manifests name.
           The name is chosen by the Workload Fleet Management vendor and is not displayed anywhere.
         required: true
         range: string
-        rank: 20
+        rank: 10
       namespace:
         description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the Workload Fleet Management vendor.
         required: true
         range: string
-        rank: 30
+        rank: 20
 
-  Annotations:
-    description: A class representing annotations.
-    rank: 20
+  Spec:
+    description: Specification details of the desired state.
+    rank: 30
     attributes:
       applicationId:
         description: >-
@@ -93,11 +85,6 @@ classes:
         range: string
         pattern: "^[-a-z0-9]{1,200}$"
         rank: 10
-
-  Spec:
-    description: Specification details of the desired state.
-    rank: 30
-    attributes:
       deploymentProfile:
         description: Section that defines deployment details including type and components.
         range: DeploymentProfile
