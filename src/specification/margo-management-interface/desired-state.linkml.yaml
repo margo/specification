@@ -80,7 +80,7 @@ classes:
         required: true
         range: string
         pattern: "^[-a-z0-9]{1,200}$"
-        rank: 10
+        rank: 5
       deploymentProfile:
         description: Section that defines deployment details including type and components.
         range: DeploymentProfile
