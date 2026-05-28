@@ -90,6 +90,7 @@ When the error used is a reserved code for a gateway-generated error, the `sourc
     "apiVersion": "deployment.margo.org/v1alpha1",
     "kind": "DeploymentStatusManifest",
     "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
+    "deviceId": "plant-alfa-zone1-edge01",
     "status": {
         "state": "pending",
         "error": {
