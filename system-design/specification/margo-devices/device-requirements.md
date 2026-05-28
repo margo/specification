@@ -19,7 +19,7 @@ Devices filling the standalone cluster role MUST provide the following additiona
 
 Applications can be deployed as Helm charts using either Helm [version 3](https://helm.sh/docs/v3/topics/charts) or [version 4](https://helm.sh/docs/topics/charts) using Chart APIVersion v2 only.
 
-Margo does not dictate how devices deploy workloads packaged as Helm charts. A device vendor may choose a deployment approach that either interacts with the Kubernetes API (such as `helm install`) or an approach that renders the helm templates and applies the templates (such as `helm template` or Kustomization). In order to facility this choice, certain Helm functions are not support. See the [Helm exceptions](../applications/application-description#helm-exceptions) for more details.
+Margo does not dictate how devices deploy workloads packaged as Helm charts. A device vendor may choose a deployment approach that either interacts with the Kubernetes API (such as `helm install`) or an approach that renders the helm templates and applies the templates (such as `helm template` or Kustomization). In order to facility this choice, certain Helm functions are not support. See the [Helm exceptions](../applications/application-description.md#helm-exceptions) for more details.
 
 #### Probationary support for `.Capabilities.APIVersions.Has` function
 
