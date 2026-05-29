@@ -342,3 +342,19 @@ spec:
 ```yaml
 {% include 'examples/valid/DesiredState-002.yaml' %}
 ```
+
+### Example: Gateway Directed Deployment Specification
+
+In this example, an application is deployed to a specific child device through a see-thru gateway. The gateway determines the target device for deployment from the value of the `deviceId` attribute of the `ApplicationDeployment` specification.
+
+```yaml
+{% include 'examples/valid/gateway-directed.yaml' %}
+```
+
+### Example: Gateway Autonomous Deployment Specification
+
+In this example, an application is deployed to a child device with the see-thru gateway deciding which device to use. The gateway is told to choose the device by using `*` in the `deviceId` attribute of the `ApplicationDeployment` specification. 
+
+```yaml
+{% include 'examples/valid/gateway-autonomous.yaml' %}
+```
