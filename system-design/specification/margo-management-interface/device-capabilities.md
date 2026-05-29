@@ -30,7 +30,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | 400 Bad Request | Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included. |
 | 401 Unauthorized | Signature verification failed. Ensure you are signing with the correct X.509 private key.  |
 | 403 Forbidden | Client certificate is not trusted or has been revoked. |
-| 404 Not Found | POST, PUT:  No client with the given `clientID` was found. <br/> DELETE: No client with the given `clientID` was found or no device with the given `deviceId` was found for the client. |
+| 404 Not Found | POST, PUT:  No client with the given `clientID` was found, or no gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No client with the given `clientID` was found or no device with the given `deviceId` was found for the client. |
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
 ## Request Body Attributes
@@ -173,17 +173,19 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 ### Opaque gateways
 
-Opaque gateways MUST report the combined capabilities of all the devices they connect to the WFM.
+A device may represent, and aggregate the capabilities of, multiple child-devices behind it and report itself as a single Margo device to the WFM. This type of device is referred to as an opaque gateway. Opaque gateways report the combined capabilities of all the devices they connect to the WFM.
 
 > Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. In addition since the gateway can deploy compose applications on its child-devices it will report the role of "standalone device".
 
 ### See-thru gateways
 
-See-thru gateways MUST report their capabilities and the capabilities of each device they connect to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device behind the gateway. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
+WFM clients may connect one or more child-devices to the WFM while allowing the WFM to see each device behind it as an individual device with its own capabilities. This type of clients are referred to as see-thru gateways and report the "Gateway" role.
 
-When reporting its own capabilities, a see-thru gateway MUST report the role "Gateway". 
+WFM clients reporting the "Gateway" role MUST report their capabilities and the capabilities of each device they connect to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device behind the gateway. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
 
-If a see-thru gateway is capable of hosting edge applications it MUST report the corresponding role(s) (i.e., "Standalone Device", "Standalone Cluster, and/or "Cluster Leader") and the resources available for these deployments.
+If a WFM client reporting the "Gateway" role is capable of hosting edge applications it MUST report the corresponding role(s) (i.e., "Standalone Device", "Standalone Cluster, and/or "Cluster Leader") and the resources available for these deployments.
+
+A WFM client reporting the "Gateway" role MUST report its own capabilities to the WFM before reporting the capabilities of any child devices. If a WFM receives a `DeviceCapabilitiesManifest` for a child-device before it has received the `DeviceCapabilitiesManifest` of the parent WFM client, the WFM MUST reject the request with a 404 Not Found response code.
 
 #### Examples
 
