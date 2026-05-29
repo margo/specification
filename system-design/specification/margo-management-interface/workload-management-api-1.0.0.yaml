@@ -522,13 +522,13 @@ components:
     DeviceId:
       # format: "{id}[/{id}[/{id}...]]"
       # Top-level id is required and must include only unreserved characters as specified in RFC3986.
-      # Subsequent ids are optional, but if present must include only unreserved characters as specified in RFC3986.
+      # Subsequent ids are only used when referencing child devices, and must include only unreserved characters as specified in RFC3986 when present.
       type: string
       pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$'
     DeviceId_with_asterisk:
       # format: "{id}[/{id}[/{id}...]/*]"
       # Top-level id is required and must include only unreserved characters as specified in RFC3986.
-      # Subsequent ids are optional, but if present must include only Unreserved Characters as specified in RFC3986.
+      # Subsequent ids are only used when referencing child devices, and must include only unreserved characters as specified in RFC3986 when present.
       type: string
       pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
 
