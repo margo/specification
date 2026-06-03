@@ -37,7 +37,7 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 | apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
 | kind            | string    | Y    | Must be `DeploymentStatusManifest`.|
 | deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Fleet Management Software. |
-| deviceId        | string    | Y    | Id of the device hosting the deployment. Includes the full device hierarchy if applicable. |
+| deviceId        | string    | N*    | Id of the device hosting the deployment. Includes the full device hierarchy if applicable. <br/> * This attribute is required when reporting on behalf of a child-device. |
 | status          | []status    | Y    | Element that defines overall deployment status. See the [Status Attributes](#status-attributes) section below.|
 | components      | []components    | Y    | Element that defines the individual component's deployment status. See the [Component Attributes](#component-attributes) section below.|
 
