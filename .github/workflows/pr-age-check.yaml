@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, ready_for_review]
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   check-pr-age:
     runs-on: ubuntu-latest
