@@ -60,22 +60,26 @@ deploymentProfiles:
           keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
 parameters:
   idpName:
+    value: "test"
     targets:
+      # Maps to deployment configuration param,
+      # e.g., helm install ... --set idp.name="test"
       - pointer: idp.name
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_NAME
+      # Maps to environment variables, e.g., IDP_NAME=test docker compose ...
+      - pointer: IDP_NAME
         components: ["digitron-orchestrator-docker"]
   idpProvider:
     targets:
       - pointer: idp.provider
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_PROVIDER
+      - pointer: IDP_PROVIDER
         components: ["digitron-orchestrator-docker"]
   idpClientId:
     targets:
       - pointer: idp.clientId
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_CLIENT_ID
+      - pointer: IDP_CLIENT_ID
         components: ["digitron-orchestrator-docker"]
   idpUrl:
     targets:
@@ -83,32 +87,32 @@ parameters:
         components: ["digitron-orchestrator"]
       - pointer: idp.providerMetadata
         components: ["digitron-orchestrator"]
-      - pointer: ENV.IDP_URL
+      - pointer: IDP_URL
         components: ["digitron-orchestrator-docker"]
   adminName:
     targets:
       - pointer: administrator.name
         components: ["digitron-orchestrator"]
-      - pointer: ENV.ADMIN_NAME
+      - pointer: ADMIN_NAME
         components: ["digitron-orchestrator-docker"]
   adminPrincipalName:
     targets:
       - pointer: administrator.userPrincipalName
         components: ["digitron-orchestrator"]
-      - pointer: ENV.ADMIN_PRINCIPALNAME
+      - pointer: ADMIN_PRINCIPALNAME
         components: ["digitron-orchestrator-docker"]
   pollFrequency:
     value: 30
     targets: 
       - pointer: settings.pollFrequency
         components: ["digitron-orchestrator", "database-services"]
-      - pointer: ENV.POLL_FREQUENCY
+      - pointer: POLL_FREQUENCY
         components: ["digitron-orchestrator-docker"]
   siteId:
     targets:
       - pointer: settings.siteId
         components: ["digitron-orchestrator", "database-services"]
-      - pointer: ENV.SITE_ID
+      - pointer: SITE_ID
         components: ["digitron-orchestrator-docker"]
   cpuLimit:
     value: 1 

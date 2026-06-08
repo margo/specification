@@ -56,18 +56,20 @@ which defines the [desired state](../margo-management-interface/desired-state.md
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-{% for slot in gen.get_direct_slots(c)|sort(attribute='rank') -%}
-{%- if slot.name != "value" -%}
+{%- for slot in gen.get_direct_slots(c)|sort(attribute='rank') %}
+{%- if c.name == "Parameter" and slot.name == "name" %}
+{%- elif slot.name != "value" %}
 | {{ slot.name }} | {{ format_range(slot) }} | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
-{%- else -%}
+{%- else %}
 | {{ slot.name }} | <*see description*> | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
 {%- endif %}
-{% endfor %}
+{%- endfor %}
 
 {%- endif %}
 
 
 {%- if c.name.startswith("DeploymentProfile") %}
+
 #### Helm Exceptions
 
 Applications can be deployed as Helm charts using either Helm [version 3](https://helm.sh/docs/v3/topics/charts) or [version 4](https://helm.sh/docs/topics/charts) using Chart APIVersion v2 only.

@@ -51,6 +51,8 @@ classes:
       parameters:
         description: >-
           Parameters element specifying the configurable parameters to use when installing, or updating, the application.
+          Defined as a map where each key is the user-defined parameter name (e.g. `mysqlDatabase:`, `greeting:`, `idpName:`, `myAppEndpoint:`),
+          and value would be Parameter object, i.e. map[string]Parameter.
           See the [Parameter](#parameter-attributes) section below.
         range: Parameter 
         multivalued: true
@@ -412,7 +414,10 @@ classes:
         range: string
 
   Parameter:
-    description: Defines a configurable parameter for the application.
+    description: >-
+      Defines a configurable parameter for the application.
+      This object is used to build a property bag, i.e. `parameters`, defined in application description.
+      See `parameters` attribute under [ApplicationDescription Attributes](#top-level-attributes) section for better understanding.
     rank: 90
     attributes:
       name: 

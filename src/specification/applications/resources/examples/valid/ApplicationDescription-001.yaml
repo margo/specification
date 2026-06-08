@@ -33,6 +33,8 @@ parameters:
   greeting:
     value: Hello
     targets:
+    # Maps to deployment configuration param,
+    # e.g., helm install ... --set global.config.appGreeting="Hello"
     - pointer: global.config.appGreeting
       components: ["hello-world"]
   greetingAddressee:
