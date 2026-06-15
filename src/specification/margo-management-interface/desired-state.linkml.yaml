@@ -75,7 +75,7 @@ classes:
     attributes:
       applicationId:
         description: >-
-          It MUST match the associated application description Metadata "id" attribute.
+          It MUST match the associated application description's top-level "id" attribute.
           It can be used to help create unique identifiers where required, such as namespaces.
         required: true
         range: string
