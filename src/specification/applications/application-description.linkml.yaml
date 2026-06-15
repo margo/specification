@@ -31,6 +31,15 @@ classes:
         required: true
         equals_string: "ApplicationDescription" 
         rank: 20
+      id:
+        description: >-
+          An identifier for the application. The id is used to help create unique identifiers where required, 
+          such as namespaces. The id must be lower case letters and numbers and MAY contain dashes. 
+          Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters.
+        rank: 25
+        range: string
+        required: true
+        pattern: ^[a-z0-9-]{1,200}$
       metadata:
         description: >-
           Metadata element specifying characteristics about the application deployment.
@@ -71,15 +80,6 @@ classes:
     description: Metadata about the application.
     rank: 10
     attributes:
-      id:
-        description: >-
-          An identifier for the application. The id is used to help create unique identifiers where required, 
-          such as namespaces. The id must be lower case letters and numbers and MAY contain dashes. 
-          Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters.
-        rank: 10
-        range: string
-        required: true
-        pattern: ^[a-z0-9-]{1,200}$
       name:
         description: >-
           The application's official name. 

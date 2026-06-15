@@ -301,7 +301,7 @@ paths:
           required: true
           schema:
             type: string
-          description: UUID of the ApplicationDeployment (metadata.annotations.id)
+          description: Unique identifier for the application deployment
         - name: digest
           in: path
           required: true
@@ -436,7 +436,7 @@ components:
         deploymentId:
           type: string
           description: >
-            The unique UUID from the ApplicationDeployment's metadata.annotations.id.
+            Unique identifier for the application deployment.
         digest:
           type: string
           description: >
@@ -620,6 +620,9 @@ components:
           type: string
           default: ApplicationDeployment
           description: Resource kind
+        id:
+          type: string
+          description: Unique identifier for the application deployment
         metadata:
           $ref: '#/components/schemas/appDeploymentMetadata'
         spec:
@@ -634,21 +637,13 @@ components:
         namespace:
           type: string
           description: Namespace of the resource
-        annotations:
-          type: object
-          description: Annotations for the resource
-          properties:
-            id:
-              type: string
-              description: Unique identifier for the deployment specification
-              pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-            applicationId:
-              type: string
-              description: Unique identifier for the application
-              pattern: "^[-a-z0-9]{1,200}$"
         deviceId:
           $ref: '#/components/schemas/DeviceId_with_asterisk'
           description: Device ID of the target device for the deployment
+        labels:
+          type: object
+          additionalProperties: { type: string }
+          description: Labels for the resource
     helmApplicationDeploymentProfileComponent:
       type: object
       description: Helm Application Deployment Profile Component
@@ -749,8 +744,18 @@ components:
     appDeploymentSpec:
       type: object
       description: Application Deployment specification
-      required: [appPackageRef, deploymentProfile]
+      required: [applicationId, deploymentProfile]
       properties:
+        applicationId:
+          type: string
+          description: >-
+            An identifier for the application.
+            The id is used to help create unique identifiers where required, such as namespaces.
+            The id must be lower case letters and numbers and MAY contain dashes.
+            Uppercase letters, underscores and periods MUST NOT be used.
+            The id MUST NOT be more than 200 characters.
+            The applicationId MUST match the associated application description's top-level "id" attribute.
+          pattern: "^[-a-z0-9]{1,200}$"
         deploymentProfile:
           $ref: '#/components/schemas/appDeploymentProfile'
           description: Deployment profile

@@ -1,5 +1,8 @@
+# Demonstrates validation of kind field
+# Invalid kind of Kubernetes custom resource.
 apiVersion: margo.org/v1-alpha1
-kind: ApplicationDescription
+# `kind` != `ApplicationDescription`
+kind: SomethingErroneous
 id: com-northstartida-hello-world
 metadata:
   name: Hello World
@@ -21,11 +24,11 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  - type: helm
-    id: com-northstartida-hello-world-helm-a
+  - type: helm.v3
+    id: com-northstartida-hello-world-helm.v3-a
     components:
       - name: hello-world
-        properties:  
+        properties:
           repository: oci://northstarida.azurecr.io/charts/hello-world
           revision: 1.0.1
           wait: true
@@ -33,15 +36,13 @@ parameters:
   greeting:
     value: Hello
     targets:
-    # Maps to deployment configuration param,
-    # e.g., helm install ... --set global.config.appGreeting="Hello"
-    - pointer: global.config.appGreeting
-      components: ["hello-world"]
+      - pointer: global.config.appGreeting
+        components: ["hello-world"]
   greetingAddressee:
     value: World
     targets:
-    - pointer: global.config.appGreetingAddressee
-      components: ["hello-world"]
+      - pointer: global.config.appGreetingAddressee
+        components: ["hello-world"]
 configuration:
   sections:
     - name: General Settings

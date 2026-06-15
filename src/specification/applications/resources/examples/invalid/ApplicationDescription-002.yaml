@@ -1,10 +1,12 @@
+# Demonstrates validation of id field
+# Invalid id format being defined in this test
 apiVersion: margo.org/v1-alpha1
 kind: ApplicationDescription
-id: com-northstartida-digitron-orchestrator
+id: an-incorrect-id-with-special-chars**&%
 metadata:
   name: Digitron orchestrator
   description: The Digitron orchestrator application
-  version: 1.2.1 
+  version: 1.2.1
   catalog:
     application:
       icon: ./resources/ndo-logo.png
@@ -21,13 +23,14 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  - type: helm
-    id: com-northstartida-digitron-orchestrator-helm-a
-    description: This allows to install / run the application as a Helm chart deployment.
+  - type: helm.v3
+    id: com-northstartida-digitron-orchestrator-helm.v3-a
+    description:
+      This allows to install / run the application as a Helm chart deployment.
       The device where this application is installed needs to have a screen and a keyboard (as indicated in the required peripherals).
     components:
       - name: database-services
-        properties: 
+        properties:
           repository: oci://quay.io/charts/realtime-database-services
           revision: 2.3.7
           wait: true
@@ -38,10 +41,10 @@ deploymentProfiles:
           revision: 1.0.9
           wait: true
     requiredResources:
-      cpu: 
+      cpu:
         cores: 1.5
-        architectures: 
-          - amd64 
+        architectures:
+          - amd64
       memory: 1024Mi
       storage: 10Gi
       peripherals:
@@ -60,26 +63,22 @@ deploymentProfiles:
           keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
 parameters:
   idpName:
-    value: "test"
     targets:
-      # Maps to deployment configuration param,
-      # e.g., helm install ... --set idp.name="test"
       - pointer: idp.name
         components: ["digitron-orchestrator"]
-      # Maps to environment variables, e.g., IDP_NAME=test docker compose ...
-      - pointer: IDP_NAME
+      - pointer: ENV.IDP_NAME
         components: ["digitron-orchestrator-docker"]
   idpProvider:
     targets:
       - pointer: idp.provider
         components: ["digitron-orchestrator"]
-      - pointer: IDP_PROVIDER
+      - pointer: ENV.IDP_PROVIDER
         components: ["digitron-orchestrator-docker"]
   idpClientId:
     targets:
       - pointer: idp.clientId
         components: ["digitron-orchestrator"]
-      - pointer: IDP_CLIENT_ID
+      - pointer: ENV.IDP_CLIENT_ID
         components: ["digitron-orchestrator-docker"]
   idpUrl:
     targets:
@@ -87,35 +86,35 @@ parameters:
         components: ["digitron-orchestrator"]
       - pointer: idp.providerMetadata
         components: ["digitron-orchestrator"]
-      - pointer: IDP_URL
+      - pointer: ENV.IDP_URL
         components: ["digitron-orchestrator-docker"]
   adminName:
     targets:
       - pointer: administrator.name
         components: ["digitron-orchestrator"]
-      - pointer: ADMIN_NAME
+      - pointer: ENV.ADMIN_NAME
         components: ["digitron-orchestrator-docker"]
   adminPrincipalName:
     targets:
       - pointer: administrator.userPrincipalName
         components: ["digitron-orchestrator"]
-      - pointer: ADMIN_PRINCIPALNAME
+      - pointer: ENV.ADMIN_PRINCIPALNAME
         components: ["digitron-orchestrator-docker"]
   pollFrequency:
     value: 30
-    targets: 
+    targets:
       - pointer: settings.pollFrequency
         components: ["digitron-orchestrator", "database-services"]
-      - pointer: POLL_FREQUENCY
+      - pointer: ENV.POLL_FREQUENCY
         components: ["digitron-orchestrator-docker"]
   siteId:
     targets:
       - pointer: settings.siteId
         components: ["digitron-orchestrator", "database-services"]
-      - pointer: SITE_ID
+      - pointer: ENV.SITE_ID
         components: ["digitron-orchestrator-docker"]
   cpuLimit:
-    value: 1 
+    value: 1
     targets:
       - pointer: settings.limits.cpu
         components: ["digitron-orchestrator"]
@@ -197,7 +196,7 @@ configuration:
       maxValue: 360
       allowEmpty: false
     - name: optionalText
-      dataType: string  
+      dataType: string
       minLength: 5
       allowEmpty: true
     - name: cpuRange

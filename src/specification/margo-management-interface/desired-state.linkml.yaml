@@ -29,6 +29,14 @@ classes:
         required: true
         range: string
         rank: 20
+      id:
+        description: >-
+          The unique identifier UUID of the deployment specification.
+          Needs to be assigned by the Workload Fleet Manager.
+        required: true
+        range: string
+        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        rank: 25
       metadata:
         description: >-
           Metadata element specifying characteristics about the application deployment.
@@ -48,24 +56,18 @@ classes:
     description: Metadata associated with the desired state.
     rank: 10
     attributes:
-      annotations:
-        description: >-
-          Defines the application ID and unique identifier associated to the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
-          See the [Annotation Attributes](#annotations-attributes) section below.
-        range: Annotations
-        required: true
-        rank: 10
       name:
         description: >-
           When deploying to Kubernetes, the manifests name.
-          The name is chosen by the workload orchestration vendor and is not displayed anywhere.
+          The name is chosen by the Workload Fleet Management vendor and is not displayed anywhere.
         required: true
-        rank: 20
+        range: string
+        rank: 10
       namespace:
-        description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the workload orchestration solution vendor.
+        description: When deploying to Kubernetes, the namespace the manifest is added under. The namespace is chosen by the Workload Fleet Management vendor.
         required: true
-        rank: 30
+        range: string
+        rank: 20
       deviceId:
         description: >-
           The id of the device, with hierarchy if applicable, to which the deployment is assigned.
@@ -74,35 +76,19 @@ classes:
           If the gateway is not capable of autonomously selecting a child-device, it MUST send back a deployment status with error `101 - Unknown child device ID` when `*` is used.
         required: true
         pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
-        rank: 40
-
-  Annotations:
-    description: A class representing annotations.
-    rank: 20
-    attributes:
-      applicationId:
-        description: >-
-          An identifier for the application.
-          The id is used to help create unique identifiers where required, such as namespaces.
-          The id must be lower case letters and numbers and MAY contain dashes.
-          Uppercase letters, underscores and periods MUST NOT be used.
-          The id MUST NOT be more than 200 characters.
-          The applicationId MUST match the associated application package Metadata "id" attribute.
-        required: true
-        pattern: "^[-a-z0-9]{1,200}$"
-        rank: 10
-      id:
-        description: >-
-          The unique identifier UUID of the deployment specification.
-          Needs to be assigned by the Workload Orchestration Software.
-        required: true
-        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-        rank: 20
-
+        rank: 30
   Spec:
     description: Specification details of the desired state.
     rank: 30
     attributes:
+      applicationId:
+        description: >-
+          It MUST match the associated application description's top-level "id" attribute.
+          It can be used to help create unique identifiers where required, such as namespaces.
+        required: true
+        range: string
+        pattern: "^[-a-z0-9]{1,200}$"
+        rank: 5
       deploymentProfile:
         description: Section that defines deployment details including type and components.
         range: DeploymentProfile

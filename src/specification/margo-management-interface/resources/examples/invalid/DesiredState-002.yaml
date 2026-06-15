@@ -1,15 +1,14 @@
-# Demonstrates validation of metadata.annotations.applicationId
+# Demonstrates validation of spec.applicationId
 # Invalid characters being used.
 apiVersion: application.margo.org/v1alpha1
 kind: ApplicationDeployment
+id: a3e2f5dc-912e-494f-8395-52cf3769bc06
 metadata:
-    annotations:
-        # id contains invalid characters: upper-case letters ('A' and 'Z'), special characters ('.' and '_')
-        applicationId: com_northstartida.Digitron-Orchestrator
-        id: a3e2f5dc-912e-494f-8395-52cf3769bc06
     name: com-northstartida-digitron-orchestrator-deployment
     namespace: margo-poc
 spec:
+    # id contains invalid characters: upper-case letters ('A' and 'Z'), special characters ('.' and '_')
+    applicationId: com_northstartida.Digitron-Orchestrator
     deploymentProfile:
         type: helm
         components:
