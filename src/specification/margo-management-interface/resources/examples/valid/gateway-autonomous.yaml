@@ -18,48 +18,48 @@ spec:
         adminName:
             value: Some One
             targets:
-                - pointer: ENV.ADMIN_NAME
+                - pointer: ADMIN_NAME
                   components:
                     - digitron-orchestrator-docker
         adminPrincipalName:
             value: someone@somewhere.com
             targets:
-                - pointer: ENV.ADMIN_PRINCIPALNAME
+                - pointer: ADMIN_PRINCIPALNAME
                   components:
                     - digitron-orchestrator-docker
         idpClientId:
             value: 123-ABC
             targets:
-                - pointer: ENV.IDP_CLIENT_ID
+                - pointer: IDP_CLIENT_ID
                   components:
                     - digitron-orchestrator-docker
         idpName:
             value: Azure AD
             targets:
-                - pointer: ENV.IDP_NAME
+                - pointer: IDP_NAME
                   components:
                     - digitron-orchestrator-docker
         idpProvider:
             value: aad
             targets:
-                - pointer: ENV.IDP_PROVIDER
+                - pointer: IDP_PROVIDER
                   components:
                     - digitron-orchestrator-docker
         idpUrl:
             value: https://123-abc.com
             targets:
-                - pointer: ENV.IDP_URL
+                - pointer: IDP_URL
                   components:
                     - digitron-orchestrator-docker
         pollFrequency:
             value: "120"
             targets:
-                - pointer: ENV.POLL_FREQUENCY
+                - pointer: POLL_FREQUENCY
                   components:
                     - digitron-orchestrator-docker
         siteId:
             value: SID-123-ABC
             targets:
-                - pointer: ENV.SITE_ID
+                - pointer: SITE_ID
                   components:
                     - digitron-orchestrator-docker
