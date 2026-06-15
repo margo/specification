@@ -73,7 +73,7 @@ classes:
           The id of the device, with hierarchy if applicable, to which the deployment is assigned.
           To reference a child-device the format is `{device-id}[/{device-id}[/...]]`. <br/>
           To request the gateway to choose the child-device, use `*` for the last segment in the hierarchy (i.e. `{device-id}[/{device-id}/...]/*`).
-          If the gateway is not capable of autonomously selecting a child-device, it MUST send back a deployment status with error `101 - Unknown child device ID` when `*` is used.
+          If the gateway is not capable of autonomously selecting a child-device, it MUST send back a deployment status with error `103 - Autonomous placement not supported` when `*` is used.
         required: true
         pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
         rank: 30
