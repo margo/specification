@@ -248,6 +248,7 @@ A WFM client reporting the "Gateway" role MUST report its own capabilities to th
             }
         }
     }
+    ```
 
 * See-thru gateway reporting the capabilities of a child device to the WFM:
 
