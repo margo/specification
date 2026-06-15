@@ -694,7 +694,7 @@ components:
             The id must be lower case letters and numbers and MAY contain dashes.
             Uppercase letters, underscores and periods MUST NOT be used.
             The id MUST NOT be more than 200 characters.
-            The applicationId MUST match the associated application package Metadata "id" attribute.
+            The applicationId MUST match the associated application description's top-level "id" attribute.
           pattern: "^[-a-z0-9]{1,200}$"
         deploymentProfile:
           $ref: '#/components/schemas/appDeploymentProfile'
