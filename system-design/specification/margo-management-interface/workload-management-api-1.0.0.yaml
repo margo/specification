@@ -553,7 +553,7 @@ components:
 
     DeploymentStatusManifest:
       type: object
-      required: [apiVersion, kind, deploymentId, deviceId, status, components]
+      required: [apiVersion, kind, deploymentId, status, components]
       properties:
         apiVersion:
           type: string
