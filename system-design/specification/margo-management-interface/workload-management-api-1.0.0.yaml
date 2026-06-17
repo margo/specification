@@ -3,15 +3,19 @@ openapi: 3.0.3
 info:
   title: Margo Workload Management API
   version: 1.0.0
-  description: API for managing workloads on Margo-compliant edge devices.
+  description: 
+    API for managing workloads on Margo-compliant edge devices.
     Includes the APIs for exchanging desired state and current state.
-    Communication is secured using server-side TLS (TLS 1.3 preferred), and
-    payloads are signed using X.509 certificates.
+    Communication is secured using server-side TLS (TLS 1.3 preferred),
+    and payloads are signed using X.509 certificates.
+
 servers:
   - url: https://wfm.margo.org/
     description: Workload Fleet Manager API
+
 security:
   - PayloadSignature: []
+
 paths:
   /api/v1/onboarding/certificate:
     get:
@@ -35,7 +39,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [apiVersion, kind, certificate]                
+              required: [apiVersion, kind, certificate]
               properties:
                 apiVersion:
                   type: string
@@ -241,12 +245,7 @@ paths:
           required: true
           schema:
             type: string
-          description: Content-addressable digest of the bundle archive. MUST conform to
-            the 'digest' attribute in the Digest Specification and MUST equal
-            the digest computed over the exact sequence of bytes (per Exact
-            Bytes Rule) in the HTTP 200 OK response body. If the server cannot
-            produce content whose digest matches this value it MUST return 404
-            Not Found.
+          description: Content-addressable digest of the bundle archive. MUST conform to the 'digest' attribute in the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
         - in: header
           name: If-None-Match
           required: false
@@ -293,8 +292,7 @@ paths:
                 $ref: '#/components/schemas/ProblemDetail'
   /api/v1/clients/{clientId}/deployments:
     get:
-      summary: Retrieve the complete desired state for all workloads assigned to a
-        device
+      summary: Retrieve the complete desired state for all workloads assigned to a device
       security:
         - PayloadSignature: []
       parameters:
@@ -310,9 +308,7 @@ paths:
           schema:
             type: string
           description: >
-            ETag value of the last successfully synced manifest. The ETag is
-            returned to the client from the /deployments endpoint, it is the
-            digest of the state manifest.
+             ETag value of the last successfully synced manifest. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
         - name: Accept
           in: header
           required: false
@@ -340,7 +336,7 @@ paths:
         '304':
           description: Not Modified - Manifest has not changed
         '406':
-          description: Not Acceptable — Unsupported manifest format
+          description: Not Acceptable - Server cannot generate a response matching the Accept header
           content:
             application/problem+json:
               schema:
@@ -357,15 +353,8 @@ paths:
       security:
         - PayloadSignature: []
       description: >
-        This endpoint is used by the client to fetch the YAML for a single
-        ApplicationDeployment after it has processed a new State Manifest and
-        identified a small number of new or updated deployments. This allows for
-        highly efficient, incremental updates without needing to download the
-        full bundle. To make individual workload retrievals race-free and
-        cache-friendly, this endpoint is content-addressable: the digest of the
-        expected YAML is part of the URL. This guarantees immutability of the
-        fetched resource and prevents a time-of-check / time-of-use race where a
-        deployment changes between manifest retrieval and content fetch.
+        This endpoint is used by the client to fetch the YAML for a single ApplicationDeployment after it has processed a new State Manifest and identified a small number of new or updated deployments. This allows for highly efficient, incremental updates without needing to download the full bundle.
+        To make individual workload retrievals race-free and cache-friendly, this endpoint is content-addressable: the digest of the expected YAML is part of the URL. This guarantees immutability of the fetched resource and prevents a time-of-check / time-of-use race where a deployment changes between manifest retrieval and content fetch.
       parameters:
         - name: clientId
           in: path
@@ -385,19 +374,14 @@ paths:
           schema:
             type: string
           description: >
-            Content-addressable digest of the ApplicationDeployment YAML file.
-            MUST conform to the Digest Specification and MUST equal the digest
-            computed over the exact sequence of bytes (per Exact Bytes Rule) in
-            the HTTP 200 OK response body. If the server cannot produce content
-            whose digest matches this value it MUST return 404 Not Found.
+            Content-addressable digest of the ApplicationDeployment YAML file. MUST conform to the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
         - name: If-None-Match
           in: header
           required: false
           schema:
             type: string
           description: >
-            Optional ETag for caching. The ETag is returned to the client from
-            the /deployments endpoint, it is the digest of the state manifest.
+            Optional ETag for caching. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
         - name: Accept-Encoding
           in: header
           required: false
@@ -407,10 +391,7 @@ paths:
       responses:
         '200':
           description: >
-            The response body is the raw ApplicationDeployment YAML file
-            (Content-Type: application/yaml). The content MUST match the
-            {digest} path segment; the server MUST return 404 if it does not
-            have the exact digest referenced.
+            The response body is the raw ApplicationDeployment YAML file (Content-Type: application/yaml). The content MUST match the {digest} path segment; the server MUST return 404 if it does not have the exact digest referenced.
           headers:
             Content-Type:
               schema:
@@ -420,8 +401,7 @@ paths:
               schema:
                 type: string
               description: >
-                The ETag is returned to the client from the /deployments endpoint,
-                it is the digest of the state manifest.
+                The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
             Cache-Control:
               schema:
                 type: string
@@ -506,13 +486,14 @@ paths:
                 $ref: "#/components/schemas/ProblemDetail"
 components:
   securitySchemes:
+    # TODO: fix this as we are following RFC 9421, instead of a custom signature header field
     PayloadSignature:
       type: apiKey
       in: header
       name: X-Payload-Signature
       description: >
-        Base64-encoded payload signature using SHA-256 and device
-        certificate. Format: public_key;digital_signature
+        Base64-encoded payload signature using SHA-256 and device certificate.
+        Format: public_key;digital_signature
   schemas:
     ProblemDetail:
       type: object
@@ -555,50 +536,34 @@ components:
     ManifestVersion:
       type: number
       description: >
-        Monotonically increasing unsigned 64-bit integer in the inclusive
-        range [1, 2^64-1]. Prevents rollback attacks. The first manifest MUST
-        use 1.
+        Monotonically increasing unsigned 64-bit integer in the inclusive range [1, 2^64-1].
+        Prevents rollback attacks. The first manifest MUST use 1.
     DeploymentBundleRef:
       type: object
       nullable: true
       description: >
-        Describes a single archive containing all ApplicationDeployment
-        documents. If there are zero deployments (deployments array is empty)
-        the property MUST be present with the value null (it MUST NOT be
-        omitted).
+        Describes a single archive containing all ApplicationDeployment documents. If there are zero deployments (deployments array is empty) the property MUST be present with the value null (it MUST NOT be omitted).
       properties:
         mediaType:
           type: string
           description: >
-            MUST be application/vnd.margo.bundle.v1+tar+gzip; a gzip-compressed
-            tar whose root contains one or more ApplicationDeployment YAML
-            files. If there are zero deployments then bundle MUST be null (an
-            empty archive MUST NOT be served). The archive MUST contain exactly
-            the set of YAML files referenced by deployments.
+            MUST be application/vnd.margo.bundle.v1+tar+gzip; a gzip-compressed tar whose root contains one or more ApplicationDeployment YAML files. If there are zero deployments then bundle MUST be null (an empty archive MUST NOT be served). The archive MUST contain exactly the set of YAML files referenced by deployments.
         digest:
           type: string
           description: >
-            The digest of the bundle archive. MUST equal the digest computed
-            over the exact sequence of bytes (per Exact Bytes Rule) in the
-            bundle endpoint's HTTP 200 OK response body.
+            The digest of the bundle archive. MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the bundle endpoint's HTTP 200 OK response body.
         sizeBytes:
           type: number
           description: >
-            Unsigned 64-bit advisory estimate of the decoded payload length in
-            bytes for the bundle archive. Provided for bandwidth estimation and
-            update planning. MUST NOT be used for integrity; digest verification
-            remains mandatory.
+            Unsigned 64-bit advisory estimate of the decoded payload length in bytes for the bundle archive. Provided for bandwidth estimation and update planning. MUST NOT be used for integrity; digest verification remains mandatory.
         url:
           type: string
           description: >
-            Content-addressable retrieval endpoint of the form
-            /api/v1/clients/{clientId}/bundles/{digest} where {digest} equals
-            bundle.digest.
+            Content-addressable retrieval endpoint of the form /api/v1/clients/{clientId}/bundles/{digest} where {digest} equals bundle.digest.
     DeploymentManifestRef:
       type: object
       description: >
-        Reference to a deployment manifest with content addressing and
-        integrity verification.
+        Reference to a deployment manifest with content addressing and integrity verification.
       required:
         - deploymentId
         - digest
@@ -606,28 +571,20 @@ components:
       properties:
         deploymentId:
           type: string
-          description: Unique identifier for the application deployment.
+          description: >
+            Unique identifier for the application deployment.
         digest:
           type: string
           description: >
-            The digest of the individual ApplicationDeployment YAML file. MUST
-            equal the digest computed over the exact sequence of bytes (per
-            Exact Bytes Rule) in that deployment endpoint's HTTP 200 OK response
-            body.
+            The digest of the individual ApplicationDeployment YAML file. MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in that deployment endpoint's HTTP 200 OK response body.
         sizeBytes:
           type: number
           description: >
-            Unsigned 64-bit advisory estimate of the decoded payload length in
-            bytes for the deployment YAML. Provided for planning or progress
-            display. MUST NOT be used for integrity; digest verification remains
-            mandatory.
+            Unsigned 64-bit advisory estimate of the decoded payload length in bytes for the deployment YAML. Provided for planning or progress display. MUST NOT be used for integrity; digest verification remains mandatory.
         url:
           type: string
           description: >
-            Content-addressable endpoint of the form
-            /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}. The
-            {digest} MUST equal deployments[].digest; the referenced resource is
-            immutable
+            Content-addressable endpoint of the form /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}. The {digest} MUST equal deployments[].digest; the referenced resource is immutable
     UnsignedAppStateManifest:
       type: object
       required:
@@ -644,15 +601,12 @@ components:
           $ref: '#/components/schemas/DeploymentBundleRef'
         deployments:
           type: array
-          description: >
-            A list of deployment object references for the device. The
-            reference contains some meta info and reference to the url where the
-            deployment is available.
+          description: A list of deployment object references for the device. The reference contains some meta info and reference to the url where the deployment is available.
           items:
             $ref: '#/components/schemas/DeploymentManifestRef'
     DeviceCapabilitiesManifest:
       type: object
-      required: [apiVersion, kind, properties]       
+      required: [apiVersion, kind, properties]
       properties:
         apiVersion:
           type: string
@@ -661,7 +615,7 @@ components:
           enum: [DeviceCapabilitiesManifest]
         properties:
           type: object
-          required: [id, vendor, modelNumber, serialNumber, roles]            
+          required: [id, vendor, modelNumber, serialNumber, roles]
           properties:
             id:
               $ref: '#/components/schemas/DeviceId'
@@ -682,7 +636,7 @@ components:
               properties:
                 cpu:
                   type: object
-                  required: [cores]                    
+                  required: [cores]
                   properties:
                     cores:
                       type: number
@@ -732,6 +686,7 @@ components:
               type: string
             message:
               type: string
+
     DeploymentStatusManifest:
       type: object
       required: [apiVersion, kind, deploymentId, status, components]
@@ -765,6 +720,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ComponentStatus'
+
     DevicePeripheral:
       type: object
       required: [type]
@@ -776,6 +732,7 @@ components:
           type: string
         model:
           type: string
+
     DeviceCommunicationInterface:
       type: object
       required: [type]
@@ -785,7 +742,6 @@ components:
           enum: [ethernet, wifi, cellular, bluetooth, usb, canbus, rs232]
     # app deployment struct added here for ease of programming, the code generators will generate the structs
     # for the actual app deployment yaml and parsing would be easy to do
-
     appDeploymentManifest:
       type: object
       description: Application Deployment manifest
@@ -862,9 +818,7 @@ components:
           properties:
             packageLocation:
               type: string
-              description: The URL indicating the Compose package's location. It should be a
-                direct path to the compose.yaml or compose.yaml file archived in
-                tar.gz
+              description: The URL indicating the Compose package's location. It should be a direct path to the compose.yaml or compose.yaml file archived in tar.gz
             keyLocation:
               type: string
               description: Key location of the component
@@ -929,12 +883,13 @@ components:
       properties:
         applicationId:
           type: string
-          description: An identifier for the application. The id is used to help create
-            unique identifiers where required, such as namespaces. The id must
-            be lower case letters and numbers and MAY contain dashes. Uppercase
-            letters, underscores and periods MUST NOT be used. The id MUST NOT
-            be more than 200 characters. The applicationId MUST match the
-            associated application description's top-level "id" attribute.
+          description: >-
+            An identifier for the application.
+            The id is used to help create unique identifiers where required, such as namespaces.
+            The id must be lower case letters and numbers and MAY contain dashes.
+            Uppercase letters, underscores and periods MUST NOT be used.
+            The id MUST NOT be more than 200 characters.
+            The applicationId MUST match the associated application description's top-level "id" attribute.
           pattern: "^[-a-z0-9]{1,200}$"
         deploymentProfile:
           $ref: '#/components/schemas/appDeploymentProfile'
