@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2024 Margo
+#
+# SPDX-License-Identifier: MIT
+#
+---
+name: Trigger Netlify Build
+
+on:
+  push:
+    branches:
+      - pre-draft
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-netlify-build:
+    name: Trigger Netlify Build Hook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify Build
+        run: |
+          curl -X POST https://api.netlify.com/build_hooks/693fe3e255604a01bc2165a9
