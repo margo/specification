@@ -75,6 +75,8 @@ classes:
           See the [Configuration](#configuration-attributes) section below.
         range: Configuration
         rank: 60
+    slots:
+      - x-placeholder-extensions
 
   Metadata:
     description: Metadata about the application.
@@ -225,6 +227,7 @@ classes:
     slots:
       - type
       - components
+      - x-placeholder-extensions
 
   RequiredResources:
     description: >-
@@ -375,6 +378,8 @@ classes:
         range: ComponentProperties 
         required: true
         rank: 20
+    slots:
+      - x-placeholder-extensions
 
   HelmComponent:
     is_a: Component
@@ -714,6 +719,17 @@ slots:
     inlined: true
     inlined_as_list: true
     rank: 20
+
+  x-placeholder-extensions:
+    description: >-
+      Allows addition of arbitrary complex YAML structures 
+      for suppliers to provide vendor-specific functionality beyond what is defined in
+      the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details.
+    required: false
+    multivalued: true
+    inlined: true
+    inlined_as_list: false
+    rank: 999
 
 enums:
   CpuArchitectureType:
