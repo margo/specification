@@ -19,6 +19,8 @@ which defines the [desired state](../margo-management-interface/desired-state.md
             {%- else -%}
                 {%- if slot.name == "properties" -%}
                     map[string][string]
+                {%- elif slot.name == "x-placeholder-extensions" -%}
+                    map[string]interface{}
                 {%- else -%}
                     map[string][{{ slot.range }}]
                 {%- endif -%}
@@ -31,11 +33,18 @@ which defines the [desired state](../margo-management-interface/desired-state.md
     {%- endif -%}
 {%- endmacro -%}
 
+{%- macro display_slot_name(slot_name) -%}
+    {%- if slot_name == "x-placeholder-extensions" -%}
+        x-&lt;unique-name&gt;-extensions
+    {%- else -%}
+        {{ slot_name }}
+    {%- endif -%}
+{%- endmacro -%}
+
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-{% for slot in schemaview.class_slots("ApplicationDescription")|sort(attribute='rank') -%}
-{% set slot_def = schemaview.induced_slot(slot, "ApplicationDescription") -%}
-| {{ slot }} | {{ format_range(slot_def) }} | {% if slot_def.required == True %} Y {% else %} N {% endif %} | {{ slot_def.description }}|
+{% for slot_def in schemaview.class_induced_slots("ApplicationDescription")|sort(attribute='rank') -%}
+| {{ display_slot_name(slot_def.name) }} | {{ format_range(slot_def) }} | {% if slot_def.required == True %} Y {% else %} N {% endif %} | {{ slot_def.description }}|
 {% endfor -%}
 
 {% for c in gen.all_class_objects()|sort(attribute='rank') %}
@@ -60,9 +69,9 @@ which defines the [desired state](../margo-management-interface/desired-state.md
 {%- for slot in gen.get_direct_slots(c)|sort(attribute='rank') %}
 {%- if c.name == "Parameter" and slot.name == "name" %}
 {%- elif slot.name != "value" %}
-| {{ slot.name }} | {{ format_range(slot) }} | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
+| {{ display_slot_name(slot.name) }} | {{ format_range(slot) }} | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
 {%- else %}
-| {{ slot.name }} | <*see description*> | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
+| {{ display_slot_name(slot.name) }} | <*see description*> | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
 {%- endif %}
 {%- endfor %}
 
@@ -171,3 +180,32 @@ An example of an `ApplicationDescription` defining [deployment profiles](#deploy
 ```yaml
 {% include 'examples/valid/ApplicationDescription-002.yaml' %}
 ```
+
+## Specification extensions
+
+> **Note:** See the [specification extensions](../margo-management-interface/specification-extensions.md) page for additional details.
+
+The Application Description document supports the following specification extensions scenarios:
+
+### Collaboration between application and workload fleet manager suppliers
+
+To make use of specification extensions defined by a workload fleet manager supplier, the extension property MUST be added to the Application Description yaml document's [root](#top-level-attributes).
+
+The workload fleet manager MUST ignore any unknown specification extensions targeting a workload fleet manager supplier. Importing an application description with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
+
+The workload fleet manager MUST NOT propagate these specification extension properties to the device via the [Application Deployment yaml](../margo-management-interface/desired-state#applicationdeployment-yaml-definition#specification-extensions) document. 
+
+
+### Collaboration between application and device suppliers
+
+To make use of specification extensions defined by a device supplier, the extension property MUST be added to the root of either the [deploymentProfile](#deploymentprofile-attributes) or [component](#componentproperties-attributes) objects. 
+
+The workload fleet manager MUST import an application description with specification extensions targeting a device supplier without resulting in a failure because of the included specification extensions.
+
+The workload fleet manager MUST propagate these extension properties to the device via the [Application Deployment yaml](../margo-management-interface/desired-state#applicationdeployment-yaml-definition#specification-extensions) document.
+
+
+
+
+
+  
