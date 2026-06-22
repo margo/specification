@@ -42,6 +42,8 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
 | kind            | string    | Y    | Must be `DeviceCapabilitiesManifest`.|
 | properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-attributes) section below. |
+| x-&lt;unique-name&gt;-extensions | map[string]interface{} | N | Allows addition of arbitrary complex JSON structures for suppliers to provide vendor-specific functionality beyond what is defined in the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details. |
+   
 
 ### Properties Attributes
 
@@ -335,3 +337,15 @@ A WFM client reporting the "Gateway" role MUST report its own capabilities to th
     ```
     DELETE /api/v1/clients/{clientId}/capabilities/gateway1/deviceA
     ```
+
+## Specification Extensions
+
+> **Note:** See the [specification extensions](../margo-management-interface/specification-extensions.md) page for additional details.
+
+The Device Capabilities document supports the following specification extension scenarios:
+
+### Collaboration between device and workload fleet manager suppliers
+
+For the device workload fleet manager clients to make use of specification extensions defined by a workload fleet manager supplier, the extension property MUST be added to the device capabilities JSON document's [root](#request-body-attributes).
+
+Workload fleet manager service implementations MUST ignore any unknown specification extensions targeting a device supplier. Importing a device capabilities document with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
