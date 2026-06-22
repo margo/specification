@@ -2,7 +2,7 @@
 
 Workload fleet manager and device suppliers may desire a way to add custom metadata, configuration, or functionality to certain Margo documents that goes beyond what is defined in the Margo specification. 
 
-The functionality is supported via specification extensions may be used for:
+The functionality is supported via specification extensions and may be used for:
 
 - Collaboration between application and workload fleet manager suppliers
 - Collaboration between application and device suppliers
@@ -17,10 +17,16 @@ Workload fleet management server and client implementations MUST NOT fail when e
 For specifics, see the specification extension documentation for each of the following documents:
 
 - [Application Description](../applications/application-description.md#specification-extensions)
-- [Application Deployment](./desired-state#applicationdeployment-yaml-definition#specification-extensions)
+- [Application Deployment](./desired-state#specification-extensions)
 - [Device Capabilities](./device-capabilities.md#specification-extensions)
 
-The property naming conventions for adding specification extension is `x-<unique name>-extensions` and MUST conform with the `^x-[a-z][a-z0-9-]*-extensions$` pattern. 
+The property naming conventions for adding specification extension is `x-<unique name>-extensions`. 
+
+The `<unique-name>` MUST match the `[a-z][a-z0-9-]*` regular expression and conform with the following rules:
+
+- MUST start with a lowercase letter
+- MUST have no spaces or special characters 
+- MAY container lowercase letters, digits, and dashes
 
 It is recommend to use identifying information as the unique name such as a company name, organization name, a combination of company name and department, etc. to reduce chances of naming conflicts.
 
@@ -31,7 +37,7 @@ For example:
 - x-northstar-industries-extensions
 - x-northforgesystems-processautomation-extensions
 
-Extension properties may contain any simple or complex child properties as long as it is valid YAML or JSON for the document type the specification extension property is added to.
+Extension properties may contain any simple or complex child properties as long as it is valid YAML or JSON applicable to the document type the specification extension property is added to.
 
 > **Note:** The supplier implementing the specification extension defines the specification extension property name and supported child properties. A supplier wishing to make use of the specification extension uses the specification extension property name and child properties the implementor has defined.
 

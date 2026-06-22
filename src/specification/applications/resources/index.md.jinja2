@@ -185,7 +185,7 @@ An example of an `ApplicationDescription` defining [deployment profiles](#deploy
 
 > **Note:** See the [specification extensions](../margo-management-interface/specification-extensions.md) page for additional details.
 
-The Application Description document supports the following specification extensions scenarios:
+The Application Description document supports the following specification extension scenarios:
 
 ### Collaboration between application and workload fleet manager suppliers
 
@@ -193,16 +193,16 @@ To make use of specification extensions defined by a workload fleet manager supp
 
 The workload fleet manager MUST ignore any unknown specification extensions targeting a workload fleet manager supplier. Importing an application description with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
 
-The workload fleet manager MUST NOT propagate these specification extension properties to the device via the [Application Deployment yaml](../margo-management-interface/desired-state#applicationdeployment-yaml-definition#specification-extensions) document. 
+The workload fleet manager MUST NOT propagate these specification extension properties to the device via the [Application Deployment yaml](../margo-management-interface/desired-state#specification-extensions) document. 
 
 
 ### Collaboration between application and device suppliers
 
-To make use of specification extensions defined by a device supplier, the extension property MUST be added to the root of either the [deploymentProfile](#deploymentprofile-attributes) or [component](#componentproperties-attributes) objects. 
+To make use of specification extensions defined by a device supplier, the extension property MUST be added to the root of either the [deploymentProfile](#deploymentprofile-attributes) or [component](#component-attributes) objects. 
 
 The workload fleet manager MUST import an application description with specification extensions targeting a device supplier without resulting in a failure because of the included specification extensions.
 
-The workload fleet manager MUST propagate these extension properties to the device via the [Application Deployment yaml](../margo-management-interface/desired-state#applicationdeployment-yaml-definition#specification-extensions) document.
+The workload fleet manager MUST propagate these extension properties to the device via the [Application Deployment yaml](../margo-management-interface/desired-state#specification-extensions) document.
 
 
 

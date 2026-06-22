@@ -105,6 +105,8 @@ classes:
         inlined: true
         inlined_as_list: false
         rank: 20
+    slots:
+      - x-placeholder-extensions
 
   DeploymentProfile:
     description: A class representing a deployment profile.
@@ -113,6 +115,7 @@ classes:
     slots:
       - type
       - components
+      - x-placeholder-extensions
 
   HelmDeploymentProfile:
     is_a: DeploymentProfile
@@ -154,6 +157,8 @@ classes:
         inlined: true
         inlined_as_list: false
         rank: 20
+    slots:
+      - x-placeholder-extensions
 
   HelmComponent:
     is_a: Component
@@ -221,3 +226,14 @@ slots:
     multivalued: true
     required: true
     rank: 20
+
+  x-placeholder-extensions:
+    description: >-
+      Allows addition of arbitrary complex YAML structures 
+      for suppliers to provide vendor-specific functionality beyond what is defined in
+      the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details.
+    required: false
+    multivalued: true
+    inlined: true
+    inlined_as_list: false
+    rank: 999

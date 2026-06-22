@@ -302,6 +302,8 @@ spec:
         {%- else -%}
             {%- if slot.name == "properties" -%}
                 map[string][string]
+            {%- elif slot.name == "x-placeholder-extensions" -%}
+                map[string]interface{}
             {%- else -%}
                 map[string][{{ slot.range }}]
             {%- endif -%}
@@ -311,10 +313,18 @@ spec:
     {%- endif -%}
 {%- endmacro -%}
 
+{%- macro display_slot_name(slot_name) -%}
+    {%- if slot_name == "x-placeholder-extensions" -%}
+        x-&lt;unique-name&gt;-extensions
+    {%- else -%}
+        {{ slot_name }}
+    {%- endif -%}
+{%- endmacro -%}
+
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 {% for slot in schemaview.class_slots("DesiredState")|sort(attribute='rank') -%}
-| {{ slot }} | {{ schemaview.get_slot(slot).range }} | {% if schemaview.get_slot(slot).required == True %} Y {% else %} N {% endif %} | {{ schemaview.get_slot(slot).description }}|
+| {{ display_slot_name(slot) }} | {{ schemaview.get_slot(slot).range }} | {% if schemaview.get_slot(slot).required == True %} Y {% else %} N {% endif %} | {{ schemaview.get_slot(slot).description }}|
 {% endfor -%}
 
 {% for c in gen.all_class_objects()|sort(attribute='rank') %}
@@ -328,7 +338,7 @@ spec:
 {%- set parameters_slot = schemaview.get_slot("parameters") -%}
 {%- set is_map_key = parameters_slot and parameters_slot.range == c.name and not parameters_slot.inlined_as_list and slot.identifier %}
 {%- if not is_map_key %}
-| {{ slot.name }} | {{ format_range(slot) }} | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
+| {{ display_slot_name(slot.name) }} | {{ format_range(slot) }} | {% if slot.required == True %} Y {% else %} N {% endif %} | {{ slot.description }}|
 {%- endif %}
 {%- endfor %}
 {%- endif %}
@@ -361,3 +371,21 @@ In this example, an application is deployed to a child device with the see-thru 
 ```yaml
 {% include 'examples/valid/gateway-autonomous.yaml' %}
 ```
+
+### Specification Extensions
+
+> **Note:** See the [specification extensions](../margo-management-interface/specification-extensions.md) page for additional details.
+
+The Application Deployment document supports the following specification extension scenarios:
+
+#### Collaboration between application and device suppliers
+
+Application suppliers targeting device supplier specification extensions include the required specification extension properties in the [application description](../applications/application-description.md#specification-extensions) document. Workload fleet manager service implementations MUST include the specification extension properties defined in the application description in the application deployment document. The specification extensions defined in the application description's deploymentProfile or component objects must be included in the comparable [deploymentProfile](#deploymentprofile-attributes) or [component](#component-attributes) objects in the application deployment document exactly as they are in the application description document.
+
+The device client implementations MUST ignore any unknown specification extensions targeting a device supplier. Importing an application deployment with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
+
+#### Collaboration between workload fleet manager and device suppliers
+
+For the workload fleet manager to make use of specification extensions defined by a device supplier, the extension property MUST be added to the Application Description yaml document's [spec](#spec-attributes) object.
+
+The device client implementations MUST ignore any unknown specification extensions targeting a device supplier. Importing an application deployment with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
