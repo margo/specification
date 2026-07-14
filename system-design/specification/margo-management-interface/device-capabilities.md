@@ -51,20 +51,17 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
-| roles         | []string    | Y    | Element that defines the device role it can provide to the Margo environment. MUST be one of the following: Standalone Cluster, Cluster Leader, Standalone Device, or Gateway |
-| resources            | Resource    | *    | Element that defines the device's resources available to the application deployed on the device. See the [Resource Fields](#resources-attributes) section below. <br/> * The element is required if the device has any of the following roles: Standalone Cluster, Cluster Leader, Standalone Device. |
+| cpu | []CPU | Y* | List of CPU entries available on the device. Utilized to match with the required resources defined in the application description. See the [CPU](#cpu-attributes) section below.|
+| memory | string | Y* | The amount of memory available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
+| storage | string | Y* | The amount of storage available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
+| peripherals | []Peripheral | N | Peripherals available for applications to utilize on the device. See the [Peripheral](#peripheral-attributes) section below.|
+| interfaces | []CommunicationInterface | N | Communication interfaces available for applications to utilize on the device. See the [Communication Interfaces](#communicationinterface-attributes) section below.|
+| otelCollector | boolean | Y* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. |
+| supportedRuntimes | []SupportedRuntime | Y* | The standard Margo OCI runtimes available on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
+| supportedDeploymentTypes | []SupportedDeploymentType | Y* | The manifest/deployment formats the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
+| managesChildDevices | boolean | N | Indicates the device is a see-thru gateway that reports the capabilities of one or more child devices to the WFM as individually visible devices. See the [Gateways considerations](#gateways-considerations) section below. |
 
-### Resources Attributes
-Resources of the specific device being reported to the WFM. Utilized to match with the required resources defined in the application description
-
-| Attribute | Type | Required? | Description |
-| --- | --- | --- | --- |
-| cpu | CPU |  Y  | CPU element specifying the CPU information of the device.  See the [CPU](#cpu-attributes) section below.|
-| memory | string |  Y  | The amount of memory available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
-| storage | string |  Y  | The amount of storage available for applications to utilize on the device. The value is given a binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
-| peripherals | []Peripheral |  Y  | Peripherals element specifying the peripherals available for applications to utilize on the device.  See the [Peripheral](#peripheral-attributes) section below.|
-| interfaces | []CommunicationInterface |  Y  | Interfaces element specifying the communication interfaces available for applications to utilize on the device.  See the [Communication Interfaces](#communicationinterface-attributes) section below.|
-
+> \* Required for devices that host workloads locally. A device that only manages child devices (a see-thru gateway that hosts nothing itself) reports `managesChildDevices: true` and omits these workload-hosting fields. Every `DeviceCapabilitiesManifest` MUST report at least one capability: the workload-hosting fields (`cpu`, `memory`, `storage`, `otelCollector`, `supportedRuntimes`, `supportedDeploymentTypes`) or `managesChildDevices: true`.
 
 ### CPU Attributes
 CPU element defining the device's CPU characteristics.
@@ -72,7 +69,7 @@ CPU element defining the device's CPU characteristics.
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
 | cores | integer |  Y  | Defines the cores available within the hosts CPU. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the device owner. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
-| architecture | CpuArchitectureType |  N  | The CPU architecture supported by the device. This can be e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.|
+| architecture | CpuArchitectureType |  N  | The CPU architecture supported by the device. This can be e.g. amd64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.|
 
 
 ### Peripheral Attributes
@@ -125,6 +122,20 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | microphone | This type stands for a microphone peripheral. |
 | speaker | This type stands for a speaker peripheral. |
 
+#### SupportedRuntime
+
+| Permissible Values | Description |
+| --- | --- |
+| oci | OCI container runtime. |
+
+
+#### SupportedDeploymentType
+
+| Permissible Values | Description |
+| --- | --- |
+| helm | Device can receive and process Kubernetes Helm chart deployments locally. |
+| compose | Device can receive and process Docker Compose service deployments locally. |
+
 
 ## Example Device Capabilities Payload
 
@@ -134,37 +145,39 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
     "kind": "DeviceCapabilitiesManifest",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
-        "vendor": "Northstar Industrial devices",
+        "vendor": "Northstar Industrial Devices",
         "modelNumber": "332ANZE1-N1",
         "serialNumber": "PF45343-AA",
-        "roles": [
-            "standalone cluster",
-            "cluster leader"
+        "cpu": [
+            {
+                "cores": 24,
+                "architecture": "amd64"
+            }
         ],
-        "resources": {
-            "cpu": [
-                {
-                    "cores": 24,
-                    "architecture": "x86_64"
-                }
-            ],
-            "memory": "59 Gi",
-            "storage": "1862 Gi",
-            "peripherals": [
-                {
-                    "type": "GPU",
-                    "manufacturer": "NVIDIA"
-                }
-            ],
-            "interfaces": [
-                {
-                    "type": "ethernet"
-                },
-                {
-                    "type": "wifi"
-                }
-            ]
-        }
+        "memory": "59 Gi",
+        "storage": "1862 Gi",
+        "peripherals": [
+            {
+                "type": "gpu",
+                "manufacturer": "NVIDIA"
+            }
+        ],
+        "interfaces": [
+            {
+                "type": "ethernet"
+            },
+            {
+                "type": "wifi"
+            }
+        ],
+        "otelCollector": true,
+        "supportedRuntimes": [
+            "oci"
+        ],
+        "supportedDeploymentTypes": [
+            "helm",
+            "compose"
+        ]
     }
 }
 ```
@@ -175,19 +188,19 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 ### Opaque gateways
 
-A device may represent, and aggregate the capabilities of, multiple child-devices behind it and report itself as a single Margo device to the WFM. This type of device is referred to as an opaque gateway. Opaque gateways report the combined capabilities of all the devices they connect to the WFM.
+A device may represent, and aggregate the capabilities of, multiple child-devices behind it and report itself as a single Margo device to the WFM. This type of device is referred to as an opaque gateway. Opaque gateways report the combined capabilities of all the devices they connect to the WFM as a single `DeviceCapabilitiesManifest`. Because the child-devices are not individually visible to the WFM, an opaque gateway does not set `managesChildDevices`; it reports the aggregated resource fields, `supportedRuntimes`, and `supportedDeploymentTypes` of the devices behind it.
 
-> Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. In addition since the gateway can deploy compose applications on its child-devices it will report the role of "standalone device".
+> Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. Since the gateway can deploy compose applications on its child-devices it will report `supportedDeploymentTypes: ["compose"]`.
 
 ### See-thru gateways
 
-WFM clients may connect one or more child-devices to the WFM while allowing the WFM to see each device behind it as an individual device with its own capabilities. This type of clients are referred to as see-thru gateways and report the "Gateway" role.
+WFM clients may connect one or more child-devices to the WFM while allowing the WFM to see each device behind it as an individual device with its own capabilities. This type of client is referred to as a see-thru gateway and reports `managesChildDevices: true`.
 
-WFM clients reporting the "Gateway" role MUST report their capabilities and the capabilities of each device they connect to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device behind the gateway. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB". 
+A see-thru gateway MUST report its own capabilities and the capabilities of each device it connects to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device behind the gateway. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB".
 
-If a WFM client reporting the "Gateway" role is capable of hosting edge applications it MUST report the corresponding role(s) (i.e., "Standalone Device", "Standalone Cluster, and/or "Cluster Leader") and the resources available for these deployments.
+A see-thru gateway that does not host workloads itself reports only `managesChildDevices: true` and omits the workload-hosting fields (`cpu`, `memory`, `storage`, `otelCollector`, `supportedRuntimes`, `supportedDeploymentTypes`). A see-thru gateway that is also capable of hosting workloads reports `managesChildDevices: true` together with the workload-hosting fields, including at least one entry in both `supportedRuntimes` and `supportedDeploymentTypes`.
 
-A WFM client reporting the "Gateway" role MUST report its own capabilities to the WFM before reporting the capabilities of any child devices. If a WFM receives a `DeviceCapabilitiesManifest` for a child-device before it has received the `DeviceCapabilitiesManifest` of the parent WFM client, the WFM MUST reject the request with a 404 Not Found response code.
+A see-thru gateway MUST report its own capabilities to the WFM before reporting the capabilities of any child devices. If a WFM receives a `DeviceCapabilitiesManifest` for a child-device before it has received the `DeviceCapabilitiesManifest` of the parent WFM client, the WFM MUST reject the request with a 404 Not Found response code.
 
 #### Examples
 
@@ -205,9 +218,7 @@ A WFM client reporting the "Gateway" role MUST report its own capabilities to th
             "vendor": "Gateway Vendor",
             "modelNumber": "GW-1000",
             "serialNumber": "GW12345678",
-            "roles": [
-                "Gateway"
-            ]
+            "managesChildDevices": true
         }
     }
     ```
@@ -226,26 +237,28 @@ A WFM client reporting the "Gateway" role MUST report its own capabilities to th
             "vendor": "Gateway Vendor",
             "modelNumber": "GW-1000",
             "serialNumber": "GW12345678",
-            "roles": [
-                "Gateway",
-                "Standalone Device"
+            "managesChildDevices": true,
+            "cpu": [
+                {
+                    "cores": 4,
+                    "architecture": "amd64"
+                }
             ],
-            "resources": {
-                "cpu": [
-                    {
-                        "cores": 4,
-                        "architecture": "x86_64"
-                    }
-                ],
-                "memory": "12 Gi",
-                "storage": "200 Gi",
-                "peripherals": [],
-                "interfaces": [
-                    {
-                        "type": "ethernet"
-                    }
-                ]
-            }
+            "memory": "12 Gi",
+            "storage": "200 Gi",
+            "peripherals": [],
+            "interfaces": [
+                {
+                    "type": "ethernet"
+                }
+            ],
+            "otelCollector": true,
+            "supportedRuntimes": [
+                "oci"
+            ],
+            "supportedDeploymentTypes": [
+                "compose"
+            ]
         }
     }
     ```
@@ -264,31 +277,32 @@ A WFM client reporting the "Gateway" role MUST report its own capabilities to th
             "vendor": "Device A Vendor",
             "modelNumber": "DA-2000",
             "serialNumber": "DA12345678",
-            "roles": [
-                "Standalone Cluster",
-                "Cluster Leader"
+            "cpu": [
+                {
+                    "cores": 24,
+                    "architecture": "amd64"
+                }
             ],
-            "resources": {
-                "cpu": [
-                    {
-                        "cores": 24,
-                        "architecture": "x86_64"
-                    }
-                ],
-                "memory": "59 Gi",
-                "storage": "1862 Gi",
-                "peripherals": [
-                    {
-                        "type": "GPU",
-                        "manufacturer": "NVIDIA"
-                    }
-                ],
-                "interfaces": [
-                    {
-                        "type": "ethernet"
-                    }
-                ]
-            }
+            "memory": "59 Gi",
+            "storage": "1862 Gi",
+            "peripherals": [
+                {
+                    "type": "gpu",
+                    "manufacturer": "NVIDIA"
+                }
+            ],
+            "interfaces": [
+                {
+                    "type": "ethernet"
+                }
+            ],
+            "otelCollector": true,
+            "supportedRuntimes": [
+                "oci"
+            ],
+            "supportedDeploymentTypes": [
+                "helm"
+            ]
         }
     }
     ```
@@ -307,25 +321,27 @@ A WFM client reporting the "Gateway" role MUST report its own capabilities to th
             "vendor": "Device A Vendor",
             "modelNumber": "DA-1000",
             "serialNumber": "DA12345678",
-            "roles": [
-                "Standalone Device"
+            "cpu": [
+                {
+                    "cores": 2,
+                    "architecture": "arm64"
+                }
             ],
-            "resources": {
-                "cpu": [
-                    {
-                        "cores": 2,
-                        "architecture": "arm64"
-                    }
-                ],
-                "memory": "6 Gi",
-                "storage": "30 Gi",
-                "peripherals": [],
-                "interfaces": [
-                    {
-                        "type": "ethernet"
-                    }
-                ]
-            }
+            "memory": "6 Gi",
+            "storage": "30 Gi",
+            "peripherals": [],
+            "interfaces": [
+                {
+                    "type": "ethernet"
+                }
+            ],
+            "otelCollector": true,
+            "supportedRuntimes": [
+                "oci"
+            ],
+            "supportedDeploymentTypes": [
+                "compose"
+            ]
         }
     }
     ```

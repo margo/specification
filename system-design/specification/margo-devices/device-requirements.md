@@ -1,19 +1,24 @@
 # Device Requirements
 
-All current device roles MUST meet the following requirements to be considered Margo compliant. These requirements ensure devices can effectively host and manage Margo compliant workloads. A device MUST support onboarding and management from only a single workload fleet manager.
+All Margo conformant devices MUST meet a baseline set of requirements to be considered Margo compliant. These requirements ensure devices can effectively host and manage Margo compliant workloads. A device MUST support onboarding and management from only a single workload fleet manager. A device reports what it can provide to the ecosystem through its [device capabilities](../margo-management-interface/device-capabilities.md).
 
 All devices MUST provide the following components:
-    
+
 - A workload fleet management client
-- An OCI container runtime
+
+All workload hosting devices MUST provide the following components:
+    
+- at least one supported deployment type (`supportedDeploymentTypes`)
+- at least one supported workload runtime (`supportedRuntimes`)
 - An OTEL collector
 
-## Standalone Cluster Role Requirements
+## Kubernetes (Helm) enabled device requirements
 
-Devices filling the standalone cluster role MUST provide the following additional components:
+Devices supporting the helm deployment type, MUST provide the following additional components:
 
-- Kubernetes orchestration platform
 - Capabilities for deploying Helm charts
+    - described via the `supportedDeploymentTypes`:`helm`
+- Kubernetes orchestration platform
 
 ### Helm deployment approaches
 
@@ -28,12 +33,13 @@ Margo does not dictate how devices deploy workloads packaged as Helm charts. A d
 If a device vendor chooses a deployment approach that does not interact with the Kubernetes API, the list of Kuberentes APIs available in the cluster MUST be provided out-of-band. This is supported by a variety of tooling such as the Helm GO SDK, `helm template` command, Kustomization, and ArgoCD.
 
 
-## Standalone Device Role Details
+## Compose enabled device requirements
 
-Devices filling the standalone device role MUST provide the following additional components:
+Devices supporting the compose deployment type, MUST provide the following additional components:
 
-- Compose compliant software as the orchestration platform
 - Capabilities for deploying Compose applications
+    - described via the `supportedDeploymentTypes`:`compose`
+- Compose compliant software as the orchestration platform
 
 
 ## Future Requirements

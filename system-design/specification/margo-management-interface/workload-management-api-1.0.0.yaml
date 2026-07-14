@@ -479,7 +479,14 @@ components:
           enum: [DeviceCapabilitiesManifest]
         properties:
           type: object
-          required: [id, vendor, modelNumber, serialNumber, roles]
+          required: [id, vendor, modelNumber, serialNumber]
+          # A device that hosts workloads MUST report cpu, memory, storage, otelCollector,
+          # supportedRuntimes (>=1), and supportedDeploymentTypes (>=1). A see-thru gateway that
+          # hosts nothing itself sets managesChildDevices=true and omits those fields. Every
+          # manifest MUST report at least one capability group, enforced by the anyOf below.
+          anyOf:
+            - required: [supportedDeploymentTypes]
+            - required: [managesChildDevices]
           properties:
             id:
               $ref: '#/components/schemas/DeviceId'
@@ -489,36 +496,45 @@ components:
               type: string
             serialNumber:
               type: string
-            roles:
+            cpu:
               type: array
               items:
+                type: object
+                required: [cores]
+                properties:
+                  cores:
+                    type: number
+                  architecture:
+                    type: string
+                    enum: [amd64, arm64, arm]
+            memory:
+              type: string
+            storage:
+              type: string
+            peripherals:
+              type: array
+              items:
+                $ref: '#/components/schemas/DevicePeripheral'
+            interfaces:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceCommunicationInterface'
+            otelCollector:
+              type: boolean
+            supportedRuntimes:
+              type: array
+              minItems: 1
+              items:
                 type: string
-                enum: [Standalone Cluster, Cluster Leader, Standalone Device, Gateway]
-            resources:
-              type: object
-              required: [cpu, memory, storage, peripherals, interfaces]
-              properties:
-                cpu:
-                  type: object
-                  required: [cores]
-                  properties:
-                    cores:
-                      type: number
-                    architecture:
-                      type: string
-                      enum: [amd64, arm64, arm]
-                memory:
-                  type: string
-                storage:
-                  type: string
-                peripherals:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/DevicePeripheral'
-                interfaces:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/DeviceCommunicationInterface'
+                enum: [oci]
+            supportedDeploymentTypes:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                enum: [helm, compose]
+            managesChildDevices:
+              type: boolean
     DeviceId:
       # format: "{id}[/{id}[/{id}...]]"
       # Top-level id is required and must include only unreserved characters as specified in RFC3986.
