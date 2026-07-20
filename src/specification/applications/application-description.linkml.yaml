@@ -722,8 +722,8 @@ slots:
 
   x-placeholder-extensions:
     description: >-
-      Allows addition of arbitrary complex YAML structures 
-      for suppliers to provide vendor-specific functionality beyond what is defined in
+      Allows addition of arbitrary object (mapping) whose contents 
+      suppliers use to provide vendor-specific functionality beyond what is defined in
       the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details.
     required: false
     multivalued: true
