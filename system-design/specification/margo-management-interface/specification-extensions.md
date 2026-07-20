@@ -26,7 +26,7 @@ The `<unique-name>` MUST match the `[a-z][a-z0-9-]*` regular expression and conf
 
 - MUST start with a lowercase letter
 - MUST have no spaces or special characters 
-- MAY container lowercase letters, digits, and dashes
+- MAY contain lowercase letters, digits, and dashes
 
 It is recommend to use identifying information as the unique name such as a company name, organization name, a combination of company name and department, etc. to reduce chances of naming conflicts.
 
