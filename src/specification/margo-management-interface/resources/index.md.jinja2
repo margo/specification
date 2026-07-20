@@ -386,6 +386,6 @@ The device client implementations MUST ignore any unknown specification extensio
 
 #### Collaboration between workload fleet manager and device suppliers
 
-For the workload fleet manager to make use of specification extensions defined by a device supplier, the extension property MUST be added to the Application Description yaml document's [spec](#spec-attributes) object.
+For the workload fleet manager to make use of specification extensions defined by a device supplier, the extension property MUST be added to the Application Deployment yaml document's [spec](#spec-attributes) object.
 
 The device client implementations MUST ignore any unknown specification extensions targeting a device supplier. Importing an application deployment with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
