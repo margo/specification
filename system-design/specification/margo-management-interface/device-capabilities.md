@@ -42,7 +42,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
 | kind            | string    | Y    | Must be `DeviceCapabilitiesManifest`.|
 | properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-attributes) section below. |
-| x-&lt;unique-name&gt;-extensions | map[string]interface{} | N | Allows addition of arbitrary complex JSON structures for suppliers to provide vendor-specific functionality beyond what is defined in the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details. |
+| x-&lt;unique-name&gt;-extensions | map[string]interface{} | N | Allows addition of an arbitrary JSON object whose contents suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details. |
    
 
 ### Properties Attributes
