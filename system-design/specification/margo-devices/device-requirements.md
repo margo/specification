@@ -1,6 +1,6 @@
 # Device Requirements
 
-All current device roles MUST meet the following requirements to be considered Margo compliant. These requirements ensure devices can effectively host and manage Margo compliant workloads. A device MUST support onboarding and management from only a single workload fleet manager.
+All current device roles MUST meet the following requirements to be considered Margo compliant. These requirements ensure devices can effectively host and manage Margo compliant workloads. A device MUST be managed by only a single workload fleet manager.
 
 All devices MUST provide the following components:
     

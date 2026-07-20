@@ -1,0 +1,139 @@
+# Margo Identity and Authorization Framework
+
+The Margo Identity and Authorization Framework (MIAF) is Margo's common foundation for identity, authentication, and authorization. It is built on cryptographically verifiable credentials aligned with open cloud-native identity standards, notably [SPIFFE](https://spiffe.io/).
+
+MIAF defines:
+
+- a **Trust Domain** model and the **SPIFFE ID** namespace for identifying Margo components;
+- an **X.509-SVID** profile (an X.509 certificate carrying a SPIFFE ID in its URI SAN) as the credential a component presents;
+- the **SPIFFE Bundle Map** as the canonical format for distributing trust anchors, located through an optional [discovery document](trust-bundle-and-discovery.md);
+- the **Margo Identity Service (MIS)** as the identity-authority role within a Trust Domain; and
+- a cryptographic and [TLS baseline](tls-requirements.md) shared by all Margo components, with authentication by mTLS using X.509-SVIDs validated against the Trust Bundle.
+
+The framework is generic: it does not define an enrollment protocol or a specific identity profile. Those are layered on top. The [Margo WFM Identity Profile](wfm-identity-profile.md) is the first such profile, naming WFMs and WFM Clients and applying MIAF authentication to the [Margo Management Interface](../margo-management-interface/api-requirements-and-security.md).
+
+Authentication is mTLS with an X.509-SVID. Authorization is performed locally by each verifier, based on the peer's verified SPIFFE ID. There is no central authorization server.
+
+## Framework Overview
+
+MIAF has four moving parts:
+
+1. **Trust Domain**: the security boundary within which MIAF identities are issued and validated. Each SPIFFE ID belongs to exactly one Trust Domain; a verifier MAY also accept identities from other Trust Domains through configuration or federation.
+2. **Margo Identity Service (MIS)**: the identity-authority role. It issues SVIDs, publishes the discovery document and Trust Bundle, and enforces the cryptographic and SVID-profile rules. The role is not pinned to a specific service API.
+3. **Margo components**: DFMs, WFMs, their clients, and infrastructure services. A component acts as an **SVID holder** when it authenticates and as a **verifier** when it validates a peer's SVID.
+4. **Trust Bundles**: each Trust Domain publishes a Trust Bundle (a set of X.509 trust anchors) that verifiers validate SVIDs against. Bundles are distributed via the SPIFFE [Bundle Map](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Trust_Domain_and_Bundle.md).
+
+Once a component holds an SVID:
+
+1. **Acquire trust material.** The component acquires its Trust Domain's Trust Bundle: it either locates the bundle through the discovery document and retrieves it over HTTPS, or receives the bundle and Trust Domain identifier through operator-provided configuration or out-of-band delivery (see [initial trust bootstrap](tls-requirements.md#initial-trust-bootstrap)).
+2. **Authenticate to peers.** The component and peer complete an mTLS handshake: the component presents its X.509-SVID, and the peer validates the chain against the Trust Bundle.
+3. **Authorize the call.** The peer applies its local policy to the now-verified SPIFFE ID.
+
+A component obtains its SVID through the [operator provisioning playbook](identity-lifecycle.md#operator-provisioning-playbook).
+
+> **Conceptual trust and identity architecture (informative)**
+>
+> The diagram below shows MIAF in its most general form: a Margo component holds an X.509-SVID within a governed Trust Domain, then authenticates to peers over mTLS. The Trust Domain publishes the Trust Bundle that participants use to validate identities.
+>
+> ```mermaid
+> flowchart LR
+>  Client["`**Margo Client Component**
+>  (e.g., WFM Client, DFM Client, OTel Collector)`"]
+>  Server["`**Margo Server Component**
+>  (e.g., WFM, DFM, Observability Platform, Component Registry)`"]
+>  MIS["`**Margo Identity Service (MIS)**
+>  Issues SVIDs, publishes Trust Bundle & discovery`"]
+>  TD["`**Trust Domain**
+>  Defines trust anchors, policies, and namespace`"]
+>  X509["`**X.509 SVID**
+>  Certificate binding SPIFFE ID to key pair`"]
+>  TB["`**Trust Bundle**
+>  X.509 trust anchors`"]
+>
+>  Client -->|"holds X.509 SVID"| X509
+>  MIS -->|"issues X.509 SVID"| X509
+>  Client -->|"authenticates using X.509 SVID (mTLS)"| Server
+>  Server -->|"verifies SVID using Trust Bundle of"| TD
+>  TD -->|"publishes"| TB
+>
+>  classDef comp fill:#e8f1ff,stroke:#5b8def,stroke-width:1px,rx:8px,ry:8px,color:#0b3b8c;
+>  classDef ident fill:#e8f7ee,stroke:#2ca36b,stroke-width:1px,rx:8px,ry:8px,color:#0f5132;
+>  classDef trust fill:#f7f7f7,stroke:#bdbdbd,stroke-width:1px,rx:8px,ry:8px,color:#333;
+>
+>  class Client,Server,MIS comp;
+>  class X509 ident;
+>  class TD,TB trust;
+> ```
+
+## Scope and Applicability
+
+MIAF is a general foundation: any Margo component MAY adopt it, and future identity profiles will extend it to new principal classes. In this release, MIAF governs:
+
+- the **MIS trust endpoints**: the discovery document and Trust Bundle retrieval described in [Trust Bundle and Discovery Endpoints](trust-bundle-and-discovery.md); and
+- the **Workload Fleet Management interface**, through the [WFM Identity Profile](wfm-identity-profile.md), which is the only identity profile defined so far.
+
+Other Margo components (the Device Fleet Manager, observability collectors, or component registries, for example) MAY hold MIAF identities, but no identity profile is defined for their interfaces yet, so how they authenticate is not governed here until such a profile exists. For an interface into an external ecosystem that carries its own established authentication convention (such as an OCI registry), a MIAF identity is expected to serve as the root credential a component uses to obtain an ecosystem-native credential, rather than as the wire-level authentication mechanism itself.
+
+## Terminology
+
+The following terms form the common vocabulary for Margo's non-human identity and authorization model. Some are adopted directly from SPIFFE; others are Margo-specific.
+
+These identities belong to *non-human* **Margo components**: the logical units of the Margo system such as the Device Fleet Manager (DFM), Workload Fleet Manager (WFM), their clients, and infrastructure services such as registries or observability collectors. Which of their interfaces MIAF governs is defined in [Scope and Applicability](#scope-and-applicability).
+
+Terms adopted from SPIFFE, used here as SPIFFE defines them:
+
+- **Trust Domain**: the governed security boundary within which identities are issued and mutually recognized, a trust-root-backed identity namespace and policy boundary. A Trust Domain defines its authoritative trust anchors (the X.509 authority certificates published for the domain), the namespace for SPIFFE IDs, and the policies for identity lifecycle and authorization.
+- **SPIFFE ID**: a URI of the form `spiffe://<trust-domain>/<path>` that names an identity within a Trust Domain. MIAF adopts [SPIFFE ID](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE-ID.md) syntax and validation rules by reference and defines Margo path conventions where needed (see [Identity model](#identity-model)).
+- **SPIFFE Verifiable Identity Document (SVID)**: the verifiable credential representing an identity within a Trust Domain. An SVID binds a SPIFFE ID to a key pair. Its profile, cryptography, and validation are defined in [SVIDs](svids.md).
+- **Trust Bundle**: the cryptographic material (X.509 trust anchors) used to validate SVIDs issued within a Trust Domain, distributed via the SPIFFE Bundle Map (see [Trust Bundle and Discovery](trust-bundle-and-discovery.md)).
+
+Terms introduced by MIAF:
+
+- **Principal**: a non-human Margo component that holds, or is being provisioned with, a SPIFFE identity in a Trust Domain. Edge Compute Devices, WFMs, and WFM Clients are all principals.
+- **Margo Identity Service (MIS)**: the identity-authority **role** within a Trust Domain. The MIS issues SVIDs, publishes the discovery document and Trust Bundle, and enforces MIAF's cryptographic and SVID-profile rules. The MIS is defined by its responsibilities, not by a specific API (see [The MIS role](#the-mis-role)).
+- **Policy-based authorization**: each verifier makes authorization decisions locally, based on the peer's verified SPIFFE ID. MIAF does not use OAuth-style token scopes or a central authorization server.
+
+## Relationship to SPIFFE
+
+MIAF reuses SPIFFE identity primitives rather than inventing Margo-specific credential formats or trust semantics. This framework:
+
+- adopts by reference the SPIFFE concepts of **Trust Domain**, **SPIFFE ID**, **X.509-SVID**, and **Trust Bundle / Bundle Map**;
+- profiles or constrains those standards where Margo needs additional rules; and
+- defines Margo-specific behavior for discovery and the MIS role, and constrains the SPIFFE ID path namespace to paths beginning with `/margo/`.
+
+MIAF references the current published text of each SPIFFE specification instead of a pinned revision: SPIFFE versions its specifications by [stability level](https://github.com/spiffe/spiffe/blob/main/standards/STABILITY.md), not release tag, and every document MIAF adopts is at **Stable**, where breaking changes are reserved for critical security fixes.
+
+| Topic | Source | Notes |
+| :---- | :----- | :---- |
+| SPIFFE ID syntax and validation rules | [SPIFFE ID](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE-ID.md), adopted by reference | Margo defines only path conventions where needed. |
+| X.509-SVID baseline semantics | [SPIFFE X.509-SVID](https://github.com/spiffe/spiffe/blob/main/standards/X509-SVID.md), adopted by reference and constrained | Margo adds the profile constraints in [SVIDs](svids.md#x509-svid-profile). |
+| Trust Bundle / Bundle Map | [SPIFFE Trust Domain and Bundle](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Trust_Domain_and_Bundle.md), adopted by reference | Margo defines discovery and retrieval conventions around it. |
+| Discovery document | Margo | Not part of SPIFFE; defined in [Trust Bundle and Discovery Endpoints](trust-bundle-and-discovery.md#discovery-document-endpoint). |
+
+## Identity Model
+
+- **Identity representation.** An identity is named by a **SPIFFE ID** and represented by an **SVID** issued under the Trust Domain's MIS.
+- **Path namespace.** A SPIFFE ID issued under a MIAF identity profile MUST have a path beginning with `/margo/`. Each identity profile claims a non-conflicting sub-prefix and defines its structure (the path conventions for WFMs and WFM Clients are in the [WFM Identity Profile](wfm-identity-profile.md)). So that `/margo/` remains a reliable signal of MIAF provenance, a non-MIAF SVID in the same Trust Domain MUST NOT use it.
+- **Uniqueness.** Each SPIFFE ID names a single identity within its Trust Domain.
+- **Lifecycle.** All identities follow the [lifecycle vocabulary](identity-lifecycle.md#lifecycle-vocabulary).
+- **Extensibility.** The MIS, Trust Domain, SVID, and Trust Bundle concepts are generic; further profiles may be added for new principal classes without redefining the framework.
+
+## The MIS Role
+
+The **Margo Identity Service (MIS)** is a role, not a specific service. Within a Trust Domain, the MIS is responsible for:
+
+- issuing X.509-SVIDs to principals;
+- serving the [Trust Bundle retrieval endpoint](trust-bundle-and-discovery.md#trust-bundle-retrieval-endpoint) and, when used, the [discovery document endpoint](trust-bundle-and-discovery.md#discovery-document-endpoint) over HTTPS; and
+- enforcing MIAF's cryptographic and SVID-profile requirements.
+
+Anything that meets these responsibilities can fill the role: [SPIRE](https://spiffe.io/docs/latest/spire-about/), a CA configured for a MIAF profile, an operator's provisioning workflow, or something else. The only wire contract MIAF fixes for the MIS is the two HTTPS trust endpoints above; it does not standardize how the MIS issues SVIDs, and beyond those endpoints conformance is judged by behavior rather than by API surface.
+
+### Deployment Patterns (informative)
+
+Three common ways to fulfil the MIS role. The framework requirements above apply equally to all of them.
+
+| Pattern | Description | Typical use case |
+| :--- | :---------- | :--------------- |
+| **Self-signed root CA** | A CA operating as a self-signed root, issuing SVIDs directly. | Self-contained or air-gapped environments. |
+| **Intermediate CA under enterprise PKI** | A CA operating as an intermediate, chaining SVIDs to an enterprise or offline root. | Enterprise environments aligned with corporate PKI. |
+| **SPIFFE-conformant identity service** | A SPIFFE-conformant service such as SPIRE, configured with the Margo path conventions and Trust Bundle distribution. | Cloud-native or service-mesh environments. |
