@@ -26,6 +26,8 @@ This section constrains the signature algorithms and key parameters used for SVI
 
 > **Crypto-agility (informative):** MIAF names its algorithms explicitly so the permitted set can evolve. The set above is classical; post-quantum signature suites are expected to arrive as additional permitted algorithms rather than a redesign of the framework. Defaulting the transport to TLS 1.3 (see [TLS requirements](tls-requirements.md)) supports this: it is the version track on which post-quantum key exchange and authentication are being standardized.
 
+Keys MUST be generated with a cryptographically secure random number generator seeded from an entropy source carrying enough genuine entropy for the key size ([RFC 4086](https://datatracker.ietf.org/doc/html/rfc4086)).
+
 These requirements apply to MIAF-generated artifacts and to the keys used in SVIDs and CSRs. They do not constrain an external bootstrap ecosystem (for example, a manufacturer PKI used as a bootstrap input), which MAY use algorithms permitted by its governing standards, subject to Trust Domain policy.
 
 ## X.509-SVID Validation
