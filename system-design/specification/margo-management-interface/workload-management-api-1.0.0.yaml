@@ -86,42 +86,8 @@ paths:
       summary: Complete onboarding with client certificate
 
   /api/v1/clients/{clientId}/capabilities/{deviceId}:
-    post:
-      summary: Report device capabilities
-      security:
-        - PayloadSignature: []
-      parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: deviceId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/DeviceId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeviceCapabilitiesManifest'
-      responses:
-        '201':
-          description: Capabilities reported successfully
-        '400':
-          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
-        '401':
-          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
-        '403':
-          description: Client certificate is not trusted or has been revoked.
-        '404':
-          description: No client with the given `clientID` was found.
-        '422':
-          description: Request body includes a semantic error.
     put:
-      summary: Update device capabilities (Update)
+      summary: Report or update device capabilities
       security:
         - PayloadSignature: []
       parameters:
@@ -142,8 +108,10 @@ paths:
             schema:
               $ref: '#/components/schemas/DeviceCapabilitiesManifest'
       responses:
+        '200':
+          description: Device capabilities updated successfully
         '201':
-          description: Capabilities reported successfully
+          description: Device capabilities created successfully
         '400':
           description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
         '401':
@@ -376,7 +344,9 @@ paths:
               $ref: '#/components/schemas/DeploymentStatusManifest'
       responses:
         '200':
-          description: The deployment status was added, or updated, successfully.
+          description: The deployment status was updated successfully.
+        '201':
+          description: The deployment status was created successfully.
         '400':
           description: Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included.
         '401':
