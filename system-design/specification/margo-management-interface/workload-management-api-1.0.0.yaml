@@ -480,13 +480,11 @@ components:
         properties:
           type: object
           required: [id, vendor, modelNumber, serialNumber]
-          # A device that hosts workloads MUST report cpu, memory, storage, otelCollector,
-          # supportedRuntimes (>=1), and supportedDeploymentTypes (>=1). A see-thru gateway that
-          # hosts nothing itself sets managesChildDevices=true and omits those fields. Every
-          # manifest MUST report at least one capability group, enforced by the anyOf below.
-          anyOf:
-            - required: [supportedDeploymentTypes]
-            - required: [managesChildDevices]
+          # Only identity fields are required. A device that hosts workloads reports cpu, memory,
+          # storage, otelCollector, supportedRuntimes (>=1), and supportedDeploymentTypes (>=1). A
+          # device that does not host workloads (e.g. a see-thru gateway that only relays the
+          # devices behind it) omits those fields; the WFM infers it is non-hosting from their
+          # absence and infers a gateway from the parent/child deviceId hierarchy.
           properties:
             id:
               $ref: '#/components/schemas/DeviceId'
@@ -533,8 +531,6 @@ components:
               items:
                 type: string
                 enum: [helm, compose]
-            managesChildDevices:
-              type: boolean
     DeviceId:
       # format: "{id}[/{id}[/{id}...]]"
       # Top-level id is required and must include only unreserved characters as specified in RFC3986.
