@@ -22,7 +22,7 @@ The REST API is defined via the OpenAPI Specification:
 ## Transport
 The REST API MUST operate over HTTP/1.1; HTTP/1.1 is used to ensure maximum support for existing infrastructure within our install base. The transport is secured by mTLS as specified in [Identity and Authentication](#identity-and-authentication).
 
-To minimize the ports required on the customer's infrastructure for cloud to edge communication, the API MUST use only port 443 for its traffic.
+To minimize the ports required on the customer's infrastructure for cloud-to-edge communication, the API MUST use port 443 for its traffic.
 
 ## Identity and Authentication
 Authentication is mutual TLS per the MIAF [TLS requirements](../identity/tls-requirements.md). Both sides present an X.509-SVID and validate the peer's SVID and `wfm-id` per the WFM Identity Profile ([Recognition by the WFM](../identity/wfm-identity-profile.md#recognition-by-the-wfm), [Recognition by the WFM Client](../identity/wfm-identity-profile.md#recognition-by-the-wfm-client)). A WFM MUST reject any Management Interface request that is not authenticated by mTLS with a valid WFM Client X.509-SVID.
