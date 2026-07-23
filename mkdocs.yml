@@ -21,7 +21,8 @@ nav:
         - specification/observability/publishing-workload-observability-data.md
         - specification/observability/collecting-workload-observability-data.md
         - specification/observability/consuming-workload-observability-data.md
-
+      - Specification Version Management:
+          - specification/specification-version-management.md
 theme:
   name: material
   features:
