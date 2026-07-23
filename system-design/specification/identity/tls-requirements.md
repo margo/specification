@@ -16,18 +16,18 @@ The TLS 1.2 fallback carries a confidentiality cost specific to MIAF. A MIAF cli
 
 ## Initial Trust Bootstrap
 
-A client cannot validate MIAF-issued SVIDs against the Trust Bundle until it holds that bundle, and it must acquire the first bundle before it has any MIAF credential of its own to authenticate the exchange. A client acquires the trust material (the discovery document, if used, and the Bundle Map) by one of two paths.
+A client cannot validate MIAF-issued SVIDs against the Trust Bundle until it holds that bundle, and it must acquire the first bundle before it has any MIAF credential of its own to authenticate the exchange. A client acquires the trust material (the discovery document, if used, and the Trust Bundle) by one of two paths.
 
-**Authenticated HTTPS retrieval.** The client fetches the discovery document and the Bundle Map over HTTPS (see [Trust Bundle and Discovery](trust-bundle-and-discovery.md)). Because the client holds no MIAF credential yet, these connections rely on an initial trust mechanism established outside MIAF. The client MUST authenticate both connections using at least one of:
+**Authenticated HTTPS retrieval.** The client fetches the discovery document and the Trust Bundle over HTTPS (see [Trust Bundle and Discovery](trust-bundle-and-discovery.md)). Because the client holds no MIAF credential yet, these connections rely on an initial trust mechanism established outside MIAF. The client MUST authenticate both connections using at least one of:
 
 1. **PKI-anchored validation**: validate the [MIS](identity-framework.md#the-mis-role) server certificate chain to a configured set of trust anchors (web PKI, enterprise PKI, or an operator-configured private CA), with DNS name validation per [RFC 6125](https://datatracker.ietf.org/doc/html/rfc6125).
 2. **Pinned trust**: validate the MIS server certificate chain or public key against operator-provisioned pins (for example, a pinned CA certificate).
 
 An operator MAY deliver the trust material for either option (the configured anchors for the first, or the pins for the second) through the same channel used to provision the principal's SVID. A client that cannot authenticate a connection by one of these mechanisms MUST abort.
 
-**Out-of-band delivery.** The operator delivers the Bundle Map, and the Trust Domain identifier and Trust Bundle URI, directly through the provisioning or deployment channel (see [Bundle Map contents and distribution](trust-bundle-and-discovery.md#bundle-map-contents-and-distribution) and the [operator provisioning playbook](identity-lifecycle.md#operator-provisioning-playbook)). No HTTPS retrieval takes place, so there is no bootstrap connection to authenticate; the integrity and authenticity of the delivered material rest on that channel.
+**Out-of-band delivery.** The operator delivers the Trust Bundle, and the Trust Domain identifier and Trust Bundle URI, directly through the provisioning or deployment channel (see [Bundle contents and distribution](trust-bundle-and-discovery.md#bundle-contents-and-distribution) and the [operator provisioning playbook](identity-lifecycle.md#operator-provisioning-playbook)). No HTTPS retrieval takes place, so there is no bootstrap connection to authenticate; the integrity and authenticity of the delivered material rest on that channel.
 
-Whichever path is used, a client MUST NOT accept trust material from an unauthenticated source, and MUST NOT treat the first acquisition as "trust on first use". Once acquired, the discovery document (if used) and the Bundle Map are MIAF's authoritative sources; the bundle they select then validates SVIDs within the Trust Domain.
+Whichever path is used, a client MUST NOT accept trust material from an unauthenticated source, and MUST NOT treat the first acquisition as "trust on first use". Once acquired, the discovery document (if used) and the Trust Bundle are MIAF's authoritative sources; that bundle then validates SVIDs within the Trust Domain.
 
 ## Certificate Validation
 

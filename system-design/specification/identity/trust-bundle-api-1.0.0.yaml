@@ -5,7 +5,7 @@ info:
   description: >
     Read-only HTTPS endpoints served by the Margo Identity Service (MIS) role:
     an optional discovery document that points a client to the Trust Bundle,
-    and the SPIFFE Bundle Map retrieval endpoint.
+    and the SPIFFE bundle retrieval endpoint.
 
 
     Both endpoints are served over HTTPS. Because a client cannot yet validate
@@ -62,15 +62,16 @@ paths:
 
   /.well-known/spiffe/bundle.json:
     get:
-      summary: Retrieve the SPIFFE Bundle Map
+      summary: Retrieve the SPIFFE bundle
       description: >
-        Returns the SPIFFE Bundle Map for the Trust Domain. The path shown here
-        is illustrative; the authoritative location is the trustBundleUri value
-        from the discovery document (or operator configuration). The entry keyed
-        by the local trustDomain holds the authoritative set of public trust
-        anchors for that Trust Domain. The response MUST conform to the SPIFFE
-        Bundle Map format
-        (https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Trust_Domain_and_Bundle.md#5-spiffe-bundle-map).
+        Returns the Trust Domain's SPIFFE bundle, holding the authoritative
+        set of public trust anchors for that Trust Domain. The
+        path shown here is illustrative; the authoritative location is the
+        trustBundleUri value from the discovery document (or operator
+        configuration). The endpoint follows the SPIFFE Federation bundle
+        endpoint model (one URL per Trust Domain). The response MUST conform to
+        the SPIFFE bundle format
+        (https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Trust_Domain_and_Bundle.md#4-spiffe-bundle-format).
       parameters:
         - name: If-None-Match
           in: header
@@ -80,7 +81,7 @@ paths:
           description: Previously returned ETag; used to revalidate a cached copy.
       responses:
         '200':
-          description: SPIFFE Bundle Map
+          description: SPIFFE bundle
           headers:
             ETag:
               schema:
@@ -89,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SpiffeBundleMap'
+                $ref: '#/components/schemas/SpiffeBundle'
         '304':
           description: Cached copy still valid
         '404':
@@ -100,6 +101,7 @@ components:
     DiscoveryDocument:
       type: object
       required: [trustDomain, trustBundleUri]
+      additionalProperties: true
       description: >
         Describes exactly one Trust Domain. Clients MUST ignore unknown fields.
       properties:
@@ -114,32 +116,29 @@ components:
           type: string
           format: uri
           description: >
-            Absolute HTTPS URL to the SPIFFE Bundle Map resource for this Trust
-            Domain. A client MUST reject a value whose scheme is not https. The
-            resource MUST contain an entry for the domain named by trustDomain;
-            that entry is the authoritative local Trust Bundle.
+            Absolute HTTPS URL to the SPIFFE bundle for this Trust Domain. A
+            client MUST reject a value whose scheme is not https. The
+            bundle holds the authoritative trust anchors for the Trust Domain.
           examples:
             - https://mis.factory.example/.well-known/spiffe/bundle.json
-    SpiffeBundleMap:
+    SpiffeBundle:
       type: object
       description: >
-        SPIFFE Bundle Map. The concrete schema is defined by the SPIFFE Trust
-        Domain and Bundle Map specification; the map is keyed by Trust Domain
-        identifier. A client MUST reject the map, and MUST NOT validate SVIDs
-        against it, if it contains no entry for the local trustDomain or that
-        entry carries no X.509 trust anchors (fail closed). A JWKS slot MAY be
-        present but is not populated by MIAF and MUST be ignored on retrieval.
+        SPIFFE bundle for one Trust Domain. The concrete schema is defined by
+        the SPIFFE Trust Domain and Bundle specification (a JWK Set). A client
+        MUST reject the bundle, and MUST NOT validate SVIDs against it, if it
+        carries no X.509 trust anchors (fail closed). The JWK Set MAY also carry
+        jwt-svid signing keys; MIAF uses only x509-svid entries and MUST ignore
+        any other key material on retrieval.
       additionalProperties: true
       examples:
-        - trust_domains:
-            factory.example:
-              spiffe_sequence: 12
-              spiffe_refresh_hint: 86400
-              keys:
-                - kty: EC
-                  crv: P-256
-                  x: <base64url-encoded EC public key x coordinate>
-                  y: <base64url-encoded EC public key y coordinate>
-                  use: x509-svid
-                  x5c:
-                    - <base64 DER of the Trust Domain's X.509 authority certificate>
+        - spiffe_sequence: 12
+          spiffe_refresh_hint: 86400
+          keys:
+            - kty: EC
+              crv: P-256
+              x: <base64url-encoded EC public key x coordinate>
+              y: <base64url-encoded EC public key y coordinate>
+              use: x509-svid
+              x5c:
+                - <base64 DER of the Trust Domain's X.509 authority certificate>

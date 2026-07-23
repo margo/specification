@@ -34,7 +34,7 @@ These requirements apply to MIAF-generated artifacts and to the keys used in SVI
 
 A verifier authenticates a peer by validating the presented X.509-SVID against the peer's Trust Domain and, on success, treating the SPIFFE ID it carries as the peer's identity. A verifier MUST, in order:
 
-- read the SPIFFE ID from the leaf certificate's **URI SAN** to determine the peer's Trust Domain, and reject the SVID unless that Trust Domain is explicitly configured or federated. DNS hostname matching does not apply to SVID identity and MUST NOT override the SPIFFE ID.
+- read the SPIFFE ID from the leaf certificate's **URI SAN** to determine the peer's Trust Domain, and reject the SVID unless that Trust Domain is the verifier's own. DNS hostname matching does not apply to SVID identity and MUST NOT override the SPIFFE ID.
 - validate the presented chain against that Trust Domain's [Trust Bundle](trust-bundle-and-discovery.md), accepting an SVID that chains to any anchor in the current bundle. A bundle MAY contain more than one anchor (for example, during a [trust anchor rotation](identity-lifecycle.md#trust-anchor-rotation-playbook) overlap), and every anchor in it is equally authoritative. Reject any certificate outside its validity period. A verifier MUST NOT rely on AIA fetching or other out-of-band intermediate retrieval; the presenter supplies the intermediates the chain needs.
 - enforce the SPIFFE X.509-SVID leaf constraints and reject any SVID that violates them: basic-constraints `cA` MUST be `false`; `keyCertSign` and `cRLSign` MUST NOT be set in key usage; the SPIFFE ID MUST use the `spiffe` scheme with a non-root path; and the certificate MUST carry exactly one URI SAN.
 
