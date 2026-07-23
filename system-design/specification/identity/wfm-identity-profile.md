@@ -8,20 +8,9 @@ All MIAF terminology is reused by reference unless specialized here.
 
 ## Identity Terminology
 
-**WFM Identity (`wfm-id`)** is the identity of a WFM within its Trust Domain, expressed as a SPIFFE URI of the form `spiffe://<trust-domain>/margo/wfm/<wfm-id>` and represented by an X.509-SVID. It anchors the namespace under which WFM Client identities are issued. The `wfm-id` segment:
+**WFM Identity (`wfm-id`)** is the identity of a WFM within its Trust Domain, expressed as a SPIFFE URI of the form `spiffe://<trust-domain>/margo/wfm/<wfm-id>` and represented by an X.509-SVID. It anchors the namespace under which WFM Client identities are issued.
 
-- MUST be unique within the Trust Domain;
-- MUST consist only of [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) unreserved characters;
-- SHOULD be assigned by the operator deploying the WFM into the Trust Domain, not unilaterally by the WFM vendor, so that operators can prevent namespace collisions in multi-vendor deployments; and
-- MUST be stable for the life of the WFM identity it names. Rebinding a `wfm-id` to a different WFM identity is not defined by this profile and MUST NOT be performed silently; replacement requires a new `wfm-id`.
-
-An operator MAY assign one shared `wfm-id` across several WFM instances to present a single logical identity, or distinct `wfm-id`s for each instance for finer-grained lifecycle management.
-
-**WFM Client Identity (`wfm-client-id`)** is the stable, verifiable identity of a WFM Client relationship within a Trust Domain, expressed as a SPIFFE URI of the form `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>` and represented by an X.509-SVID. The `wfm-client-id` segment:
-
-- MUST be stable for the lifetime of the relationship;
-- MUST be unique within the issuing WFM's namespace; and
-- MUST consist only of [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) unreserved characters.
+**WFM Client Identity (`wfm-client-id`)** is the stable, verifiable identity of a WFM Client relationship within a Trust Domain, expressed as a SPIFFE URI of the form `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>` and represented by an X.509-SVID.
 
 ## Identity Model
 
@@ -32,6 +21,15 @@ A WFM identity is a SPIFFE ID of the form:
 ```text
 spiffe://<trust-domain>/margo/wfm/<wfm-id>
 ```
+
+The `wfm-id` segment:
+
+- MUST be non-empty, MUST consist only of [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) unreserved characters, and MUST NOT be `.` or `..`;
+- MUST be unique within the Trust Domain;
+- MUST be stable for the life of the WFM identity it names. Rebinding a `wfm-id` to a different WFM identity is not defined by this profile and MUST NOT be performed silently; replacement requires a new `wfm-id`; and
+- SHOULD be assigned by the operator deploying the WFM into the Trust Domain, not unilaterally by the WFM vendor, so that operators can prevent namespace collisions in multi-vendor deployments.
+
+An operator MAY assign one shared `wfm-id` across several WFM instances to present a single logical identity, or distinct `wfm-id`s for each instance for finer-grained lifecycle management.
 
 A WFM participating in this profile:
 
@@ -48,12 +46,13 @@ A WFM Client identity is a SPIFFE ID of the form:
 spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>
 ```
 
-The `wfm-id` and `wfm-client-id` segments:
+The `wfm-client-id` segment:
 
-- MUST each be non-empty, consist only of [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) unreserved characters, and MUST NOT be `.` or `..`; and
-- carry no meaning beyond naming the WFM and the client relationship: apart from the recognition checks defined in this profile, a WFM Client MUST NOT infer structure or attributes from their content.
+- MUST be non-empty, MUST consist only of [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) unreserved characters, and MUST NOT be `.` or `..`;
+- MUST be unique within the issuing WFM's namespace; and
+- MUST be stable for the lifetime of the relationship.
 
-All comparisons of these segments are exact and case-sensitive, following SPIFFE path semantics. This SPIFFE ID is the canonical WFM Client identity within the Trust Domain.
+The `wfm-id` and `wfm-client-id` segments carry no meaning beyond naming the WFM and the client relationship: apart from the recognition checks defined in this profile, a WFM Client MUST NOT infer structure or attributes from their content. All comparisons of these segments are exact and case-sensitive, following SPIFFE path semantics. This SPIFFE ID is the canonical WFM Client identity within the Trust Domain.
 
 ### Identity Representation
 
