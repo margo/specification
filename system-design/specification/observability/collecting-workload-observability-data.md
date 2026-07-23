@@ -58,7 +58,7 @@ For devices running Kubernetes the following is a minimum list of observability 
 
   > **Note:** Please see the [information below](#workload-observability-default-telemetry) for the default attributes added by the Kubernetes Attributes Processor.
 
-### Standalone Device Container Platforms
+### Non-Clustered Container Platforms
 
 For devices running non-clustered container platforms such as Docker or Podman the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
