@@ -2,7 +2,7 @@
 
 MIAF assumes an adversarial network and the possibility of a compromised individual device or service. Its goals are to preserve identity integrity and minimize blast radius; protecting the private keys those identities rest on is the responsibility of the deployment rather than provided by the framework.
 
-This section is scoped to identity. For each threat it states the mitigation MIAF relies on, with the concrete rules in the linked sections. Some mitigations are normative framework requirements; others are residual risks carried by the operator's deployment.
+This section is scoped to identity. For each threat, it describes the mitigation that MIAF relies on, along with links to the specific rules. Some mitigations are normative framework requirements; others are residual risks carried by the operator's deployment.
 
 ## Framework Threats
 
