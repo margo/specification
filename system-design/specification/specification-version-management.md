@@ -273,7 +273,7 @@ When the working group votes to advance pre-draft content into draft:
 
 This means pre-draft always reflects a higher target version than draft, making it immediately clear which branch represents which upcoming release.
 
-Each quarterly drop increments `N` on the appropriate branch. Once the draft branch reaches final approval, it merges to release and the suffix is dropped, publishing the plain semantic version.
+Each quarterly release increments `N` on the appropriate branch. Once the draft branch reaches final approval, it is merged into release, and the suffix is dropped, publishing the plain semantic version.
 
 ### Repositories requiring this branch structure
 
