@@ -349,6 +349,13 @@ components:
     DeviceCapabilitiesManifest:
       type: object
       required: [apiVersion, kind, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         apiVersion:
           type: string
@@ -526,6 +533,13 @@ components:
       type: object
       description: Helm Application Deployment Profile Component
       required: [name, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         name:
           type: string
@@ -550,6 +564,13 @@ components:
       type: object
       description: Compose Application Deployment Profile Component
       required: [name, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         name:
           type: string
@@ -574,6 +595,13 @@ components:
       type: object
       description: Application Deployment Profile
       required: [type, components]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -623,6 +651,13 @@ components:
       type: object
       description: Application Deployment specification
       required: [applicationId, deploymentProfile]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         applicationId:
           type: string
