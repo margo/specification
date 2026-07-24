@@ -39,7 +39,7 @@ Official releases use plain semantic versioning:
 - `1.1.0`
 - `2.0.0`
 
-The release number should advance based on the highest level of accepted change since the previous public release:
+The release number advances based on the highest level of accepted change since the previous public release:
 
 | Change in release scope | Next public version | Rule |
 | --- | --- | --- |
