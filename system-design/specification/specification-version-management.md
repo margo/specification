@@ -174,7 +174,7 @@ The major and minor versions must remain in sync with the specification. Only th
 
 A user seeing reference implementation `1.1.2` can immediately determine it implements specification `1.1.x`. Any new feature or breaking change is tied to a specification change, which increments the minor or major version and realigns all deliverables at the next coordinated release.
 
-## Estimated Workflow
+## Expected Workflow
 
 ### Phase 1: Pre-draft work
 
