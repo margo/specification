@@ -172,7 +172,7 @@ The major and minor versions must remain in sync with the specification. Only th
 | Reference implementation | `1.1.2` |
 | Conformance test and toolkit | `1.1.1` |
 
-A user seeing reference implementation `1.1.2` can immediately determine it implements specification `1.1.x`. Any new feature or breaking change must be tied to a specification change, which would increment the minor or major version and realign all deliverables at the next coordinated release.
+A user seeing reference implementation `1.1.2` can immediately determine it implements specification `1.1.x`. Any new feature or breaking change is tied to a specification change, which increments the minor or major version and realigns all deliverables at the next coordinated release.
 
 ## Estimated Workflow
 
