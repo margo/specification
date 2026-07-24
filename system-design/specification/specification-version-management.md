@@ -208,7 +208,7 @@ Each quarterly preview publication uses two independent Git tags applied to the 
 
 ### Quarterly release tag
 
-Every quarterly drop receives a semantic version tag that follows the pre-release label scheme defined in this document:
+Every quarterly release receives a semantic version tag that follows the pre-release label scheme defined in this document:
 
 - Format: `vX.Y.Z-rc.<N>`
 - Examples: `v1.0.0-rc.1`, `v1.0.0-rc.2`, `v1.1.0-rc.1`
