@@ -95,7 +95,7 @@ The Specification and supporting documentation is the authoritative driver for r
 - `rc.N` represents all pre-release working snapshots regardless of branch stage
 - Final publication removes the suffix and publishes the plain semantic version
 
-Release decisions for patch, minor, or major should be based on specification impact:
+Release decisions for patch, minor, or major are based on specification impact:
 
 - `Patch` for clarifications, corrections, and non-breaking wording updates
 - `Minor` for new non-breaking capabilities or normative additions
