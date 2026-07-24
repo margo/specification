@@ -244,7 +244,7 @@ For PR2 with a plugfest in July 2026:
 
 ## Branching Strategy
 
-The branching model maps directly to the four stages defined in the membership agreement: **pre-draft → draft → final approval → publication**.
+The branching model maps directly to the four stages defined in Margo's membership agreement: **pre-draft → draft → final approval → publication**.
 
 ### Branch layout
 
