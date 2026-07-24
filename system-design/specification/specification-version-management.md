@@ -146,7 +146,7 @@ Examples:
 - Initial toolkit release for GA spec `1.0.0` -> toolkit `1.0.0`
 - Bug fix to toolkit only -> toolkit `1.0.1` (spec remains `1.0.0`)
 
-If the CTT uncovers a breaking issue in the specification, the release classification should be revised before the next preview or release is published.
+If the CTT uncovers a breaking issue in the specification, the release classification will be revised before the next preview or release is published.
 
 ## Release Cohesion Rule
 
