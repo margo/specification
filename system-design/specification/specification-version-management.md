@@ -57,7 +57,7 @@ When multiple change types exist, the release uses the highest-precedence change
 
 ### Preview Release(PR) deliverables before release
 
-Preview release deliverables should use preview release labels instead of incrementing the public semantic version for every change implemented.
+Preview release deliverables use preview release labels instead of incrementing the public semantic version for every change implemented.
 
 These PR deliverables are not official releases of the specification. They are incremental checkpoints that show the suppliers/community what is being prepared for the next official release.
 
