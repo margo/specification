@@ -290,7 +290,7 @@ Recommended relationship:
 
 - Sandbox implementation depends on the OpenAPI spec within the specification. Changes to specification should be reflected in the sandbox at the next convenient release. 
 - Sandbox retains its own SemVer and release automation
-- Sandbox release notes should state which specification release they align to
+- Sandbox release notes state which specification release they align to
 - Sandbox tags may use release candidates and nightly builds independently of the specification deliverables
 - Sandbox changes do not force a specification version bump unless they reflect an accepted specification change
 
