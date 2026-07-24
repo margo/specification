@@ -46,6 +46,8 @@ The path above is the default convention; an origin serving several Trust Domain
 
 A client MUST ignore unknown fields in the discovery document.
 
+A client that already holds an SVID SHOULD verify that the document's `trustDomain` matches the trust domain of its own SPIFFE ID and treat a mismatch as a configuration error; on an origin serving several Trust Domains, this check is what catches a client pointed at the wrong Trust Domain's document.
+
 ### Example Discovery Document Response
 
 Request:
