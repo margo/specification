@@ -121,7 +121,7 @@ The reference implementation shares the specification's major and minor version 
 - **Major and minor** versions must match the specification version being implemented
 - **Patch** version may differ to accommodate software-only releases (bug fixes, security patches)
 - Preview builds use the same target semantic version with `rc` labels
-- Implementation-only iteration between previews should increase the pre-release sequence
+- Implementation-only iteration between previews increases the pre-release sequence
 
 Examples:
 
