@@ -78,7 +78,7 @@ Examples:
 - `1.0.0-rc.7`
 - `1.1.0-rc.1`
 
-The base semantic version in the preview tag should represent the next intended public release. That means:
+The base semantic version in the preview tag represents the next intended public release. That means:
 
 - Before the first official release, preview versions target `1.0.0`
 - After `1.0.0` is released, if the next release is expected to be a non-breaking feature release, previews move to `1.1.0-rc.1`
