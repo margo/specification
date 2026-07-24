@@ -204,7 +204,7 @@ A user seeing reference implementation `1.1.2` can immediately determine it impl
 
 ## Git Tagging Strategy
 
-Each quarterly preview publication uses two independent Git tags applied to the repository. These tags are separate identifiers that can point to the same commit or to different commits depending on what is needed for a given event.
+Each quarterly preview publication uses two independent Git tags applied to the repository. These tags are separate identifiers that may point to the same commit or to different commits depending on what is needed for a given event.
 
 ### Quarterly release tag
 
