@@ -5,6 +5,7 @@
     "device-capabilities",
     "desired-state",
     "deployment-status",
+    "specification-extensions"
     "workload-management-api-1.0.0"
   ]
 }
