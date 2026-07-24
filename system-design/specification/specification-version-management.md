@@ -103,7 +103,7 @@ Release decisions for patch, minor, or major are based on specification impact:
 
 ### OpenAPI specification
 
-The OpenAPI specification should share the same public release version as the specification because it describes the same release contract.
+The OpenAPI specification shares the same public release version as the specification because it describes the same release contracts.
 
 - Preview versions should mirror the specification version exactly
 - Final GA release should publish the same semantic version as the specification
