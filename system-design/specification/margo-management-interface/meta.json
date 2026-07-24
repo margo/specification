@@ -1,0 +1,10 @@
+{
+  "title": "Margo Management Interface",
+  "pages": [
+    "api-requirements-and-security",
+    "device-capabilities",
+    "desired-state",
+    "deployment-status",
+    "workload-management-api-1.0.0"
+  ]
+}
