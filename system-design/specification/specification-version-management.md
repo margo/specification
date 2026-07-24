@@ -1,7 +1,7 @@
 # Version Management Strategy
 ## Purpose
 
-The purpose of this document is to establish a version management strategy for the Margo initiative. This version management outline covers the major deliverables the Margo initiative will be responsible for.
+The purpose of this document is to explain the Margo initiatives version management strategy. This version management outline covers the major deliverables the Margo initiative is responsible for.
 
 The goal is to make public releases easy to understand, keep preview builds useful for feedback, and ensure all official deliverables can be versioned together at release.
 
