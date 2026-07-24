@@ -9,7 +9,7 @@ The goal is to make public releases easy to understand, keep preview builds usef
 
 Margo uses one public semantic version for the official Margo release(s) and applies it to these deliverables at release time:
 
-Current Preview Release deliverables include:
+The current Preview Release deliverables include:
 - Specification
 - Open API Specification(s)
 - Code first sandbox
