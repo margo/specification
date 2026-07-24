@@ -32,7 +32,7 @@ This keeps the release story simple:
 
 ### General Availability(GA) release versions
 
-Official releases should use plain semantic versioning:
+Official releases use plain semantic versioning:
 
 - `1.0.0`
 - `1.0.1`
