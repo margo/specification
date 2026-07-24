@@ -39,7 +39,7 @@ MIAF has four moving parts: the **Trust Domain**, the **Margo Identity Service (
 
 Once a component holds an SVID:
 
-1. **Acquire trust material.** The component acquires its Trust Domain's Trust Bundle: it either locates the bundle through the discovery document and retrieves it over HTTPS, or receives the bundle and Trust Domain identifier through operator-provided configuration or out-of-band delivery (see [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap)).
+1. **Acquire trust material.** The component acquires its Trust Domain's Trust Bundle: it either locates the bundle through the discovery document and retrieves it over HTTPS, or receives the bundle through operator-provided configuration or out-of-band delivery (see [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap)).
 2. **Authenticate to peers.** The component and peer complete an mTLS handshake: the component presents its X.509-SVID, and the peer validates the chain against the Trust Bundle.
 3. **Authorize the call.** The peer applies its local policy to the now-verified SPIFFE ID.
 

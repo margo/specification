@@ -34,8 +34,7 @@ paths:
         An origin serving exactly one Trust Domain SHOULD expose the document
         at this well-known path per RFC 8615; an origin serving several Trust
         Domains MAY use other absolute HTTPS URLs. When discovery is not used,
-        the Trust Domain identifier and Trust Bundle URI are supplied by
-        operator-provided configuration.
+        the Trust Bundle URI is supplied by operator-provided configuration.
       parameters:
         - name: If-None-Match
           in: header

@@ -10,7 +10,7 @@ A machine-readable description of both endpoints is available as the [Trust Bund
 
 The discovery document is an optional entry point to a Trust Domain that points a client to the Trust Bundle URI. Each document describes exactly one Trust Domain.
 
-When discovery is used, an origin serving exactly one Trust Domain SHOULD expose the document at `GET /.well-known/margo` per [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615); an origin serving several Trust Domains MAY use other absolute HTTPS URLs. When discovery is not used, the Trust Domain identifier and Trust Bundle URI are supplied by operator-provided configuration.
+When discovery is used, an origin serving exactly one Trust Domain SHOULD expose the document at `GET /.well-known/margo` per [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615); an origin serving several Trust Domains MAY use other absolute HTTPS URLs. When discovery is not used, the Trust Bundle URI is supplied by operator-provided configuration.
 
 The endpoint requires no authentication at the application layer; the transport is authenticated per [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap).
 
