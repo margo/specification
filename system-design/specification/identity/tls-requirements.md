@@ -21,7 +21,7 @@ A client cannot validate MIAF-issued SVIDs against the Trust Bundle until it hol
 **Authenticated HTTPS retrieval.** The client fetches the discovery document and the Trust Bundle over HTTPS (see [Trust Bundle and Discovery](./trust-bundle-and-discovery.md)). Because the client holds no MIAF credential yet, these connections rely on an initial trust mechanism established outside MIAF. The client MUST authenticate both connections using at least one of:
 
 1. **PKI-anchored validation**: validate the [MIS](./identity-framework.md#the-mis-role) server certificate chain to a configured set of trust anchors (web PKI, enterprise PKI, or an operator-configured private CA), with DNS name validation per [RFC 6125](https://datatracker.ietf.org/doc/html/rfc6125).
-2. **Pinned trust**: validate the MIS server certificate chain or public key against operator-provisioned pins (for example, a pinned CA certificate).
+2. **Pinned trust**: validate the MIS server certificate chain against operator-provisioned pins. A pin is the base64-encoded SHA-256 digest of the DER-encoded SubjectPublicKeyInfo of a certificate (the SPKI Fingerprint construction of [RFC 7469, Section 2.4](https://datatracker.ietf.org/doc/html/rfc7469#section-2.4)). The connection is authenticated when a certificate in the presented chain carries a SubjectPublicKeyInfo matching a provisioned pin (for example, a pin over the issuing CA's public key).
 
 An operator MAY deliver the trust material for either option (the configured anchors for the first, or the pins for the second) through the same channel used to provision the principal's SVID. A client that cannot authenticate a connection by one of these mechanisms MUST abort.
 
