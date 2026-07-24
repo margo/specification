@@ -8,7 +8,7 @@ MIAF adopts the [SPIFFE X.509-SVID specification](https://github.com/spiffe/spif
 
 An identity profile MAY further constrain validity periods, key-protection rules, or path conventions for its own principal classes.
 
-The SPIFFE X.509-SVID specification defines the certificate profile and RFC 5280 path validation but leaves how the chain is conveyed out of scope, so MIAF specifies chain delivery here. When presenting an X.509-SVID, the presenter MUST include the leaf SVID and every intermediate CA certificate needed to build a path to a trust anchor; a certificate the Trust Bundle already carries as a trust anchor (typically the self-signed root) MAY be omitted. This presented chain travels inline wherever an X.509-SVID is conveyed, including the TLS `Certificate` message during mTLS. Because the [Trust Bundle](./trust-bundle-and-discovery.md) holds only trust anchors, the presented chain is the sole carrier of the intermediates.
+The SPIFFE X.509-SVID specification defines the certificate profile and RFC 5280 path validation but leaves how the chain is conveyed out of scope, so MIAF must specify chain delivery. When presenting an X.509-SVID, the presenter MUST include the leaf SVID and every intermediate CA certificate needed to build a path to a trust anchor; a certificate the Trust Bundle already carries as a trust anchor (typically the self-signed root) MAY be omitted. This presented chain travels inline wherever an X.509-SVID is conveyed, including the TLS `Certificate` message during mTLS. Because the [Trust Bundle](./trust-bundle-and-discovery.md) holds only trust anchors, the presented chain is the sole carrier of the intermediates.
 
 ## Cryptographic Requirements
 

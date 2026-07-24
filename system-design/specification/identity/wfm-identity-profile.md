@@ -79,7 +79,7 @@ A WFM Client MUST recognize the WFM it connects to from the authenticated SPIFFE
 3. verify that the SPIFFE ID is exactly `spiffe://<trust-domain>/margo/wfm/<wfm-id>`, using the `<trust-domain>` and `<wfm-id>` of the client's own SVID; and
 4. abort the connection if any of these checks fails.
 
-A WFM Client holding a long-lived connection SHOULD bound the connection's lifetime, or otherwise re-validate the WFM SVID, per the MIAF [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation) rules, rather than relying solely on the connection-time check above.
+A WFM Client holding a long-lived connection SHOULD limit the connection's lifetime, or otherwise re-validate the WFM SVID, per the MIAF [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation) rules, rather than relying solely on the connection-time check above.
 
 ## Provisioning
 
