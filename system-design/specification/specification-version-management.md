@@ -47,7 +47,7 @@ The release number advances based on the highest level of accepted change since 
 | One or more non-breaking additions or new features | MINOR | `1.0.0 -> 1.1.0` |
 | One or more breaking changes | MAJOR | `1.0.0 -> 2.0.0` |
 
-When multiple change types exist, the release should use the highest-precedence change type:
+When multiple change types exist, the release uses the highest-precedence change type:
 
 - Major supersedes minor
 - Minor supersedes patch
