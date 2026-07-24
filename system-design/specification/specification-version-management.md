@@ -138,7 +138,7 @@ The conformance suite validates one specification release at a time. It shares t
 - **Major and minor** versions must match the specification release the toolkit validates
 - **Patch** version may differ for bug fixes, tooling updates, or security patches not related to specification changes
 - Preview versions follow the same pre-release label sequence as the specification
-- Toolkit updates that change expected test behavior must feed back into release classification before GA
+- Toolkit updates that change expected test behavior are fed back into release classification before GA
 
 Examples:
 
