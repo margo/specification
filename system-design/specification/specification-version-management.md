@@ -284,7 +284,7 @@ Each quarterly release increments `N` on the appropriate branch. Once the draft 
 
 ## Sandbox Relationship
 
-The sandbox should keep its own release cycle, as described in [Sandbox Release Document](https://github.com/margo/sandbox/blob/main/docs/release.md). It is a supporting implementation environment to enable the code first process, not the authoritative version anchor for the specification.
+The sandbox keeps its own release cycle, as described in [Sandbox Release Document](https://github.com/margo/sandbox/blob/main/docs/release.md). It is a supporting implementation environment to enable the code-first process, not an authoritative version anchor for the specification.
 
 Recommended relationship:
 
