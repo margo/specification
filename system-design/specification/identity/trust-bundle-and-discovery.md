@@ -1,10 +1,10 @@
 # Trust Bundle and Discovery
 
-The MIS role serves two read-only HTTPS endpoints: an optional **discovery document** that points a client to the Trust Bundle, and the **Trust Bundle retrieval** endpoint itself. Because the MIS is a role rather than a fixed service (see [The MIS role](identity-framework.md#the-mis-role)), the origin hosting these endpoints is chosen by the MIS implementation; this section constrains only the path convention (when discovery is used) and the response payloads.
+The MIS role serves two read-only HTTPS endpoints: an optional **discovery document** that points a client to the Trust Bundle, and the **Trust Bundle retrieval** endpoint itself. Because the MIS is a role rather than a fixed service (see [The MIS role](./identity-framework.md#the-mis-role)), the origin hosting these endpoints is chosen by the MIS implementation; this section constrains only the path convention (when discovery is used) and the response payloads.
 
-Both endpoints MUST be served over HTTPS authenticated per [initial trust bootstrap](tls-requirements.md#initial-trust-bootstrap), and a client MUST tolerate unknown response fields so that future revisions can add fields without breaking existing implementations.
+Both endpoints MUST be served over HTTPS authenticated per [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap), and a client MUST tolerate unknown response fields so that future revisions can add fields without breaking existing implementations.
 
-A machine-readable description of both endpoints is available as the [Trust Bundle API OpenAPI definition](trust-bundle-api-swagger.md).
+A machine-readable description of both endpoints is available as the [Trust Bundle API OpenAPI definition](./trust-bundle-api-swagger.md).
 
 ## Discovery Document Endpoint
 
@@ -12,7 +12,7 @@ The discovery document is an optional entry point to a Trust Domain that points 
 
 When discovery is used, an origin serving exactly one Trust Domain SHOULD expose the document at `GET /.well-known/margo` per [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615); an origin serving several Trust Domains MAY use other absolute HTTPS URLs. When discovery is not used, the Trust Domain identifier and Trust Bundle URI are supplied by operator-provided configuration.
 
-The endpoint requires no authentication at the application layer; the transport is authenticated per [initial trust bootstrap](tls-requirements.md#initial-trust-bootstrap).
+The endpoint requires no authentication at the application layer; the transport is authenticated per [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap).
 
 ### Route and HTTP Methods
 
@@ -68,7 +68,7 @@ Response (`200 OK`):
 
 The resource identified by `trustBundleUri` returns the Trust Domain's SPIFFE bundle, which holds the authoritative set of public trust anchors for that Trust Domain. The endpoint follows the SPIFFE [bundle endpoint](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Federation.md) model, where one URL serves one Trust Domain's bundle.
 
-The endpoint requires no authentication at the application layer; the transport is authenticated per [initial trust bootstrap](tls-requirements.md#initial-trust-bootstrap). A client cannot yet validate MIAF-issued SVIDs when it first retrieves trust material, so this connection relies on an initial trust mechanism established outside MIAF, not on a MIAF SVID. When `trustBundleUri` names a different origin than the discovery document, the client's initial-trust material (configured PKI anchors or operator-provisioned pins) MUST cover that origin.
+The endpoint requires no authentication at the application layer; the transport is authenticated per [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap). A client cannot yet validate MIAF-issued SVIDs when it first retrieves trust material, so this connection relies on an initial trust mechanism established outside MIAF, not on a MIAF SVID. When `trustBundleUri` names a different origin than the discovery document, the client's initial-trust material (configured PKI anchors or operator-provisioned pins) MUST cover that origin.
 
 ### Route and HTTP Methods
 
@@ -95,7 +95,7 @@ GET <trustBundleUri>
 
 ### Example Bundle Response
 
-The bundle carries the Trust Domain's X.509 trust anchors as JWK entries with `"use": "x509-svid"`. Each authority's certificate travels in `x5c` (base64-encoded DER). During a [trust anchor rotation](identity-lifecycle.md#trust-anchor-rotation-playbook) overlap the `keys` array carries more than one `x509-svid` entry.
+The bundle carries the Trust Domain's X.509 trust anchors as JWK entries with `"use": "x509-svid"`. Each authority's certificate travels in `x5c` (base64-encoded DER). During a [trust anchor rotation](./identity-lifecycle.md#trust-anchor-rotation-playbook) overlap the `keys` array carries more than one `x509-svid` entry.
 
 Response (`200 OK`):
 
@@ -120,12 +120,12 @@ Response (`200 OK`):
 
 A client uses the retrieved bundle as the authoritative source when validating SVIDs issued within the Trust Domain. A client that retrieves a bundle carrying no X.509 trust anchors MUST reject it and MUST NOT validate SVIDs against it, failing closed rather than proceeding with an empty anchor set. To resist rollback, where the bundle carries `spiffe_sequence` a client SHOULD track the highest value it has accepted for the Trust Domain and SHOULD reject a retrieved bundle whose `spiffe_sequence` has regressed, since a lower value signals a stale, cached, or replayed bundle that could re-admit a trust anchor that was retired to revoke a compromise.
 
-A client SHOULD refresh its cached bundle at the interval given by the bundle's `spiffe_refresh_hint`, when present, and otherwise at an operator-configured interval. This refresh cadence is authoritative: HTTP cache revalidation (`If-None-Match`/`304`, and any `Cache-Control` freshness) is an efficiency optimization within it and MUST NOT defer a refresh the interval requires. The refresh interval bounds how quickly a Trust Bundle rotation reaches the fleet; the [trust anchor rotation playbook](identity-lifecycle.md#trust-anchor-rotation-playbook) depends on it.
+A client SHOULD refresh its cached bundle at the interval given by the bundle's `spiffe_refresh_hint`, when present, and otherwise at an operator-configured interval. This refresh cadence is authoritative: HTTP cache revalidation (`If-None-Match`/`304`, and any `Cache-Control` freshness) is an efficiency optimization within it and MUST NOT defer a refresh the interval requires. The refresh interval bounds how quickly a Trust Bundle rotation reaches the fleet; the [trust anchor rotation playbook](./identity-lifecycle.md#trust-anchor-rotation-playbook) depends on it.
 
 ## Bundle Contents and Distribution
 
 A Trust Bundle is distributed as a SPIFFE [bundle](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Trust_Domain_and_Bundle.md), MAY additionally be delivered through deployment tooling or provisioning flows, and SHOULD be cached locally by a client to support offline validation.
 
-The bundle contains the Trust Domain's X.509 trust anchors only; intermediate CA certificates travel with the presented SVID chain, not in the bundle (see [chain delivery](svids.md#x509-svid-profile)).
+The bundle contains the Trust Domain's X.509 trust anchors only; intermediate CA certificates travel with the presented SVID chain, not in the bundle (see [chain delivery](./svids.md#x509-svid-profile)).
 
 A SPIFFE bundle is a JWK Set that MAY also carry JWT-SVID signing keys (`"use": "jwt-svid"`). MIAF uses only `x509-svid` entries; an implementation MUST ignore any `jwt-svid` or other non-`x509-svid` key material found in the bundle.

@@ -1,6 +1,6 @@
 # WFM Identity Profile
 
-The WFM Identity Profile is the first identity profile under the [Margo Identity and Authorization Framework](identity-framework.md). It covers both the **WFM identity** and the **WFM Client identity**: how each is named, how each is recognized, how each is provisioned, and how the WFM authenticates and authorizes a caller at its API.
+The WFM Identity Profile is the first identity profile under the [Margo Identity and Authorization Framework](./identity-framework.md). It covers both the **WFM identity** and the **WFM Client identity**: how each is named, how each is recognized, how each is provisioned, and how the WFM authenticates and authorizes a caller at its API.
 
 A WFM holds an identity within the Trust Domain that anchors its namespace. A WFM Client holds an identity within that same Trust Domain, named under the WFM that issues it. Authentication is mutual: a WFM Client presents its X.509-SVID and validates the WFM's SVID, and the caller identity at the WFM API is the authenticated WFM Client SPIFFE ID carried over mTLS.
 
@@ -56,7 +56,7 @@ The `wfm-id` and `wfm-client-id` segments carry no meaning beyond naming the WFM
 
 ### Identity Representation
 
-X.509-SVID is the representation used for WFM and WFM Client authentication, per the MIAF [X.509-SVID profile](svids.md#x509-svid-profile).
+X.509-SVID is the representation used for WFM and WFM Client authentication, per the MIAF [X.509-SVID profile](./svids.md#x509-svid-profile).
 
 ### Recognition by the WFM
 
@@ -68,7 +68,7 @@ A WFM MUST recognize a WFM Client from the authenticated SPIFFE ID alone. When a
 
 A WFM MUST NOT treat a peer as one of its clients when the peer's SPIFFE ID does not match this shape, even if that SVID is validly issued within the Trust Domain.
 
-Over the life of the connection, the WFM SHOULD bound connection lifetime per the MIAF [session lifetime and re-validation](tls-requirements.md#session-lifetime-and-re-validation) rules, and MUST authorize each request using local policy keyed on the WFM Client identity, per [Authorization](#authorization).
+Over the life of the connection, the WFM SHOULD bound connection lifetime per the MIAF [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation) rules, and MUST authorize each request using local policy keyed on the WFM Client identity, per [Authorization](#authorization).
 
 ### Recognition by the WFM Client
 
@@ -79,35 +79,35 @@ A WFM Client MUST recognize the WFM it connects to from the authenticated SPIFFE
 3. verify that the SPIFFE ID is exactly `spiffe://<trust-domain>/margo/wfm/<wfm-id>`, using the `<trust-domain>` and `<wfm-id>` of the client's own SVID; and
 4. abort the connection if any of these checks fails.
 
-A WFM Client holding a long-lived connection SHOULD bound the connection's lifetime, or otherwise re-validate the WFM SVID, per the MIAF [session lifetime and re-validation](tls-requirements.md#session-lifetime-and-re-validation) rules, rather than relying solely on the connection-time check above.
+A WFM Client holding a long-lived connection SHOULD bound the connection's lifetime, or otherwise re-validate the WFM SVID, per the MIAF [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation) rules, rather than relying solely on the connection-time check above.
 
 ## Provisioning
 
-WFM and WFM Client SVIDs are both provisioned by the operator. The MIAF [operator provisioning playbook](identity-lifecycle.md#operator-provisioning-playbook) applies; the SPIFFE path and acceptance policy for each principal type are below.
+WFM and WFM Client SVIDs are both provisioned by the operator. The MIAF [operator provisioning playbook](./identity-lifecycle.md#operator-provisioning-playbook) applies; the SPIFFE path and acceptance policy for each principal type are below.
 
 **For each WFM, the operator:**
 
 1. chooses a `wfm-id` for the WFM namespace;
-2. mints an X.509-SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>`, conforming to the MIAF [X.509-SVID profile](svids.md#x509-svid-profile) and [cryptographic requirements](svids.md#cryptographic-requirements); and
+2. mints an X.509-SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>`, conforming to the MIAF [X.509-SVID profile](./svids.md#x509-svid-profile) and [cryptographic requirements](./svids.md#cryptographic-requirements); and
 3. installs the SVID (and private key material, if generated centrally) on the WFM.
 
 **For each WFM Client, the operator:**
 
 1. chooses a `wfm-id` for the target WFM (matching the WFM's `wfm-id`) and a `wfm-client-id` for this client relationship;
-2. mints an X.509-SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>`, conforming to the MIAF [X.509-SVID profile](svids.md#x509-svid-profile) and [cryptographic requirements](svids.md#cryptographic-requirements);
+2. mints an X.509-SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>`, conforming to the MIAF [X.509-SVID profile](./svids.md#x509-svid-profile) and [cryptographic requirements](./svids.md#cryptographic-requirements);
 3. installs the SVID (and private key material, if generated centrally) on the principal;
 4. configures the client with the WFM's endpoint URL. The URL is routing information only: the client authenticates the WFM by its SVID, matching it against the `<trust-domain>` and `<wfm-id>` carried in the client's own SVID per [Recognition by the WFM Client](#recognition-by-the-wfm-client), not by the URL; and
 5. adds the new `wfm-client-id` (or full SPIFFE ID) to the target WFM's accepted-client policy, so that the WFM will authorize requests from this client per [Authorization](#authorization).
 
 ## Lifecycle
 
-The MIAF [lifecycle vocabulary](identity-lifecycle.md#lifecycle-vocabulary) applies to both WFM and WFM Client identities. The **Active** phase has a fully normative protocol surface: a client authenticates to a WFM over mTLS using its X.509-SVID per the Management Interface [identity and authentication](../margo-management-interface/api-requirements-and-security.md#identity-and-authentication) rules, and validates the WFM SVID per [Recognition by the WFM Client](#recognition-by-the-wfm-client). The other phases are operator-driven:
+The MIAF [lifecycle vocabulary](./identity-lifecycle.md#lifecycle-vocabulary) applies to both WFM and WFM Client identities. The **Active** phase has a fully normative protocol surface: a client authenticates to a WFM over mTLS using its X.509-SVID per the Management Interface [identity and authentication](../margo-management-interface/api-requirements-and-security.md#identity-and-authentication) rules, and validates the WFM SVID per [Recognition by the WFM Client](#recognition-by-the-wfm-client). The other phases are operator-driven:
 
 | Phase | WFM | WFM Client |
 | :---- | :--------- | :--------- |
 | Enrollment | Mint SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>`; install on the WFM. | Mint SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>`; install on the principal; add `wfm-client-id` to the WFM's accepted-client policy. |
 | Renewal | Mint a replacement SVID (same SPIFFE ID) before expiry; install on the WFM. | Mint a replacement SVID (same SPIFFE ID) before expiry; install on the principal. |
-| Revocation | Rotate the Trust Bundle to invalidate the issuing CA (this also invalidates the WFM Clients issued under that CA). See the MIAF [operator revocation playbook](identity-lifecycle.md#operator-revocation-playbook). | Remove `wfm-client-id` from the WFM's accepted-client policy. For mass revocation, rotate the Trust Bundle. |
+| Revocation | Rotate the Trust Bundle to invalidate the issuing CA (this also invalidates the WFM Clients issued under that CA). See the MIAF [operator revocation playbook](./identity-lifecycle.md#operator-revocation-playbook). | Remove `wfm-client-id` from the WFM's accepted-client policy. For mass revocation, rotate the Trust Bundle. |
 | Re-issuance | Mint a new SVID with the same SPIFFE ID; install on the replacement WFM. | Mint a new SVID (same or new `wfm-client-id`, per operator policy); install on the replacement principal; update the WFM's accepted-client policy if the identifier changed. |
 
 WFM revocation is heavier-handed than WFM Client revocation because there is no client-side accepted-server allowlist comparable to the WFM's accepted-client policy. An operator reissues the WFM SVID (keeping the same SPIFFE ID) in most cases; Trust Bundle rotation is the cryptographically enforced revocation path.
@@ -118,6 +118,6 @@ Removing a `wfm-client-id` revokes one client only where the accepted-client pol
 
 A WFM MUST authorize each request using local policy keyed on the authenticated WFM Client identity. Recognizing the SPIFFE ID (see [Recognition by the WFM](#recognition-by-the-wfm)) establishes only that the caller is a validly issued client within this WFM's namespace; it does not by itself grant access.
 
-A WFM MUST maintain an accepted-client policy and admit a caller only when its identity is accepted by that policy; a matching `wfm-id` namespace is necessary but not sufficient. The policy MAY accept named `wfm-client-id`s (or full SPIFFE IDs) individually, and MAY accept any client within this WFM's namespace where the operator trusts the [MIS](identity-framework.md#the-mis-role) to issue identities under `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/` only to authorized clients. How the policy is expressed is implementation-specific; the requirement is that acceptance is an explicit local decision, not an automatic consequence of holding a valid SVID. Policy MAY further consider deployment-specific `wfm-client-id` metadata, and a WFM MAY deny a request from a still-valid credential; for example, once a client relationship has been retired.
+A WFM MUST maintain an accepted-client policy and admit a caller only when its identity is accepted by that policy; a matching `wfm-id` namespace is necessary but not sufficient. The policy MAY accept named `wfm-client-id`s (or full SPIFFE IDs) individually, and MAY accept any client within this WFM's namespace where the operator trusts the [MIS](./identity-framework.md#the-mis-role) to issue identities under `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/` only to authorized clients. How the policy is expressed is implementation-specific; the requirement is that acceptance is an explicit local decision, not an automatic consequence of holding a valid SVID. Policy MAY further consider deployment-specific `wfm-client-id` metadata, and a WFM MAY deny a request from a still-valid credential; for example, once a client relationship has been retired.
 
 How this profile applies to the Margo Management Interface is specified in [API Requirements and Security](../margo-management-interface/api-requirements-and-security.md#identity-and-authentication): the endpoints served, the mTLS authentication of each call, the handling of caller identity, and how an authorization denial is surfaced (HTTP status and response body).
