@@ -129,7 +129,7 @@ Examples:
 - Initial release aligned to spec `1.1.0` -> Reference implementation `1.1.0`
 - Security patch to reference implementation only -> Reference implementation `1.1.1` (spec remains `1.1.0`)
 
-If the reference implementation uncovers a breaking issue in the specification, the release classification should be revised before the next preview or release is published.
+If the reference implementation uncovers a breaking issue in the specification, the release classification will be revised before the next preview or release is published.
 
 ### Conformance test and toolkit
 
