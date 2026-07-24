@@ -68,7 +68,7 @@ Margo plans to publish preview releases quarterly on the 15th day of each quarte
 - September 15
 - December 15
 
-The version semantics documented in this plan still apply to each preview release. The scheduled quarterly release determines when a preview is published, not how the semantic version is classified.
+The version semantics documented here apply to each preview release. The scheduled quarterly release determines when a preview is published, not how the semantic version is classified.
 
 The single pre-release label used across all stages is `rc.N`. The branch the tag lives on and the base version number together provide the stage context.
 
