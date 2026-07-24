@@ -23,7 +23,7 @@ The Trust Bundle and discovery document are the only runtime endpoints MIAF defi
 For **enrollment**, the operator:
 
 1. accepts a CSR from the principal (the preferred path, since it keeps the private key on the principal and supports hardware-bound keys such as a TPM, secure element, or HSM). Where the principal cannot generate its own key pair, the operator generates one centrally and accepts the resulting concentration of key custody;
-2. mints an X.509-SVID for the chosen SPIFFE ID under the Trust Domain's issuing authority;
+2. mints an X.509-SVID for the chosen SPIFFE ID under the Trust Domain's issuing authority. The issuance is authoritative for the SPIFFE ID: any subject or SAN content the CSR carries is advisory and is overridden;
 3. installs the SVID on the principal over a channel that protects its integrity and authenticity, and that additionally protects confidentiality on the path where it also carries the centrally generated private key; and
 4. ensures every relying party the principal will authenticate to has the Trust Bundle and any local-policy entries needed to recognize the new SPIFFE ID.
 
