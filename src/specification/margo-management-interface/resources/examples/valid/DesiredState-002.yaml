@@ -12,8 +12,8 @@ spec:
         components:
             - name: digitron-orchestrator-docker
               properties:
-                keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
-                packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
+                repository: oci://northstarida.azurecr.io/compose/digitron-orchestrator
+                revision: 1.0.9
     parameters:
         adminName:
             value: Some One

@@ -142,13 +142,22 @@ classes:
   Component:
     description: A class representing a component of a deployment profile.
     rank: 50
-    # abstract: true
     attributes:
       name:
         description: The name of the component.
-        # identifier: true
         required: true
         rank: 10
+      revision:
+        description: >-
+          OCI tag identifying the component version within the repository
+          (e.g., "1.0.0", "2.3.1", "1.0.0-rc1", "1.0.0_build.123").
+          MUST be a valid SemVer 2.0 string without a leading `v`.
+          SemVer build metadata separator `+` MUST be stored as `_`
+          because `+` is not a valid OCI tag character.
+        range: string
+        required: false
+        rank: 15
+        pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
       properties:
         description: Properties associated with the component.
         range: Property
