@@ -176,6 +176,16 @@ classes:
   ComposeComponent:
     is_a: Component
     rank: 50
+    description: >-
+      A component in a Compose deployment profile, packaged as a
+      Compose Archive stored in an OCI-compliant Component Registry.
+    attributes:
+      properties:
+        description: Compose-specific deployment properties providing OCI coordinates and behavior settings.
+        range: ComposeComponentProperties
+        required: true
+        inlined: true
+        rank: 20
 
   Property:
     rank: 80
@@ -188,6 +198,36 @@ classes:
         range: string
         rank: 20
         required: true
+
+  ComposeComponentProperties:
+    rank: 82
+    description: >-
+      Compose-specific component properties providing OCI coordinates
+      and optional deployment behavior settings.
+    attributes:
+      repository:
+        description: OCI repository URI for the Compose Archive.
+        range: string
+        required: true
+        pattern: "^oci://.+"
+        rank: 10
+      revision:
+        description: OCI tag identifying the Compose Archive version (SemVer).
+        range: string
+        required: true
+        pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
+        rank: 20
+      wait:
+        description: Whether to wait for all containers to reach running state before reporting success.
+        range: boolean
+        required: false
+        rank: 30
+      timeout:
+        description: Maximum time to wait for containers to reach running state (e.g. '5m0s').
+        range: string
+        required: false
+        pattern: "^\\d+m\\d+s$"
+        rank: 40
 
   Parameter:
     description: A class representing a single parameter.
