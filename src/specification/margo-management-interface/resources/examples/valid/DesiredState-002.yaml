@@ -13,7 +13,9 @@ spec:
             - name: digitron-orchestrator-docker
               properties:
                 repository: oci://northstarida.azurecr.io/compose/digitron-orchestrator
-                revision: 1.0.9
+                revision: "1.0.9"
+                wait: true
+                timeout: "5m0s"
     parameters:
         adminName:
             value: Some One
