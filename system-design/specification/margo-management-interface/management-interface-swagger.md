@@ -3,7 +3,7 @@
 <script>
 window.onload = function() {
   SwaggerUIBundle({
-    url: "/specification/margo-management-interface/workload-management-api-1.0.0.yaml",  // path to api definition
+    url: "/specification/margo-management-interface/workload-management-api-1.0.0-rc.2.yaml",  // path to api definition
     dom_id: '#swagger-ui'
   });
 };
