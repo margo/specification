@@ -286,13 +286,11 @@ Each quarterly release increments `N` on the appropriate branch. Once the draft 
 
 The sandbox keeps its own release cycle, as described in [Sandbox Release Document](https://github.com/margo/sandbox/blob/main/docs/release.md). It is a supporting implementation environment to enable the code-first process, not an authoritative version anchor for the specification.
 
-Recommended relationship:
+Defined relationship:
 
 - Sandbox implementation depends on the OpenAPI spec within the specification. Changes to specification should be reflected in the sandbox at the next convenient release. 
 - Sandbox retains its own SemVer and release automation
 - Sandbox release notes state which specification release they align to
-- Sandbox tags may use release candidates and nightly builds independently of the specification deliverables
-- Sandbox changes do not force a specification version bump unless they reflect an accepted specification change
 
 Example compatibility statement:
 
