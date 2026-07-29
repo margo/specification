@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Margo Workload Management API
-  version: 1.0.0
+  version: 1.0.0-rc.2
   description: 
     API for managing workloads on Margo-compliant edge devices.
     Includes the APIs for exchanging desired state and current state.
@@ -10,7 +10,7 @@ info:
 
 servers:
   - url: https://wfm.margo.org/
-    description: Workload Fleet Manager API
+    description: Workload Fleet Manager APIs
 
 security:
   - PayloadSignature: []
