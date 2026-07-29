@@ -150,7 +150,7 @@ If the CTT uncovers a breaking issue in the specification, the release classific
 
 ## Release Cohesion Rule
 
-At an official release, all four Margo deliverables publish with the same version number. After the initial release, the specification and OpenAPI specification continue to version in lockstep, while the reference implementation and conformance toolkit may increment their patch version independently for software-only changes.
+At an official release, all four Margo deliverables publish with the same version number. After that, any deliverable may bump its patch version on its own for small fixes, such as software bug fixes or documentation edits like typos, clarifications, and examples. The major and minor versions stay in lockstep.
 
 ### At initial release — all deliverables share the same version
 
@@ -161,9 +161,9 @@ At an official release, all four Margo deliverables publish with the same versio
 | Reference implementation | `1.1.0` |
 | Conformance test and toolkit | `1.1.0` |
 
-### After release — software patch versions may diverge
+### After release — patch versions may diverge
 
-The major and minor versions must remain in sync with the specification. Only the patch number may differ, and only for software-only fixes (bugs, security issues, tooling).
+The major and minor versions must stay in sync with the specification. Only the patch number may differ, and only for small fixes that don't change requirements, such as software bug fixes or documentation edits (typos, clarifications, examples). These do not force a coordinated release.
 
 | Deliverable | Version after independent patches |
 | --- | --- |
@@ -181,7 +181,6 @@ A user seeing reference implementation `1.1.2` can immediately determine it impl
 - Publish working previews as `X.Y.Z-rc.N` on the pre-draft branch
 - Target quarterly preview publication on March 15, June 15, September 15, and December 15
 - Increment `N` for each quarterly drop or agreed checkpoint
-- Use issue and branch tags to track PR numbers or work items instead of embedding PR identifiers in the semantic version
 
 ### Phase 2: Draft review
 
