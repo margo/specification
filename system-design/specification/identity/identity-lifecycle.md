@@ -35,13 +35,13 @@ The provisioning channel itself is deployment-specific and out of scope. Typical
 
 ## Operator Revocation Playbook
 
-Without an automated revocation protocol, a deployment revokes an SVID through one of:
+Without an automated revocation protocol, a deployment withdraws an SVID's access through one of:
 
-1. **Relying-party allowlist removal**: where a relying party keeps an allowlist of the identities it accepts, the operator removes the SPIFFE ID from it. This is the most precise option - it revokes one principal's access without affecting any other - and is recommended for routine revocation where such a list exists.
+1. **Relying-party allowlist removal**: where a relying party keeps an allowlist of the identities it accepts, the operator removes the SPIFFE ID from it. This withdraws authorization at the application layer - the certificate itself is not revoked and stays valid until it expires. It is the most precise option - it removes one principal's access without affecting any other - and is recommended for routine use where such a list exists.
 2. **Trust Bundle rotation**: the operator removes the compromised trust anchor from the Trust Bundle, invalidating every SVID that chains to it. This is heavy-handed but effective when an entire issuance authority is compromised. See the [Trust Anchor Rotation Playbook](#trust-anchor-rotation-playbook) below, which also covers the case where the issuer is an intermediate CA whose anchor is the root above it.
 3. **Expiry**: wait for the SVID to expire. This is viable only with shorter SVID lifetimes.
 
-None of these options is instantaneous. Allowlist removal takes effect promptly only where the relying party re-evaluates its authorization policy per request; a Trust Bundle rotation propagates no faster than the fleet's refresh interval. In either case a long-lived mTLS connection can keep a revoked peer authenticated until the connection is re-established (see [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation)).
+None of these options is instantaneous. Allowlist removal takes effect promptly only where the relying party re-evaluates its authorization policy per request; a Trust Bundle rotation propagates no faster than the fleet's refresh interval. In either case a long-lived mTLS connection can keep the affected peer authenticated until the connection is re-established (see [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation)).
 
 ## Trust Anchor Rotation Playbook
 

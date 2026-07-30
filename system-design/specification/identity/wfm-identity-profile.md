@@ -112,7 +112,7 @@ The MIAF [lifecycle vocabulary](./identity-lifecycle.md#lifecycle-vocabulary) ap
 
 WFM revocation is heavier-handed than WFM Client revocation because there is no client-side accepted-server allowlist comparable to the WFM's accepted-client policy. An operator reissues the WFM SVID (keeping the same SPIFFE ID) in most cases; Trust Bundle rotation is the cryptographically enforced revocation path.
 
-Removing a `wfm-client-id` revokes one client only where the accepted-client policy lists clients individually. Where a WFM instead accepts any client within its namespace (see [Authorization](#authorization)), there is no per-client entry to remove, so revoking a single client requires narrowing the policy to explicit entries or rotating the Trust Bundle.
+Removing a `wfm-client-id` withdraws one client only where the accepted-client policy lists clients individually. Where a WFM instead accepts any client within its namespace (see [Authorization](#authorization)), there is no individual entry to remove, so withdrawing a single client requires narrowing the policy to explicit entries or rotating the Trust Bundle.
 
 ## Authorization
 
