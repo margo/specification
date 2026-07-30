@@ -20,7 +20,7 @@ A client cannot validate MIAF-issued SVIDs against the Trust Bundle until it hol
 
 **Authenticated HTTPS retrieval.** The client fetches the discovery document and the Trust Bundle over HTTPS (see [Trust Bundle and Discovery](./trust-bundle-and-discovery.md)). Because the client holds no MIAF credential yet, these connections rely on an initial trust mechanism established outside MIAF. The client MUST authenticate both connections using at least one of:
 
-1. **PKI-anchored validation**: validate the [MIS](./identity-framework.md#the-mis-role) server certificate chain to a configured set of trust anchors (web PKI, enterprise PKI, or an operator-configured private CA), with DNS name validation per [RFC 6125](https://datatracker.ietf.org/doc/html/rfc6125).
+1. **PKI-anchored validation**: validate the [MIS](./identity-framework.md#the-mis-role) server certificate chain to a configured set of trust anchors (web PKI, enterprise PKI, or an operator-configured private CA), with DNS name validation per [RFC 9525](https://datatracker.ietf.org/doc/html/rfc9525).
 2. **Pinned trust**: validate the MIS server certificate chain against operator-provisioned pins. A pin is the base64-encoded SHA-256 digest of the DER-encoded SubjectPublicKeyInfo of a certificate (the SPKI Fingerprint construction of [RFC 7469, Section 2.4](https://datatracker.ietf.org/doc/html/rfc7469#section-2.4)). The connection is authenticated when a certificate in the presented chain carries a SubjectPublicKeyInfo matching a provisioned pin (for example, a pin over the issuing CA's public key).
 
 An operator MAY deliver the trust material for either option (the configured anchors for the first, or the pins for the second) through the same channel used to provision the principal's SVID. A client that cannot authenticate a connection by one of these mechanisms MUST abort.
@@ -38,7 +38,7 @@ Validity-period evaluation depends on a trustworthy local clock (see [unreliable
 **Server identity for MIAF HTTPS endpoints (discovery and Trust Bundle retrieval):**
 
 - The client MUST validate the server certificate chain to its configured initial trust anchors (see [Initial Trust Bootstrap](#initial-trust-bootstrap)).
-- Under PKI-anchored validation, the client MUST validate the expected DNS name per [RFC 6125](https://datatracker.ietf.org/doc/html/rfc6125). Under pinned trust, the pin itself establishes server identity, so RFC 6125 DNS-name validation applies only where the client connects by a DNS name; a client connecting to a pinned endpoint by IP address is not required to perform it.
+- Under PKI-anchored validation, the client MUST validate the expected DNS name per [RFC 9525](https://datatracker.ietf.org/doc/html/rfc9525). Under pinned trust, the pin itself establishes server identity, so RFC 9525 DNS-name validation applies only where the client connects by a DNS name; a client connecting to a pinned endpoint by IP address is not required to perform it.
 - The Trust Bundle selected from `trustBundleUri` MUST NOT replace these TLS server-validation checks for MIAF HTTPS endpoints; it is used to validate SVIDs within the Trust Domain.
 
 **SVID identity for MIAF mTLS:** when a peer presents an X.509-SVID at the mTLS layer, the verifier validates it and derives the peer's identity per the [X.509-SVID validation](./svids.md#x509-svid-validation) rules. SVID identity is established by the SPIFFE ID in the URI SAN, not by a DNS name.
