@@ -58,7 +58,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | interfaces | []CommunicationInterface | N* | Communication interfaces available for applications to utilize on the device. See the [Communication Interfaces](#communicationinterface-attributes) section below.|
 | otelCollector | boolean | N* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. |
 | supportedRuntimes | []SupportedRuntime | N* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
-| supportedDeploymentTypes | []SupportedDeploymentType | N* | The manifest/deployment formats the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
+| supportedDeploymentTypes | []SupportedDeploymentType | N* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
 
 > Note:  \* Required for devices that host workloads locally. A device that does not host workloads itself, for example see-thru gateway, that only relays the devices behind it — omits these fields. The WFM infers that such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy. No explicit gateway flag is required.
 
