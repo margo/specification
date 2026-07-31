@@ -51,14 +51,14 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
-| cpu | []CPU | N* | List of CPU entries available on the device. Utilized to match with the required resources defined in the application description. See the [CPU](#cpu-attributes) section below.|
-| memory | string | N* | The amount of memory available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
-| storage | string | N* | The amount of storage available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
-| peripherals | []Peripheral | N* | Peripherals available for applications to utilize on the device. See the [Peripheral](#peripheral-attributes) section below.|
-| interfaces | []CommunicationInterface | N* | Communication interfaces available for applications to utilize on the device. See the [Communication Interfaces](#communicationinterface-attributes) section below.|
-| otelCollector | boolean | N* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. |
-| supportedRuntimes | []SupportedRuntime | N* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
-| supportedDeploymentTypes | []SupportedDeploymentType | N* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
+| cpu | []CPU | Y* | List of CPU entries available on the device. Utilized to match with the required resources defined in the application description. See the [CPU](#cpu-attributes) section below.|
+| memory | string | Y* | The amount of memory available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
+| storage | string | Y* | The amount of storage available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
+| peripherals | []Peripheral | Y* | Peripherals available for applications to utilize on the device. See the [Peripheral](#peripheral-attributes) section below.|
+| interfaces | []CommunicationInterface | Y* | Communication interfaces available for applications to utilize on the device. See the [Communication Interfaces](#communicationinterface-attributes) section below.|
+| otelCollector | boolean | Y* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. |
+| supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
+| supportedDeploymentTypes | []SupportedDeploymentType | Y* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
 
 > Note:  \* A see-through gateway not hosting workloads itself MUST omit or provide empty values for these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy. 
 
