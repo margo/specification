@@ -133,7 +133,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | Permissible Values | Description |
 | --- | --- |
 | helm | Device can receive and process Kubernetes Helm chart deployments locally. |
-| compose | Device can receive and process Docker Compose service deployments locally. |
+| compose | Device can receive and process Compose service deployments locally. |
 
 
 ## Example Device Capabilities Payload
