@@ -14,12 +14,13 @@ All workload hosting devices MUST provide the following components:
 - at least one supported workload runtime (`supportedRuntimes`)
 - An OTEL collector
 
-## Kubernetes (Helm) enabled device requirements
+> Note: See the `supportedDeploymentTypes` in [device capabilities](../margo-management-interface/device-capabilities.md) for the supported deployment types. 
+
+## Helm enabled device requirements
 
 Devices supporting the helm deployment type, MUST provide the following additional components:
 
 - Capabilities for deploying Helm charts
-    - described via the `supportedDeploymentTypes`:`helm`
 - Kubernetes orchestration platform
 
 ### Helm deployment approaches
@@ -40,8 +41,7 @@ If a device vendor chooses a deployment approach that does not interact with the
 Devices supporting the compose deployment type, MUST provide the following additional components:
 
 - Capabilities for deploying Compose applications
-    - described via the `supportedDeploymentTypes`:`compose`
-- Compose compliant software as the orchestration platform
+- Compose orchestration platform i.e., Docker or Podman
 
 
 ## Future Requirements
