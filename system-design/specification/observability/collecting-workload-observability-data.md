@@ -60,7 +60,7 @@ For devices running Kubernetes the following is a minimum list of observability 
 
 ### Compose-based Devices
 
-For devices running non-clustered container platforms such as Docker or Podman the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
+For devices with runtimes supporting compose deployment types, such as Docker or Podman, the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
 - Container observability data MUST be collected.
   - It is recommended the Device Owner use the [Docker Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/dockerstatsreceiver/README.md) or [Podman Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/podmanreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
