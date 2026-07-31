@@ -10,11 +10,11 @@ All margo-conformant devices MUST provide the following components:
 
 All workload hosting devices MUST provide the following components:
     
-- at least one supported deployment type (`supportedDeploymentTypes`)
-- at least one supported workload runtime (`supportedRuntimes`)
+- at least one supported deployment type
+- at least one supported workload runtime
 - An OTEL collector
 
-> Note: See the `supportedDeploymentTypes` in [device capabilities](../margo-management-interface/device-capabilities.md) for the supported deployment types. 
+> Note: See [device capabilities](../margo-management-interface/device-capabilities.md) for the supported deployment types and runtimes. 
 
 ## Helm enabled device requirements
 
