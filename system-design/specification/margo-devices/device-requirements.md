@@ -16,7 +16,7 @@ All workload hosting devices MUST provide the following capabilities:
 
 > Note: See [device capabilities](../margo-management-interface/device-capabilities.md) for the supported deployment types and runtimes. 
 
-## Helm enabled device requirements
+## Helm-enabled Device Requirements
 
 Devices supporting the helm deployment type, MUST provide the following additional components:
 
