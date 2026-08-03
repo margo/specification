@@ -486,10 +486,11 @@ components:
         properties:
           type: object
           required: [id, vendor, modelNumber, serialNumber]
-          # Only identity fields are required. A device that hosts workloads reports cpu, memory,
-          # storage, otelCollector, supportedRuntimes (>=1), and supportedDeploymentTypes (>=1). A
-          # device that does not host workloads (e.g. a see-thru gateway that only relays the
-          # devices behind it) omits those fields; the WFM infers it is non-hosting from their
+          # Only identity fields are required. A device that hosts workloads reports cpus, memory,
+          # storage, peripherals, interfaces, otelCollector (true), supportedRuntimes (>=1), and
+          # supportedDeploymentTypes (>=1). A device that does not host workloads (e.g. a see-thru
+          # gateway that only relays the devices behind it) omits those fields or reports them
+          # empty, reporting otelCollector as false; the WFM infers it is non-hosting from their
           # absence and infers a gateway from the parent/child deviceId hierarchy.
           properties:
             id:
@@ -500,7 +501,7 @@ components:
               type: string
             serialNumber:
               type: string
-            cpu:
+            cpus:
               type: array
               items:
                 type: object

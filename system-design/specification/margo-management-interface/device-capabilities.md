@@ -53,7 +53,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
-| cpu | []CPU | Y* | List of CPU entries available on the device. Utilized to match with the required resources defined in the application description. See the [CPU](#cpu-attributes) section below.|
+| cpus | []CPU | Y* | List of CPU entries available on the device. Utilized to match with the required resources defined in the application description. See the [CPU](#cpu-attributes) section below.|
 | memory | string | Y* | The amount of memory available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined by the device owner.|
 | storage | string | Y* | The amount of storage available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
 | peripherals | []Peripheral | Y* | Peripherals available for applications to utilize on the device. See the [Peripheral](#peripheral-attributes) section below.|
@@ -62,15 +62,17 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
 | supportedDeploymentTypes | []SupportedDeploymentType | Y* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
 
-> Note:  \* A see-thru gateway not hosting workloads itself MUST omit or provide empty values for these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy. 
+> Note:  \* A see-thru gateway not hosting workloads itself MUST omit these fields or provide empty values for them, reporting `otelCollector` as `false`. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy.
 
 ### CPU Attributes
 CPU element defining the device's CPU characteristics.
 
 | Attribute | Type | Required? | Description |
 | --- | --- | --- | --- |
-| cores | integer |  Y  | Defines the cores available within the hosts CPU. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the device owner. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
+| cores | number |  Y  | Defines the cores available within the hosts CPU. Specified as decimal units of CPU cores (e.g., `0.5` is half a core). This is defined by the device owner. After deployment of the application, the device MUST provide this number of CPU cores for the application.|
 | architecture | CpuArchitectureType |  N  | The CPU architecture supported by the device. This can be e.g. amd64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.|
+
+Each entry in the `cpus` array describes one set of cores a single workload can be placed on. A device satisfies an application's `requiredResources.cpu` only if a single entry provides at least the required number of `cores` and, when the application specifies one or more architectures, that entry's `architecture` is one of the listed values. Cores from separate `cpus` entries MUST NOT be summed together when evaluating the requirement.
 
 
 ### Peripheral Attributes
@@ -149,7 +151,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
         "vendor": "Northstar Industrial Devices",
         "modelNumber": "332ANZE1-N1",
         "serialNumber": "PF45343-AA",
-        "cpu": [
+        "cpus": [
             {
                 "cores": 24,
                 "architecture": "amd64"
@@ -195,13 +197,26 @@ A device may represent, and aggregate the capabilities of, multiple child-device
 
 ### See-thru gateways
 
-WFM clients may connect one or more child-devices to the WFM while allowing the WFM to see each device behind it as an individual device with its own capabilities. This type of client is referred to as a **see-thru gateway**. A see-thru gateway is not a special device type; it is treated as an ordinary device that additionally reports the capabilities of the devices behind it. The WFM infers the gateway relationship from the reported information — the parent/child `deviceId` hierarchy and it is especially evident when the gateway itself reports no workload-hosting capabilities.
+WFM clients may connect one or more child-devices to the WFM while allowing the WFM to see each device behind it as an individual device with its own capabilities. This type of client is referred to as a **see-thru gateway**.
 
-A see-thru gateway MUST report its own capabilities and the capabilities of each device it connects to the WFM. This is done by calling the `device capabilities` endpoint for the gateway itself and for each device behind the gateway. The `deviceId` in the endpoint is used to indicate the hierarchy of devices, with a parent/child relationship. For example, if a see-thru gateway with `deviceId` "gateway1" connects two devices with `deviceId` "deviceA" and "deviceB", the gateway would call the `device capabilities` endpoint three times with the following `deviceId`s: "gateway1", "gateway1/deviceA", and "gateway1/deviceB".
+A see-thru gateway uses the same `DeviceCapabilitiesManifest` schema as any other device — from a payload perspective it is an ordinary device that also reports the devices behind it. Its conformance rules are relaxed, though: unlike a standalone hosting device, a see-thru gateway is not required to host workloads and need not report workload-hosting capabilities. The WFM infers the gateway relationship from the parent/child `deviceId` hierarchy, which is typically most evident when the gateway reports no workload-hosting capabilities.
 
-A see-thru gateway that does not host workloads itself MUST omit the workload-hosting fields (`cpu`, `memory`, `storage`, `otelCollector`, `supportedRuntimes`, `supportedDeploymentTypes`), so its manifest contains only the required identity fields. A see-thru gateway that is also capable of hosting workloads reports the workload-hosting fields, including at least one entry in both `supportedRuntimes` and `supportedDeploymentTypes`.
+**How a see-thru gateway reports capabilities**
 
-A see-thru gateway MUST report its own capabilities to the WFM before reporting the capabilities of any child devices. If a WFM receives a `DeviceCapabilitiesManifest` for a child-device before it has received the `DeviceCapabilitiesManifest` of the parent WFM client, the WFM MUST reject the request with a 404 Not Found response code.
+A see-thru gateway MUST report its own capabilities and the capabilities of each device it connects to the WFM:
+
+1. Call the `device capabilities` endpoint once for the gateway itself, then once for each device behind it.
+2. Encode the hierarchy in the `deviceId` as a parent/child path. For example, a gateway `gateway1` with two child-devices calls the endpoint three times, with `deviceId`s `gateway1`, `gateway1/deviceA`, and `gateway1/deviceB`.
+3. Report the gateway's own manifest **before** any child manifest. If the WFM receives a child manifest first, it MUST reject the request with a `404 Not Found` response code.
+
+**What the gateway reports about itself**
+
+| If the gateway... | Then its own manifest MUST... |
+| --- | --- |
+| does **not** host workloads | contain only the required identity fields — omit or provide empty values for the workload-hosting fields (`cpus`, `memory`, `storage`, `peripherals`, `interfaces`, `supportedRuntimes`, `supportedDeploymentTypes`), and omit `otelCollector` or report it as `false` |
+| **also** hosts workloads | report the workload-hosting fields like any hosting device, including at least one entry in both `supportedRuntimes` and `supportedDeploymentTypes` |
+
+Hosting is neither required of nor forbidden for a see-thru gateway: it reports the workload-hosting fields when it hosts workloads, and omits them when it does not.
 
 #### Examples
 
@@ -237,7 +252,7 @@ A see-thru gateway MUST report its own capabilities to the WFM before reporting 
             "vendor": "Gateway Vendor",
             "modelNumber": "GW-1000",
             "serialNumber": "GW12345678",
-            "cpu": [
+            "cpus": [
                 {
                     "cores": 4,
                     "architecture": "amd64"
@@ -276,7 +291,7 @@ A see-thru gateway MUST report its own capabilities to the WFM before reporting 
             "vendor": "Device A Vendor",
             "modelNumber": "DA-2000",
             "serialNumber": "DA12345678",
-            "cpu": [
+            "cpus": [
                 {
                     "cores": 24,
                     "architecture": "amd64"
@@ -320,7 +335,7 @@ A see-thru gateway MUST report its own capabilities to the WFM before reporting 
             "vendor": "Device A Vendor",
             "modelNumber": "DA-1000",
             "serialNumber": "DA12345678",
-            "cpu": [
+            "cpus": [
                 {
                     "cores": 2,
                     "architecture": "arm64"
