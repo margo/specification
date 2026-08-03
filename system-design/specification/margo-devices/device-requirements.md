@@ -38,7 +38,7 @@ If a device vendor chooses a deployment approach that does not interact with the
 
 ## Compose-enabled Device Requirements
 
-Devices supporting the compose deployment type, MUST provide the following additional components:
+Devices supporting the Compose deployment type, MUST provide the following additional components:
 
 - Capabilities for deploying Compose applications
 - Compose orchestration platform i.e., Docker or Podman
