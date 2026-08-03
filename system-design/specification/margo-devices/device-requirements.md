@@ -18,7 +18,7 @@ All workload hosting devices MUST provide the following capabilities:
 
 ## Helm-enabled Device Requirements
 
-Devices supporting the helm deployment type, MUST provide the following additional components:
+Devices supporting the Helm deployment type, MUST provide the following additional components:
 
 - Capabilities for deploying Helm charts
 - Kubernetes orchestration platform
