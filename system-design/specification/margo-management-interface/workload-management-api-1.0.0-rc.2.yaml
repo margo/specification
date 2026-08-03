@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: Margo Workload Management API
-  version: 1.0.0
+  version: 1.0.0-rc.2
   description: 
     API for managing workloads on Margo-compliant edge devices.
     Includes the APIs for exchanging desired state and current state.
@@ -10,7 +10,7 @@ info:
 
 servers:
   - url: https://wfm.margo.org/
-    description: Workload Fleet Manager API
+    description: Workload Fleet Manager APIs
 
 security:
   - PayloadSignature: []
@@ -403,8 +403,7 @@ components:
         Monotonically increasing unsigned 64-bit integer in the inclusive range [1, 2^64-1].
         Prevents rollback attacks. The first manifest MUST use 1.
     DeploymentBundleRef:
-      type: object
-      nullable: true
+      type: [object, 'null']
       description: >
         Describes a single archive containing all ApplicationDeployment documents. If there are zero deployments (deployments array is empty) the property MUST be present with the value null (it MUST NOT be omitted).
       properties:
@@ -471,6 +470,13 @@ components:
     DeviceCapabilitiesManifest:
       type: object
       required: [apiVersion, kind, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         apiVersion:
           type: string
@@ -660,6 +666,13 @@ components:
       type: object
       description: Helm Application Deployment Profile Component
       required: [name, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         name:
           type: string
@@ -684,6 +697,13 @@ components:
       type: object
       description: Compose Application Deployment Profile Component
       required: [name, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         name:
           type: string
@@ -708,6 +728,13 @@ components:
       type: object
       description: Application Deployment Profile
       required: [type, components]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         type:
           type: string
@@ -757,6 +784,13 @@ components:
       type: object
       description: Application Deployment specification
       required: [applicationId, deploymentProfile]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
       properties:
         applicationId:
           type: string
