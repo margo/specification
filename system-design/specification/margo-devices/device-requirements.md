@@ -36,7 +36,7 @@ Margo does not dictate how devices deploy workloads packaged as Helm charts. A d
 If a device vendor chooses a deployment approach that does not interact with the Kubernetes API, the list of Kuberentes APIs available in the cluster MUST be provided out-of-band. This is supported by a variety of tooling such as the Helm GO SDK, `helm template` command, Kustomization, and ArgoCD.
 
 
-## Compose enabled device requirements
+## Compose-enabled Device Requirements
 
 Devices supporting the compose deployment type, MUST provide the following additional components:
 
