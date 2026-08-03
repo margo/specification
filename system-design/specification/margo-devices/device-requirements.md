@@ -10,8 +10,8 @@ All margo-conformant devices MUST provide the following components:
 
 All workload hosting devices MUST provide the following components:
     
-- at least one supported deployment type
-- at least one supported workload runtime
+- At least one supported deployment type
+- At least one supported workload runtime
 - An OTEL collector
 
 > Note: See [device capabilities](../margo-management-interface/device-capabilities.md) for the supported deployment types and runtimes. 
