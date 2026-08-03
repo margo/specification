@@ -8,7 +8,7 @@ All margo-conformant devices MUST provide the following components:
 
 > Note: This is not required for a device behind a see-thru gateway.
 
-All workload hosting devices MUST provide the following components:
+All workload hosting devices MUST provide the following capabilities:
     
 - At least one supported deployment type
 - At least one supported workload runtime
