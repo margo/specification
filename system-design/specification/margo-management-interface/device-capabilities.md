@@ -60,7 +60,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
 | supportedDeploymentTypes | []SupportedDeploymentType | Y* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
 
-> Note:  \* A see-through gateway not hosting workloads itself MUST omit or provide empty values for these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy. 
+> Note:  \* A see-thru gateway not hosting workloads itself MUST omit or provide empty values for these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy. 
 
 ### CPU Attributes
 CPU element defining the device's CPU characteristics.
