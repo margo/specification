@@ -56,7 +56,7 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | storage | string | Y* | The amount of storage available for applications to utilize on the device. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined by the device owner.|
 | peripherals | []Peripheral | Y* | Peripherals available for applications to utilize on the device. See the [Peripheral](#peripheral-attributes) section below.|
 | interfaces | []CommunicationInterface | Y* | Communication interfaces available for applications to utilize on the device. See the [Communication Interfaces](#communicationinterface-attributes) section below.|
-| otelCollector | boolean | Y* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. |
+| otelCollector | boolean | Y* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. A device that is capable of hosting workloads MUST report `true`. |
 | supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
 | supportedDeploymentTypes | []SupportedDeploymentType | Y* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that hosts workloads MUST report at least one entry.|
 
