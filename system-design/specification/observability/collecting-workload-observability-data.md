@@ -1,8 +1,8 @@
 # Collecting Workload Observability Data
 
-The device owner MUST deploy, and configure, an OpenTelemetry collector on their device. The device owner MAY choose the deployment model they wish to follow but MUST use one of the following approaches.
-
 For workload hosting devices there MUST be at least one OpenTelemetry collector deployed to collect the observability data required below. The Device owner MAY choose to deploy multiple OpenTelemetry collectors with each collector receiving different parts of the observability data required below as long as all required observability data is collected.
+
+The device owner MAY choose the deployment model they wish to follow but MUST use one of the following approaches.
 
 ![Deployment Model - Multi-Node Deployment](../../figures/System-design-observability-deployment1.drawio.svg)
 
