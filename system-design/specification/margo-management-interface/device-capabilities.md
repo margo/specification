@@ -199,7 +199,7 @@ A device may represent, and aggregate the capabilities of, multiple child-device
 
 WFM clients may connect one or more child-devices to the WFM while allowing the WFM to see each device behind it as an individual device with its own capabilities. This type of client is referred to as a **see-thru gateway**.
 
-A see-thru gateway uses the same `DeviceCapabilitiesManifest` schema as any other device — from a payload perspective it is an ordinary device that also reports the devices behind it. Its conformance rules are relaxed, though: unlike a standalone hosting device, a see-thru gateway is not required to host workloads and need not report workload-hosting capabilities. The WFM infers the gateway relationship from the parent/child `deviceId` hierarchy, which is typically most evident when the gateway reports no workload-hosting capabilities.
+A see-thru gateway uses the same `DeviceCapabilitiesManifest` schema as any other device — from a payload perspective it is an ordinary device that also reports the devices behind it. Its conformance rules are relaxed, though: unlike non-gateway device, a see-thru gateway is not required to host workloads and need not report workload-hosting capabilities. The WFM infers the gateway relationship from the parent/child `deviceId` hierarchy, which is typically most evident when the gateway reports no workload-hosting capabilities.
 
 **How a see-thru gateway reports capabilities**
 
