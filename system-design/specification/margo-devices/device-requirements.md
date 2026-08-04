@@ -41,7 +41,7 @@ If a device vendor chooses a deployment approach that does not interact with the
 Devices supporting the Compose deployment type, MUST provide the following additional components:
 
 - Capabilities for deploying Compose applications
-- Compose orchestration platform i.e., Docker or Podman
+- An OCI container runtime, for example Docker or Podman
 
 
 ## Future Requirements
