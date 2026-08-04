@@ -213,7 +213,7 @@ A see-thru gateway MUST report its own capabilities and the capabilities of each
 
 | If the gateway... | Then its own manifest MUST... |
 | --- | --- |
-| does **not** host workloads | contain only the required identity fields — omit or provide empty values for the workload-hosting fields (`cpus`, `memory`, `storage`, `peripherals`, `interfaces`, `supportedRuntimes`, `supportedDeploymentTypes`), and omit `otelCollector` or report it as `false` |
+| does **not** host workloads | contain only the required identity fields — omit the workload-hosting fields (`cpus`, `memory`, `storage`, `peripherals`, `interfaces`, `supportedRuntimes`, `supportedDeploymentTypes`), and omit `otelCollector` |
 | **also** hosts workloads | report the workload-hosting fields like any hosting device, including at least one entry in both `supportedRuntimes` and `supportedDeploymentTypes` |
 
 Hosting is neither required of nor forbidden for a see-thru gateway: it reports the workload-hosting fields when it hosts workloads, and omits them when it does not.
