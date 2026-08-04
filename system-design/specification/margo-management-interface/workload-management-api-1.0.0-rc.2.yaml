@@ -489,9 +489,9 @@ components:
           # Only identity fields are required. A device that hosts workloads reports cpus, memory,
           # storage, peripherals, interfaces, otelCollector (true), supportedRuntimes (>=1), and
           # supportedDeploymentTypes (>=1). A device that does not host workloads (e.g. a see-thru
-          # gateway that only relays the devices behind it) omits those fields or reports them
-          # empty, reporting otelCollector as false; the WFM infers it is non-hosting from their
-          # absence and infers a gateway from the parent/child deviceId hierarchy.
+          # gateway that only relays the devices behind it) omits those fields.
+          # The WFM infers it is non-hosting from their absence and infers a
+          # gateway from the parent/child deviceId hierarchy.
           properties:
             id:
               $ref: '#/components/schemas/DeviceId'
