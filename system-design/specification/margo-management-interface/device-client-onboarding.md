@@ -5,7 +5,7 @@ In order for the Workload Fleet Management software to manage the edge device's 
 
 ## Onboarding Sequence
 
-- The end user provides the the Workload Fleet Management web service's root URL to the device's management client
+- The end user provides the Workload Fleet Management web service's root URL to the device's management client
 - The device's management client downloads the Workload Fleet Manager's public root CA certificate using the [Certificate API](../../specification/margo-management-interface/certificate-api.md)
 - Context and trust is established between the device's management client and the Workload Fleet Management web service
 - The device's management client uses the [Onboarding API](../../specification/margo-management-interface/device-client-onboarding.md) to onboard with the Workload Fleet Management service by providing its X.509 certificate
