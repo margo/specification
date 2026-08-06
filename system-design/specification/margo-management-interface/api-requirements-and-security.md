@@ -16,7 +16,7 @@ Identity and authentication for the Management Interface are provided by the [Ma
 ## API Definition
 The REST API is defined via the OpenAPI Specification:
 
-- [OpenAPI Specification](https://github.com/margo/specification/blob/pre-draft/system-design/specification/margo-management-interface/workload-management-api-1.0.0.yaml)
+- [OpenAPI Specification](https://github.com/margo/specification/blob/pre-draft/system-design/specification/margo-management-interface/workload-management-api-1.0.0-rc.2.yaml)
 - [Swagger UI](../margo-management-interface/management-interface-swagger.md)
 
 ## Transport

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Margo Workload Management API
-  version: 1.0.0
+  version: 1.0.0-rc.2
   description: >
     API for managing workloads on Margo-compliant edge devices.
     Includes the APIs for exchanging desired state and current state.
@@ -15,7 +15,7 @@ info:
 
 servers:
   - url: https://wfm.margo.org
-    description: Workload Fleet Manager API
+    description: Workload Fleet Manager APIs
 
 security:
   - mTLS: []
@@ -364,7 +364,13 @@ components:
           enum: [DeviceCapabilitiesManifest]
         properties:
           type: object
-          required: [id, vendor, modelNumber, serialNumber, roles]
+          required: [id, vendor, modelNumber, serialNumber]
+          # Only identity fields are required. A device that hosts workloads reports cpus, memory,
+          # storage, peripherals, interfaces, otelCollector (true), supportedRuntimes (>=1), and
+          # supportedDeploymentTypes (>=1). A device that does not host workloads (e.g. a see-thru
+          # gateway that only relays the devices behind it) omits those fields.
+          # The WFM infers it is non-hosting from their absence and infers a
+          # gateway from the parent/child deviceId hierarchy.
           properties:
             id:
               $ref: '#/components/schemas/DeviceId'
@@ -374,36 +380,43 @@ components:
               type: string
             serialNumber:
               type: string
-            roles:
+            cpus:
               type: array
               items:
+                type: object
+                required: [cores]
+                properties:
+                  cores:
+                    type: number
+                  architecture:
+                    type: string
+                    enum: [amd64, arm64, arm]
+            memory:
+              type: string
+            storage:
+              type: string
+            peripherals:
+              type: array
+              items:
+                $ref: '#/components/schemas/DevicePeripheral'
+            interfaces:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceCommunicationInterface'
+            otelCollector:
+              type: boolean
+            supportedRuntimes:
+              type: array
+              minItems: 1
+              items:
                 type: string
-                enum: [Standalone Cluster, Cluster Leader, Standalone Device, Gateway]
-            resources:
-              type: object
-              required: [cpu, memory, storage, peripherals, interfaces]
-              properties:
-                cpu:
-                  type: object
-                  required: [cores]
-                  properties:
-                    cores:
-                      type: number
-                    architecture:
-                      type: string
-                      enum: [amd64, arm64, arm]
-                memory:
-                  type: string
-                storage:
-                  type: string
-                peripherals:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/DevicePeripheral'
-                interfaces:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/DeviceCommunicationInterface'
+                enum: [oci]
+            supportedDeploymentTypes:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                enum: [helm, compose]
     DeviceId:
       # format: "{id}[/{id}[/{id}...]]"
       # Top-level id is required and must include only unreserved characters as specified in RFC3986.

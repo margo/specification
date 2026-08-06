@@ -1,16 +1,16 @@
 # Collecting Workload Observability Data
 
-The device owner MUST deploy, and configure, an OpenTelemetry collector on their device. The device owner MAY choose the deployment model they wish to follow but MUST use one of the following approaches.
+For workload hosting devices there MUST be at least one OpenTelemetry collector deployed to collect the observability data required below. The Device owner MAY choose to deploy multiple OpenTelemetry collectors with each collector receiving different parts of the observability data required below as long as all required observability data is collected.
 
-For standalone and clustered devices there MUST be at least one OpenTelemetry collector deployed to collect the observability data required below. The Device owner MAY choose to deploy multiple OpenTelemetry collectors with each collector receiving different parts of the observability data required below as long as all required observability data is collected.
+The device owner MAY choose the deployment model they wish to follow but MUST use one of the following approaches.
 
 ![Deployment Model - Multi-Node Deployment](../../figures/System-design-observability-deployment1.drawio.svg)
 
-For multi-node capable clusters the device owner MAY chose to use the DaemonSet deployment model to ensure there is an OpenTelemetry collector running on each node.
+For multi-node capable devices the device owner MAY chose to use the DaemonSet deployment model to ensure there is an OpenTelemetry collector running on each node.
 
 ![Deployment Model - DaemonSet](../../figures/System-design-observability-deployment2.drawio.svg)
 
-For multi-node capable clusters the device owner MUST ensure the communication between workloads, and collector, from one node to a collector on a different node is secure.
+For multi-node capable devices the device owner MUST ensure the communication between workloads, and collector, from one node to a collector on a different node is secure.
 
 The device owner MUST NOT require the use of the sidecar deployment model at this time since this requires the pods/containers to have foreknowledge of this deployment model.
 
@@ -18,7 +18,7 @@ The device owner MUST NOT require the use of the sidecar deployment model at thi
 
 The device owner MUST NOT pre-configure exporters to send observability data from the device because the end user must control what observability data is exported.
 
-The device owner MUST NOT attempt to inject auto-instrumentation (by using the [OpenTelemetry operator](https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection) for example) into any compliant workloads running on the device that are not owned by the device owner.
+The device owner MUST NOT attempt to inject auto-instrumentation (by using the [OpenTelemetry operator](https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection) for example) into any Margo-conformant workloads running on the device that are not owned by the device owner.
 
 Device owners are NOT required to provide backends for consuming observability data on their devices.
 
@@ -26,7 +26,7 @@ Device owners are NOT required to provide backends for consuming observability d
 
 ## Container Platform Observability Requirements
 
-In order to allow for monitoring the chosen container platform's state the device owner MUST ensure the following observability data is being collected and made available for export from the OpenTelemetry collector(s) on the standalone device or cluster
+In order to allow for monitoring the chosen container platform's state the device owner MUST ensure the following observability data is being collected and made available for export from the OpenTelemetry collector(s) on the workload hosting device
 
 ### Kubernetes
 
@@ -58,9 +58,9 @@ For devices running Kubernetes the following is a minimum list of observability 
 
   > **Note:** Please see the [information below](#workload-observability-default-telemetry) for the default attributes added by the Kubernetes Attributes Processor.
 
-### Standalone Device Container Platforms
+### Compose-based Devices
 
-For devices running non-clustered container platforms such as Docker or Podman the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
+For devices with runtimes supporting compose deployment types, such as Docker or Podman, the following is a minimum list of observability data that MUST be provided. The device owner MAY choose to provide additional observability data if they wish.
 
 - Container observability data MUST be collected.
   - It is recommended the Device Owner use the [Docker Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/dockerstatsreceiver/README.md) or [Podman Stats Receiver](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/podmanreceiver/README.md) with the default configuration to collect this information but using either of these receivers is not required.
@@ -90,13 +90,13 @@ If the device owner chooses not to deploy the Workload Fleet Management Client a
 
 > **Action:** Need to do research to determine if this makes sense, or not, when the client is not running as a containerized workload. We may have to leave it up to what is covered through device observability for this case. If it is possible, and makes sense, we need to define what should be provided.
 
-In addition to the resource utilization data the Workload Fleet Management Client MUST also send the following minimum set of workload observability data to the open telemetry collector on the standalone device or cluster. The device owner MAY choose to provided additional observability data if they wish.
+In addition to the resource utilization data the Workload Fleet Management Client MUST also send the following minimum set of workload observability data to the open telemetry collector on the workload hosting device. The device owner MAY choose to provided additional observability data if they wish.
 
 > **Action:** We need to understand what the WOS/a is going to be doing to determine what this is.
 
 ### Connecting to the OpenTelemetry Collector
 
-In order for a workload to publish its observability data to the collector on the standalone device or cluster the device own MUST inject the following environment variables into each container.
+In order for a workload to publish its observability data to the collector on the workload hosting device the device owner MUST inject the following environment variables into each container.
 
 |Environment Variable|Description|
 |---|---|
@@ -109,7 +109,7 @@ In order for a workload to publish its observability data to the collector on th
 
 ## Exporting Observability Data
 
-End users MUST be able to export observability data from a standalone device or cluster to collectors, or backends, onsite or in the cloud if they wish to make the information available to enable remote monitoring and diagnostics.
+End users MUST be able to export observability data from a workload hosting device to collectors, or backends, onsite or in the cloud if they wish to make the information available to enable remote monitoring and diagnostics.
 
 > **Decision Needed:** There is a dependency on the decisions about using OpenTelemetry instead of the management API approach. If OpenTelemetry is chosen then there would be some subset of data that MUST be exported to the workload fleet manager supplier.
 >
