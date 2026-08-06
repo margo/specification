@@ -3,7 +3,7 @@ info:
   title: Margo Workload Management API
   version: 1.0.0-rc.2
   description: >
-    API for managing workloads on Margo-compliant edge devices.
+    API for managing workloads on Margo-conformant edge devices.
     Includes the APIs for exchanging desired state and current state.
     Communication is secured with mutual TLS, defaulting to TLS 1.3 per the MIAF
     TLS requirements: the WFM Client

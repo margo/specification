@@ -8,6 +8,6 @@
     "identity-lifecycle",
     "wfm-identity-profile",
     "identity-security-considerations",
-    "trust-bundle-api-1.0.0"
+    "trust-bundle-api-swagger"
   ]
 }

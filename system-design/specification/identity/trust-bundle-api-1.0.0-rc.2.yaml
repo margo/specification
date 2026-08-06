@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Margo Trust Bundle API
-  version: 1.0.0
+  version: 1.0.0-rc.2
   description: >
     Read-only HTTPS endpoints served by the Margo Identity Service (MIS) role:
     an optional discovery document that points a client to the Trust Bundle,
