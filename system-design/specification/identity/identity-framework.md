@@ -30,12 +30,13 @@ Terms adopted from SPIFFE, used here as SPIFFE defines them:
 Terms introduced by MIAF:
 
 - **Principal**: a non-human Margo component that holds, or is being provisioned with, a SPIFFE identity in a Trust Domain. Edge Compute Devices, WFMs, and WFM Clients are all principals.
+- **Verifier**: a Margo component that validates a peer's SVID and then authorizes the call locally, using the SPIFFE ID that SVID carries.
 - **Margo Identity Service (MIS)**: the identity-authority **role** within a Trust Domain. The MIS issues SVIDs, publishes the discovery document and Trust Bundle, and enforces MIAF's cryptographic and SVID-profile rules. The MIS is defined by its responsibilities, not by a specific API (see [The MIS role](#the-mis-role)).
 - **Policy-based authorization**: each verifier makes authorization decisions locally, based on the peer's verified SPIFFE ID. MIAF does not use OAuth-style token scopes or a central authorization server.
 
 ## Framework Overview
 
-MIAF has four moving parts: the **Trust Domain**, the **Margo Identity Service (MIS)**, the **Margo components** that hold and verify identities, and the **Trust Bundles** each Trust Domain publishes. Each SPIFFE ID belongs to exactly one Trust Domain, and a verifier validates SVIDs against its own Trust Domain's Trust Bundle. A component acts as an **SVID holder** when it authenticates and as a **verifier** when it validates a peer's SVID.
+MIAF has four moving parts: the **Trust Domain**, the **Margo Identity Service (MIS)**, the **Margo components** that hold and verify identities, and the **Trust Bundles** each Trust Domain publishes. Each SPIFFE ID belongs to exactly one Trust Domain, and a verifier validates SVIDs against its own Trust Domain's Trust Bundle. A component acts as a **principal** when it presents its own SVID and as a **verifier** when it validates a peer's SVID.
 
 Once a component holds an SVID:
 
@@ -86,7 +87,7 @@ MIAF is a general foundation: any Margo component MAY adopt it, and future ident
 - the **MIS trust endpoints**: the discovery document and Trust Bundle retrieval described in [Trust Bundle and Discovery Endpoints](./trust-bundle-and-discovery.md); and
 - the **Workload Fleet Management interface**, through the [WFM Identity Profile](./wfm-identity-profile.md), which is the only identity profile defined so far.
 
-Other Margo components (the Device Fleet Manager, observability collectors, or component registries, for example) MAY hold MIAF identities, but no identity profile is defined for their interfaces yet, so how they authenticate is not governed here until such a profile exists. For an interface into an external ecosystem that carries its own established authentication convention (such as an OCI registry), a MIAF identity is expected to serve as the root credential a component uses to obtain an ecosystem-native credential, rather than as the wire-level authentication mechanism itself.
+Other Margo components (the Device Fleet Manager, observability collectors, or component registries, for example) MAY hold MIAF identities, but no identity profile is defined for their interfaces yet, so how they authenticate is not governed here until such a profile exists. For an interface into an external ecosystem that carries its own established authentication convention (such as an OCI registry), a component's X.509-SVID is expected to serve as the root credential it uses to obtain an ecosystem-native credential, rather than as the wire-level authentication mechanism itself.
 
 Each principal belongs to a single Trust Domain. A WFM and its WFM Clients share one Trust Domain, and that shared Trust Domain is the basis of their mutual recognition. An operator MAY run several independent Trust Domains, for example to separate environments or tiers of differing criticality; these Trust Domains do not trust one another. Trust across Trust Domains (federation) is not defined in this release and is expected to be addressed in a future revision.
 

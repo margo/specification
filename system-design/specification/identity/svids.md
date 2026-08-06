@@ -1,6 +1,6 @@
 # SVIDs
 
-A MIAF identity is represented by an **X.509-SVID**: an X.509 certificate that binds a SPIFFE ID to a key pair, with the SPIFFE ID in the certificate's URI SAN. This topic defines the SVID profile every MIAF principal presents, the cryptographic algorithms those credentials use, and how a verifier validates a presented SVID. It applies to every interface authenticated under a MIAF identity profile.
+A MIAF identity is represented by an **X.509-SVID**: an X.509 certificate that binds a SPIFFE ID to a key pair, with the SPIFFE ID in the certificate's URI SAN. This topic defines the SVID profile every principal presents, the cryptographic algorithms those credentials use, and how a verifier validates a presented SVID. It applies to every interface authenticated under a MIAF identity profile.
 
 ## X.509-SVID Profile
 

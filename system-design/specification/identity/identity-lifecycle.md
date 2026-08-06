@@ -5,7 +5,7 @@
 A MIAF identity moves through five lifecycle phases:
 
 - **Enrollment**: initial issuance of an SVID for a principal.
-- **Active**: the principal holds a valid SVID and authenticates over mTLS, presenting its own SVID and validating each peer's SVID against the Trust Bundle, and is recognized by relying parties.
+- **Active**: the principal holds a valid SVID and authenticates over mTLS, presenting its own SVID and validating each peer's SVID against the Trust Bundle, and is recognized by verifiers.
 - **Renewal**: refresh of an SVID before expiry.
 - **Revocation**: declaration that an issued SVID is no longer valid before its natural expiry.
 - **Re-issuance**: issuance of an SVID to a replacement principal (for example, after device replacement), typically reusing the original SPIFFE ID, though an operator MAY assign a fresh one.
@@ -25,7 +25,7 @@ For **enrollment**, the operator:
 1. accepts a CSR from the principal (the preferred path, since it keeps the private key on the principal and supports hardware-bound keys such as a TPM, secure element, or HSM). Where the principal cannot generate its own key pair, the operator generates one centrally and accepts the resulting concentration of key custody;
 2. mints an X.509-SVID for the chosen SPIFFE ID under the Trust Domain's issuing authority. The issuance is authoritative for the SPIFFE ID: any subject or SAN content the CSR carries is advisory and is overridden;
 3. installs the SVID on the principal over a channel that protects its integrity and authenticity, and that additionally protects confidentiality on the path where it also carries the centrally generated private key; and
-4. ensures every relying party the principal will authenticate to has the Trust Bundle and any local-policy entries needed to recognize the new SPIFFE ID.
+4. ensures every verifier the principal will authenticate to has the Trust Bundle and any local-policy entries needed to recognize the new SPIFFE ID.
 
 For **renewal**, the operator repeats steps 1-3 before the current SVID expires, replacing the prior SVID in place.
 
@@ -37,11 +37,11 @@ The provisioning channel itself is deployment-specific and out of scope. Typical
 
 Without an automated revocation protocol, a deployment withdraws an SVID's access through one of:
 
-1. **Relying-party allowlist removal**: where a relying party keeps an allowlist of the identities it accepts, the operator removes the SPIFFE ID from it. This withdraws authorization at the application layer - the certificate itself is not revoked and stays valid until it expires. It is the most precise option - it removes one principal's access without affecting any other - and is recommended for routine use where such a list exists.
+1. **Verifier allowlist removal**: where a verifier keeps an allowlist of the identities it accepts, the operator removes the SPIFFE ID from it. This withdraws authorization at the application layer - the certificate itself is not revoked and stays valid until it expires. It is the most precise option - it removes one principal's access without affecting any other - and is recommended for routine use where such a list exists.
 2. **Trust Bundle rotation**: the operator removes the compromised trust anchor from the Trust Bundle, invalidating every SVID that chains to it. This is heavy-handed but effective when an entire issuance authority is compromised. See the [Trust Anchor Rotation Playbook](#trust-anchor-rotation-playbook) below, which also covers the case where the issuer is an intermediate CA whose anchor is the root above it.
 3. **Expiry**: wait for the SVID to expire. This is viable only with shorter SVID lifetimes.
 
-None of these options is instantaneous. Allowlist removal takes effect promptly only where the relying party re-evaluates its authorization policy per request; a Trust Bundle rotation propagates no faster than the fleet's refresh interval. In either case a long-lived mTLS connection can keep the affected peer authenticated until the connection is re-established (see [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation)).
+None of these options is instantaneous. Allowlist removal takes effect promptly only where the verifier re-evaluates its authorization policy per request; a Trust Bundle rotation propagates no faster than the fleet's refresh interval. In either case a long-lived mTLS connection can keep the affected peer authenticated until the connection is re-established (see [session lifetime and re-validation](./tls-requirements.md#session-lifetime-and-re-validation)).
 
 ## Trust Anchor Rotation Playbook
 
