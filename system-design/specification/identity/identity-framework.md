@@ -60,14 +60,14 @@ A component obtains its SVID through the [operator provisioning playbook](./iden
 >  Issues SVIDs, publishes Trust Bundle & discovery`"]
 >  TD["`**Trust Domain**
 >  Defines trust anchors, policies, and namespace`"]
->  X509["`**X.509 SVID**
+>  X509["`**X.509-SVID**
 >  Certificate binding SPIFFE ID to key pair`"]
 >  TB["`**Trust Bundle**
 >  X.509 trust anchors`"]
 >
->  Client -->|"holds X.509 SVID"| X509
->  MIS -->|"issues X.509 SVID"| X509
->  Client -->|"authenticates using X.509 SVID (mTLS)"| Server
+>  Client -->|"holds X.509-SVID"| X509
+>  MIS -->|"issues X.509-SVID"| X509
+>  Client -->|"authenticates using X.509-SVID (mTLS)"| Server
 >  Server -->|"verifies SVID using Trust Bundle of"| TD
 >  TD -->|"publishes"| TB
 >
