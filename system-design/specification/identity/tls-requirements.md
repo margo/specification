@@ -10,7 +10,7 @@ MIAF follows [RFC 9852](https://datatracker.ietf.org/doc/html/rfc9852), which re
 | :---------- | :------------------ | :-------- |
 | **Default protocol version** | An implementation MUST use **TLS 1.3** as its default. | [RFC 8446](https://datatracker.ietf.org/doc/html/rfc8446), [RFC 9852](https://datatracker.ietf.org/doc/html/rfc9852) |
 | **TLS 1.2 fallback** | TLS 1.2 MAY be supported as a non-default fallback where a deployment requires it. When supported, it MUST conform to [RFC 9325](https://datatracker.ietf.org/doc/html/rfc9325). | [RFC 9852](https://datatracker.ietf.org/doc/html/rfc9852), [RFC 9325](https://datatracker.ietf.org/doc/html/rfc9325) |
-| **Deprecated versions** | SSL v2, SSL v3, TLS 1.0, and TLS 1.1 MUST NOT be used. | [RFC 8996](https://datatracker.ietf.org/doc/html/rfc8996) |
+| **Deprecated versions** | SSL v2, SSL v3, TLS 1.0, and TLS 1.1 MUST NOT be used. | [RFC 6176](https://datatracker.ietf.org/doc/html/rfc6176) (SSL v2), [RFC 7568](https://datatracker.ietf.org/doc/html/rfc7568) (SSL v3), [RFC 8996](https://datatracker.ietf.org/doc/html/rfc8996) (TLS 1.0, TLS 1.1) |
 
 The TLS 1.2 fallback carries a confidentiality cost specific to MIAF. A MIAF client certificate is an X.509-SVID, and TLS 1.2 sends the certificate messages in cleartext during the handshake (TLS 1.3 encrypts them), so a passive on-path observer can read the peer's SPIFFE ID, and with it the peer's Trust Domain and client relationship, from any TLS 1.2 mTLS handshake. Defaulting to TLS 1.3 avoids this. An operator that enables the fallback accepts the exposure (see [handshake identity disclosure on TLS 1.2 fallback](./identity-security-considerations.md#framework-threats)).
 
