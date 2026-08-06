@@ -29,7 +29,7 @@ Authentication is mutual TLS per the MIAF [TLS requirements](../identity/tls-req
 
 The caller identity for every request is the authenticated WFM Client SPIFFE ID; the request itself does not carry it. A WFM derives the caller from the SPIFFE ID, not from any identifier in the request path or body.
 
-Every Management Interface endpoint is implicitly scoped to the authenticated caller. A WFM associates the resources a client reports (device capabilities and deployment status) with that client's identity, and MUST NOT expose or mutate one client's resources on behalf of another.
+Every Management Interface endpoint is scoped to the authenticated caller. A WFM determines from the caller's identity which devices that client is responsible for and which deployments are assigned to them. Where a request path carries a resource identifier, for example `{deviceId}` or `{digest}`, the WFM looks that identifier up only among the resources in the caller's scope. A WFM MUST NOT expose or mutate a resource outside the caller's scope.
 
 The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`) using the `wfm-client-relationship-retired` type:
 
