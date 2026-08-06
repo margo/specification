@@ -24,7 +24,7 @@ spiffe://<trust-domain>/margo/wfm/<wfm-id>
 
 The `wfm-id` segment:
 
-- MUST be non-empty, MUST consist only of [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) unreserved characters, and MUST NOT be `.` or `..`;
+- MUST be non-empty, MUST consist only of letters, digits, dots, dashes, and underscores, and MUST NOT be `.` or `..`, per [SPIFFE ID, Section 2.2](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE-ID.md#22-path);
 - MUST be unique within the Trust Domain;
 - MUST be stable for the life of the WFM identity it names. Rebinding a `wfm-id` to a different WFM identity is not defined by this profile and MUST NOT be performed silently; replacement requires a new `wfm-id`; and
 - SHOULD be assigned by the operator deploying the WFM into the Trust Domain, not unilaterally by the WFM vendor, so that operators can prevent namespace collisions in multi-vendor deployments.
@@ -48,7 +48,7 @@ spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>
 
 The `wfm-client-id` segment:
 
-- MUST be non-empty, MUST consist only of [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986) unreserved characters, and MUST NOT be `.` or `..`;
+- MUST be non-empty, MUST consist only of letters, digits, dots, dashes, and underscores, and MUST NOT be `.` or `..`, per [SPIFFE ID, Section 2.2](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE-ID.md#22-path);
 - MUST be unique within the issuing WFM's namespace; and
 - MUST be stable for the lifetime of the relationship.
 
