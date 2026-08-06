@@ -29,7 +29,7 @@ For **enrollment**, the operator:
 
 For **renewal**, the operator repeats steps 1-3 before the current SVID expires, replacing the prior SVID in place.
 
-For **re-issuance** after a principal is replaced, the operator follows the same workflow on the replacement principal. Whether to reuse the original SPIFFE ID or assign a fresh one is an operator-policy choice.
+For **re-issuance** after a principal is replaced, the operator follows the same workflow on the replacement principal. Reusing the original SPIFFE ID keeps the retired principal's SVID valid under the same identity until it expires, and no allowlist removal can withdraw the old credential without also withdrawing the replacement's access. An operator SHOULD assign a fresh SPIFFE ID unless the retired principal's private key is known to be destroyed, or its SVID is close enough to expiry that the operator accepts the overlap.
 
 The provisioning channel itself is deployment-specific and out of scope. Typical options include device-management tooling, configuration management, HSM workflows, and out-of-band installer media.
 
