@@ -40,4 +40,3 @@ For example:
 The value of an extension property MUST be an object (a YAML/JSON mapping). Its child properties may be any simple or complex structure, as long as it is valid YAML or JSON applicable to the document type the specification extension property is added to.
 
 > **Note:** The supplier implementing the specification extension defines the specification extension property name and supported child properties. A supplier wishing to make use of the specification extension uses the specification extension property name and child properties the implementor has defined.
-

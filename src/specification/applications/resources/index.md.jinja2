@@ -95,6 +95,183 @@ Your Helm based application MUST NOT rely on the following Helm functions:
 
 {%- endif %}
 
+{%- if c.name.startswith("DeviceConstraints") %}
+
+Workload fleet manager implementations are not required to guarentee a workload can be deployed to a selected device. Ultimately, this responsibility falls to the device to determine if a workload can be deployed or not. 
+
+Workload fleet manager implemantations MAY choose to implement device eligibility matching in order to reduce the risk of deployment failures because of incompatability between what a workload requires and what a device provides. 
+
+If a workload fleet manager chooses to implement device eligibility matching they MUST follow the matching rules define below to match the application description's device constraint requirements with device's reported capabilities.
+
+* A workload fleet manager MUST evaluate `deviceConstraints` before selecting a target device for a deployment profile.
+* A device that does not satisfy the minimum required CPU, memory, and storage defined in the `capacityRequirements` MUST NOT be selected for that profile.
+* If `eligibilityRules` are present, a device that does not satisfy the required rule evaluation MUST NOT be selected for that profile.
+* If no available device satisfies the profile's required constraints, the deployment MUST be reported as not placeable according to the implementation's existing status model.
+
+{%- endif %}
+
+{%- if c.name.startswith("CapacityRequirements") %}
+
+The following rules MUST be applied when performing capacity requirements matching:
+
+* `cpu.cores` is the minimum number of CPU cores required on the target device.
+* `cpu.architectures`, when present, restricts acceptable CPU architectures.
+* `memory` is the minimum memory required by the deployment profile.
+* `storage` is the minimum storage required by the deployment profile.
+* A device MUST satisfy all specified `capacityRequirements` to remain eligible for further evaluation.
+
+{%- endif %}
+
+{%- if c.name.startswith("EligibilityRule") %}
+
+#### Eligibility rules
+
+The following rules MUST be applied when performing eligability rule matching:
+
+* All `matchExpressions` within a single selector are combined using logical AND.
+* If an eligibility rule contains both `propertySelector` and `labelSelector`, both selectors must match for that rule to match.
+* The `eligibilityRules` array is combined using logical OR. A device matches eligibility rules if at least one eligibility rule matches.
+* If `eligibilityRules` is omitted, the deployment profile has no additional selector-based constraint beyond `capacityRequirements`.
+* If both `capacityRequirements` and `eligibilityRules` are present, implementations MUST evaluate `capacityRequirements` first and MUST only evaluate `eligibilityRules` for devices that satisfy the required capacity.
+
+#### Property selector key format
+
+`propertySelector.matchExpressions[].key` MUST be a JSON Pointer as defined by [RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901), evaluated relative to the device capabilities `properties` object.
+
+Examples:
+
+* `/vendor`
+* `/id`
+* `/modelNumber`
+
+Property selectors MUST resolve to a device capability property whose value is either:
+
+* a string, number, or boolean
+* an array of strings, or numbers
+* an array of objects
+
+If a property selector resolves to any other JSON type, the expression MUST evaluate to `false`.
+
+If a property selector resolve to an array of objects, `ContainsAll` or `ContainsAny` must be used or else the expression MUST evaluate to `false`.
+
+#### Label selector key format
+
+`labelSelector.matchExpressions[].key` MUST be the exact label key to evaluate within device capabilities `labels` dictionary.
+
+This label selector MUST resolve to device capability label whose value is either:
+
+* a string, number, or boolean
+* an array of strings, or numbers
+
+If a label selector resolves to any other JSON type, the expression MUST evaluate to `false`.
+
+{%- endif %}
+
+{%- if c.name.startswith("MatchExpression") %}
+
+The following rules MUST be followed when evaluating match expressions:
+
+* `In`: true when the referenced device capabilities value equals one of `values`, or when the referenced array contains at least one element that equals one of `values`
+* `NotIn`: true when the referenced device capabilities key exists and none of its values match any entry in `values`
+* `Exists`: true when the referenced device capabilities key is present
+* `DoesNotExist`: true when the referenced device capabilities key is absent
+* `Gt`: true when the referenced device capabilities value is greater than `values`.
+* `Lt`: true when the referenced device capabilities value is less than `values`.
+* `ContainsAll`: True when the referenced device capabilities value is an array of objects and at least one array element satisfies all `itemSelector.matchExpressions` (AND logic).
+* `ContainsAny`: True when the referenced device capabilities value is an array of objects and at least one array element satisfies any `itemSelector.matchExpression` (OR logic).
+
+String comparisons MUST be exact and case-sensitive.
+
+For `In` and `NotIn`:
+
+* `values` MUST be present
+* `values` MUST contain one or more strings or numbers, or one boolean
+* `values` MUST be the same data type when indicating more than one.
+
+For `Exists` and `DoesNotExist`:
+
+* `values` MUST be omitted
+
+For `Gt` and `Lt`:
+
+* `values` MUST be present
+* `values` MUST be parsable as numbers
+* `values` MUST only contain a single number
+
+For `ContainsAll` and `ContainsAny`:
+
+* `itemSelector` MUST be present
+* `itemSelector.matchExpressions` MUST contain one or more expressions
+* `values` MUST be omitted
+* Keys within `itemSelector.matchExpressions` are JSON Pointers relative to each array element (not absolute)
+* Expressions within `itemSelector.matchExpressions` are combined using `AND` logic for `ContainsAll` and `OR` logic for `ContainsAny`
+
+#### Object Array Item Matching
+
+`ContainsAll` and `ContainsAny` operators enable matching on properties of objects within an array. These operators are used when the device capability property referenced by `key` resolves to an array of objects.
+
+**`ContainsAll` (array element with all conditions):**
+
+Evaluates to true when at least one array element satisfies all conditions specified in `itemSelector.matchExpressions`. All expressions within the `itemSelector` are combined using AND logic.
+
+Example: Match a device that has at least one GPU peripheral manufactured by NVIDIA:
+
+```yaml
+propertySelector:
+  matchExpressions:
+    - key: /peripherals
+      operator: ContainsAll
+      itemSelector:
+        matchExpressions:
+          - key: /type
+            operator: In
+            values: ["gpu"]
+          - key: /manufacturer
+            operator: In
+            values: ["NVIDIA"]
+```
+
+**`ContainsAny` (array element with any condition):**
+
+Evaluates to true when at least one array element satisfies any condition specified in `itemSelector.matchExpressions`. Expressions within the `itemSelector` are combined using OR logic.
+
+Example: Match a device that has at least one peripheral that is either a GPU or a high-speed NIC:
+
+```yaml
+propertySelector:
+  matchExpressions:
+    - key: /peripherals
+      operator: ContainsAny
+      itemSelector:
+        matchExpressions:
+          - key: /type
+            operator: In
+            values: ["gpu", "nic"]
+```
+
+**Interaction with other expressions:**
+
+Multiple `matchExpressions` within the same `propertySelector` remain AND'd together. For example:
+
+```yaml
+propertySelector:
+  matchExpressions:
+    - key: /vendor
+      operator: In
+      values: ["Vendor Name"]
+    - key: /peripherals
+      operator: ContainsAll
+      itemSelector:
+        matchExpressions:
+          - key: /type
+            operator: In
+            values: ["gpu"]
+```
+
+This evaluates to true only when the device vendor matches **AND** the device has at least one GPU peripheral.
+
+{%- endif %}
+
 {%- if c.name.startswith("ComponentProperties") %}
 
 ### ComponentProperties Attributes
@@ -128,28 +305,18 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 | arm64 | ARM 64-bit architecture.|
 | arm | ARM 32-bit architecture. |  
 
-### CommunicationInterfaceType
+### SelectorOperator
 
 | Permissible Values | Description |
-| --- | --- |
-| ethernet | This type stands for an Ethernet interface.|
-| wifi | This type stands for an WiFi interface.|
-| cellular | This type stands for cellular communication technologies such as 5G, LTE, 3G, 2G, ....|
-| bluetooth | This type stands for a Bluetooth or Bluetooth Low-Energy (BLE) interface. |  
-| usb | This type stands for a USB interface.|
-| canbus | This type stands for a CANBus interface.|
-| rs232 | This type stands for a RS232 interface. |  
-
-### PeripheralType
-
-| Permissible Values | Description |
-| --- | --- |
-| gpu | This type stands for a Graphics Processing Unit (GPU) peripheral.|
-| display | This type stands for a display peripheral.|
-| camera | This type stands for a camera peripheral.|
-| microphone | This type stands for a microphone peripheral. |
-| speaker | This type stands for a speaker peripheral. |
-
+|--------------------|-------------|
+| In | Indicates matching should find a match with at least one specified values. |
+| NotIn | Indicates matching should not find a match with any specified values. |
+| Exists | Indicates matching should find a match on the specified key. |
+| DoesNotExist | Indicates matching should not find a match on the specified key. |
+| Gt | Indicates matching should find a match if the specified value is greater. |
+| Lt | Indicates matching should find a match if the specified value is less. |
+| ContainsAll | Indicates matching should find a match against all itemSelectors. |
+| ContainersAny| Indicates matching should find a match against at least one itemSelector. |
 
 ## Application Description Examples
 
@@ -166,10 +333,21 @@ An example of an `ApplicationDescription` defining [deployment profiles](#deploy
 ```yaml
 {% include 'examples/valid/ApplicationDescription-002.yaml' %}
 ```
+## Custom runtimes and deployments
+
+> **Note:** See the [Custom Runtimes and Deployments](../extensibility/custom-runtimes-and-deployments.md) page for additional details.
+
+An application and device supplier MAY collaborate to enable deploying workloads using a format other than Margo's specified deployment types. 
+
+If suppliers choose this option they MUST follow these rules:
+
+* The deployment profile type MUST be set to `custom`.
+* Device constraint eligibility rules MUST be defined with label selectors matching the supplier's agreed upon key/value label pairs reported in the device's capabilities document. 
+* The workload artifacts MUST be package in an OCI blob. The specific details for how this OCI blob is created is the responsibility of the suppliers to agree upon.
 
 ## Specification extensions
 
-> **Note:** See the [specification extensions](../margo-management-interface/specification-extensions.md) page for additional details.
+> **Note:** See the [specification extensions](../extensibility/specification-extensions.md) page for additional details.
 
 The Application Description document supports the following specification extension scenarios:
 
