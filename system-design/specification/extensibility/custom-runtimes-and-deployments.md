@@ -14,7 +14,7 @@ For specifics, see the documentation for each of the following documents:
 - [Device Capabilities](../margo-management-interface/device-capabilities.md#custom-runtimes-and-deployments)
 - [Application Deployment](../margo-management-interface/desired-state#deviceconstraints-attributes)
 
-Application suppliers MUST follow the same pattern established for officially supported deployment types and use an OCI blob to package their application artifacts and use the existing Application Description [component properties](../applications/application-description#componentproperties-attributes) to describe its location. The specific details for how this OCI blob gets created (e.g. metadata, layers, contents) are the responsibility of the suppliers to agree upon and are outside the scope of Margo's specification.
+Application suppliers MUST follow the same pattern established for officially supported deployment types and use an OCI blob to package their application artifacts and use the existing Application Description [component properties](../applications/application-description#componentproperties-attributes) to describe its location. The specific details for how this OCI blob gets created (e.g. media types, layers, annotations, contents, etc.) are the responsibility of the suppliers to agree upon and are outside the scope of Margo's specification.
 
 Device suppliers supporting a custom runtime or deployment type MUST follow the [Device Capabilities](../margo-management-interface/device-capabilities.md#custom-runtimes-and-deployments) guidelines to report these capabilities.
 
