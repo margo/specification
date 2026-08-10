@@ -538,13 +538,32 @@ components:
               minItems: 1
               items:
                 type: string
-                enum: [oci]
+                enum: [oci, custom]
             supportedDeploymentTypes:
               type: array
               minItems: 1
               items:
                 type: string
-                enum: [helm, compose]
+                enum: [helm, compose, custom]
+        labels:
+          type: object
+          description: >-
+            Optional supplier-defined key/value pair metadata used for device matching via eligibilityRules
+            label selectors. Values MUST be a string, number, boolean, or an array of strings or numbers.
+            Margo does not assign semantics to any particular label key or value. Label keys are case-sensitive.
+            Implementations SHOULD use stable, collision-resistant label names, prefixing with an organization
+            domain is recommended.
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: number
+              - type: boolean
+              - type: array
+                items:
+                  type: string
+              - type: array
+                items:
+                  type: number
     DeviceId:
       # format: "{id}[/{id}[/{id}...]]"
       # Top-level id is required and must include only unreserved characters as specified in RFC3986.
@@ -723,6 +742,102 @@ components:
           items: 
             $ref: '#/components/schemas/applicationDeploymentProfileComponent'
           description: Components of the deployment profile
+        deviceConstraints:
+          $ref: '#/components/schemas/DeviceConstraints'
+          description: Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+    DeviceConstraints:
+      type: object
+      description: >-
+        Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+      properties:
+        capacityRequirements:
+          $ref: '#/components/schemas/CapacityRequirements'
+          description: Minimum CPU, memory, and storage requirements for the deployment profile.
+        eligibilityRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/EligibilityRule'
+          description: >-
+            Optional rules used to match the deployment with device properties and supplier-defined labels
+            reported in the device capabilities.
+    CapacityRequirements:
+      type: object
+      description: Minimum device capacity required by the deployment profile.
+      properties:
+        cpu:
+          $ref: '#/components/schemas/DeploymentCpuRequirement'
+          description: CPU element specifying the CPU requirements for the deployment.
+        memory:
+          type: string
+          description: >-
+            The minimum amount of memory required. The value is given in binary units
+            (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
+          pattern: ^[0-9]+(Mi|Gi|Ki)$
+        storage:
+          type: string
+          description: >-
+            The minimum amount of storage required. The value is given in binary units
+            (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
+          pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
+    DeploymentCpuRequirement:
+      type: object
+      description: CPU element specifying the CPU requirements for the deployment.
+      required: [cores]
+      properties:
+        cores:
+          type: number
+          description: >-
+            The required amount of CPU cores. Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
+        architectures:
+          type: array
+          items:
+            type: string
+            enum: [amd64, arm64, arm, riscv64, other]
+          description: The CPU architectures supported by the deployment.
+    EligibilityRule:
+      type: object
+      description: A rule matching properties and supplier-defined labels reported through the device capabilities.
+      properties:
+        propertySelector:
+          $ref: '#/components/schemas/Selector'
+          description: Selector evaluated against the properties reported in the device capabilities.
+        labelSelector:
+          $ref: '#/components/schemas/Selector'
+          description: Selector evaluated against the labels reported in the device capabilities.
+    Selector:
+      type: object
+      description: A set of match expressions evaluated with AND semantics.
+      required: [matchExpressions]
+      properties:
+        matchExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchExpression'
+          description: Match expressions evaluated against the device's reported capabilities.
+    MatchExpression:
+      type: object
+      description: An expression used to match a device's reported capabilities properties or labels.
+      required: [key, operator]
+      properties:
+        key:
+          type: string
+          description: >-
+            The key used to match the device's reported capabilities. For property selectors, this MUST be a JSON
+            Pointer, as defined by RFC 6901, mapping to a specific property. For label selectors, this MUST be the
+            exact label key.
+        operator:
+          type: string
+          enum: [In, NotIn, Exists, DoesNotExist, Gt, Lt, ContainsAll, ContainsAny]
+          description: Operator used to evaluate the referenced value.
+        values:
+          type: array
+          items: {}
+          description: >-
+            Values used by the operator when required for matching expressions. Required for the `In`, `NotIn`,
+            `Gt`, or `Lt` operator.
+        itemSelector:
+          $ref: '#/components/schemas/Selector'
+          description: Selector evaluated against array elements. Required for the `ContainsAll` or `ContainsAny` operator.
     appParameterTarget:
       type: object
       description: Application Parameter Target
