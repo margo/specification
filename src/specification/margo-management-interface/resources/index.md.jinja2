@@ -277,6 +277,24 @@ spec:
         components:
             - name: 
               properties:
+        deviceConstraints:
+          capacityRequirements:
+            cpu:
+              cores:
+              architectures:
+            memory:
+            storage:
+          eligibilityRules:
+          - propertySelector:
+            matchExpressions:
+            - key: 
+              operator:
+              value:
+          - labelSelector:
+            matchExpression:
+            - key:
+              operator:
+              value:  
     parameters:
         param:
             value: 
@@ -292,7 +310,7 @@ spec:
 {%- macro format_range(slot) -%}
     {%- if slot.multivalued and slot.inlined -%}
         {%- if slot.inlined_as_list -%}
-            {{ abort("List not supported yet") }}
+      []{{ slot.range }}
         {%- else -%}
             {%- if slot.name == "properties" -%}
                 map[string][string]
@@ -336,7 +354,43 @@ spec:
 {%- endif %}
 {%- endfor %}
 {%- endif %}
+
+{%- if c.name.startswith("DeviceConstraints") %}
+
+> **Note:** Please see the [device constraints](../applications/application-description#deviceconstraints-attributes) section on the Application Description page for details about how to apply device constraint rules.
+
+Device constraints contains a set of rules application suppliers can use to describe device compatibility requirements for their workloads. The device constraints are taken directly from the Application Description and MUST be provided, without modification, in the Application Deployment if they are defined in the Application Description.
+
+Device suppliers MAY choose to evaluate the capacity constraints prior to deploying the workload as a preliminary check or leave it up to their chosen runtime to determine if the device has the required capacity.
+
+Device suppliers MUST evaluate the eligibility rules prior to deploying the workload.
+
+{%- endif %}
 {%- endfor %}
+
+### Enumerations
+These enumerations are used as vocabularies for attribute values of the `ApplicationDeployment`.
+
+#### CpuArchitectureType
+
+| Permissible Values | Description |
+| --- | --- |
+| amd64 | AMD 64-bit architecture.|
+| arm64 | ARM 64-bit architecture.|
+| arm | ARM 32-bit architecture. |  
+
+#### SelectorOperator
+
+| Permissible Values | Description |
+|--------------------|-------------|
+| In | Indicates matching should find a match with at least one specified values. |
+| NotIn | Indicates matching should not find a match with any specified values. |
+| Exists | Indicates matching should find a match on the specified key. |
+| DoesNotExist | Indicates matching should not find a match on the specified key. |
+| Gt | Indicates matching should find a match if the target value is greater than specified value. |
+| Lt | Indicates matching should find a match if the target value is less than the specified value. |
+| ContainsAll | Indicates matching should find a match against all itemSelectors. |
+| ContainersAny| Indicates matching should find a match against at least one itemSelector. |
 
 ### Example: Helm Deployment Specification
 

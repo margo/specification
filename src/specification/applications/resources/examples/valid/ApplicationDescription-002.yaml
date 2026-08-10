@@ -56,7 +56,7 @@ deploymentProfiles:
                       values: ["gpu"]
                     - key: /manufacturer
                       operator: In
-                        values: ["NVIDIA"]
+                      values: ["NVIDIA"]
               - key: /interfaces
                 operator: ContainsAll
                 itemSelector:

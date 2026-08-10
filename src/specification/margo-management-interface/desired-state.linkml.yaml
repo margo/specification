@@ -100,7 +100,14 @@ classes:
   DeploymentProfile:
     description: A class representing a deployment profile.
     rank: 40
-    # abstract: true
+    attributes:
+      deviceConstraints:
+        description: >-
+          Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+          See the [Device Constraints](#deviceconstraints-attributes) section below.
+        range: DeviceConstraints
+        required: false
+        rank: 30
     slots:
       - type
       - components
@@ -127,6 +134,187 @@ classes:
       components:
         range: ComposeComponent
         rank: 20
+
+  DeviceConstraints:
+    description: >-
+      Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+    rank: 41
+    attributes:
+      capacityRequirements:
+        description: >-
+          Minimum CPU, memory, and storage requirements for the deployment profile.
+          See the [Capacity Requirements](#capacityrequirements-attributes) section below.
+        range: CapacityRequirements
+        required: false
+        rank: 10
+      eligibilityRules:
+        description: >-
+          Optional rules used to match the deployment with device properties and supplier-defined labels reported in the device capabilities.
+          See the [Eligibility Rules](#eligibilityrule-attributes) section below.
+        range: EligibilityRule
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        required: false
+        rank: 20
+
+  CapacityRequirements:
+    description: Minimum device capacity required by the deployment profile.
+    rank: 42
+    attributes:
+      cpu:
+        description: >-
+          CPU element specifying the CPU requirements for the deployment.
+          See the [CPU](#cpu-attributes) section below.
+        range: CPU
+        required: false
+        rank: 10
+      memory:
+        description: >-
+          The minimum amount of memory required. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
+        range: string
+        pattern: ^[0-9]+(Mi|Gi|Ki)$
+        required: false
+        rank: 20
+      storage:
+        description: >-
+          The minimum amount of storage required. The value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
+        range: string
+        pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
+        required: false
+        rank: 30
+
+  CPU:
+    description: CPU element specifying the CPU requirements for the deployment.
+    rank: 43
+    attributes:
+      cores:
+        description: >-
+          The required amount of CPU cores. Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
+        rank: 10
+        range: double
+        required: true
+      architectures:
+        description: >-
+          The CPU architectures supported by the deployment. See the [CpuArchitectureType](#cpuarchitecturetype) definition for all permissible values.
+        rank: 20
+        range: CpuArchitectureType
+        required: false
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+
+  EligibilityRule:
+    description: A rule matching properties and supplier-defined labels reported through the device capabilities.
+    rank: 44
+    attributes:
+      propertySelector:
+        description: Selector evaluated against the properties reported in the device capabilities.
+        range: Selector
+        required: false
+        rank: 10
+      labelSelector:
+        description: Selector evaluated against the labels reported in the device capabilities.
+        range: Selector
+        required: false
+        rank: 20
+
+  Selector:
+    description: A set of match expressions evaluated with AND semantics.
+    rank: 45
+    attributes:
+      matchExpressions:
+        description: Match expressions evaluated against the device's reported capabilities.
+        range: MatchExpression
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        required: true
+        rank: 10
+
+  MatchExpression:
+    description: An expression used to match a device's reported capabilities properties or labels.
+    rank: 46
+    rules:
+      - description: '`values` MUST be present when the operator is `In`.'
+        preconditions:
+          slot_conditions:
+            operator:
+              equals_string: In
+        postconditions:
+          slot_conditions:
+            values:
+              required: true
+      - description: '`values` MUST be present when the operator is `NotIn`.'
+        preconditions:
+          slot_conditions:
+            operator:
+              equals_string: NotIn
+        postconditions:
+          slot_conditions:
+            values:
+              required: true
+      - description: '`values` MUST be present when the operator is `Gt`.'
+        preconditions:
+          slot_conditions:
+            operator:
+              equals_string: Gt
+        postconditions:
+          slot_conditions:
+            values:
+              required: true
+      - description: '`values` MUST be present when the operator is `Lt`.'
+        preconditions:
+          slot_conditions:
+            operator:
+              equals_string: Lt
+        postconditions:
+          slot_conditions:
+            values:
+              required: true
+      - description: '`itemSelector` MUST be present when the operator is `ContainsAll`.'
+        preconditions:
+          slot_conditions:
+            operator:
+              equals_string: ContainsAll
+        postconditions:
+          slot_conditions:
+            itemSelector:
+              required: true
+      - description: '`itemSelector` MUST be present when the operator is `ContainsAny`.'
+        preconditions:
+          slot_conditions:
+            operator:
+              equals_string: ContainsAny
+        postconditions:
+          slot_conditions:
+            itemSelector:
+              required: true
+    attributes:
+      key:
+        description: >-
+          The key used to match the device's reported capabilities. For property selectors, this MUST be a JSON Pointer, as defined by [RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901), mapping to a specific property. For label selectors, this MUST be the exact label key.
+        range: string
+        required: true
+        rank: 10
+      operator:
+        description: Operator used to evaluate the referenced value. See [SelectorOperator](#selectoroperator) for all permissible values.
+        range: SelectorOperator
+        required: true
+        rank: 20
+      values:
+        description: Values used by the operator when required for matching expressions. Required for the `In`, `NotIn`, `Gt`, or `Lt` operator.
+        range: Any
+        multivalued: true
+        inlined: true
+        inlined_as_list: true
+        required: false
+        rank: 30
+      itemSelector:
+        description: Selector evaluated against array elements. Required for the `ContainsAll` or `ContainsAny` operator.
+        range: Selector
+        required: false
+        rank: 40
 
   Component:
     description: A class representing a component of a deployment profile.
@@ -260,3 +448,36 @@ slots:
     inlined: true
     inlined_as_list: false
     rank: 999
+
+enums:
+  SelectorOperator:
+    permissible_values:
+      In:
+        description: Matches when the referenced value equals one of the supplied values.
+      NotIn:
+        description: Matches when the referenced value does not equal any supplied value.
+      Exists:
+        description: Matches when the referenced key is present.
+      DoesNotExist:
+        description: Matches when the referenced key is absent.
+      Gt:
+        description: Matches when the referenced value is greater than the supplied value.
+      Lt:
+        description: Matches when the referenced value is less than the supplied value.
+      ContainsAll:
+        description: Matches when an array contains an object satisfying all item selector expressions.
+      ContainsAny:
+        description: Matches when an array contains an object satisfying any item selector expression.
+
+  CpuArchitectureType:
+    permissible_values:
+      amd64:
+        description: AMD 64-bit architecture.
+      arm64:
+        description: ARM 64-bit architecture.
+      arm:
+        description: ARM 32-bit architecture.
+      riscv64:
+        description: RISC-V 64-bit architecture.
+      other:
+        description: Any other CPU architecture.

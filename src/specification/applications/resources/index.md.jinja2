@@ -84,22 +84,22 @@ which defines the [desired state](../margo-management-interface/desired-state.md
 
 Applications can be deployed as Helm charts using either Helm [version 3](https://helm.sh/docs/v3/topics/charts) or [version 4](https://helm.sh/docs/topics/charts) using Chart APIVersion v2 only.
 
-In order to facility the require deployment options for Helm charts, Margo does not support Helm functions requiring direct communication with the Kubernetes API.
+In order to facilitate the required deployment options for Helm charts, Margo does not support Helm functions requiring direct communication with the Kubernetes API.
 
 Your Helm based application MUST NOT rely on the following Helm functions:
 - [Lookup](https://helm.sh/docs/chart_template_guide/functions_and_pipelines#using-the-lookup-function): The `lookup` template function queries live resources in the target Kubernetes cluster at render time, for example to fetch ConfigMaps, Secrets, or other objects. This requires direct API access and cluster credentials during rendering.
 - [Hooks](https://helm.sh/docs/topics/charts_hooks/): Hooks (pre/post install, upgrade, delete, rollback, test, etc.) execute additional Kubernetes resources or jobs at specific points in the release lifecycle. Helm waits for these resources to reach a ready state by monitoring them via the Kubernetes API, and the hooks themselves may perform privileged or arbitrary operations in the cluster.
-- [CRD management via helm](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/): Installing or managing Custom Resource Definitions (CRDs) with Helm requires checking for the presence of CRDs and registering new APIs with the cluster, which involves API calls and may require elevated permissions.
+- [CRD management via Helm](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/): Installing or managing Custom Resource Definitions (CRDs) with Helm requires checking for the presence of CRDs and registering new APIs with the cluster, which involves API calls and may require elevated permissions.
 
-**Note:** This function list is based on the current Helm v3 and v4 implementations. Additional functions may be added later if Helm introduced new functions requiring communication with the Kuberentes API to work.
+**Note:** This function list is based on the current Helm v3 and v4 implementations. Additional functions may be added later if Helm introduces new functions requiring communication with the Kubernetes API to work.
 
 {%- endif %}
 
 {%- if c.name.startswith("DeviceConstraints") %}
 
-Workload fleet manager implementations are not required to guarentee a workload can be deployed to a selected device. Ultimately, this responsibility falls to the device to determine if a workload can be deployed or not. 
+Workload fleet manager implementations are not required to guarantee a workload can be deployed to a selected device. Ultimately, this responsibility falls to the device to determine if a workload can be deployed or not. 
 
-Workload fleet manager implemantations MAY choose to implement device eligibility matching in order to reduce the risk of deployment failures because of incompatability between what a workload requires and what a device provides. 
+Workload fleet manager implementations MAY choose to implement device eligibility matching in order to reduce the risk of deployment failures because of incompatibility between what a workload requires and what a device provides. 
 
 If a workload fleet manager chooses to implement device eligibility matching they MUST follow the matching rules define below to match the application description's device constraint requirements with device's reported capabilities.
 
@@ -126,7 +126,7 @@ The following rules MUST be applied when performing capacity requirements matchi
 
 #### Eligibility rules
 
-The following rules MUST be applied when performing eligability rule matching:
+The following rules MUST be applied when performing eligibility rule matching:
 
 * All `matchExpressions` within a single selector are combined using logical AND.
 * If an eligibility rule contains both `propertySelector` and `labelSelector`, both selectors must match for that rule to match.
@@ -152,13 +152,13 @@ Property selectors MUST resolve to a device capability property whose value is e
 
 If a property selector resolves to any other JSON type, the expression MUST evaluate to `false`.
 
-If a property selector resolve to an array of objects, `ContainsAll` or `ContainsAny` must be used or else the expression MUST evaluate to `false`.
+If a property selector resolves to an array of objects, `ContainsAll` or `ContainsAny` must be used, or else the expression MUST evaluate to `false`.
 
 #### Label selector key format
 
-`labelSelector.matchExpressions[].key` MUST be the exact label key to evaluate within device capabilities `labels` dictionary.
+`labelSelector.matchExpressions[].key` MUST be the exact label key to evaluate within the device capabilities `labels` dictionary.
 
-This label selector MUST resolve to device capability label whose value is either:
+This label selector MUST resolve to a device capability label whose value is either:
 
 * a string, number, or boolean
 * an array of strings, or numbers
@@ -177,8 +177,8 @@ The following rules MUST be followed when evaluating match expressions:
 * `DoesNotExist`: true when the referenced device capabilities key is absent
 * `Gt`: true when the referenced device capabilities value is greater than `values`.
 * `Lt`: true when the referenced device capabilities value is less than `values`.
-* `ContainsAll`: True when the referenced device capabilities value is an array of objects and at least one array element satisfies all `itemSelector.matchExpressions` (AND logic).
-* `ContainsAny`: True when the referenced device capabilities value is an array of objects and at least one array element satisfies any `itemSelector.matchExpression` (OR logic).
+* `ContainsAll`: True when the referenced device capabilities value is an array of objects, and at least one array element satisfies all `itemSelector.matchExpressions` (AND logic).
+* `ContainsAny`: True when the referenced device capabilities value is an array of objects, and at least one array element satisfies any `itemSelector.matchExpression` (OR logic).
 
 String comparisons MUST be exact and case-sensitive.
 
@@ -210,7 +210,7 @@ For `ContainsAll` and `ContainsAny`:
 
 `ContainsAll` and `ContainsAny` operators enable matching on properties of objects within an array. These operators are used when the device capability property referenced by `key` resolves to an array of objects.
 
-**`ContainsAll` (array element with all conditions):**
+##### `ContainsAll` (array element with all conditions):
 
 Evaluates to true when at least one array element satisfies all conditions specified in `itemSelector.matchExpressions`. All expressions within the `itemSelector` are combined using AND logic.
 
@@ -231,7 +231,7 @@ propertySelector:
             values: ["NVIDIA"]
 ```
 
-**`ContainsAny` (array element with any condition):**
+##### `ContainsAny` (array element with any condition):
 
 Evaluates to true when at least one array element satisfies any condition specified in `itemSelector.matchExpressions`. Expressions within the `itemSelector` are combined using OR logic.
 
@@ -249,7 +249,7 @@ propertySelector:
             values: ["gpu", "nic"]
 ```
 
-**Interaction with other expressions:**
+##### Interaction with other expressions:
 
 Multiple `matchExpressions` within the same `propertySelector` remain AND'd together. For example:
 
@@ -313,8 +313,8 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 | NotIn | Indicates matching should not find a match with any specified values. |
 | Exists | Indicates matching should find a match on the specified key. |
 | DoesNotExist | Indicates matching should not find a match on the specified key. |
-| Gt | Indicates matching should find a match if the specified value is greater. |
-| Lt | Indicates matching should find a match if the specified value is less. |
+| Gt | Indicates matching should find a match if the target value is greater than specified value. |
+| Lt | Indicates matching should find a match if the target value is less than the specified value. |
 | ContainsAll | Indicates matching should find a match against all itemSelectors. |
 | ContainersAny| Indicates matching should find a match against at least one itemSelector. |
 
@@ -339,11 +339,11 @@ An example of an `ApplicationDescription` defining [deployment profiles](#deploy
 
 An application and device supplier MAY collaborate to enable deploying workloads using a format other than Margo's specified deployment types. 
 
-If suppliers choose this option they MUST follow these rules:
+If suppliers choose this option, they MUST follow these rules:
 
 * The deployment profile type MUST be set to `custom`.
-* Device constraint eligibility rules MUST be defined with label selectors matching the supplier's agreed upon key/value label pairs reported in the device's capabilities document. 
-* The workload artifacts MUST be package in an OCI blob. The specific details for how this OCI blob is created is the responsibility of the suppliers to agree upon.
+* Device constraint eligibility rules MUST be defined with label selectors matching the supplier's agreed-upon key/value label pairs reported in the device's capabilities document. 
+* The workload artifacts MUST be packaged in an OCI blob. The specific details for how this OCI blob is created are the responsibility of the suppliers to agree upon.
 
 ## Specification extensions
 
@@ -353,7 +353,7 @@ The Application Description document supports the following specification extens
 
 ### Collaboration between application and workload fleet manager suppliers
 
-To make use of specification extensions defined by a workload fleet manager supplier, the extension property MUST be added to the Application Description yaml document's [root](#top-level-attributes).
+To make use of specification extensions defined by a workload fleet manager supplier, the extension property MUST be added to the Application Description YAML document's [root](#top-level-attributes).
 
 The workload fleet manager MUST ignore any unknown specification extensions targeting a workload fleet manager supplier. Importing an application description with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
 
