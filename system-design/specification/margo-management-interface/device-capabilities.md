@@ -36,7 +36,7 @@ DELETE /api/v1/capabilities/{deviceId}
 | Field      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
 | properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-attributes) section below. |
-| labels          | map[string]interface{} | N | Supplier-defined key/value metadata used for device matching via eligibility rules in the Application Description. Values MUST be a string, number, boolean, an array of strings, or an array of numbers. Label keys are case-sensitive. |
+| labels          | map[string]interface{} | N | Supplier-defined key/value pair metadata used for device matching via [eligibility rules](../applications/application-description#deviceconstraints-attributes) in the Application Description. Values MUST be a string, number, boolean, an array of strings, or an array of numbers. Label keys are case-sensitive.  Implementations SHOULD use stable, collision-resistant label names. Prefixing with an organization domain is recommended. |
 | x-&lt;unique-name&gt;-extensions | map[string]interface{} | N | Allows addition of an arbitrary JSON object whose contents suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details. |
 
 ### Properties Attributes
@@ -124,7 +124,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | Permissible Values | Description |
 | --- | --- |
 | oci | OCI container runtime. |
-| custom | The device is using a runtime not defined by the Margo specification. See [Custom Runtimes and Deployments](#custom-runtimes-and-deployments) below for more details.|
+| custom | The device is using a runtime not defined by the Margo specification. Workload fleet manager implementations MUST default to custom if the provided runtime does not match a known runtime. See [Custom Runtimes and Deployments](#custom-runtimes-and-deployments) below for more details.|
 
 
 #### SupportedDeploymentType
@@ -133,7 +133,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | --- | --- |
 | helm | Device can receive and process Kubernetes Helm chart deployments locally. |
 | compose | Device can receive and process Compose service deployments locally. |
-| custom | Device can recieve and process custom deployments locally that are not defined by the Margo specification. Workload fleet manager implementations MUST default to custom if a device provided deployment type does not match an known deployment type. See [Custom Runtimes and Deployments](#custom-runtimes-and-deployments) below for more details. |
+| custom | Device can receive and process custom deployments locally that are not defined by the Margo specification. Workload fleet manager implementations MUST default to custom if the provided deployment type does not match a known deployment type. See [Custom Runtimes and Deployments](#custom-runtimes-and-deployments) below for more details. |
 
 ## Example Device Capabilities Payload
 
