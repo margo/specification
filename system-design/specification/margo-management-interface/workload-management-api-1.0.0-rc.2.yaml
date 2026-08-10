@@ -102,13 +102,13 @@ paths:
         '201':
           description: Capabilities reported successfully
         '400':
-          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included
+          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '401':
-          description: Signature verification failed. Ensure you are signing with the correct X.509 private key
+          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
           content:
             application/problem+json:
               schema:
@@ -126,7 +126,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '422':
-          description: Request body includes a semantic error
+          description: Request body includes a semantic error.
           content:
             application/problem+json:
               schema:
@@ -307,15 +307,15 @@ paths:
           schema:
             type: string
           description: >
-             ETag value of the last successfully synced manifest. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+            ETag value of the last successfully synced manifest. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
         - name: Accept
           in: header
           required: false
           schema:
             type: string
           description: >
-            Indicates which manifest formats the client supports. Supported
-            values: application/vnd.margo.manifest.v1+json.
+            Indicates which manifest formats the client supports. 
+            Supported values: application/vnd.margo.manifest.v1+json.
       responses:
         '200':
           description: Manifest returned in the negotiated format
@@ -466,7 +466,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '403':
-          description:  Client certificate is not trusted or has been revoked.
+          description: Client certificate is not trusted or has been revoked.
           content:
             application/problem+json:
               schema:
