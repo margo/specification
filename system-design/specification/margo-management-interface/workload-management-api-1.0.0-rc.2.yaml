@@ -1,4 +1,4 @@
-openapi: 3.1.0
+​openapi: 3.1.0
 info:
   title: Margo Workload Management API
   version: 1.0.0-rc.2
@@ -62,29 +62,20 @@ paths:
                 type: object
           description: New client onboarded successfully.
         '400':
-          content:
-            application/json:
-              schema:
-                properties:
-                  error:
-                    example: Invalid certificate
-                    type: string
-                type: object
           description: Invalid certificate format or structure.
-        '403':
           content:
-            application/json:
+            application/problem+json:
               schema:
-                properties:
-                  error:
-                    example: Client rejected
-                    type: string
-                type: object
+                $ref: '#/components/schemas/ProblemDetail'
+        '403':
           description: Client certificate not trusted or client rejected.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
       security:
       - PayloadSignature: []
       summary: Complete onboarding with client certificate
-
   /api/v1/clients/{clientId}/capabilities/{deviceId}:
     post:
       summary: Report device capabilities
@@ -112,14 +103,34 @@ paths:
           description: Capabilities reported successfully
         '400':
           description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '401':
           description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '403':
           description: Client certificate is not trusted or has been revoked.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '404':
           description: No client with the given `clientID` was found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '422':
           description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
     put:
       summary: Update device capabilities (Update)
       security:
@@ -146,14 +157,34 @@ paths:
           description: Capabilities reported successfully
         '400':
           description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '401':
           description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '403':
           description: Client certificate is not trusted or has been revoked.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '404':
           description: No client with the given `clientID` was found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '422':
           description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
     delete:
       summary: Remove device (Unregister)
       security:
@@ -173,13 +204,29 @@ paths:
         '204':
           description: Device capabilities removed successfully
         '400':
-          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.  
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '401':
           description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '403':
           description: Client certificate is not trusted or has been revoked.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '404':
           description: Client or device not found.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
   /api/v1/clients/{clientId}/bundles/{digest}:
     get:
       summary: Retrieve bundle information for a specific device and digest
@@ -224,19 +271,29 @@ paths:
                 description: Gzip-compressed tar containing one YAML file per deployment.
         '304':
           description: Representation not modified
+        '400':
+          description: Invalid request.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '404':
           description: Bundle not found for the given digest
-        '400':
-           description: Invalid request.
-        # TBD
-        # '500':
-        #   $ref: '#/components/responses/ErrorResponse'
-
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '500':
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
   /api/v1/clients/{clientId}/deployments:
     get:
       summary: Retrieve the complete desired state for all workloads assigned to a device
       security:
-        - PayloadSignature: []      
+        - PayloadSignature: []
       parameters:
         - name: clientId
           in: path
@@ -257,7 +314,7 @@ paths:
           schema:
             type: string
           description: >
-            Indicates which manifest formats the client supports.
+            Indicates which manifest formats the client supports. 
             Supported values: application/vnd.margo.manifest.v1+json.
       responses:
         '200':
@@ -279,13 +336,16 @@ paths:
           description: Not Modified - Manifest has not changed
         '406':
           description: Not Acceptable - Server cannot generate a response matching the Accept header
-
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
 
   /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}:
     get:
       summary: Retrieve an individual ApplicationDeployment YAML file
       security:
-        - PayloadSignature: []        
+        - PayloadSignature: []
       description: >
         This endpoint is used by the client to fetch the YAML for a single ApplicationDeployment after it has processed a new State Manifest and identified a small number of new or updated deployments. This allows for highly efficient, incremental updates without needing to download the full bundle.
         To make individual workload retrievals race-free and cache-friendly, this endpoint is content-addressable: the digest of the expected YAML is part of the URL. This guarantees immutability of the fetched resource and prevents a time-of-check / time-of-use race where a deployment changes between manifest retrieval and content fetch.
@@ -334,7 +394,7 @@ paths:
             ETag:
               schema:
                 type: string
-              description: > 
+              description: >
                 The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
             Cache-Control:
               schema:
@@ -349,9 +409,15 @@ paths:
               schema:
                 type: string
                 description: Raw YAML content of the ApplicationDeployment
+
+
         '404':
           description: Deployment not found for the given digest
-
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        
   /api/v1/clients/{clientId}/deployments/{deploymentId}/status:
     post:
       summary: Report deployment status
@@ -379,12 +445,28 @@ paths:
           description: The deployment status was added, or updated, successfully.
         '400':
           description: Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '401':
           description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '403':
           description: Client certificate is not trusted or has been revoked.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         '422':
           description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
 
 components:
   securitySchemes:
@@ -397,6 +479,85 @@ components:
         Base64-encoded payload signature using SHA-256 and device certificate.
         Format: public_key;digital_signature
   schemas:
+    ProblemDetail:
+      type: object
+      description: >
+        RFC 9457 Problem Details for HTTP APIs. Returned with Content-Type:
+        application/problem+json.
+        See https://www.rfc-editor.org/rfc/rfc9457.
+        Extension members (RFC 9457 §3.2) are permitted via additionalProperties.
+        Vendors MAY add custom fields alongside standard margo fields.
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: >
+            URI reference identifying the problem type.
+            Implementations MUST use the registered Margo type URI for any error
+            condition defined in the Margo specification.
+            Clients MUST use this field for programmatic error handling, NOT the status code or title.
+            Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
+            for display and handling.
+          example: https://docs.margo.org/specification/problems/invalid-digest-header
+        title:
+          type: string
+          description: Short human-readable summary of the problem type.
+          example: Invalid Certificate
+        status:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: Certificate signature verification failed
+        instance:
+          type: string
+          format: uri-reference
+          description: URI reference identifying the specific occurrence of the problem.
+          example: /api/v1/onboarding
+        retryable:
+          type: boolean
+          description: >
+            Whether the client MAY retry the request. If true, client SHOULD respect
+            the Retry-After response header when present.
+          example: false
+        retryAfterSeconds:
+          type: integer
+          description: >
+            Advisory retry delay in seconds. The authoritative value is the Retry-After
+            response header when present. This field is advisory only.
+          example: 30
+        backoffStrategy:
+          type: string
+          enum: [none, fixed, exponential]
+          description: >
+            Recommended backoff strategy for retrying.
+            none: do not retry.
+            fixed: retry after retryAfterSeconds.
+            exponential: use exponential backoff starting at retryAfterSeconds.
+          example: exponential
+        errors:
+          type: array
+          description: >
+            Optional list of field-level validation errors.
+            SHOULD be present on 422 Unprocessable Entity responses.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Field path that caused the validation error.
+                example: properties.roles
+              message:
+                type: string
+                description: Human-readable validation error message.
+                example: must contain at least one valid role
+      additionalProperties: true
     ManifestVersion:
       type: number
       description: >
@@ -459,7 +620,7 @@ components:
         - deployments
       properties:
         manifestVersion:
-          $ref: '#/components/schemas/ManifestVersion' 
+          $ref: '#/components/schemas/ManifestVersion'
         bundle:
           $ref: '#/components/schemas/DeploymentBundleRef'
         deployments:
@@ -623,7 +784,6 @@ components:
         type:
           type: string
           enum: [ethernet, wifi, cellular, bluetooth, usb, canbus, rs232]
-
     # app deployment struct added here for ease of programming, the code generators will generate the structs
     # for the actual app deployment yaml and parsing would be easy to do
     appDeploymentManifest:
@@ -767,7 +927,6 @@ components:
       required: [value, targets]
       properties:
         value:
-          # type: object
           description: Value of the parameter
           additionalProperties: true
           x-go-type: interface{}

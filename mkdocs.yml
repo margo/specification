@@ -4,6 +4,18 @@ docs_dir: system-design
 nav:
   - What is Margo?: index.md
   - Specification:
+      - Problems:
+          - specification/problems/index.md
+          - specification/problems/invalid-certificate-format.md
+          - specification/problems/invalid-digest-header.md
+          - specification/problems/invalid-request.md
+          - specification/problems/signature-verification-failed.md
+          - specification/problems/semantic-error.md
+          - specification/problems/certificate-not-trusted.md
+          - specification/problems/invalid-client.md
+          - specification/problems/invalid-bundle.md
+          - specification/problems/deployment-not-found.md
+          - specification/problems/server-cannot-generate-response.md
       - Margo Management Interface:
           - specification/margo-management-interface/api-requirements-and-security.md
           - specification/margo-management-interface/certificate-api.md
