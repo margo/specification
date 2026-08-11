@@ -108,6 +108,8 @@ If a workload fleet manager chooses to implement device eligibility matching the
 * If `eligibilityRules` are present, a device that does not satisfy the required rule evaluation MUST NOT be selected for that profile.
 * If no available device satisfies the profile's required constraints, the deployment MUST be reported as not placeable according to the implementation's existing status model.
 
+If a workload fleet manager chooses to implement device eligibility matching they MAY choose to find only the first suitable device or all suitable devices.
+
 {%- endif %}
 
 {%- if c.name.startswith("CapacityRequirements") %}
@@ -128,11 +130,29 @@ The following rules MUST be applied when performing capacity requirements matchi
 
 The following rules MUST be applied when performing eligibility rule matching:
 
-* All `matchExpressions` within a single selector are combined using logical AND.
-* If an eligibility rule contains both `propertySelector` and `labelSelector`, both selectors must match for that rule to match.
-* The `eligibilityRules` array is combined using logical OR. A device matches eligibility rules if at least one eligibility rule matches.
-* If `eligibilityRules` is omitted, the deployment profile has no additional selector-based constraint beyond `capacityRequirements`.
-* If both `capacityRequirements` and `eligibilityRules` are present, implementations MUST evaluate `capacityRequirements` first and MUST only evaluate `eligibilityRules` for devices that satisfy the required capacity.
+```
+eligible devices =
+    OR over each rule in eligibilityRules:
+        AND(
+            propertySelector matches   (TRUE if propertySelector is omitted),
+            labelSelector matches      (TRUE if labelSelector is omitted)
+        )
+```
+
+* Each eligibility rule is evaluated using a logical OR. 
+  * A least one eligibility rule MUST evaluate to true to be considered a match.
+  * If `eligibilityRules` is omitted, the deployment profile has no additional selector-based constraint beyond `capacityRequirements`, if present.
+* The `propertySelector` and `labelSelector` expressions are combined using a logical AND. 
+  * An eligibility rule MAY contain a `propertySelector`, `labelSelector` or both.
+  * All property selector and all label selectors expressions MUST evaluate to true to be considered a match.
+* All `matchExpressions` within a single property or label selector are combined using logical AND.
+  * All match expressions MUST evaluate to true to be considered a match.
+
+|You want...|	Do this |
+|-----------|---------|
+| Condition A AND condition B must both be true within the same selector type	| One `matchExpressions` list with both expressions in the same `propertySelector` or `labelSelector` |
+| Condition A AND condition B must both be true but one condition is a property and the other a label	| One `eligibilityRules` entry with both `propertySelector` and `labelSelector` set |
+| Condition A OR condition B must be true	| Two separate `eligibilityRules` entries |
 
 #### Property selector key format
 
@@ -171,34 +191,36 @@ If a label selector resolves to any other JSON type, the expression MUST evaluat
 
 The following rules MUST be followed when evaluating match expressions:
 
-* `In`: true when the referenced device capabilities value equals one of `values`, or when the referenced array contains at least one element that equals one of `values`
-* `NotIn`: true when the referenced device capabilities key exists and none of its values match any entry in `values`
-* `Exists`: true when the referenced device capabilities key is present
-* `DoesNotExist`: true when the referenced device capabilities key is absent
-* `Gt`: true when the referenced device capabilities value is greater than `values`.
-* `Lt`: true when the referenced device capabilities value is less than `values`.
-* `ContainsAll`: True when the referenced device capabilities value is an array of objects, and at least one array element satisfies all `itemSelector.matchExpressions` (AND logic).
-* `ContainsAny`: True when the referenced device capabilities value is an array of objects, and at least one array element satisfies any `itemSelector.matchExpression` (OR logic).
+| Operator | Evaluation Rule |
+|----------|-----------------|
+| `In`| True when the referenced device capabilities value equals one of `values`, or when the referenced array contains at least one element that equals one of `values` |
+| `NotIn` | True when the referenced device capabilities key exists and none of its values match any entry in `values` |
+| `Exists` | True when the referenced device capabilities key is present |
+| `DoesNotExist` | True when the referenced device capabilities key is absent |
+| `Gt` | True when the referenced device capabilities value is greater than `values` |
+| `Lt` | True when the referenced device capabilities value is less than `values` |
+| `ContainsAll` | True when the referenced device capabilities value is an array of objects, and at least one array element satisfies all `itemSelector.matchExpressions` (AND logic) |
+| `ContainsAny` | True when the referenced device capabilities value is an array of objects, and at least one array element satisfies any `itemSelector.matchExpression` (OR logic) |
 
 String comparisons MUST be exact and case-sensitive.
 
-For `In` and `NotIn`:
+For the `In` and `NotIn` operator:
 
 * `values` MUST be present
 * `values` MUST contain one or more strings or numbers, or one boolean
 * `values` MUST be the same data type when indicating more than one.
 
-For `Exists` and `DoesNotExist`:
+For the `Exists` and `DoesNotExist` operator:
 
 * `values` MUST be omitted
 
-For `Gt` and `Lt`:
+For the `Gt` and `Lt` operator:
 
 * `values` MUST be present
 * `values` MUST be parsable as numbers
 * `values` MUST only contain a single number
 
-For `ContainsAll` and `ContainsAny`:
+For the `ContainsAll` and `ContainsAny` operator:
 
 * `itemSelector` MUST be present
 * `itemSelector.matchExpressions` MUST contain one or more expressions
