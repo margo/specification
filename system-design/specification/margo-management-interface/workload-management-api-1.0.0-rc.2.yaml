@@ -2,91 +2,29 @@
 info:
   title: Margo Workload Management API
   version: 1.0.0-rc.2
-  description: 
-    API for managing workloads on Margo-compliant edge devices.
+  description: >
+    API for managing workloads on Margo-conformant edge devices.
     Includes the APIs for exchanging desired state and current state.
-    Communication is secured using server-side TLS (TLS 1.3 preferred),
-    and payloads are signed using X.509 certificates.
+    Communication is secured with mutual TLS, defaulting to TLS 1.3 per the MIAF
+    TLS requirements: the WFM Client
+    and the WFM each present an X.509-SVID, validated against the Trust Domain's
+    Trust Bundle per the Margo Identity and Authorization Framework (MIAF) and
+    the WFM Identity Profile. The caller identity for every request is the
+    authenticated WFM Client SPIFFE ID. Trust anchors are distributed via the
+    MIAF Trust Bundle.
 
 servers:
-  - url: https://wfm.margo.org/
+  - url: https://wfm.margo.org
     description: Workload Fleet Manager APIs
 
 security:
-  - PayloadSignature: []
+  - mTLS: []
 
 paths:
-  /api/v1/onboarding/certificate:
-    get:
-      summary: Download Root CA certificate
-      security: []
-      responses:
-        '200':
-          description: Root CA certificate
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  certificate:
-                    type: string
-                    description: Base64-encoded certificate text
-  /api/v1/onboarding:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [apiVersion, kind, certificate]
-              properties:
-                apiVersion:
-                  type: string
-                  description: API version identifier
-                kind:
-                  type: string
-                  enum: [OnboardingRequest]
-                  description: Resource kind
-                certificate:
-                  description: Base64-encoded client certificate
-                  type: string
-        required: true
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                properties:
-                  clientId:
-                    type: string
-                type: object
-          description: New client onboarded successfully.
-        '400':
-          description: Invalid certificate format or structure.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        '403':
-          description: Client certificate not trusted or client rejected.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-      security:
-      - PayloadSignature: []
-      summary: Complete onboarding with client certificate
-  /api/v1/clients/{clientId}/capabilities/{deviceId}:
+  /api/v1/capabilities/{deviceId}:
     post:
       summary: Report device capabilities
-      security:
-        - PayloadSignature: []
       parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
         - name: deviceId
           in: path
           required: true
@@ -102,25 +40,20 @@ paths:
         '201':
           description: Capabilities reported successfully
         '400':
-          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+          description: Malformed request body.
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-        '401':
-          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
+        
         '403':
-          description: Client certificate is not trusted or has been revoked.
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '404':
-          description: No client with the given `clientID` was found.
+          description: No gateway was found for the given child-device deviceId.
           content:
             application/problem+json:
               schema:
@@ -133,14 +66,7 @@ paths:
                 $ref: '#/components/schemas/ProblemDetail'
     put:
       summary: Update device capabilities (Update)
-      security:
-        - PayloadSignature: []
       parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
         - name: deviceId
           in: path
           required: true
@@ -156,25 +82,20 @@ paths:
         '201':
           description: Capabilities reported successfully
         '400':
-          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+          description: Malformed request body.
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-        '401':
-          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
+
         '403':
-          description: Client certificate is not trusted or has been revoked.
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '404':
-          description: No client with the given `clientID` was found.
+          description: No gateway was found for the given child-device deviceId.
           content:
             application/problem+json:
               schema:
@@ -187,14 +108,7 @@ paths:
                 $ref: '#/components/schemas/ProblemDetail'
     delete:
       summary: Remove device (Unregister)
-      security:
-        - PayloadSignature: []
       parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
         - name: deviceId
           in: path
           required: true
@@ -203,42 +117,22 @@ paths:
       responses:
         '204':
           description: Device capabilities removed successfully
-        '400':
-          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.  
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        '401':
-          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
         '403':
-          description: Client certificate is not trusted or has been revoked.
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '404':
-          description: Client or device not found.
+          description: No device with the given deviceId was found for the client.
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-  /api/v1/clients/{clientId}/bundles/{digest}:
+  /api/v1/bundles/{digest}:
     get:
-      summary: Retrieve bundle information for a specific device and digest
-      security:
-        - PayloadSignature: []
+      summary: Retrieve a deployment bundle by its content digest
       parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Unique identifier of the device-client
         - name: digest
           in: path
           required: true
@@ -258,11 +152,11 @@ paths:
             ETag:
               schema:
                 type: string
-              description: New ETag for the returned manifest
+              description: Quoted digest of the returned bundle archive
             Cache-Control:
               schema:
                 type: string
-              description: public, max-age=31536000, immutable
+              description: private, max-age=31536000, immutable
           content:
             application/vnd.margo.bundle.v1+tar+gzip:
               schema:
@@ -271,8 +165,8 @@ paths:
                 description: Gzip-compressed tar containing one YAML file per deployment.
         '304':
           description: Representation not modified
-        '400':
-          description: Invalid request.
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
           content:
             application/problem+json:
               schema:
@@ -283,24 +177,11 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
-        '500':
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-  /api/v1/clients/{clientId}/deployments:
+
+  /api/v1/deployments:
     get:
       summary: Retrieve the complete desired state for all workloads assigned to a device
-      security:
-        - PayloadSignature: []
       parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The unique identifier of the Edge Compute Device making the request
         - name: If-None-Match
           in: header
           required: false
@@ -314,7 +195,7 @@ paths:
           schema:
             type: string
           description: >
-            Indicates which manifest formats the client supports. 
+            Indicates which manifest formats the client supports.
             Supported values: application/vnd.margo.manifest.v1+json.
       responses:
         '200':
@@ -328,12 +209,22 @@ paths:
               schema:
                 type: string
               description: New ETag for the returned manifest
+            Cache-Control:
+              schema:
+                type: string
+              description: private
           content:
             application/vnd.margo.manifest.v1+json:
               schema:
                 $ref: '#/components/schemas/UnsignedAppStateManifest'
         '304':
           description: Not Modified - Manifest has not changed
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'  
         '406':
           description: Not Acceptable - Server cannot generate a response matching the Accept header
           content:
@@ -341,21 +232,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
 
-  /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}:
+  /api/v1/deployments/{deploymentId}/{digest}:
     get:
       summary: Retrieve an individual ApplicationDeployment YAML file
-      security:
-        - PayloadSignature: []
       description: >
         This endpoint is used by the client to fetch the YAML for a single ApplicationDeployment after it has processed a new State Manifest and identified a small number of new or updated deployments. This allows for highly efficient, incremental updates without needing to download the full bundle.
         To make individual workload retrievals race-free and cache-friendly, this endpoint is content-addressable: the digest of the expected YAML is part of the URL. This guarantees immutability of the fetched resource and prevents a time-of-check / time-of-use race where a deployment changes between manifest retrieval and content fetch.
       parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Unique identifier of the Edge Compute Device
         - name: deploymentId
           in: path
           required: true
@@ -399,7 +282,7 @@ paths:
             Cache-Control:
               schema:
                 type: string
-              description: public, max-age=31536000, immutable
+              description: private, max-age=31536000, immutable
             Vary:
               schema:
                 type: string
@@ -409,8 +292,12 @@ paths:
               schema:
                 type: string
                 description: Raw YAML content of the ApplicationDeployment
-
-
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'	
         '404':
           description: Deployment not found for the given digest
           content:
@@ -418,17 +305,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         
-  /api/v1/clients/{clientId}/deployments/{deploymentId}/status:
+  /api/v1/deployments/{deploymentId}/status:
     post:
       summary: Report deployment status
-      security:
-        - PayloadSignature: []
       parameters:
-        - name: clientId
-          in: path
-          required: true
-          schema:
-            type: string
         - name: deploymentId
           in: path
           required: true
@@ -444,19 +324,13 @@ paths:
         '200':
           description: The deployment status was added, or updated, successfully.
         '400':
-          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included.
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetail'
-        '401':
-          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+          description: Malformed request body.
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '403':
-          description: Client certificate is not trusted or has been revoked.
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
           content:
             application/problem+json:
               schema:
@@ -470,14 +344,15 @@ paths:
 
 components:
   securitySchemes:
-    # TODO: fix this as we are following RFC 9421, instead of a custom signature header field
-    PayloadSignature:
-      type: apiKey
-      in: header
-      name: X-Payload-Signature
+    mTLS:
+      type: mutualTLS
       description: >
-        Base64-encoded payload signature using SHA-256 and device certificate.
-        Format: public_key;digital_signature
+        Mutual TLS, defaulting to TLS 1.3 (TLS 1.2 permitted only as a
+        non-default fallback). The WFM Client and the WFM each
+        present an X.509-SVID, validated against the Trust Domain's Trust
+        Bundle per the Margo Identity and Authorization Framework (MIAF)
+        and the WFM Identity Profile.
+
   schemas:
     ProblemDetail:
       type: object
@@ -502,7 +377,7 @@ components:
             Clients MUST use this field for programmatic error handling, NOT the status code or title.
             Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
             for display and handling.
-          example: https://docs.margo.org/specification/problems/invalid-digest-header
+          example: https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-request
         title:
           type: string
           description: Short human-readable summary of the problem type.
@@ -583,7 +458,7 @@ components:
         url:
           type: string
           description: >
-            Content-addressable retrieval endpoint of the form /api/v1/clients/{clientId}/bundles/{digest} where {digest} equals bundle.digest.
+            Content-addressable retrieval endpoint of the form /api/v1/bundles/{digest} where {digest} equals bundle.digest.
     DeploymentManifestRef:
       type: object
       description: >
@@ -608,7 +483,7 @@ components:
         url:
           type: string
           description: >
-            Content-addressable endpoint of the form /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}. The {digest} MUST equal deployments[].digest; the referenced resource is immutable
+            Content-addressable endpoint of the form /api/v1/deployments/{deploymentId}/{digest}. The {digest} MUST equal deployments[].digest; the referenced resource is immutable
     UnsignedAppStateManifest:
       type: object
       required:
@@ -784,6 +659,7 @@ components:
         type:
           type: string
           enum: [ethernet, wifi, cellular, bluetooth, usb, canbus, rs232]
+
     # app deployment struct added here for ease of programming, the code generators will generate the structs
     # for the actual app deployment yaml and parsing would be easy to do
     appDeploymentManifest:
@@ -927,6 +803,7 @@ components:
       required: [value, targets]
       properties:
         value:
+						
           description: Value of the parameter
           additionalProperties: true
           x-go-type: interface{}
