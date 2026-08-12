@@ -13,7 +13,7 @@ These values are used in the `type` field of RFC 9457 `application/problem+json`
 | [#invalid-request](#invalid-request) | 400 | Malformed request body. |
 | [#semantic-error](#semantic-error) | 422 | Request body includes a semantic error. |
 | [#not-authorized](#not-authorized) | 403 | The request is not authorized by the WFM's local policy. |
-| [#invalid-client](#invalid-client) | 404 | No gateway was found for the given child-device deviceId. |
+| [#gateway-not-found](#gateway-not-found) | 404 | No gateway was found for the given child-device deviceId. |
 | [#device-not-found](#device-not-found) | 404 | No device with the given deviceId was found for the client. |
 | [#invalid-bundle](#invalid-bundle) | 404 | Bundle not found for the given digest. |
 | [#deployment-not-found](#deployment-not-found) | 404 | Deployment not found for the given digest. |
@@ -143,9 +143,9 @@ This problem type identifies requests that are denied by the WFM's local authori
 
 ---
 
-## invalid-client
+## gateway-not-found
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-client`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/gateway-not-found`
 - **HTTP status:** 404 Not Found
 - **Summary:** No gateway was found for the given child-device deviceId.
 
@@ -153,8 +153,8 @@ This problem type indicates that the server cannot find a gateway for the child-
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-client",
-  "title": "Invalid Client",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/gateway-not-found",
+  "title": "Gateway not found",
   "status": 404,
   "detail": "No gateway was found for the given child-device deviceId.",
   "instance": "/api/v1/capabilities/gateway-1/child-device-2"

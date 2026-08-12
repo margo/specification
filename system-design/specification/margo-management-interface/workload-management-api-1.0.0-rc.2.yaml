@@ -385,7 +385,7 @@ components:
         title:
           type: string
           description: Short human-readable summary of the problem type.
-          example: Invalid Client
+          example: Gateway not found
         status:
           type: integer
           description: HTTP status code.
