@@ -362,6 +362,8 @@ components:
         See https://www.rfc-editor.org/rfc/rfc9457.
         Extension members (RFC 9457 §3.2) are permitted via additionalProperties.
         Vendors MAY add custom fields alongside standard margo fields.
+        Vendor-specific problem types MUST use their own URI namespace.
+        The https://docs.margo.org/specification/margo-management-interface/problem-types namespace is reserved for Margo.
       required:
         - type
         - title
@@ -374,6 +376,8 @@ components:
             URI reference identifying the problem type.
             Implementations MUST use the registered Margo type URI for any error
             condition defined in the Margo specification.
+            For error conditions not defined in this specification, implementations
+            MAY define their own type URIs under their own namespace.
             Clients MUST use this field for programmatic error handling, NOT the status code or title.
             Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
             for display and handling.
@@ -381,20 +385,20 @@ components:
         title:
           type: string
           description: Short human-readable summary of the problem type.
-          example: Invalid Certificate
+          example: Invalid Client
         status:
           type: integer
           description: HTTP status code.
-          example: 400
+          example: 404
         detail:
           type: string
           description: Human-readable explanation specific to this occurrence of the problem.
-          example: Certificate signature verification failed
+          example: No gateway was found for the given child-device deviceId.
         instance:
           type: string
           format: uri-reference
           description: URI reference identifying the specific occurrence of the problem.
-          example: /api/v1/onboarding
+          example: /api/v1/capabilities/gateway-1/child-device-2
         retryable:
           type: boolean
           description: >
@@ -433,6 +437,17 @@ components:
                 description: Human-readable validation error message.
                 example: must contain at least one valid role
       additionalProperties: true
+      # additionalProperties: true permits RFC 9457 §4 extension members.
+      # Margo extension fields: retryable, retryAfterSeconds, backoffStrategy, errors
+      #
+      # Vendor extension fields SHOULD follow RFC 9457 naming rules:
+      #   - Start with a letter (A-Z, a-z)
+      #   - Use only letters, digits, and underscores
+      #   - Be three characters or longer
+      #
+      # Vendor extension examples:
+      #   vendor_component: "sensor-subsystem"
+      #   vendor_error_code: "ERR_4291"
     ManifestVersion:
       type: number
       description: >

@@ -21,8 +21,60 @@ These values are used in the `type` field of RFC 9457 `application/problem+json`
 
 ## Use in responses
 
-A Margo API problem response SHOULD include a `type` value that matches one of the URIs in this catalogue whenever the condition is one of the standard Margo error categories. The canonical `type` value is the stable identifier; the HTTP status and `title` are descriptive metadata and are not a substitute for the URI.
+A Margo API problem response MUST include a `type` value that matches one of the URIs in this catalogue whenever the condition is one of the standard Margo error categories. The canonical `type` value is the stable identifier; the HTTP status and `title` are descriptive metadata and are not a substitute for the URI.
 
+---
+## Registry Governance
+
+### URI Stability and Versioning
+Type URIs are **permanent stable identifiers and are intentionally unversioned**. The URI identifies the error *concept*, not the API version.
+
+- `https://docs.margo.org/specification/margo-management-interface/problem-types/not-authorized` means "Not Authorized" in v1, v2, and all future versions — the concept does not change between API versions
+- If an error concept changes significantly, a **new URI is added** and the old one **deprecated** — both remain valid during the transition period
+- Existing URIs MUST NOT be repurposed or have their semantics changed
+- Clients MUST treat each `type` URI as an opaque stable string
+
+### Vendor Extensions
+RFC 9457 §3.2 explicitly supports vendor-specific problem type URIs — there is no central registry. Suppliers MAY define additional problem types using their own URI namespace:
+
+- Vendor URIs MUST use the supplier's own domain (e.g. `https://vendor.example.com/problems/sensor-fault`)
+- Vendor URIs MUST NOT use the `https://docs.margo.org/specification/margo-management-interface/problem-types/` namespace, which is reserved for this specification
+- Clients encountering an unknown `type` URI SHOULD fall back to using `title` and `detail` fields for display, and `status` for HTTP-level handling
+
+### Deprecations
+
+- Deprecated URIs are marked with `(deprecated)` in this registry
+- Deprecated URIs remain valid for a minimum of two major specification versions
+- A replacement URI MUST be listed alongside any deprecated URI
+
+> **Note on URI Dereferenceability:** RFC 9457 §3.1.1 requires `type` to be a URI but does not require it to be dereferenceable at runtime. Clients MUST NOT fetch these URIs at runtime; they are stable identifiers only.
+
+### `about:blank` Type URI
+
+When no Margo-specific problem type applies, implementations MUST use `about:blank` as the `type` value. In this case the `title` SHOULD be the standard HTTP status phrase for the status code, and `detail` SHOULD describe the specific occurrence.
+
+| `type` | HTTP Status | When to use |
+| --- | --- | --- |
+| `about:blank` | 404 | Not Found — resource does not exist and no specific Margo type applies |
+| `about:blank` | 409 | Conflict — request conflicts with current state |
+| `about:blank` | 429 | Too Many Requests — rate limit exceeded |
+| `about:blank` | 500 | Internal Server Error — unexpected server error |
+| `about:blank` | 501 | Not Implemented — feature not yet implemented |
+| `about:blank` | 503 | Service Unavailable — server temporarily unable to handle request |
+
+Example `about:blank` response for a rate limit:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Too Many Requests",
+  "status": 429,
+  "detail": "Rate limit exceeded. Retry after the indicated period.",
+  "instance": "/api/v1/deployments",
+  "retryable": true,
+  "backoffStrategy": "exponential"
+}
+```
 ---
 
 ## invalid-request

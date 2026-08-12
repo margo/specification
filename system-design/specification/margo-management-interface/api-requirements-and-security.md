@@ -36,6 +36,48 @@ Initial trust is accomplished via TLS version 1.3 or greater
 - It validates the server’s identity using the public root CA certificate.
 - Client authentication is achieved using application-layer HTTP Message Signatures (RFC 9421), as defined in the [Payload Security](#payload-security-method) section.
 
+#### Error Responses
+All API error responses conform to [RFC 9457 Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc9457). Error responses are returned with `Content-Type: application/problem+json` and include a stable `type` URI that clients MUST use for programmatic error handling.
+
+The standard error response structure is:
+```json
+{
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-request",
+  "title": "Invalid Request",
+  "status": 400,
+  "detail": "Malformed request body.",
+  "instance": "/api/v1/capabilities/device-1"
+}
+```
+
+| Field | Required | RFC 9457 Description |
+| --- | --- | --- |
+| `type` | No | Optional. If omitted, it defaults implicitly to about:blank. A URI reference identifying the problem type. Clients SHOULD use type as the primary identifier for programmatic error handling. |
+| `title` | No | Optional. A short, human-readable summary of the problem type. For about:blank, the title is the same as the recommended HTTP status phrase for the status code. |
+| `status` | No | Optional. It conveys the HTTP status code in the response body for convenience and consistency and SHOULD match the actual HTTP status code of the response. |
+| `detail` | No | Optional. Human-readable explanation specific to this occurrence. |
+| `instance` | No | Optional. URI reference identifying the specific occurrence of the problem. |
+| `retryable` | No | Extension field. Whether the client MAY retry the request. |
+| `backoffStrategy` | No | Extension field. Recommended retry strategy: `none`, `fixed`, or `exponential`. |
+| `errors` | No | Extension field. Field-level validation errors. Common industry practice for validation failures (often 400 or 422). |
+
+The full catalogue of registered Margo problem type URIs is defined in [Problem Types](../margo-management-interface/probelm-types.md).
+
+#### Retry Semantics
+Transient failures MUST communicate retry information as follows:
+
+| Response | `Retry-After` Header | `retryable` | `backoffStrategy` |
+| --- | --- | --- | --- |
+| `429 Too Many Requests` | REQUIRED | `true` | `exponential` |
+| `503 Service Unavailable` | REQUIRED | `true` | `exponential` |
+| `500 Internal Server Error` | RECOMMENDED | `true` | `exponential` |
+| All other errors | NOT applicable | `false` | `none` |
+
+Clients MUST:
+- Respect the `Retry-After` header value and MUST NOT retry before it elapses
+- Use the `retryable` field to determine if retry is appropriate
+- Apply `backoffStrategy` when retrying
+
 #### API Port Details
 
 This API is designed to minimize the ports required on the customer's infrastructure to enable cloud to edge communication. 
