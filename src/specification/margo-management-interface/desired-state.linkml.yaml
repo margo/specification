@@ -18,17 +18,6 @@ classes:
   DesiredState:
     description: A class representing the desired state of an entity.
     attributes:
-      apiVersion:
-        description: Identifier of the version of the API the object definition follows.
-        required: true
-        range: string
-        rank: 10
-      kind:
-        description: Must be `ApplicationDeployment`.
-        equals_string: "ApplicationDeployment"
-        required: true
-        range: string
-        rank: 20
       id:
         description: >-
           The unique identifier UUID of the deployment specification.

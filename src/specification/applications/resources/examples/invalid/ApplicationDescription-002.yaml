@@ -1,7 +1,6 @@
 # Demonstrates validation of id field
 # Invalid id format being defined in this test
-apiVersion: margo.org/v1-alpha1
-kind: ApplicationDescription
+apiVersion: v1
 id: an-incorrect-id-with-special-chars**&%
 metadata:
   name: Digitron orchestrator

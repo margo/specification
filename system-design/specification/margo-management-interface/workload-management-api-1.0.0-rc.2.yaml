@@ -38,15 +38,8 @@ paths:
           application/json:
             schema:
               type: object
-              required: [apiVersion, kind, certificate]
+              required: [certificate]
               properties:
-                apiVersion:
-                  type: string
-                  description: API version identifier
-                kind:
-                  type: string
-                  enum: [OnboardingRequest]
-                  description: Resource kind
                 certificate:
                   description: Base64-encoded client certificate
                   type: string
@@ -469,7 +462,7 @@ components:
             $ref: '#/components/schemas/DeploymentManifestRef'
     DeviceCapabilitiesManifest:
       type: object
-      required: [apiVersion, kind, properties]
+      required: [properties]
       patternProperties:
         '^x-[a-z][a-z0-9-]*-extensions$':
           type: object
@@ -478,11 +471,6 @@ components:
             where <unique-name> matches [a-z][a-z0-9-]*.
       additionalProperties: false
       properties:
-        apiVersion:
-          type: string
-        kind:
-          type: string
-          enum: [DeviceCapabilitiesManifest]
         properties:
           type: object
           required: [id, vendor, modelNumber, serialNumber]
@@ -572,13 +560,8 @@ components:
 
     DeploymentStatusManifest:
       type: object
-      required: [apiVersion, kind, deploymentId, status, components]
+      required: [deploymentId, status, components]
       properties:
-        apiVersion:
-          type: string
-        kind:
-          type: string
-          enum: [DeploymentStatusManifest]
         deploymentId:
           type: string
         deviceId:
@@ -629,16 +612,8 @@ components:
     appDeploymentManifest:
       type: object
       description: Application Deployment manifest
-      required: [apiVersion, kind, metadata, spec]
-      properties:
-        apiVersion:
-          type: string
-          default: margo.org
-          description: API version
-        kind:
-          type: string
-          default: ApplicationDeployment
-          description: Resource kind
+      required: [metadata, spec]
+      properties:     
         id:
           type: string
           description: Unique identifier for the application deployment

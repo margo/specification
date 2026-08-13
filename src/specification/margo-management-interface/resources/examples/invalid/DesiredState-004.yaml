@@ -1,7 +1,5 @@
 # Demonstrates validation of id field
 # Not a valid UUID.
-apiVersion: application.margo.org/v1alpha1
-kind: ApplicationDeployment
 # id is not a valid UUID
 id: this-is-definitively-not-a-uuid
 metadata:
