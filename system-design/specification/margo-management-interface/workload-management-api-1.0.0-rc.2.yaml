@@ -381,7 +381,7 @@ components:
             Clients MUST use this field for programmatic error handling, NOT the status code or title.
             Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
             for display and handling.
-          example: https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-request
+          example: https://docs.margo.org/specification/margo-management-interface/problem-types#invalid-request
         title:
           type: string
           description: Short human-readable summary of the problem type.

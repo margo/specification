@@ -29,7 +29,7 @@ A Margo API problem response MUST include a `type` value that matches one of the
 ### URI Stability and Versioning
 Type URIs are **permanent stable identifiers and are intentionally unversioned**. The URI identifies the error *concept*, not the API version.
 
-- `https://docs.margo.org/specification/margo-management-interface/problem-types/not-authorized` means "Not Authorized" in v1, v2, and all future versions — the concept does not change between API versions
+- `https://docs.margo.org/specification/margo-management-interface/problem-types#not-authorized` means "Not Authorized" in v1, v2, and all future versions — the concept does not change between API versions
 - If an error concept changes significantly, a **new URI is added** and the old one **deprecated** — both remain valid during the transition period
 - Existing URIs MUST NOT be repurposed or have their semantics changed
 - Clients MUST treat each `type` URI as an opaque stable string
@@ -79,7 +79,7 @@ Example `about:blank` response for a rate limit:
 
 ## invalid-request
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-request`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#invalid-request`
 - **HTTP status:** 400 Bad Request
 - **Summary:** Malformed request body.
 
@@ -87,7 +87,7 @@ This problem type indicates that the server rejected the request because the req
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-request",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#invalid-request",
   "title": "Invalid Request",
   "status": 400,
   "detail": "Malformed request body.",
@@ -99,7 +99,7 @@ This problem type indicates that the server rejected the request because the req
 
 ## semantic-error
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/semantic-error`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#semantic-error`
 - **HTTP status:** 422 Unprocessable Entity
 - **Summary:** Request body includes a semantic error.
 
@@ -107,7 +107,7 @@ This problem type is returned when the request body is syntactically valid but c
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/semantic-error",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#semantic-error",
   "title": "Semantic Error",
   "status": 422,
   "detail": "Request body includes a semantic error.",
@@ -125,7 +125,7 @@ This problem type is returned when the request body is syntactically valid but c
 
 ## not-authorized
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/not-authorized`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#not-authorized`
 - **HTTP status:** 403 Forbidden
 - **Summary:** The request is not authorized by the WFM's local policy.
 
@@ -133,7 +133,7 @@ This problem type identifies requests that are denied by the WFM's local authori
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/not-authorized",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#not-authorized",
   "title": "Not Authorized",
   "status": 403,
   "detail": "The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).",
@@ -145,7 +145,7 @@ This problem type identifies requests that are denied by the WFM's local authori
 
 ## gateway-not-found
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/gateway-not-found`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#gateway-not-found`
 - **HTTP status:** 404 Not Found
 - **Summary:** No gateway was found for the given child-device deviceId.
 
@@ -153,7 +153,7 @@ This problem type indicates that the server cannot find a gateway for the child-
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/gateway-not-found",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#gateway-not-found",
   "title": "Gateway not found",
   "status": 404,
   "detail": "No gateway was found for the given child-device deviceId.",
@@ -165,7 +165,7 @@ This problem type indicates that the server cannot find a gateway for the child-
 
 ## device-not-found
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/device-not-found`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#device-not-found`
 - **HTTP status:** 404 Not Found
 - **Summary:** No device with the given deviceId was found for the client.
 
@@ -173,7 +173,7 @@ This problem type is returned when a DELETE request references a device that doe
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/device-not-found",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#device-not-found",
   "title": "Device Not Found",
   "status": 404,
   "detail": "No device with the given deviceId was found for the client.",
@@ -185,7 +185,7 @@ This problem type is returned when a DELETE request references a device that doe
 
 ## invalid-bundle
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-bundle`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#invalid-bundle`
 - **HTTP status:** 404 Not Found
 - **Summary:** Bundle not found for the given digest.
 
@@ -193,7 +193,7 @@ This problem type is returned when the referenced bundle archive cannot be serve
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-bundle",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#invalid-bundle",
   "title": "Invalid Bundle",
   "status": 404,
   "detail": "Bundle not found for the given digest.",
@@ -205,7 +205,7 @@ This problem type is returned when the referenced bundle archive cannot be serve
 
 ## deployment-not-found
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/deployment-not-found`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#deployment-not-found`
 - **HTTP status:** 404 Not Found
 - **Summary:** Deployment not found for the given digest.
 
@@ -213,7 +213,7 @@ This problem type identifies requests for deployment content that cannot be retr
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/deployment-not-found",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#deployment-not-found",
   "title": "Deployment Not Found",
   "status": 404,
   "detail": "Deployment not found for the given digest.",
@@ -225,7 +225,7 @@ This problem type identifies requests for deployment content that cannot be retr
 
 ## server-cannot-generate-response
 
-- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types/server-cannot-generate-response`
+- **Type URI:** `https://docs.margo.org/specification/margo-management-interface/problem-types#server-cannot-generate-response`
 - **HTTP status:** 406 Not Acceptable
 - **Summary:** Not Acceptable - Server cannot generate a response matching the Accept header.
 
@@ -233,7 +233,7 @@ This problem type is used when the server cannot produce a response in the forma
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/server-cannot-generate-response",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#server-cannot-generate-response",
   "title": "Server Cannot Generate Response",
   "status": 406,
   "detail": "Not Acceptable - Server cannot generate a response matching the Accept header.",

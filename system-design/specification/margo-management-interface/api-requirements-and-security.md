@@ -42,7 +42,7 @@ All API error responses conform to [RFC 9457 Problem Details for HTTP APIs](http
 The standard error response structure is:
 ```json
 {
-  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types/invalid-request",
+  "type": "https://docs.margo.org/specification/margo-management-interface/problem-types#invalid-request",
   "title": "Invalid Request",
   "status": 400,
   "detail": "Malformed request body.",
@@ -61,7 +61,7 @@ The standard error response structure is:
 | `backoffStrategy` | No | Extension field. Recommended retry strategy: `none`, `fixed`, or `exponential`. |
 | `errors` | No | Extension field. Field-level validation errors. Common industry practice for validation failures (often 400 or 422). |
 
-The full catalogue of registered Margo problem type URIs is defined in [Problem Types](../margo-management-interface/probelm-types.md).
+The full catalogue of registered Margo problem type URIs are defined in [Problem Types](../margo-management-interface/problem-types.md).
 
 #### Retry Semantics
 Transient failures MUST communicate retry information as follows:
