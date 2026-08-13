@@ -122,6 +122,8 @@ The following rules MUST be applied when performing capacity requirements matchi
 * `storage` is the minimum storage required by the deployment profile.
 * A device MUST satisfy all specified `capacityRequirements` to remain eligible for further evaluation.
 
+The capacity requirements device constraint are intended to make it easier for application suppliers to indicate the most common workload constraints. Application suppliers MAY use either the `capacityRequirements` or a `propertySelector` eligibility rule to describe their capacity constraints. Application suppliers SHOULD avoid using both at the same time. If both are used, validation logic MUST treat them as independent rule definitions and not try to correlate what is defined in the `capacityRequirements` with what is defined in the `properSelector`.   
+
 {%- endif %}
 
 {%- if c.name.startswith("EligibilityRule") %}
