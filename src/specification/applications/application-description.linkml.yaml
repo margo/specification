@@ -25,12 +25,6 @@ classes:
         required: true
         range: string
         rank: 10
-      kind:
-        description: Specifies the object type; must be `ApplicationDescription`.
-        range: string
-        required: true
-        equals_string: "ApplicationDescription" 
-        rank: 20
       id:
         description: >-
           An identifier for the application. The id is used to help create unique identifiers where required, 

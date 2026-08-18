@@ -164,6 +164,56 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 | speaker | This type stands for a speaker peripheral. |
 
 
+## Version Progression
+
+The `apiVersion` follows a Kubernetes-style API group versioning convention.
+
+| Stage | ApplicationDescription |
+| --- | --- |
+| Current | `v1` |
+| Next breaking change | `v2` |
+
+> **Version Independence Clarification**
+>
+> These are three independent versioning axes — a change to one does NOT require a change to the others:
+>
+> | Versioning Axis | Example | Description |
+> | --- | --- | --- |
+> | Margo OpenAPI spec version | `1.0.0` | Spec metadata, follows semver |
+> | API route version | `/api/v1/` | Structure contract version via URL path segment |
+> | ApplicationDescription apiVersion | `v1` | Structure contract version via document field |
+
+The following rules apply to both the `apiVersion` in the `ApplicationDescription` and the `/api/v{n}/` in the API routes:
+- A new `apiVersion` value MUST be introduced for any significantly breaking change
+- Non-breaking additive changes (new optional fields) MAY be made within the same `apiVersion`
+- Clients MUST reject documents with an unrecognised `apiVersion`
+- Servers MUST NOT serve documents with a deprecated `apiVersion` after its removal date
+- Both old and new `apiVersion` values SHOULD be supported simultaneously during a transition period of at least one major specification release
+
+### Breaking Changes
+- Renaming an endpoint, property/field, enumeration value, or parameter
+- Removing an endpoint, property/field, enumeration value, or parameter
+- Changing data types or expected format
+- Making optional things required
+- Changing the semantics or behavior of an endpoint
+- Changing HTTP method or response codes
+- Making any validations stricter
+- Changing authentication/authorization rules
+
+### Non-Breaking Changes
+- Adding new endpoints, properties/fields, or parameters
+- Adding optional parameters
+- Adding headers
+- Adding metadata
+- Fixing incorrect behaviors (bugs)
+
+### Gray Areas
+The following can be breaking if not handled carefully:
+- Adding enumeration values
+- Changing defaults
+- Reordering fields
+- Changing error responses
+
 
 ## Application Description Examples
 
