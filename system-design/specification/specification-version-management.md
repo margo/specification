@@ -148,6 +148,59 @@ Examples:
 
 If the CTT uncovers a breaking issue in the specification, the release classification will be revised before the next preview or release is published.
 
+## Application Description Version Progression
+
+The application description `apiVersion` follows a Kubernetes-style API group versioning convention.
+
+| Stage | ApplicationDescription |
+| --- | --- |
+| Current | `v1` |
+| Next breaking change | `v2` |
+
+There are multiple versioning axes in the Margo specification. The contract versions are independent and may not reflect the specification's major version:
+| Versioning Axis | Example | Description |
+| --- | --- | --- |
+| Margo OpenAPI spec version | `1.1.0` | Spec metadata, follows semver |
+| API route version | `/api/v1/` | Structure contract version via URL path segment |
+| ApplicationDescription apiVersion | `v1` | Structure contract version via document field |
+
+
+### Breaking Changes
+
+The following types of changes would result in a new API contract version in the specification:
+
+- Renaming an endpoint, property/field, enumeration value, or parameter
+- Removing an endpoint, property/field, enumeration value, or parameter
+- Changing data types or expected format
+- Making optional things required
+- Changing the semantics or behavior of an endpoint
+- Changing HTTP method or response codes
+- Making any validations stricter
+- Changing authentication/authorization rules
+
+### Non-Breaking Changes
+
+The following types of changes would not result in a new API contract version in the specification:
+
+- Adding new endpoints, properties/fields, or parameters
+- Adding optional parameters
+- Adding headers
+- Adding metadata
+- Fixing incorrect behaviors (bugs)
+
+### Potential Breaking Change
+
+The following types of changes would not result in a new API contract version in the specification, but may result in unexpected behavior if implementations do not handle them properly:
+
+- Adding enumeration values
+- Changing defaults
+- Reordering fields
+- Changing error responses
+
+
+
+
+
 ## Release Cohesion Rule
 
 At an official release, all four Margo deliverables publish with the same version number. After that, any deliverable may bump its patch version on its own for small fixes, such as software bug fixes or documentation edits like typos, clarifications, and examples. The major and minor versions stay in lockstep.
