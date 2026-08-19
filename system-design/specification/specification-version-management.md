@@ -148,26 +148,31 @@ Examples:
 
 If the CTT uncovers a breaking issue in the specification, the release classification will be revised before the next preview or release is published.
 
-## Application Description Version Progression
+## API Contract Versioning
 
-The application description `apiVersion` follows a Kubernetes-style API group versioning convention.
+There are multiple versioning axes in the Margo specification:
 
-| Stage | ApplicationDescription |
-| --- | --- |
-| Current | `v1` |
-| Next breaking change | `v2` |
-
-There are multiple versioning axes in the Margo specification. The contract versions are independent and may not reflect the specification's major version:
 | Versioning Axis | Example | Description |
 | --- | --- | --- |
 | Margo OpenAPI spec version | `1.1.0` | Spec metadata, follows semver |
 | API route version | `/api/v1/` | Structure contract version via URL path segment |
 | ApplicationDescription apiVersion | `v1` | Structure contract version via document field |
 
+The contract versions for the application description and APIs are independent and may not reflect the same major version as the specification.
 
-### Breaking Changes
+Contract versions are only updated when new changes are introduced constituting a breaking change to that specific contract.
 
-The following types of changes would result in a new API contract version in the specification:
+### Rules:
+
+- A new contract API version value MUST be introduced for any significantly breaking change
+- Non-breaking additive changes (new optional fields) MAY be made within the same contract API version
+- Clients MUST reject documents with an unrecognised apiVersion
+- Servers MUST NOT serve documents with a deprecated contract API version after its removal date
+- Both old and new contract API version values SHOULD be supported simultaneously during a transition period of at least one major specification release
+
+#### Breaking Changes
+
+The following are example changes resulting in a new API contract version in the specification:
 
 - Renaming an endpoint, property/field, enumeration value, or parameter
 - Removing an endpoint, property/field, enumeration value, or parameter
@@ -178,9 +183,9 @@ The following types of changes would result in a new API contract version in the
 - Making any validations stricter
 - Changing authentication/authorization rules
 
-### Non-Breaking Changes
+#### Non-Breaking Changes
 
-The following types of changes would not result in a new API contract version in the specification:
+The following are example changes not resulting in a new API contract version in the specification:
 
 - Adding new endpoints, properties/fields, or parameters
 - Adding optional parameters
@@ -188,18 +193,14 @@ The following types of changes would not result in a new API contract version in
 - Adding metadata
 - Fixing incorrect behaviors (bugs)
 
-### Potential Breaking Change
+#### Potential Breaking Change
 
-The following types of changes would not result in a new API contract version in the specification, but may result in unexpected behavior if implementations do not handle them properly:
+The following are example changes not resulting in a new API contract version in the specification, but may result in unexpected behavior if implementations do not handle them properly:
 
 - Adding enumeration values
 - Changing defaults
 - Reordering fields
 - Changing error responses
-
-
-
-
 
 ## Release Cohesion Rule
 
