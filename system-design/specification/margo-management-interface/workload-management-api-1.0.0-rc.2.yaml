@@ -662,10 +662,10 @@ components:
         labels:
           type: object
           additionalProperties: { type: string }
-          description: Labels for the resource
-    helmApplicationDeploymentProfileComponent:
+          description: Labels for the resource   
+    applicationDeploymentProfileComponent:
       type: object
-      description: Helm Application Deployment Profile Component
+      description: Application Deployment Profile Component (helm or compose)
       required: [name, properties]
       patternProperties:
         '^x-[a-z][a-z0-9-]*-extensions$':
@@ -680,51 +680,23 @@ components:
           description: Name of the component
         properties:
           type: object
-          required: [repository]
+          required: [repository, revision]
           properties:
             repository:
               type: string
-              description: Repository of the component
+              description: OCI repository URL of the component (Helm chart or Compose package archive)
             revision:
               type: string
-              description: Revision of the component
+              description: Version of the component
             timeout:
               type: string
-              description: Timeout for the component
+              description: Timeout for the component installation
             wait:
               type: boolean
-              description: Wait for the component to be ready
-    composeApplicationDeploymentProfileComponent:
-      type: object
-      description: Compose Application Deployment Profile Component
-      required: [name, properties]
-      patternProperties:
-        '^x-[a-z][a-z0-9-]*-extensions$':
-          type: object
-          description: >-
-            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
-            where <unique-name> matches [a-z][a-z0-9-]*.
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-          description: Name of the component
-        properties:
-          type: object
-          required: [packageLocation]
-          properties:
-            packageLocation:
-              type: string
-              description: The URL indicating the Compose package's location. It should be a direct path to the compose.yaml or compose.yaml file archived in tar.gz
-            keyLocation:
-              type: string
-              description: Key location of the component
-            timeout:
-              type: string
-              description: Timeout for the component
-            wait:
-              type: boolean
-              description: Wait for the component to be ready
+              description: Wait for the component to be ready before proceeding
+
+    
+    
     appDeploymentProfile:
       type: object
       description: Application Deployment Profile
@@ -744,10 +716,9 @@ components:
         components:
           type: array
           items:
-            oneOf:
-              - $ref: '#/components/schemas/helmApplicationDeploymentProfileComponent'
-              - $ref: '#/components/schemas/composeApplicationDeploymentProfileComponent'
+            $ref: '#/components/schemas/applicationDeploymentProfileComponent'  
           description: Components of the deployment profile
+
     appParameterTarget:
       type: object
       description: Application Parameter Target
