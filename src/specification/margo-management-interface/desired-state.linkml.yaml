@@ -147,24 +147,13 @@ classes:
         description: The name of the component.
         required: true
         rank: 10
-      revision:
-        description: >-
-          OCI tag identifying the component version within the repository
-          (e.g., "1.0.0", "2.3.1", "1.0.0-rc1", "1.0.0_build.123").
-          MUST be a valid SemVer 2.0 string without a leading `v`.
-          SemVer build metadata separator `+` MUST be stored as `_`
-          because `+` is not a valid OCI tag character.
-        range: string
-        required: false
-        rank: 15
-        pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
       properties:
-        description: Properties associated with the component.
-        range: Property
+        description: >-
+          Component deployment properties providing OCI coordinates and behavior settings.
+          See the ComponentProperties section below.
+        range: ComponentProperties
         required: true
-        multivalued: true
         inlined: true
-        inlined_as_list: false
         rank: 20
     slots:
       - x-placeholder-extensions
@@ -176,54 +165,50 @@ classes:
   ComposeComponent:
     is_a: Component
     rank: 50
-    description: >-
-      A component in a Compose deployment profile, packaged as a
-      Compose Archive stored in an OCI-compliant Component Registry.
-    attributes:
-      properties:
-        description: Compose-specific deployment properties providing OCI coordinates and behavior settings.
-        range: ComposeComponentProperties
-        required: true
-        inlined: true
-        rank: 20
 
-  Property:
-    rank: 80
-    attributes:
-      name:
-        identifier: true
-        range: string
-        rank: 10
-      value:
-        range: string
-        rank: 20
-        required: true
-
-  ComposeComponentProperties:
+  ComponentProperties:
     rank: 82
     description: >-
-      Compose-specific component properties providing OCI coordinates
+      Typed component properties providing OCI coordinates
       and optional deployment behavior settings.
+      Used by both Helm and Compose deployment types.
     attributes:
       repository:
-        description: OCI repository URI for the Compose Archive.
+        description: >-
+          OCI repository URI for the component package
+          (e.g., oci://registry.example.com/org/component-name).
+          MUST be a valid OCI reference using the oci:// scheme.
         range: string
         required: true
         pattern: "^oci://.+"
         rank: 10
       revision:
-        description: OCI tag identifying the Compose Archive version (SemVer).
+        description: >-
+          OCI tag identifying the component version within the repository
+          (e.g., "1.0.0", "2.3.1", "1.0.0-rc1", "1.0.0_build.123").
+          MUST be a valid SemVer 2.0 string without a leading `v`.
+          SemVer build metadata separator `+` MUST be stored as `_`
+          because `+` is not a valid OCI tag character.
+          Implementations comparing this value against a SemVer string
+          MUST convert `_` back to `+` before comparison.
         range: string
         required: true
         pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
         rank: 20
       wait:
-        description: Whether to wait for all containers to reach running state before reporting success.
+        description: >-
+          Whether to wait for component installation to complete before proceeding.
+          For Helm: waits until the release is deployed.
+          For Compose: waits until all containers reach running state.
+          Default is true. Only applies when multiple components are provided.
         range: boolean
         required: false
         rank: 30
       timeout:
-        description: Maximum time to wait for containers to reach running state (e.g. '5m0s').
+        description: >-
+          Maximum time to wait for component installation to complete.
+          Format is "##m##s" (e.g., "5m0s", "8m30s").
+          If installation does not complete before timeout, deployment fails.
         range: string
         required: false
         pattern: "^\\d+m\\d+s$"
