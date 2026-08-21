@@ -98,27 +98,14 @@ Your Helm based application MUST NOT rely on the following Helm functions:
 {%- if c.name.startswith("ComponentProperties") %}
 
 ### ComponentProperties Attributes
-The expected properties for the suppported deployment types are indicated below.
-
-- Properties for `helm` components
+The expected properties for all OCI-based deployment types (Helm and Compose) are indicated below.
 
 | Attribute      | Type  | Required?     | Description    |
 | --- | --- | --- | --- |
-| repository     | string |  Y  | The URL indicating the helm chart's location.|
-| revision      | string |  Y  | The helm chart's full version.|
-| wait | bool  | N  | If `True`, indicates the device MUST wait until the helm chart has finished installing before installing the next helm chart. The default is `True`. The Workload Fleet Management Client MUST support `True` and MAY support `False`. Only applies if multiple `helm` components are provided.|
-| timeout | string      | N   | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait. |  
-
-- Properties for `compose` components
-
-> **Investigation Needed**: We need to have more discussion about how Compose should be handled and what is required here.
-
-| Attribute      | Type  | Required?     | Description    |
-| --- | --- | --- | --- |
-| packageLocation  | string |  Y  | The URL indicating the Compose package's location. It should be a direct path to the compose.yaml or compose file archived in tar.gz |
-| keyLocation    | string | N  | The public key used to validated the digitally signed package. It is highly recommend to digitally sign the package. When signing the package PGP MUST be used.|
-| wait | bool  | N  | If `True`, indicates the device MUST wait until the Compose file has finished starting up before starting the next Compose file. The default is `True`. The Workload Fleet Management Client MUST support `True` and MAY support `False`. Only applies if multiple `compose` components are provided.|
-| timeout | string      | N   | The time to wait for the component's installation to complete. If the installation does not completed before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait.|
+| repository     | string |  Y  | OCI repository URI for the component package (e.g., `oci://registry.example.com/org/component-name`). MUST be a valid OCI reference using the `oci://` scheme. See [Compose Component Registry](./application-registry.md#compose-component-registry) for details.|
+| revision      | string |  Y  | OCI tag identifying the component version. MUST be a valid SemVer 2.0 string without a leading `v`. Build metadata separator `+` MUST be stored as `_` because `+` is not a valid OCI tag character.|
+| wait | bool  | N  | If `True`, indicates the device MUST wait until the component installation completes before installing the next component. For Helm: waits until the release is deployed. For Compose: waits until all containers reach running state. The default is `True`. The Workload Fleet Management Client MUST support `True` and MAY support `False`. Only applies if multiple components are provided.|
+| timeout | string      | N   | The time to wait for the component's installation to complete. If the installation does not complete before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait. |
 
 ## Defining configurable application parameters
 

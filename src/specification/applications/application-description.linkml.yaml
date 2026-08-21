@@ -390,33 +390,50 @@ classes:
     #rank: 76
   
   ComponentProperties:
-    description: Properties dictionary for component deployment details.
+    description: >-
+      Typed component properties providing OCI coordinates
+      and optional deployment behavior settings.
+      Used by both Helm and Compose deployment types.
     rank: 80
     attributes:
       repository:
-        description: Repository location for the component.
+        description: >-
+          OCI repository URI for the component package
+          (e.g., oci://registry.example.com/org/component-name).
+          MUST be a valid OCI reference using the oci:// scheme.
         rank: 10
         range: string
+        required: true
+        pattern: "^oci://.+"
       revision:
-        description: Revision version for the component.
+        description: >-
+          OCI tag identifying the component version within the repository
+          (e.g., "1.0.0", "2.3.1", "1.0.0-rc1", "1.0.0_build.123").
+          MUST be a valid SemVer 2.0 string without a leading `v`.
+          SemVer build metadata separator `+` MUST be stored as `_`
+          because `+` is not a valid OCI tag character.
+          Implementations comparing this value against a SemVer string
+          MUST convert `_` back to `+` before comparison.
         rank: 20
         range: string
+        required: true
+        pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
       wait:
-        description: If True, indicates the device waits for the component installation to complete.
+        description: >-
+          Whether to wait for component installation to complete before proceeding.
+          For Helm: waits until the release is deployed.
+          For Compose: waits until all containers reach running state.
+          Default is true. Only applies when multiple components are provided.
         rank: 30
         range: boolean
       timeout:
-        description: Time to wait for component installation to complete, formatted as "##m##s".
+        description: >-
+          Maximum time to wait for component installation to complete.
+          Format is "##m##s" (e.g., "5m0s", "8m30s").
+          If installation does not complete before timeout, deployment fails.
         rank: 40
         range: string
-      packageLocation:
-        description: The URL indicating the Compose package's location. It should be a direct path to the compose.yaml or compose.yaml file archived in tar.gz
-        rank: 50
-        range: string
-      keyLocation:
-        description: URL for the public key used to validate a digitally signed package.
-        rank: 60
-        range: string
+        pattern: "^\\d+m\\d+s$"
 
   Parameter:
     description: >-
