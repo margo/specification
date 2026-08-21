@@ -249,7 +249,7 @@ Also for this purpose available tools and libraries can be used for an implement
 
 ## Compose Component Registry
 
-Compose components MUST be stored in an OCI-compliant Component Registry and referenced via `repository` (an `oci://` URI) and `revision` (an OCI tag matching SemVer 2.0) in the ApplicationDescription and Desired State manifests.
+Compose components MUST be stored in an OCI-compliant Component Registry and referenced via `repository` (an `oci://` URI) and `revision` (an OCI tag matching SemVer 2.0) in the ApplicationDescription and ApplicationDeployment manifests.
 
 The OCI image manifest for a Compose component MUST use `artifactType` = `application/vnd.org.margo.component.compose+json`. The single layer blob MUST use `mediaType` = `application/vnd.org.margo.component.compose.tar+gzip`.
 
@@ -307,7 +307,7 @@ When stored in an OCI-compliant Component Registry, the Compose Archive tarball 
 
 ### Publishing Workflow
 
-To publish a Compose Archive to an OCI-compliant Component Registry, use `oras push` ([ORAS — OCI Registry as Storage](https://oras.land/)). This is the RECOMMENDED publishing tool for Margo Compose Archives.
+To publish a Compose Archive to an OCI-compliant Component Registry, implementations MAY use any OCI-compliant push tool. The example below uses `oras push` ([ORAS — OCI Registry as Storage](https://oras.land/)), which is a RECOMMENDED tool for Margo Compose Archives.
 
 > **Warning**: `docker compose publish` (Docker Compose 2.34.0+) MUST NOT be used to publish Margo Compose components. It produces a structurally incompatible OCI artifact: `artifactType: application/vnd.docker.compose.project`, multiple layers (one per file), and SHA256-hashed file paths. This format cannot be consumed by a Margo-compliant WFM or device implementation.
 
@@ -335,7 +335,7 @@ components:
       revision: "1.0.0"
 ```
 
-### WFM Reconciliation and `wait` Semantics for Compose
+### Reconciliation and `wait` Semantics for Compose
 
 If `wait` is set to `true` for a Compose component, the device MUST wait until all containers in the Compose project reach **running** state before reporting the deployment as successful. This is equivalent to `docker compose up` or `podman-compose up` completing synchronously without `--detach`.
 

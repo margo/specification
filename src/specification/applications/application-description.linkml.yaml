@@ -390,16 +390,21 @@ classes:
     #rank: 76
   
   ComponentProperties:
-    description: Properties dictionary for component deployment details.
+    description: >-
+      Typed component properties providing OCI coordinates
+      and optional deployment behavior settings.
+      Used by both Helm and Compose deployment types.
     rank: 80
     attributes:
       repository:
         description: >-
-          OCI repository URI for the component (e.g., oci://registry.example.com/org/component-name).
-          MUST be used for Helm, Compose, and Quadlet components.
+          OCI repository URI for the component package
+          (e.g., oci://registry.example.com/org/component-name).
+          MUST be a valid OCI reference using the oci:// scheme.
         rank: 10
         range: string
         required: true
+        pattern: "^oci://.+"
       revision:
         description: >-
           OCI tag identifying the component version within the repository
@@ -409,18 +414,26 @@ classes:
           because `+` is not a valid OCI tag character.
           Implementations comparing this value against a SemVer string
           MUST convert `_` back to `+` before comparison.
+        rank: 20
         range: string
         required: true
-        rank: 20
         pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
       wait:
-        description: If True, indicates the device waits for the component installation to complete.
+        description: >-
+          Whether to wait for component installation to complete before proceeding.
+          For Helm: waits until the release is deployed.
+          For Compose: waits until all containers reach running state.
+          Default is true. Only applies when multiple components are provided.
         rank: 30
         range: boolean
       timeout:
-        description: Time to wait for component installation to complete, formatted as "##m##s".
+        description: >-
+          Maximum time to wait for component installation to complete.
+          Format is "##m##s" (e.g., "5m0s", "8m30s").
+          If installation does not complete before timeout, deployment fails.
         rank: 40
         range: string
+        pattern: "^\\d+m\\d+s$"
 
   Parameter:
     description: >-
