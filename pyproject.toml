@@ -15,7 +15,8 @@ dependencies = [
   'mkdocs>=1.6.1',
   'mkdocs-markdownextradata-plugin>=0.2.6',
   'mkdocs-material>=9.5.44',
-  'linkml>=1.8.5',
+  'linkml @ git+https://github.com/linkml/linkml.git#subdirectory=packages/linkml',
+  'linkml-runtime @ git+https://github.com/linkml/linkml.git#subdirectory=packages/linkml_runtime'
 ]
 
 [tool.poetry]
