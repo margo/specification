@@ -19,7 +19,7 @@ Below is a breakdown of the three major categories these requirements fall under
 The REST API is defined via the Open API Specification. 
 
 - Follow the link below to see the specification:
-    - [OpenAPI Specification](https://github.com/margo/specification/blob/pre-draft/system-design/specification/margo-management-interface/workload-management-api-1.0.0.yaml)
+    - [OpenAPI Specification](https://github.com/margo/specification/blob/pre-draft/system-design/specification/margo-management-interface/workload-management-api-1.0.0-rc.2.yaml)
     - [Swagger UI](../margo-management-interface/management-interface-swagger.md)
 #### General Rest API information
 Server-side TLS REST API MUST be utilized operating over HTTP1.1.

@@ -1,19 +1,27 @@
 # Device Requirements
 
-All current device roles MUST meet the following requirements to be considered Margo compliant. These requirements ensure devices can effectively host and manage Margo compliant workloads. A device MUST support onboarding and management from only a single workload fleet manager.
+A device MUST meet a baseline set of requirements to be considered Margo-conformant. These requirements ensure devices can effectively manage Margo-conformant workload and/or host those workloads. A device MUST support onboarding and management from only a single workload fleet manager. A device reports what it can provide to the ecosystem through its [device capabilities](../margo-management-interface/device-capabilities.md).
 
-All devices MUST provide the following components:
-    
+All Margo-conformant devices MUST provide the following components:
+
 - A workload fleet management client
-- An OCI container runtime
+
+> Note: This is not required for a device behind a see-thru gateway.
+
+All workload hosting devices MUST provide the following capabilities:
+    
+- At least one supported deployment type
+- At least one supported workload runtime
 - An OTEL collector
 
-## Standalone Cluster Role Requirements
+> Note: See [device capabilities](../margo-management-interface/device-capabilities.md) for the supported deployment types and runtimes. 
 
-Devices filling the standalone cluster role MUST provide the following additional components:
+## Helm-enabled Device Requirements
 
-- Kubernetes orchestration platform
+Devices supporting the Helm deployment type, MUST provide the following additional components:
+
 - Capabilities for deploying Helm charts
+- Kubernetes orchestration platform
 
 ### Helm deployment approaches
 
@@ -28,12 +36,12 @@ Margo does not dictate how devices deploy workloads packaged as Helm charts. A d
 If a device vendor chooses a deployment approach that does not interact with the Kubernetes API, the list of Kuberentes APIs available in the cluster MUST be provided out-of-band. This is supported by a variety of tooling such as the Helm GO SDK, `helm template` command, Kustomization, and ArgoCD.
 
 
-## Standalone Device Role Details
+## Compose-enabled Device Requirements
 
-Devices filling the standalone device role MUST provide the following additional components:
+Devices supporting the Compose deployment type, MUST provide the following additional components:
 
-- Compose compliant software as the orchestration platform
 - Capabilities for deploying Compose applications
+- An OCI container runtime, for example Docker or Podman
 
 
 ## Future Requirements

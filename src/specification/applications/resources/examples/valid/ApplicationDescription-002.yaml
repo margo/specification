@@ -56,8 +56,8 @@ deploymentProfiles:
     components:
       - name: digitron-orchestrator-docker
         properties:
-          packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
-          keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
+          repository: oci://northstarida.azurecr.io/compose/digitron-orchestrator
+          revision: 1.0.9
 parameters:
   idpName:
     value: "test"
