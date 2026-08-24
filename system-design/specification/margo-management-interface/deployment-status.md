@@ -23,7 +23,8 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 
 | Code | Description |
 |------|-------------|
-| 200 OK  | The deployment status was added, or updated, successfully. |
+| 200 OK  | The deployment status was updated successfully. |
+| 201 Created | The deployment status was created successfully. |
 | 400 Bad Request | Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included. |
 | 401 Unauthorized | Signature verification failed. Ensure you are signing with the correct X.509 private key.  |
 | 403 Forbidden | Client certificate is not trusted or has been revoked. |

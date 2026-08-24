@@ -11,7 +11,6 @@ To ensure the WFM is kept up to date, the device's client MUST send updated capa
 ## Route and HTTP Methods
 
 ```https
-POST /api/v1/clients/{clientId}/capabilities/{deviceId}
 PUT /api/v1/clients/{clientId}/capabilities/{deviceId}
 DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 ```
@@ -27,12 +26,13 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 
 | Code | Description |
 |------|-------------|
-| 201 OK | The device capabilities document was added, or updated, successfully |
+| 200 OK | The device capabilities document was updated successfully. |
+| 201 Created | The device capabilities document was created successfully. |
 | 204 No Content | The device capabilities document was deleted successfully. |
 | 400 Bad Request | Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included. |
 | 401 Unauthorized | Signature verification failed. Ensure you are signing with the correct X.509 private key.  |
 | 403 Forbidden | Client certificate is not trusted or has been revoked. |
-| 404 Not Found | POST, PUT:  No client with the given `clientID` was found, or no gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No client with the given `clientID` was found or no device with the given `deviceId` was found for the client. |
+| 404 Not Found | PUT:  No client with the given `clientID` was found, or no gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No client with the given `clientID` was found or no device with the given `deviceId` was found for the client. |
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
 ## Request Body Attributes
@@ -223,7 +223,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway, without hosting capabilities, reporting its capabilities to the WFM:
 
     ```
-    POST /api/v1/clients/{clientId}/capabilities/gateway1
+    PUT /api/v1/clients/{clientId}/capabilities/gateway1
     ```
     ```json
     {
@@ -241,7 +241,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway, with hosting capabilities, reporting its capabilities to the WFM:
 
     ```
-    POST /api/v1/clients/{clientId}/capabilities/gateway1
+    PUT /api/v1/clients/{clientId}/capabilities/gateway1
     ```
     ```json
     {
@@ -280,7 +280,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway reporting the capabilities of a child device to the WFM:
 
     ```
-    POST /api/v1/clients/{clientId}/capabilities/gateway1/deviceA
+    PUT /api/v1/clients/{clientId}/capabilities/gateway1/deviceA
     ```
     ```json
     {
@@ -324,7 +324,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway reporting the capabilities of a child device with deeper hierarchy to the WFM:
 
     ```
-    POST /api/v1/clients/{clientId}/capabilities/gateway1/path1/deviceA
+    PUT /api/v1/clients/{clientId}/capabilities/gateway1/path1/deviceA
     ```
     ```json
     {
