@@ -4,13 +4,7 @@ The WFM Identity Profile is the first identity profile under the [Margo Identity
 
 A WFM holds an identity within the Trust Domain that anchors its namespace. A WFM Client holds an identity within that same Trust Domain, named under the WFM that issues it. Authentication is mutual: a WFM Client presents its X.509-SVID and validates the WFM's SVID, and the caller identity at the WFM API is the authenticated WFM Client SPIFFE ID carried over mTLS.
 
-All MIAF terminology is reused by reference unless specialized here.
-
-## Identity Terminology
-
-**WFM Identity (`wfm-id`)** is the identity of a WFM within its Trust Domain, expressed as a SPIFFE URI of the form `spiffe://<trust-domain>/margo/wfm/<wfm-id>` and represented by an X.509-SVID. It anchors the namespace under which WFM Client identities are issued.
-
-**WFM Client Identity (`wfm-client-id`)** is the stable, verifiable identity of a WFM Client relationship within a Trust Domain, expressed as a SPIFFE URI of the form `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>` and represented by an X.509-SVID.
+All MIAF terminology is reused by reference from the [MIAF terminology](./identity-framework.md#terminology) unless specialized here. The two identities this profile introduces, the **WFM Identity** and the **WFM Client Identity**, are defined in the [Identity Model](#identity-model) below.
 
 ## Identity Model
 
@@ -83,21 +77,15 @@ A WFM Client holding a long-lived connection SHOULD limit the connection's lifet
 
 ## Provisioning
 
-WFM and WFM Client SVIDs are both provisioned by the operator. The MIAF [operator provisioning playbook](./identity-lifecycle.md#operator-provisioning-playbook) applies; the SPIFFE path and acceptance policy for each principal type are below.
+WFM and WFM Client SVIDs are both provisioned by the operator following the MIAF [operator provisioning playbook](./identity-lifecycle.md#operator-provisioning-playbook). This profile adds only what is specific to its two principal types: the SPIFFE path each SVID carries and the steps that establish the client relationship.
 
-**For each WFM, the operator:**
+**For each WFM**, the operator chooses a `wfm-id` for the WFM namespace and follows the playbook with the URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>`.
 
-1. chooses a `wfm-id` for the WFM namespace;
-2. mints an X.509-SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>`, conforming to the MIAF [X.509-SVID profile](./svids.md#x509-svid-profile) and [cryptographic requirements](./svids.md#cryptographic-requirements); and
-3. installs the SVID (and private key material, if generated centrally) on the WFM.
+**For each WFM Client**, the operator:
 
-**For each WFM Client, the operator:**
-
-1. chooses a `wfm-id` for the target WFM (matching the WFM's `wfm-id`) and a `wfm-client-id` for this client relationship;
-2. mints an X.509-SVID with URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>`, conforming to the MIAF [X.509-SVID profile](./svids.md#x509-svid-profile) and [cryptographic requirements](./svids.md#cryptographic-requirements);
-3. installs the SVID (and private key material, if generated centrally) on the principal;
-4. configures the client with the WFM's endpoint URL. The URL is routing information only: the client authenticates the WFM by its SVID, matching it against the `<trust-domain>` and `<wfm-id>` carried in the client's own SVID per [Recognition by the WFM Client](#recognition-by-the-wfm-client), not by the URL; and
-5. adds the new `wfm-client-id` (or full SPIFFE ID) to the target WFM's accepted-client policy, so that the WFM will authorize requests from this client per [Authorization](#authorization).
+1. chooses a `wfm-id` for the target WFM (matching the WFM's `wfm-id`) and a `wfm-client-id` for this client relationship, and follows the playbook with the URI SAN `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/<wfm-client-id>`;
+2. configures the client with the WFM's endpoint URL. The URL is routing information only: the client authenticates the WFM by its SVID, matching it against the `<trust-domain>` and `<wfm-id>` carried in the client's own SVID per [Recognition by the WFM Client](#recognition-by-the-wfm-client), not by the URL; and
+3. adds the new `wfm-client-id` (or full SPIFFE ID) to the target WFM's accepted-client policy, so that the WFM will authorize requests from this client per [Authorization](#authorization).
 
 ## Lifecycle
 

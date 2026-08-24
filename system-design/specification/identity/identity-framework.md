@@ -16,7 +16,7 @@ Authentication is mTLS with an X.509-SVID. Authorization is performed locally by
 
 ## Terminology
 
-The following terms form the common vocabulary for Margo's non-human identity and authorization model. Some are adopted directly from SPIFFE; others are Margo-specific.
+The following terms form the common vocabulary for Margo's non-human identity and authorization model. Some are adopted directly from SPIFFE; others are Margo-specific. This section is the authoritative definition of these terms: other Margo documents link here instead of restating them.
 
 These identities belong to *non-human* **Margo components**: the logical units of the Margo system such as the Device Fleet Manager (DFM), Workload Fleet Manager (WFM), their clients, and infrastructure services such as registries or observability collectors. Which of their interfaces MIAF governs is defined in [Scope and Applicability](#scope-and-applicability).
 
@@ -45,40 +45,6 @@ Once a component holds an SVID:
 3. **Authorize the call.** The peer applies its local policy to the now-verified SPIFFE ID.
 
 A component obtains its SVID through the [operator provisioning playbook](./identity-lifecycle.md#operator-provisioning-playbook).
-
-> **Conceptual trust and identity architecture (informative)**
->
-> The diagram below shows MIAF in its most general form: a Margo component holds an X.509-SVID within a governed Trust Domain, then authenticates to peers over mTLS. The Trust Domain publishes the Trust Bundle that participants use to validate identities.
->
-> ```mermaid
-> flowchart LR
->  Client["`**Margo Client Component**
->  (e.g., WFM Client, DFM Client, OTel Collector)`"]
->  Server["`**Margo Server Component**
->  (e.g., WFM, DFM, Observability Platform, Component Registry)`"]
->  MIS["`**Margo Identity Service (MIS)**
->  Issues SVIDs, publishes Trust Bundle & discovery`"]
->  TD["`**Trust Domain**
->  Defines trust anchors, policies, and namespace`"]
->  X509["`**X.509-SVID**
->  Certificate binding SPIFFE ID to key pair`"]
->  TB["`**Trust Bundle**
->  X.509 trust anchors`"]
->
->  Client -->|"holds X.509-SVID"| X509
->  MIS -->|"issues X.509-SVID"| X509
->  Client -->|"authenticates using X.509-SVID (mTLS)"| Server
->  Server -->|"verifies SVID using Trust Bundle of"| TD
->  TD -->|"publishes"| TB
->
->  classDef comp fill:#e8f1ff,stroke:#5b8def,stroke-width:1px,rx:8px,ry:8px,color:#0b3b8c;
->  classDef ident fill:#e8f7ee,stroke:#2ca36b,stroke-width:1px,rx:8px,ry:8px,color:#0f5132;
->  classDef trust fill:#f7f7f7,stroke:#bdbdbd,stroke-width:1px,rx:8px,ry:8px,color:#333;
->
->  class Client,Server,MIS comp;
->  class X509 ident;
->  class TD,TB trust;
-> ```
 
 ## Scope and Applicability
 
