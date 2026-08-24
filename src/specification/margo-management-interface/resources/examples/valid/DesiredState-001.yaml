@@ -1,5 +1,3 @@
-apiVersion: application.margo.org/v1alpha1
-kind: ApplicationDeployment
 id: a3e2f5dc-912e-494f-8395-52cf3769bc06
 metadata:
     name: com-northstartida-digitron-orchestrator-deployment
@@ -15,12 +13,12 @@ spec:
                 repository: oci://quay.io/charts/realtime-database-services
                 revision: 2.3.7
                 timeout: 8m30s
-                wait: "true"
+                wait: true
             - name: digitron-orchestrator
               properties:
                 repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
                 revision: 1.0.9
-                wait: "true"
+                wait: true
     parameters:
         adminName:
             value: Some One

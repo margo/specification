@@ -148,6 +148,60 @@ Examples:
 
 If the CTT uncovers a breaking issue in the specification, the release classification will be revised before the next preview or release is published.
 
+## API Contract Versioning
+
+There are multiple versioning axes in the Margo specification:
+
+| Versioning Axis | Example | Description |
+| --- | --- | --- |
+| Margo OpenAPI spec version | `1.1.0` | Spec metadata, follows semver |
+| API route version | `/api/v1/` | Structure contract version via URL path segment |
+| ApplicationDescription apiVersion | `v1` | Structure contract version via document field |
+
+The contract versions for the application description and APIs are independent and may not reflect the same major version as the specification.
+
+Contract versions are only updated when new changes are introduced constituting a breaking change to that specific contract.
+
+### Rules:
+
+- A new contract API version value MUST be introduced for any significantly breaking change
+- Non-breaking additive changes (new optional fields) MAY be made within the same contract API version
+- Clients MUST reject documents with an unrecognised apiVersion
+- Servers MUST NOT serve documents with a deprecated contract API version after its removal date
+- Both old and new contract API version values SHOULD be supported simultaneously during a transition period of at least one major specification release
+
+#### Breaking Changes
+
+The following are example changes resulting in a new API contract version in the specification:
+
+- Renaming an endpoint, property/field, enumeration value, or parameter
+- Removing an endpoint, property/field, enumeration value, or parameter
+- Changing data types or expected format
+- Making optional things required
+- Changing the semantics or behavior of an endpoint
+- Changing HTTP method or response codes
+- Making any validations stricter
+- Changing authentication/authorization rules
+
+#### Non-Breaking Changes
+
+The following are example changes not resulting in a new API contract version in the specification:
+
+- Adding new endpoints, properties/fields, or parameters
+- Adding optional parameters
+- Adding headers
+- Adding metadata
+- Fixing incorrect behaviors (bugs)
+
+#### Potential Breaking Change
+
+The following are example changes not resulting in a new API contract version in the specification, but may result in unexpected behavior if implementations do not handle them properly:
+
+- Adding enumeration values
+- Changing defaults
+- Reordering fields
+- Changing error responses
+
 ## Release Cohesion Rule
 
 At an official release, all four Margo deliverables publish with the same version number. After that, any deliverable may bump its patch version on its own for small fixes, such as software bug fixes or documentation edits like typos, clarifications, and examples. The major and minor versions stay in lockstep.

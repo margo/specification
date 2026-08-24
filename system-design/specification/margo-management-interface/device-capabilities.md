@@ -9,7 +9,6 @@ To ensure the WFM is kept up to date, the device's client MUST send updated capa
 ## Route and HTTP Methods
 
 ```https
-POST /api/v1/capabilities/{deviceId}
 PUT /api/v1/capabilities/{deviceId}
 DELETE /api/v1/capabilities/{deviceId}
 ```
@@ -24,19 +23,18 @@ DELETE /api/v1/capabilities/{deviceId}
 
 | Code | Description |
 |------|-------------|
-| 201 OK | The device capabilities document was added, or updated, successfully |
+| 200 OK | The device capabilities document was updated successfully. |
+| 201 Created | The device capabilities document was created successfully. |
 | 204 No Content | The device capabilities document was deleted successfully. |
-| 400 Bad Request | POST, PUT: Malformed request body. |
+| 400 Bad Request | PUT: Malformed request body. |
 | 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
-| 404 Not Found | POST, PUT: No gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No device with the given `deviceId` was found for the client. |
+| 404 Not Found | PUT: No gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No device with the given `deviceId` was found for the client. |
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
 ## Request Body Attributes
 
 | Field      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
-| kind            | string    | Y    | Must be `DeviceCapabilitiesManifest`.|
 | properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-attributes) section below. |
 | x-&lt;unique-name&gt;-extensions | map[string]interface{} | N | Allows addition of an arbitrary JSON object whose contents suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details. |
    
@@ -140,8 +138,6 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 ```json
 {
-    "apiVersion": "device.margo.org/v1alpha1",
-    "kind": "DeviceCapabilitiesManifest",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
         "vendor": "Northstar Industrial Devices",
@@ -219,12 +215,10 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway, without hosting capabilities, reporting its capabilities to the WFM:
 
     ```
-    POST /api/v1/capabilities/gateway1
+    PUT /api/v1/capabilities/gateway1
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1",
             "vendor": "Gateway Vendor",
@@ -237,12 +231,10 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway, with hosting capabilities, reporting its capabilities to the WFM:
 
     ```
-    POST /api/v1/capabilities/gateway1
+    PUT /api/v1/capabilities/gateway1
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1",
             "vendor": "Gateway Vendor",
@@ -276,12 +268,10 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway reporting the capabilities of a child device to the WFM:
 
     ```
-    POST /api/v1/capabilities/gateway1/deviceA
+    PUT /api/v1/capabilities/gateway1/deviceA
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1/deviceA",
             "vendor": "Device A Vendor",
@@ -320,12 +310,10 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway reporting the capabilities of a child device with deeper hierarchy to the WFM:
 
     ```
-    POST /api/v1/capabilities/gateway1/path1/deviceA
+    PUT /api/v1/capabilities/gateway1/path1/deviceA
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1/path1/deviceA",
             "vendor": "Device A Vendor",
