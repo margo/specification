@@ -4,11 +4,11 @@
 
 A MIAF identity moves through five lifecycle phases:
 
-- **Enrollment**: initial issuance of an SVID for a principal.
-- **Active**: the principal holds a valid SVID and authenticates over mTLS, presenting its own SVID and validating each peer's SVID against the Trust Bundle, and is recognized by verifiers.
-- **Renewal**: refresh of an SVID before expiry.
-- **Revocation**: declaration that an issued SVID is no longer valid before its natural expiry.
-- **Re-issuance**: issuance of an SVID to a replacement principal (for example, after device replacement), typically reusing the original SPIFFE ID, though an operator MAY assign a fresh one.
+1. **Enrollment**: initial issuance of an SVID for a principal.
+2. **Active**: the principal holds a valid SVID and authenticates over mTLS, presenting its own SVID and validating each peer's SVID against the Trust Bundle, and is recognized by verifiers.
+3. **Renewal**: refresh of an SVID before expiry.
+4. **Revocation**: declaration that an issued SVID is no longer valid before its natural expiry.
+5. **Re-issuance**: issuance of an SVID to a replacement principal (for example, after device replacement), typically reusing the original SPIFFE ID, though an operator MAY assign a fresh one.
 
 The **Active** phase has a fully normative protocol surface. The other phases are operator-driven and follow the playbooks below.
 
