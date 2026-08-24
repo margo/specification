@@ -48,7 +48,7 @@ sequenceDiagram
     Note over Client,Server: Device Client onboarding Ends
     Note over Client,Server: 📡 Secure API Usage with Signed Payloads can now begin
 
-    Client->>Server: POST /clients/{clientId}/capabilities
+    Client->>Server: PUT /clients/{clientId}/capabilities
     Server-->>Client: 201 Created
     Note over Client,Server: Enrollment is complete
     Note over Client,Server: 📡 Secure API Usage with Signed Payloads
