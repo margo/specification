@@ -35,8 +35,6 @@ POST /api/v1/clients/{clientId}/deployments/{deploymentId}/status
 
 | Fields       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
-| kind            | string    | Y    | Must be `DeploymentStatusManifest`.|
 | deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Fleet Management Software. |
 | deviceId        | string    | N*    | Id of the device hosting the deployment. Includes the full device hierarchy if applicable. <br/> * This attribute is required when reporting on behalf of a child-device. |
 | status          | []status    | Y    | Element that defines overall deployment status. See the [Status Attributes](#status-attributes) section below.|
@@ -89,8 +87,6 @@ When the error used is a reserved code for a gateway-generated error, the `sourc
 
 ```json
 {
-    "apiVersion": "deployment.margo.org/v1alpha1",
-    "kind": "DeploymentStatusManifest",
     "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
     "deviceId": "plant-alfa-zone1-edge01",
     "status": {

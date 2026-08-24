@@ -1,5 +1,4 @@
-apiVersion: margo.org/v1-alpha1
-kind: ApplicationDescription
+apiVersion: v1
 id: com-northstartida-hello-world
 metadata:
   name: Hello World

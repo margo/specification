@@ -21,16 +21,10 @@ classes:
     description: Root class for an application description.
     attributes:
       apiVersion:
-        description: Identifier of the version of the API the object definition follows.
+        description: Identifier of the version of the API the object definition follows. Must be "v1".
         required: true
         range: string
         rank: 10
-      kind:
-        description: Specifies the object type; must be `ApplicationDescription`.
-        range: string
-        required: true
-        equals_string: "ApplicationDescription" 
-        rank: 20
       id:
         description: >-
           An identifier for the application. The id is used to help create unique identifiers where required, 

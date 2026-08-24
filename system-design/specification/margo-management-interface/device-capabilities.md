@@ -39,8 +39,6 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 
 | Field      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| apiVersion      | string    | Y    | Identifier of the version the API resource follows.|
-| kind            | string    | Y    | Must be `DeviceCapabilitiesManifest`.|
 | properties        | Properties    | Y    | Element that defines characteristics about the device. See the [Properties Fields](#properties-attributes) section below. |
 | x-&lt;unique-name&gt;-extensions | map[string]interface{} | N | Allows addition of an arbitrary JSON object whose contents suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details. |
    
@@ -144,8 +142,6 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 ```json
 {
-    "apiVersion": "device.margo.org/v1alpha1",
-    "kind": "DeviceCapabilitiesManifest",
     "properties": {
         "id": "northstarida.xtapro.k8s.edge",
         "vendor": "Northstar Industrial Devices",
@@ -227,8 +223,6 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1",
             "vendor": "Gateway Vendor",
@@ -245,8 +239,6 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1",
             "vendor": "Gateway Vendor",
@@ -284,8 +276,6 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1/deviceA",
             "vendor": "Device A Vendor",
@@ -328,8 +318,6 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
     ```
     ```json
     {
-        "apiVersion": "device.margo.org/v1alpha1",
-        "kind": "DeviceCapabilitiesManifest",
         "properties": {
             "id": "gateway1/path1/deviceA",
             "vendor": "Device A Vendor",
