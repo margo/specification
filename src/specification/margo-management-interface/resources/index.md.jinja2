@@ -5,7 +5,7 @@ In order for the Workload Fleet Manager (WFM) to manage workloads on an Edge Com
 The Desired State defines *what* workloads (applications) should run on the device and *how* they should be configured.
 It is distributed using a lightweight, pull-based HTTP API that allows devices to stay synchronized with the WFM.
 
-At the center of this process is the State Manifest, a JSON document that lists all workloads assigned to the device. Each workload is represented by an [`ApplicationDeployment`](#applicationdeployment-yaml-definition) YAML - a self-contained object defining configuration, components, and parameters for that workload.
+At the center of this process is the State Manifest, a JSON document that lists all workloads assigned to the authenticated client. The manifest is scoped to the client, not to a single device: a client that fronts several devices, such as a see-thru gateway with child devices, retrieves one manifest covering all of them. Each workload is represented by an [`ApplicationDeployment`](#applicationdeployment-yaml-definition) YAML - a self-contained object defining configuration, components, and parameters for that workload - and names its target device in its `metadata.deviceId` attribute.
 
 The manifest includes two complementary ways for the client to obtain the same `ApplicationDeployment` YAMLs:
 
@@ -25,7 +25,7 @@ For every change in deployment state - including installation, updates, removals
 
 ## Endpoints: State Manifest
 
-This section defines the API endpoint used by a client to retrieve the State Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the device.
+This section defines the API endpoint used by a client to retrieve the State Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the client and the devices it is responsible for.
 
 ### Route and HTTP Methods
 
@@ -73,7 +73,7 @@ GET /api/v1/deployments
 
 | Field | Type | Required? | Description |
 | ----- | ---- | --------- | ----------- |
-| `manifestVersion` | number | Y | Monotonically increasing unsigned 64-bit integer in the inclusive range `[1, 2^64-1]`. Each new manifest for the same (device) client MUST have a strictly greater value than the previous. The first manifest for a given client MUST use the value 1. |
+| `manifestVersion` | number | Y | Monotonically increasing unsigned 64-bit integer in the inclusive range `[1, 2^64-1]`. Each new manifest for the same client MUST have a strictly greater value than the previous, forming a single sequence per client that spans all devices the client is responsible for. The first manifest for a given client MUST use the value 1. |
 | `bundle` | object | Y | Describes an archive containing all referenced `ApplicationDeployment` YAMLs. If there are zero deployments (i.e., the `deployments` array is empty), this field MUST be present with the value `null`. An empty archive MUST NOT be served. |
 | `bundle.mediaType` | string | Y | MUST be `application/vnd.margo.bundle.v1+tar+gzip`, which denotes a gzip-compressed tar archive (commonly delivered as a .tar.gz) whose root contains one or more `ApplicationDeployment` YAML files. Servers MUST set the HTTP `Content-Type` to this media type. The archive MUST contain exactly the set of YAML files referenced by `deployments`. |
 | `bundle.digest` | string | Y | Digest of the bundle archive. MUST equal the digest computed over the exact sequence of bytes in the [bundle endpoint's](#endpoints-deployment-bundle) HTTP `200 OK` response body. See [Protocol: Digest](#protocol-digest) for further details. |
