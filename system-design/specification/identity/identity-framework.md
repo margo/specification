@@ -29,7 +29,7 @@ Terms adopted from SPIFFE, used here as SPIFFE defines them:
 
 Terms introduced by MIAF:
 
-- **Principal**: a non-human Margo component that holds, or is being provisioned with, a SPIFFE identity in a Trust Domain. Edge Compute Devices, WFMs, and WFM Clients are all principals.
+- **Principal**: a non-human Margo component that holds, or is being provisioned with, a SPIFFE identity in a Trust Domain. WFMs and WFM Clients are the principals for which an identity profile exists today. An Edge Compute Device participates through the WFM Client it hosts; the device itself becomes a principal only under a future identity profile (for example, one for device fleet management).
 - **Verifier**: a Margo component that validates a peer's SVID and then authorizes the call locally, using the SPIFFE ID that SVID carries.
 - **Margo Identity Service (MIS)**: the identity-authority **role** within a Trust Domain. The MIS issues SVIDs, publishes the discovery document and Trust Bundle, and enforces MIAF's cryptographic and SVID-profile rules. The MIS is defined by its responsibilities, not by a specific API (see [The MIS role](#the-mis-role)).
 - **Policy-based authorization**: each verifier makes authorization decisions locally, based on the peer's verified SPIFFE ID. MIAF does not use OAuth-style token scopes or a central authorization server.
