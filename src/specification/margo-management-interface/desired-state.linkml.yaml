@@ -22,6 +22,8 @@ classes:
         description: >-
           The unique identifier UUID of the deployment specification.
           Needs to be assigned by the Workload Fleet Manager.
+          When the Workload Fleet Manager changes the content of an existing deployment, the `id` stays the same and the digest changes.
+          A different `id` identifies a different deployment.
         required: true
         range: string
         pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
