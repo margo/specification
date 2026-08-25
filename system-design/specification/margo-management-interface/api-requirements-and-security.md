@@ -1,16 +1,13 @@
 # API Requirements and Security Details
 ## General Requirements
 - The Workload Fleet Management supplier MUST implement the server side of the API specification contract.
-- The Device supplier, via it's WFM Client, MUST implement the client side of the API specification contract.
+- The Device supplier, via its WFM Client, MUST implement the client side of the API specification contract.
 
-Below is a breakdown of the three major categories these requirements fall under:
+Below is a breakdown of the two major categories these requirements fall under:
 
-1. Basic functions for supporting the Management Interface
-    - Onboarding of the management interface client
-2. Workload management functions
+1. Workload management functions
     - Set Desired State(s) assigned to particular device clients
-3. Device client specific functions
-    - Client Onboarding
+2. Device client specific functions
     - Device Capability Reporting
     - Workload Status deployment reporting
 	

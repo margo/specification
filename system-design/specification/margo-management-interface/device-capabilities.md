@@ -1,25 +1,22 @@
 # Device Capabilities
 
-Devices MUST provide the Workload Fleet Management service with their capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint. Reporting the device capabilities is the final step in the onboarding of the device's client. 
+Devices MUST provide the Workload Fleet Management service with their capabilities and characteristics. This is done by calling the Device API's `device capabilities` endpoint. Reporting the device capabilities is the first exchange a WFM Client makes after it is provisioned and connects to the WFM.
 
 The reported capabilities represent only the subset of device resources delegated exclusively to Margo for workload placement and reconciliation, and do not necessarily reflect the device's total physical capacity. The mechanisms used to isolate, reserve, and preserve these resources for exclusive Margo use are implementation-specific and outside the scope of this specification.
 
 To ensure the WFM is kept up to date, the device's client MUST send updated capabilities information if any changes occur to the information originally provided (i.e., additional memory is added to the device).
 
-- Requests to this endpoint MUST be authenticated using the HTTP Message Signature method as defined in the [Payload Security](../margo-management-interface/api-requirements-and-security.md#payload-security-method) section.
-
 ## Route and HTTP Methods
 
 ```https
-PUT /api/v1/clients/{clientId}/capabilities/{deviceId}
-DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
+PUT /api/v1/capabilities/{deviceId}
+DELETE /api/v1/capabilities/{deviceId}
 ```
 
 ### Route Parameters
 
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
-| {clientId} | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
 | {deviceId} | string | Y | The unique identifier of the device reporting the capabilities. <br/>It must have the following format: "{id}[/{id}[/{id}...]]". The top-level `id` is required and must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). If reporting capabilties for a child device, the subsequent `id`s are required and must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). <br/>Using multiple ids in the endpoint does not register multiple devices in a single request, but indicates a hierarchy of devices, with a parent/child relationship. |
 
 ### Response Codes
@@ -29,10 +26,9 @@ DELETE /api/v1/clients/{clientId}/capabilities/{deviceId}
 | 200 OK | The device capabilities document was updated successfully. |
 | 201 Created | The device capabilities document was created successfully. |
 | 204 No Content | The device capabilities document was deleted successfully. |
-| 400 Bad Request | Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included. |
-| 401 Unauthorized | Signature verification failed. Ensure you are signing with the correct X.509 private key.  |
-| 403 Forbidden | Client certificate is not trusted or has been revoked. |
-| 404 Not Found | PUT:  No client with the given `clientID` was found, or no gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No client with the given `clientID` was found or no device with the given `deviceId` was found for the client. |
+| 400 Bad Request | PUT: Malformed request body. |
+| 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
+| 404 Not Found | PUT: No gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No device with the given `deviceId` was found for the client. |
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
 ## Request Body Attributes
@@ -219,7 +215,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway, without hosting capabilities, reporting its capabilities to the WFM:
 
     ```
-    PUT /api/v1/clients/{clientId}/capabilities/gateway1
+    PUT /api/v1/capabilities/gateway1
     ```
     ```json
     {
@@ -235,7 +231,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway, with hosting capabilities, reporting its capabilities to the WFM:
 
     ```
-    PUT /api/v1/clients/{clientId}/capabilities/gateway1
+    PUT /api/v1/capabilities/gateway1
     ```
     ```json
     {
@@ -272,7 +268,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway reporting the capabilities of a child device to the WFM:
 
     ```
-    PUT /api/v1/clients/{clientId}/capabilities/gateway1/deviceA
+    PUT /api/v1/capabilities/gateway1/deviceA
     ```
     ```json
     {
@@ -314,7 +310,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway reporting the capabilities of a child device with deeper hierarchy to the WFM:
 
     ```
-    PUT /api/v1/clients/{clientId}/capabilities/gateway1/path1/deviceA
+    PUT /api/v1/capabilities/gateway1/path1/deviceA
     ```
     ```json
     {
@@ -351,7 +347,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
 * See-thru gateway informing the WFM that a child device is no longer available:
 
     ```
-    DELETE /api/v1/clients/{clientId}/capabilities/gateway1/deviceA
+    DELETE /api/v1/capabilities/gateway1/deviceA
     ```
 
 ## Specification Extensions

@@ -1,6 +1,6 @@
 # Device Requirements
 
-A device MUST meet a baseline set of requirements to be considered Margo-conformant. These requirements ensure devices can effectively manage Margo-conformant workload and/or host those workloads. A device MUST support onboarding and management from only a single workload fleet manager. A device reports what it can provide to the ecosystem through its [device capabilities](../margo-management-interface/device-capabilities.md).
+A device MUST meet a baseline set of requirements to be considered Margo-conformant. These requirements ensure devices can effectively manage Margo-conformant workload and/or host those workloads. A device MUST be managed by only a single workload fleet manager. A device reports what it can provide to the ecosystem through its [device capabilities](../margo-management-interface/device-capabilities.md).
 
 All Margo-conformant devices MUST provide the following components:
 

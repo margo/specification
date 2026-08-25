@@ -4,10 +4,17 @@ docs_dir: system-design
 nav:
   - What is Margo?: index.md
   - Specification:
+      - Identity and Authorization:
+          - specification/identity/identity-framework.md
+          - specification/identity/svids.md
+          - specification/identity/tls-requirements.md
+          - specification/identity/trust-bundle-and-discovery.md
+          - specification/identity/identity-lifecycle.md
+          - specification/identity/wfm-identity-profile.md
+          - specification/identity/identity-security-considerations.md
+          - specification/identity/trust-bundle-api-swagger.md
       - Margo Management Interface:
           - specification/margo-management-interface/api-requirements-and-security.md
-          - specification/margo-management-interface/certificate-api.md
-          - specification/margo-management-interface/device-client-onboarding.md
           - specification/margo-management-interface/device-capabilities.md
           - specification/margo-management-interface/desired-state.md
           - specification/margo-management-interface/deployment-status.md

@@ -1,0 +1,11 @@
+{
+  "title": "Margo Management Interface",
+  "pages": [
+    "api-requirements-and-security",
+    "device-capabilities",
+    "desired-state",
+    "deployment-status",
+    "specification-extensions",
+    "management-interface-swagger"
+  ]
+}

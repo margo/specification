@@ -5,7 +5,7 @@ In order for the Workload Fleet Manager (WFM) to manage workloads on an Edge Com
 The Desired State defines *what* workloads (applications) should run on the device and *how* they should be configured.
 It is distributed using a lightweight, pull-based HTTP API that allows devices to stay synchronized with the WFM.
 
-At the center of this process is the State Manifest, a JSON document that lists all workloads assigned to the device. Each workload is represented by an [`ApplicationDeployment`](#applicationdeployment-yaml-definition) YAML - a self-contained object defining configuration, components, and parameters for that workload.
+At the center of this process is the State Manifest, a JSON document that lists all workloads assigned to the authenticated client. The manifest is scoped to the client, not to a single device: a client that fronts several devices, such as a see-thru gateway with child devices, retrieves one manifest covering all of them. Each workload is represented by an [`ApplicationDeployment`](#applicationdeployment-yaml-definition) YAML - a self-contained object defining configuration, components, and parameters for that workload - and names its target device in its `metadata.deviceId` attribute.
 
 The manifest includes two complementary ways for the client to obtain the same `ApplicationDeployment` YAMLs:
 
@@ -21,23 +21,17 @@ This design allows the Workload Fleet Management Client to choose the optimal re
 | Individual YAMLs | Incremental updates, bandwidth-limited or metered links | Only changed workloads are downloaded |
 
 The Workload Fleet Management Client compares the manifest with its current state and reconciles any differences by deploying, updating, or removing workloads.
-For every change in deployment state - including installation, updates, removals, and failures - the client MUST report the corresponding status to the WFM using the [Deployment Status API](../../specification/margo-management-interface/deployment-status.md).
+For every change in deployment state - including installation, updates, removals, and failures - the client MUST report the corresponding status to the WFM using the [Deployment Status API](../margo-management-interface/deployment-status.md).
 
-## Endpoints - State Manifest
+## Endpoints: State Manifest
 
-This section defines the API endpoint used by a client to retrieve the State Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the device.
+This section defines the API endpoint used by a client to retrieve the State Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the client and the devices it is responsible for.
 
 ### Route and HTTP Methods
 
 ```https
-GET /api/v1/clients/{clientId}/deployments
+GET /api/v1/deployments
 ```
-
-### Route Parameters
-
-| Parameter | Type | Required? | Description |
-| --------- | ---- | --------- | ----------- |
-| `{clientId}` | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
 
 ### Request Headers
 
@@ -52,6 +46,7 @@ GET /api/v1/clients/{clientId}/deployments
 | ----- | ---------- |
 | 200 OK | The response body contains the manifest. The server MUST include a valid `ETag` and `Content-Type: application/vnd.margo.manifest.v1+json`. |
 | 304 Not Modified | The response body is empty. Returned if the `If-None-Match` `ETag` matches, i.e. the cached response body has not changed since the last retrieved version. |
+| 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
 | 406 Not Acceptable | The server cannot return a representation matching the `Accept` header. |
 
 ### Example State Manifest Response
@@ -62,13 +57,13 @@ GET /api/v1/clients/{clientId}/deployments
   "bundle": {
     "mediaType": "application/vnd.margo.bundle.v1+tar+gzip",
     "digest": "sha256:b5c6d7e8f9...",
-    "url": "/api/v1/clients/1234/bundles/sha256:b5c6d7e8f9..."
+    "url": "/api/v1/bundles/sha256:b5c6d7e8f9..."
   },
   "deployments": [
     {
       "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
       "digest": "sha256:a4e01b2c3d...",
-      "url": "/api/v1/clients/1234/deployments/a3e2f5dc-912e-494f-8395-52cf3769bc06/sha256:a4e01b2c3d..."
+      "url": "/api/v1/deployments/a3e2f5dc-912e-494f-8395-52cf3769bc06/sha256:a4e01b2c3d..."
     }
   ]
 }
@@ -78,17 +73,17 @@ GET /api/v1/clients/{clientId}/deployments
 
 | Field | Type | Required? | Description |
 | ----- | ---- | --------- | ----------- |
-| `manifestVersion` | number | Y | Monotonically increasing unsigned 64-bit integer in the inclusive range `[1, 2^64-1]`. Each new manifest for the same (device) client MUST have a strictly greater value than the previous. The first manifest for a given client MUST use the value 1. |
+| `manifestVersion` | number | Y | Monotonically increasing unsigned 64-bit integer in the inclusive range `[1, 2^64-1]`. Each new manifest for the same client MUST have a strictly greater value than the previous, forming a single sequence per client that spans all devices the client is responsible for. The first manifest for a given client MUST use the value 1. |
 | `bundle` | object | Y | Describes an archive containing all referenced `ApplicationDeployment` YAMLs. If there are zero deployments (i.e., the `deployments` array is empty), this field MUST be present with the value `null`. An empty archive MUST NOT be served. |
 | `bundle.mediaType` | string | Y | MUST be `application/vnd.margo.bundle.v1+tar+gzip`, which denotes a gzip-compressed tar archive (commonly delivered as a .tar.gz) whose root contains one or more `ApplicationDeployment` YAML files. Servers MUST set the HTTP `Content-Type` to this media type. The archive MUST contain exactly the set of YAML files referenced by `deployments`. |
-| `bundle.digest` | string | Y | Digest of the bundle archive. MUST equal the digest computed over the exact sequence of bytes in the [bundle endpoint's](#endpoints-deployment-bundle) HTTP `200 OK` response body. See [Protocol - Digest](#protocol-digest) for further details. |
+| `bundle.digest` | string | Y | Digest of the bundle archive. MUST equal the digest computed over the exact sequence of bytes in the [bundle endpoint's](#endpoints-deployment-bundle) HTTP `200 OK` response body. See [Protocol: Digest](#protocol-digest) for further details. |
 | `bundle.sizeBytes` | number | N | Optional unsigned 64-bit advisory estimate of the decoded payload length in bytes for the bundle archive. Provided for bandwidth estimation and update planning. MUST NOT be used for integrity verification. |
-| `bundle.url` | string | Y | Content-addressable retrieval endpoint for the bundle of the form `/api/v1/clients/{clientId}/bundles/{digest}` where `{digest}` equals `bundle.digest`. |
+| `bundle.url` | string | Y | Content-addressable retrieval endpoint for the bundle of the form `/api/v1/bundles/{digest}` where `{digest}` equals `bundle.digest`. |
 | `deployments` | array | Y | List of deployment objects describing each workload. |
 | `deployments[].deploymentId` | string | Y | The UUID of the deployment. MUST equal top-level `id` attribute in the `ApplicationDeployment`. |
-| `deployments[].digest` | string | Y | Digest of the corresponding `ApplicationDeployment` YAML file. MUST equal the digest computed over the exact sequence of bytes in the [individual deployment endpoint's](#endpoints-individual-deployment-yaml) HTTP `200 OK` response body. See [Protocol - Digest](#protocol-digest) for further details. |
+| `deployments[].digest` | string | Y | Digest of the corresponding `ApplicationDeployment` YAML file. MUST equal the digest computed over the exact sequence of bytes in the [individual deployment endpoint's](#endpoints-individual-deployment-yaml) HTTP `200 OK` response body. See [Protocol: Digest](#protocol-digest) for further details. |
 | `deployments[].sizeBytes` | number | N | Optional unsigned 64-bit advisory estimate of the decoded payload length in bytes for the `ApplicationDeployment` YAML. Provided for bandwidth estimation and update planning. MUST NOT be used for integrity verification. |
-| `deployments[].url` | string | Y | Content-addressable retrieval endpoint for the `ApplicationDeployment` YAML of the form `/api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}` where `{digest}` equals `deployments[].digest`. |
+| `deployments[].url` | string | Y | Content-addressable retrieval endpoint for the `ApplicationDeployment` YAML of the form `/api/v1/deployments/{deploymentId}/{digest}` where `{digest}` equals `deployments[].digest`. |
 
 > **Note:** The `ETag` returned from this endpoint is a digest of the entire JSON response body (after serialization). It is independent of `bundle.digest` and individual deployment digests (`deployments[].digest`). See [ETag and Caching](#protocol-etag-and-caching) for details.
 
@@ -98,60 +93,60 @@ GET /api/v1/clients/{clientId}/deployments
 - If any digest validation fails, the client MUST abort the update and retain the previous state.
 - The client MUST persist both the last accepted `manifestVersion` and `ETag` to prevent rollback across restarts.
 
-## Endpoints - Individual Deployment YAML
+## Endpoints: Individual Deployment YAML
 
 This section defines the API endpoint used by a client to retrieve a single `ApplicationDeployment` YAML for incremental synchronization and targeted updates.
 
 ### Route and HTTP Methods
 
 ```https
-GET /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}
+GET /api/v1/deployments/{deploymentId}/{digest}
 ```
 
 ### Route Parameters
 
 | Parameter | Type | Required? | Description |
 | --------- | ---- | --------- | ----------- |
-| `{clientId}` | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
 | `{deploymentId}` | string | Y | The UUID of the served `ApplicationDeployment` YAML. This MUST equal to top-level `id` attribute in the ApplicationDeployment. |
-| `{digest}` | string | Y | Content-addressable digest of the served `ApplicationDeployment` YAML. See [Protocol - Digest](#protocol-digest) for further details. |
+| `{digest}` | string | Y | Content-addressable digest of the served `ApplicationDeployment` YAML. See [Protocol: Digest](#protocol-digest) for further details. |
 
 ### Response Codes
 
 | Code | Description |
 | ---- | ----------- |
-| 200 OK | The response body contains the raw `ApplicationDeployment` YAML (`Content-Type: application/yaml`). Server MUST set `ETag` to the quoted digest and SHOULD return `Cache-Control: public, max-age=31536000, immutable`. |
+| 200 OK | The response body contains the raw `ApplicationDeployment` YAML (`Content-Type: application/yaml`). Server MUST set `ETag` to the quoted digest and MUST return `Cache-Control: private, max-age=31536000, immutable` (see [Protocol: ETag and Caching](#protocol-etag-and-caching)). |
+| 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
 | 404 Not Found | The referenced digest does not exist on the server. `404 Not Found` indicates only that this specific digest is unavailable. It MUST NOT be interpreted as a deletion signal by a client; deletion of workloads is determined solely by absence from the state manifest. |
 
 > **Note:** Servers MAY apply HTTP `Content-Encoding` (e.g., gzip, br). The client advertises support via `Accept-Encoding`. Digests and ETags always refer to the decoded representation (i.e., the exact bytes of the response body after decompressing any HTTP `Content-Encoding` such as gzip). Servers SHOULD include `Vary: Accept-Encoding` if compression is used.
 
-## Endpoints - Deployment Bundle
+## Endpoints: Deployment Bundle
 
 This section defines the API endpoint used by a client to retrieve a compressed bundle containing all `ApplicationDeployment` YAMLs for efficient bulk synchronization.
 
 ### Route and HTTP Methods
 
 ```https
-GET /api/v1/clients/{clientId}/bundles/{digest}
+GET /api/v1/bundles/{digest}
 ```
 
 ### Route Parameters
 
 | Parameter | Type | Required? | Description |
 | --------- | ---- | --------- | ----------- |
-| `{clientId}` | string | Y | The unique identifier of the (device) client registered with the WFM during onboarding. |
-| `{digest}` | string | Y | Content-addressable digest of the served bundle archive. See [Protocol - Digest](#protocol-digest) for further details. |
+| `{digest}` | string | Y | Content-addressable digest of the served bundle archive. See [Protocol: Digest](#protocol-digest) for further details. |
 
 ### Response Codes
 
 | Code | Description |
 | ---- | ----------- |
-| 200 OK | The bundle was successfully retrieved. The server MUST set `Content-Type` to the manifest-declared `bundle.mediaType`, `ETag` to the quoted digest, and SHOULD return `Cache-Control: public, max-age=31536000, immutable`. |
+| 200 OK | The bundle was successfully retrieved. The server MUST set `Content-Type` to the manifest-declared `bundle.mediaType`, `ETag` to the quoted digest, and MUST return `Cache-Control: private, max-age=31536000, immutable` (see [Protocol: ETag and Caching](#protocol-etag-and-caching)). |
+| 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
 | 404 Not Found | The referenced digest does not exist on the server. `404 Not Found` indicates only that this specific digest is unavailable. It MUST NOT be interpreted as a deletion signal by a client; deletion of workloads is determined solely by absence from the state manifest. |
 
 > **Note:** Servers MAY apply `Content-Encoding` (e.g., gzip, br) and SHOULD include `Vary: Accept-Encoding` if they do.
 
-## Protocol - Digest
+## Protocol: Digest
 
 All Desired State artifacts - including the manifest, bundle archives, and individual `ApplicationDeployment` YAMLs - use a canonical digest to ensure content integrity and consistency across client and server implementations.
 
@@ -163,7 +158,7 @@ A digest has the form `algorithm:encoded`, where both parts are lowercase. Clien
 The resulting digest value is used consistently across all API representations:
 
 - In JSON responses: `"digest": "sha256:a4e01b2c3d..."`
-- In URLs: `/api/v1/clients/{clientId}/deployments/{deploymentId}/sha256:a4e01b2c3d...`
+- In URLs: `/api/v1/deployments/{deploymentId}/sha256:a4e01b2c3d...`
 - In HTTP headers: `ETag: "sha256:a4e01b2c3d..."`
 
 Clients MUST verify that the digest they compute for every retrieved artifact matches the value provided in the manifest. Any mismatch MUST cause the client to abort the update and preserve the previous state.
@@ -179,26 +174,27 @@ sha256:a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef
 > This API defines the digest format `sha256:<hex>` (lowercase) for JSON fields, URLs, and ETags.
 > This digest represents content identity, ensuring that each artifact (manifest, bundle, or `ApplicationDeployment` YAML) can be uniquely verified and referenced within the Desired State API.
 >
-> By contrast, the mechanism described in the [API Requirements and Security Details](../../specification/margo-management-interface/api-requirements-and-security.md) document - which follows [RFC 9421](https://datatracker.ietf.org/doc/html/rfc9421) - provides HTTP message-level integrity through signed payloads.
-> While both rely on the SHA-256 algorithm, they operate at different layers of the protocol:
+> By contrast, transport-level authenticity and integrity are provided by mutual TLS as described in the [API Requirements and Security Details](../margo-management-interface/api-requirements-and-security.md) document. The two operate at different layers of the protocol:
 >
-> - The digest in this API defines immutable content identity for artifacts.
-> - The RFC 9421 mechanism ensures end-to-end message integrity and authenticity during HTTP transport.
+> - The digest in this API defines immutable content identity for artifacts, verifiable independently of how they were transported.
+> - Mutual TLS authenticates both parties and protects the messages that carry those artifacts in transit.
 
-## Protocol - ETag and Caching
+## Protocol: ETag and Caching
 
 All Desired State endpoints implement standard HTTP caching semantics to optimize synchronization between the Workload Fleet Manager (WFM) and the Workload Fleet Management Client. ETags are used to detect content changes and avoid redundant data transfers. Two caching models are defined: one for the mutable State Manifest, and one for immutable, content-addressable resources such as individual deployments and bundles.
+
+Every response is scoped to the authenticated client, so all Desired State responses are marked `Cache-Control: private`, which keeps a response in that client's own cache rather than a shared one. Because mTLS carries no `Authorization` header (whose presence would normally keep a response out of shared caches per [RFC 9111 §3.5](https://datatracker.ietf.org/doc/html/rfc9111#section-3.5)), servers set this explicitly rather than rely on default cache behavior. Under end-to-end mTLS no shared cache sees these responses at all; the marking matters only where an operator terminates mTLS at a TLS-offloading proxy and cleartext reaches an internal hop (see the MIAF [traffic-inspecting proxies](../identity/tls-requirements.md#traffic-inspecting-proxies) rules), where `private` keeps a cache on that hop from serving one client's response to another.
 
 ### State Manifest Endpoint
 
 For the [State Manifest](#endpoints-state-manifest) endpoint, servers use strong ETags as defined in [RFC 9110 § 8.8.3](https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3).
 
 - The `ETag` MUST be a strong validator computed as a digest of the exact serialized JSON response body.
-  The format MUST follow the digest grammar defined in [Protocol – Digest](#protocol-digest):
+  The format MUST follow the digest grammar defined in [Protocol: Digest](#protocol-digest):
   `"<algorithm>:<hex-encoded-hash>"`, for example:
   `"sha256:a4e01b2c3d..."`.
 - Servers SHOULD serialize JSON deterministically (for example, per [RFC 8785](https://datatracker.ietf.org/doc/html/rfc8785)) so that logically identical manifests yield identical bytes and therefore identical ETags.
-- Manifest responses MUST NOT be marked immutable (e.g., by applying `Cache-Control: immutable` or excessively long `max-age` values). Freshness is controlled through periodic polling using `If-None-Match` revalidation requests.
+- Manifest responses MUST be marked `Cache-Control: private` and MUST NOT be marked immutable (no `Cache-Control: immutable` or excessively long `max-age`). Freshness is controlled through periodic polling using `If-None-Match` revalidation requests.
 - When a client presents an `ETag` that matches the current manifest, the server MUST respond with `304 Not Modified`, omitting the response body.
 
 ### Content-Addressable Endpoints
@@ -207,7 +203,7 @@ For [Individual Deployment YAML](#endpoints-individual-deployment-yaml) and [Dep
 
 - The `ETag` MUST equal the quoted digest embedded in the resource’s URL (e.g., `ETag: "sha256:a4e01b2c3d..."`).
   This constitutes a strong validator per [RFC 9110 § 8.8.3](https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3).
-- Servers SHOULD include `Cache-Control: public, max-age=31536000, immutable` to enable long-term caching of immutable artifacts.
+- Servers MUST include `Cache-Control: private, max-age=31536000, immutable`, enabling long-term caching of immutable artifacts in the client's own cache.
 - If compression is applied, servers SHOULD include `Vary: Accept-Encoding` to ensure cache correctness across encodings.
 - Clients MAY send `If-None-Match` when revalidating cached resources; servers MAY return `304 Not Modified` if the artifact has not changed.
 
@@ -218,7 +214,7 @@ This section defines the end-to-end workflow followed by a client to retrieve, v
 - The client polls the WFM for the latest manifest using the last known `ETag` (if any):
 
   ```https
-  GET /api/v1/clients/{clientId}/deployments
+  GET /api/v1/deployments
   ```
 
   - If the manifest is unchanged, the WFM responds with `304 Not Modified`.
@@ -229,7 +225,7 @@ This section defines the end-to-end workflow followed by a client to retrieve, v
   - The client reconciles its local workloads:
     - Adds or updates workloads that appear in the new manifest.
     - Removes workloads no longer present in the new manifest.
-  - For each change in workload state, the client reports progress and results to the WFM using the [Deployment Status API](../../specification/margo-management-interface/deployment-status.md).
+  - For each change in workload state, the client reports progress and results to the WFM using the [Deployment Status API](../margo-management-interface/deployment-status.md).
   - Once reconciliation succeeds, the client MUST durably persist the new `manifestVersion` and associated `ETag` for use in the next poll cycle.
 
 ### Sequence Diagram
@@ -241,7 +237,7 @@ sequenceDiagram
     participant WFM as Workload Fleet<br>Manager
 
     loop Poll for updates
-        Client->>+WFM: GET /api/v1/clients/{clientId}/deployments<br>Header: If-None-Match: "sha256:abc..."
+        Client->>+WFM: GET /api/v1/deployments<br>Header: If-None-Match: "sha256:abc..."
         alt State unchanged
             WFM-->>-Client: 304 Not Modified
         else State updated
@@ -257,7 +253,7 @@ sequenceDiagram
             end
 
             Client->>Client: Verify digests and reconcile workloads
-            Client->>WFM: POST /api/v1/clients/{clientId}/deployment/{deploymentId}/status<br>Report progress
+            Client->>WFM: POST /api/v1/deployments/{deploymentId}/status<br>Report progress
         end
     end
 ```
