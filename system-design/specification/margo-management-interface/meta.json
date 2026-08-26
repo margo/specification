@@ -5,7 +5,6 @@
     "device-capabilities",
     "desired-state",
     "deployment-status",
-    "specification-extensions",
     "management-interface-swagger"
   ]
 }
