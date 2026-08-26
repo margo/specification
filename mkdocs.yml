@@ -19,7 +19,6 @@ nav:
           - specification/margo-management-interface/desired-state.md
           - specification/margo-management-interface/deployment-status.md
           - specification/margo-management-interface/management-interface-swagger.md
-          - Problem Types: specification/margo-management-interface/problem-types.md
       - Applications:
           - specification/applications/application-description.md
           - specification/applications/application-registry.md
@@ -29,6 +28,8 @@ nav:
           - specification/observability/publishing-workload-observability-data.md
           - specification/observability/collecting-workload-observability-data.md
           - specification/observability/consuming-workload-observability-data.md
+      - Problem Types: 
+          - specification/problem-types.md    
       - Specification Version Management:
           - specification/specification-version-management.md
 theme:
