@@ -17,6 +17,8 @@ These values are used in the `type` field of RFC 9457 `application/problem+json`
 | [#device-not-found](#device-not-found) | 404 | No device with the given deviceId was found for the client. |
 | [#invalid-bundle](#invalid-bundle) | 404 | Bundle not found for the given digest. |
 | [#deployment-not-found](#deployment-not-found) | 404 | Deployment not found for the given digest. |
+| [#discovery-document-not-found](#discovery-document-not-found) | 404 | Trust domain discovery document not available. |
+| [#spiffe-bundle-not-found](#spiffe-bundle-not-found) | 404 | spiffe bundle unavailable. |
 | [#server-cannot-generate-response](#server-cannot-generate-response) | 406 | Not Acceptable - Server cannot generate a response matching the Accept header. |
 
 ## Use in responses
@@ -238,5 +240,48 @@ This problem type is used when the server cannot produce a response in the forma
   "status": 406,
   "detail": "Not Acceptable - Server cannot generate a response matching the Accept header.",
   "instance": "/api/v1/deployments"
+}
+```
+
+---
+
+## discovery-document-not-found
+
+- **Type URI:** `https://docs.margo.org/specification/problem-types#discovery-document-not-found`
+- **HTTP status:** 404 Not Found
+- **Summary:** Trust domain discovery document not available.
+
+This problem type is returned when the Trust Domain discovery document is not available at the well-known path. This may occur when the Margo Identity Service (MIS) does not expose a discovery document, or when the document has not yet been provisioned. Clients SHOULD fall back to operator-provided Trust Bundle URI configuration when this error is encountered.
+
+```json
+{
+  "type": "https://docs.margo.org/specification/problem-types#discovery-document-not-found",
+  "title": "Discovery Document Not Found",
+  "status": 404,
+  "detail": "Trust domain discovery document not available.",
+  "instance": "/.well-known/margo"
+}
+```
+
+---
+
+## spiffe-bundle-not-found
+
+- **Type URI:** `https://docs.margo.org/specification/problem-types#spiffe-bundle-not-found`
+- **HTTP status:** 404 Not Found
+- **Summary:** SPIFFE bundle unavailable.
+
+This problem type is returned when the SPIFFE Trust Bundle cannot be retrieved from the Margo Identity Service (MIS). Clients MUST NOT validate SVIDs when the Trust Bundle is unavailable and SHOULD retry using the backoff strategy indicated in the response.
+
+```json
+{
+  "type": "https://docs.margo.org/specification/problem-types#spiffe-bundle-not-found",
+  "title": "Bundle Not Found",
+  "status": 404,
+  "detail": "SPIFFE bundle unavailable.",
+  "instance": "/.well-known/spiffe/bundle.json",
+  "retryable": true,
+  "retryAfterSeconds": 30,
+  "backoffStrategy": "exponential"
 }
 ```

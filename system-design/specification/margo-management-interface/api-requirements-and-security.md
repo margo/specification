@@ -38,7 +38,7 @@ The WFM authorizes each request using local policy keyed on the authenticated WF
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/problem-types/not-authorized",
+  "type": "https://docs.margo.org/specification/problem-types#not-authorized",
   "title": "Client Relationship Retired",
   "status": 403,
   "detail": "The WFM Client relationship has been retired by local policy."											 
@@ -76,7 +76,7 @@ The standard error response structure is:
 | `backoffStrategy` | No | Extension field. Recommended retry strategy: `none`, `fixed`, or `exponential`. |
 | `errors` | No | Extension field. Field-level validation errors. Common industry practice for validation failures (often 400 or 422). |
 
-The full catalogue of registered Margo problem type URIs are defined in [Problem Types](../margo-management-interface/problem-types.md).
+The full catalogue of registered Margo problem type URIs are defined in [Problem Types](../problem-types.md).
 
 ## Retry Semantics
 Transient failures MUST communicate retry information as follows:

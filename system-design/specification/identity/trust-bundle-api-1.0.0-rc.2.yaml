@@ -58,6 +58,10 @@ paths:
           description: Cached copy still valid
         '404':
           description: Discovery document not available
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'       
 
   /.well-known/spiffe/bundle.json:
     get:
@@ -94,9 +98,99 @@ paths:
           description: Cached copy still valid
         '404':
           description: Bundle unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
 
 components:
   schemas:
+    ProblemDetail:
+      type: object
+      description: >
+        RFC 9457 Problem Details for HTTP APIs. Returned with Content-Type:
+        application/problem+json.
+        See https://www.rfc-editor.org/rfc/rfc9457.
+        Extension members (RFC 9457 §3.2) are permitted via additionalProperties.
+        Vendors MAY add custom fields alongside standard margo fields.
+        Vendor-specific problem types MUST use their own URI namespace.
+        The https://docs.margo.org/specification/problem-types namespace is reserved for Margo.
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: >
+            URI reference identifying the problem type.
+            Implementations MUST use the registered Margo type URI for any error
+            condition defined in the Margo specification.
+            For error conditions not defined in this specification, implementations
+            MAY define their own type URIs under their own namespace.
+            Clients MUST use this field for programmatic error handling, NOT the status code or title.
+            Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
+            for display and handling.
+          example: https://docs.margo.org/specification/problem-types#spiffe-bundle-not-found
+        title:
+          type: string
+          description: Short human-readable summary of the problem type.
+          example: Bundle not found
+        status:
+          type: integer
+          description: HTTP status code.
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: No SPIFFE bundle was found for the given Trust Domain.
+        instance:
+          type: string
+          format: uri-reference
+          description: URI reference identifying the specific occurrence of the problem.
+          example: /.well-known/spiffe/bundle.json
+        retryable:
+          type: boolean
+          description: >
+            Whether the client MAY retry the request. If true, client SHOULD respect
+            the Retry-After response header when present.
+          example: false
+        retryAfterSeconds:
+          type: integer
+          description: >
+            Advisory retry delay in seconds. The authoritative value is the Retry-After
+            response header when present. This field is advisory only.
+          example: 30
+        backoffStrategy:
+          type: string
+          enum: [none, fixed, exponential]
+          description: >
+            Recommended backoff strategy for retrying.
+            none: do not retry.
+            fixed: retry after retryAfterSeconds.
+            exponential: use exponential backoff starting at retryAfterSeconds.
+          example: exponential
+        errors:
+          type: array
+          description: >
+            Optional list of field-level validation errors.
+            SHOULD be present on 422 Unprocessable Entity responses.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Field path that caused the validation error.
+                example: trustBundleUri
+              message:
+                type: string
+                description: Human-readable validation error message.
+                example: must be an absolute HTTPS URL
+      additionalProperties: true
+      # additionalProperties: true permits RFC 9457 §4 extension members.
+      # Margo extension fields: retryable, retryAfterSeconds, backoffStrategy, errors
+
     DiscoveryDocument:
       type: object
       required: [trustDomain, trustBundleUri]
@@ -120,6 +214,7 @@ components:
             bundle holds the authoritative trust anchors for the Trust Domain.
           examples:
             - https://mis.factory.example/.well-known/spiffe/bundle.json
+
     SpiffeBundle:
       type: object
       description: >
