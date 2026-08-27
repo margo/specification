@@ -51,6 +51,7 @@ do
         # Check test examples
         set -e
         doc-generation/check-examples.bash
+        doc-generation/check-openapi.bash
         set +e
 
 	fi

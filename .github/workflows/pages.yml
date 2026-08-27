@@ -62,6 +62,10 @@ jobs:
         run: |
           doc-generation/check-examples.bash
 
+      - name: Check OpenAPI documents
+        run: |
+          doc-generation/check-openapi.bash
+
   documents:
     needs:
       - quality-checks
