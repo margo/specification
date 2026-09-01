@@ -674,7 +674,7 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, indicates a value must be provided. Default is false if not provided.
+          If true, an empty value is permitted. Default is false if not provided.
         rank: 30
         range: boolean
         required: false
@@ -701,7 +701,7 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, indicates a value must be provided. Default is false if not provided.
+          If true, an empty value is permitted. Default is false if not provided.
         rank: 30
         range: boolean
         required: false
@@ -713,7 +713,7 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, indicates a value must be provided. Default is false if not provided.
+          If true, an empty value is permitted. Default is false if not provided.
         rank: 30
         range: boolean
         required: false
@@ -735,7 +735,7 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, indicates a value must be provided. Default is false if not provided.
+          If true, an empty value is permitted. Default is false if not provided.
         rank: 30
         range: boolean
         required: false
@@ -767,7 +767,7 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, indicates a value must be provided. Default is false if not provided.
+          If true, an empty value is permitted. Default is false if not provided.
         rank: 30
         range: boolean
         required: false
