@@ -1,8 +1,0 @@
-{
-  "title": "Observability",
-  "pages": [
-    "publishing-workload-observability-data",
-    "collecting-workload-observability-data",
-    "consuming-workload-observability-data"
-  ]
-}

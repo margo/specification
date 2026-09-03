@@ -1,0 +1,94 @@
+<!--
+IMPORTANT NOTE: This MarkDown document has been generated from the
+Margo data model and should not be manually changed!
+The LinkML schema for this schema is available in https://github.com/margo/specification/tree/pre-draft/data-model/
+The MarkDown document template is available in https://github.com/margo/specification/tree/pre-draft/tools/templates/model/index.md.jinja2
+-->
+# {% if schema.title %}{{ schema.title }}{% else %}{{ schema.name }}{% endif %}
+
+{% if schema.description %}{{ schema.description }}{% endif %}
+
+{#
+URI: {{ schema.id }}
+
+Name: {{ schema.name }}
+#}
+
+{% if include_top_level_diagram %}
+
+## Schema Diagram
+
+```{{ gen.mermaid_directive() }}
+{{ gen.mermaid_diagram() }}
+```
+{% endif %}
+
+## Interfacing Classes
+
+These are the classes directly participating in Margo interfaces (e.g. APIs):
+
+| Class | Description |
+| --- | --- |
+{% for cn in ["ApplicationDescription", "ApplicationDeployment", "DeviceCapabilitiesManifest", "DesiredStateManifest", "DeploymentStatusManifest"] -%}
+| {{ gen.link(schemaview.get_class(cn), True) }} | {{ schemaview.get_class(cn).description|enshorten }} |
+{% endfor %}
+
+??? note "Complete Margo data model"
+
+    ## Detailed Class Diagram
+
+    This is a class diagram showing all the classes involved in the Margo data model.
+    Use the mouse wheel to zoom and click-drag to pan. The controls in the bottom-right corner allow zooming in, resetting, and zooming out.
+
+    <div class="svg-pan-zoom-container" data-svg-pan-zoom data-svg-src="../figures/DataModel-ClassDiagram.svg" data-svg-alt="Complete Data Model"></div>
+    <div class="svg-pan-zoom-hint">Scroll to zoom &middot; Drag to pan &middot; Use controls at bottom-right to zoom in/out/reset</div>
+
+    ## All Classes
+
+    These are all the classes involved in the Margo data model:
+
+    | Class | Description |
+    | --- | --- |
+    {% if gen.hierarchical_class_view -%}
+    {% for u, v in gen.class_hierarchy_as_tuples() -%}
+    | {{ "&nbsp;"|safe*u*8 }}{{ gen.link(schemaview.get_class(v), True) }} | {{ schemaview.get_class(v).description|enshorten }} |
+    {% endfor %}
+    {% else -%}
+    {% for c in gen.all_class_objects()|sort(attribute=sort_by) -%}
+    | {{ gen.link(c, True) }} | {{ c.description|enshorten }} |
+    {% endfor %}
+    {% endif %}
+
+{#
+## Slots
+
+| Slot | Description |
+| --- | --- |
+{% for s in gen.all_slot_objects()|sort(attribute=sort_by) -%}
+| {{ gen.link(s, True) }} | {{ s.description|enshorten }} |
+{% endfor %}
+
+## Enumerations
+
+| Enumeration | Description |
+| --- | --- |
+{% for e in gen.all_enum_objects()|sort(attribute=sort_by) -%}
+| {{ gen.link(e, True) }} | {{ e.description|enshorten }} |
+{% endfor %}
+
+## Types
+
+| Type | Description |
+| --- | --- |
+{% for t in gen.all_type_objects()|sort(attribute=sort_by) -%}
+| {{ gen.link(t, True) }} | {{ t.description|enshorten }} |
+{% endfor %}
+
+## Subsets
+
+| Subset | Description |
+| --- | --- |
+{% for ss in schemaview.all_subsets().values()|sort(attribute='name') -%}
+| {{ gen.link(ss, True) }} | {{ ss.description|enshorten }} |
+{% endfor %}
+#}

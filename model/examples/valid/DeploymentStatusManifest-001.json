@@ -1,0 +1,22 @@
+{
+    "apiVersion": "v1",
+    "kind": "DeploymentStatusManifest",
+    "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
+    "status": {
+        "state": "installed"
+    },
+    "components": [
+        {
+            "name": "frontend",
+            "state": "installed"
+        },
+        {
+            "name": "backend",
+            "state": "failed",
+            "error": {
+                "code": "ERR_IMAGE_PULL",
+                "message": "Failed to pull image: access denied"
+            }
+        }
+    ]
+}

@@ -1,0 +1,6 @@
+{
+    "root": "model",
+    "targetclass": "ProblemDetail",
+    "schemafile": "problem-details.linkml.yaml",
+    "markdowndoc": "problem-details.md"
+}

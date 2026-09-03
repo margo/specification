@@ -1,5 +1,5 @@
 site_name: Specification (pre-draft)
-docs_dir: system-design
+docs_dir: build/site
 
 nav:
   - What is Margo?: index.md
@@ -15,9 +15,11 @@ nav:
           - specification/identity/trust-bundle-api-swagger.md
       - Margo Management Interface:
           - specification/margo-management-interface/api-requirements-and-security.md
-          - specification/margo-management-interface/device-capabilities.md
+          - specification/margo-management-interface/device-capabilities-api.md
+          - Device Capabilities: specification/margo-management-interface/device-capabilities.md
           - specification/margo-management-interface/desired-state.md
-          - specification/margo-management-interface/deployment-status.md
+          - specification/margo-management-interface/deployment-status-api.md
+          - Deployment Status: specification/margo-management-interface/deployment-status.md
           - specification/margo-management-interface/management-interface-swagger.md
       - Applications:
           - specification/applications/application-description.md
@@ -28,8 +30,16 @@ nav:
           - specification/observability/publishing-workload-observability-data.md
           - specification/observability/collecting-workload-observability-data.md
           - specification/observability/consuming-workload-observability-data.md
-      - Problem Types: 
-          - specification/problem-types.md    
+      - Data Model:
+          - Overview: data-model/index.md
+          - ApplicationDescription: data-model/ApplicationDescription.md
+          - ApplicationDeployment: data-model/ApplicationDeployment.md
+          - DeviceCapabilitiesManifest: data-model/DeviceCapabilitiesManifest.md
+          - DesiredStateManifest: data-model/DesiredStateManifest.md
+          - DeploymentStatusManifest: data-model/DeploymentStatusManifest.md
+      - Problem Types:
+          - specification/problem-types.md
+          - specification/problem-details.md
       - Specification Version Management:
           - specification/specification-version-management.md
 theme:
@@ -59,6 +69,8 @@ theme:
 markdown_extensions:
   - toc:
       toc_depth: 2
+  - admonition
+  - pymdownx.details
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -72,6 +84,8 @@ extra_css:
 extra_javascript:
   - assets/swagger-ui-bundle.js
   - assets/swagger-ui-standalone-preset.js
+  - assets/svg-pan-zoom.min.js
+  - assets/svg-pan-zoom-init.js
 
 extra:
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice

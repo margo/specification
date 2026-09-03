@@ -1,0 +1,14 @@
+{
+    "apiVersion": "v1",
+    "kind": "WrongKind",
+    "deploymentId": "a3e2f5dc-912e-494f-8395-52cf3769bc06",
+    "status": {
+        "state": "installed"
+    },
+    "components": [
+        {
+            "name": "frontend",
+            "state": "installed"
+        }
+    ]
+}

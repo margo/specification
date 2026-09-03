@@ -1,0 +1,399 @@
+openapi: 3.1.0
+info:
+  title: Margo Workload Management API
+  version: 1.0.0-rc.2
+  description: >
+    API for managing workloads on Margo-conformant edge devices.
+    Includes the APIs for exchanging desired state and current state.
+    Communication is secured with mutual TLS, defaulting to TLS 1.3 per the MIAF
+    TLS requirements: the WFM Client
+    and the WFM each present an X.509-SVID, validated against the Trust Domain's
+    Trust Bundle per the Margo Identity and Authorization Framework (MIAF) and
+    the WFM Identity Profile. The caller identity for every request is the
+    authenticated WFM Client SPIFFE ID. Trust anchors are distributed via the
+    MIAF Trust Bundle.
+
+servers:
+  - url: https://wfm.margo.org
+    description: Workload Fleet Manager APIs
+
+security:
+  - mTLS: []
+
+paths:
+paths:
+  /api/v1/capabilities/{deviceId}:
+    put:
+      summary: Report or update device capabilities
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/DeviceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceCapabilitiesManifest"
+      responses:
+        "200":
+          description: Device capabilities updated successfully
+        "201":
+          description: Device capabilities created successfully
+        "400":
+          description: Malformed request body.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "403":
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: No gateway was found for the given child-device deviceId.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "422":
+          description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+    delete:
+      summary: Remove device (Unregister)
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/DeviceId"
+      responses:
+        "204":
+          description: Device capabilities removed successfully
+        "403":
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: No device with the given deviceId was found for the client.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+  /api/v1/bundles/{digest}:
+    get:
+      summary: Retrieve a deployment bundle by its content digest
+      parameters:
+        - name: digest
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Content-addressable digest of the bundle archive. MUST conform to the 'digest' attribute in the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
+        - in: header
+          name: If-None-Match
+          required: false
+          schema:
+            type: string
+          description: Quoted ETag (same as digest) previously returned for this bundle.
+      responses:
+        "200":
+          description: Bundle archive (immutable)
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: Quoted digest of the returned bundle archive
+            Cache-Control:
+              schema:
+                type: string
+              description: private, max-age=31536000, immutable
+          content:
+            application/vnd.margo.bundle.v1+tar+gzip:
+              schema:
+                type: string
+                format: binary
+                description: Gzip-compressed tar containing one YAML file per deployment.
+        "304":
+          description: Representation not modified
+        "403":
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: Bundle not found for the given digest
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/deployments:
+    get:
+      summary: Retrieve the complete desired state for all workloads assigned to a device
+      parameters:
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            ETag value of the last successfully synced manifest. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+        - name: Accept
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Indicates which manifest formats the client supports.
+            Supported values: application/vnd.margo.manifest.v1+json.
+      responses:
+        "200":
+          description: Manifest returned in the negotiated format
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: Format of the returned manifest
+            ETag:
+              schema:
+                type: string
+              description: New ETag for the returned manifest
+            Cache-Control:
+              schema:
+                type: string
+              description: private
+          content:
+            application/vnd.margo.manifest.v1+json:
+              schema:
+                $ref: "#/components/schemas/UnsignedAppStateManifest"
+        "304":
+          description: Not Modified - Manifest has not changed
+        "403":
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "406":
+          description: Not Acceptable - Server cannot generate a response matching the Accept header
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/deployments/{deploymentId}/{digest}:
+    get:
+      summary: Retrieve an individual ApplicationDeployment YAML file
+      description: >
+        This endpoint is used by the client to fetch the YAML for a single ApplicationDeployment after it has processed a new State Manifest and identified a small number of new or updated deployments. This allows for highly efficient, incremental updates without needing to download the full bundle.
+        To make individual workload retrievals race-free and cache-friendly, this endpoint is content-addressable: the digest of the expected YAML is part of the URL. This guarantees immutability of the fetched resource and prevents a time-of-check / time-of-use race where a deployment changes between manifest retrieval and content fetch.
+      parameters:
+        - name: deploymentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier for the application deployment
+        - name: digest
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >
+            Content-addressable digest of the ApplicationDeployment YAML file. MUST conform to the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Optional ETag for caching. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+        - name: Accept-Encoding
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Indicates supported compression formats (e.g., gzip, br)
+      responses:
+        "200":
+          description: >
+            The response body is the raw ApplicationDeployment YAML file (Content-Type: application/yaml). The content MUST match the {digest} path segment; the server MUST return 404 if it does not have the exact digest referenced.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: application/yaml
+            ETag:
+              schema:
+                type: string
+              description: >
+                The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+            Cache-Control:
+              schema:
+                type: string
+              description: private, max-age=31536000, immutable
+            Vary:
+              schema:
+                type: string
+              description: Accept-Encoding
+          content:
+            application/yaml:
+              schema:
+                type: string
+                description: Raw YAML content of the ApplicationDeployment
+        "403":
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: Deployment not found for the given digest
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /api/v1/deployments/{deploymentId}/status:
+    post:
+      summary: Report deployment status
+      parameters:
+        - name: deploymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeploymentStatusManifest"
+      responses:
+        "200":
+          description: The deployment status was updated successfully.
+        "201":
+          description: The deployment status was created successfully.
+        "400":
+          description: Malformed request body.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "403":
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "422":
+          description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+components:
+  securitySchemes:
+    mTLS:
+      type: mutualTLS
+      description: >
+        Mutual TLS, defaulting to TLS 1.3 (TLS 1.2 permitted only as a
+        non-default fallback). The WFM Client and the WFM each
+        present an X.509-SVID, validated against the Trust Domain's Trust
+        Bundle per the Margo Identity and Authorization Framework (MIAF)
+        and the WFM Identity Profile.
+
+  # Modifications compared to pre-data-model stage:
+  # - ManifestVersion INLINED into UnsignedAppStateManifest(OpenAPI)/DesiredStateManifest(LinkML)
+  # - appDeploymentParams INLINED into appDeploymentSpec(OpenAPI)/Spec(LinkML)
+  schemas:
+    UnsignedAppStateManifest:
+      type: object
+      description: >-
+        Manifest from the Workload Fleet Manager, representing the complete desired workload configuration assigned to the device.
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: DesiredStateManifest
+    DeviceCapabilitiesManifest:
+      type: object
+      description: >-
+        Capabilities of a device on which applications can be deployed.
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: DeviceCapabilitiesManifest
+    DeploymentStatusManifest:
+      description: >-
+        Manifest sent by the device client to report the deployment status of a workload.
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: DeploymentStatusManifest
+    DeviceId:
+      description: >-
+        Device properties reported to the WFM.
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: FlatDeviceId
+    DeviceId_with_asterisk:
+      description: >-
+        Device properties reported to the WFM.
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: HierarchicalDeviceId
+    appDeploymentManifest:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: ApplicationDeployment
+    appDeploymentMetadata:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: DeploymentMetadata
+    appDeploymentProfile:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: DeploymentProfile
+    appDeploymentSpec:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: Spec
+    appParameterTarget:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: Target
+    DeploymentBundleRef:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: Bundle
+    DeploymentManifestRef:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: Deployment
+    helmApplicationDeploymentProfileComponent:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: HelmComponent
+    composeApplicationDeploymentProfileComponent:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: ComposeComponent
+    appParameterValue:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: Parameter.identifier
+    ProblemDetail:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: ProblemDetail
+    FieldError:
+      type: object
+      x-linkml-schema: https://specification.margo.org/data-model
+      x-linkml-source: FieldError

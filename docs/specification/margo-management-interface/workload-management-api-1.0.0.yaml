@@ -1,0 +1,995 @@
+openapi: 3.0.3
+info:
+  title: Margo Workload Management API
+  version: 1.0.0
+  description: 
+    API for managing workloads on Margo-compliant edge devices.
+    Includes the APIs for exchanging desired state and current state.
+    Communication is secured using server-side TLS (TLS 1.3 preferred),
+    and payloads are signed using X.509 certificates.
+
+servers:
+  - url: https://wfm.margo.org/
+    description: Workload Fleet Manager API
+
+security:
+  - PayloadSignature: []
+
+paths:
+  /api/v1/onboarding/certificate:
+    get:
+      summary: Download Root CA certificate
+      security: []
+      responses:
+        '200':
+          description: Root CA certificate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  certificate:
+                    type: string
+                    description: Base64-encoded certificate text
+  /api/v1/onboarding:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [apiVersion, kind, certificate]
+              properties:
+                apiVersion:
+                  type: string
+                  description: API version identifier
+                kind:
+                  type: string
+                  enum: [OnboardingRequest]
+                  description: Resource kind
+                certificate:
+                  description: Base64-encoded client certificate
+                  type: string
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                properties:
+                  clientId:
+                    type: string
+                type: object
+          description: New client onboarded successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: Invalid certificate
+                    type: string
+                type: object
+          description: Invalid certificate format or structure.
+        '403':
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    example: Client rejected
+                    type: string
+                type: object
+          description: Client certificate not trusted or client rejected.
+      security:
+      - PayloadSignature: []
+      summary: Complete onboarding with client certificate
+
+  /api/v1/clients/{clientId}/capabilities/{deviceId}:
+    post:
+      summary: Report device capabilities
+      security:
+        - PayloadSignature: []
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCapabilitiesManifest'
+      responses:
+        '201':
+          description: Capabilities reported successfully
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+        '401':
+          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+        '404':
+          description: No client with the given `clientID` was found.
+        '422':
+          description: Request body includes a semantic error.
+    put:
+      summary: Update device capabilities (Update)
+      security:
+        - PayloadSignature: []
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCapabilitiesManifest'
+      responses:
+        '201':
+          description: Capabilities reported successfully
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+        '401':
+          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+        '404':
+          description: No client with the given `clientID` was found.
+        '422':
+          description: Request body includes a semantic error.
+    delete:
+      summary: Remove device (Unregister)
+      security:
+        - PayloadSignature: []
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      responses:
+        '204':
+          description: Device capabilities removed successfully
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the payload is included.
+        '401':
+          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+        '404':
+          description: Client or device not found.
+  /api/v1/clients/{clientId}/bundles/{digest}:
+    get:
+      summary: Retrieve bundle information for a specific device and digest
+      security:
+        - PayloadSignature: []
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the device-client
+        - name: digest
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Content-addressable digest of the bundle archive. MUST conform to the 'digest' attribute in the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
+        - in: header
+          name: If-None-Match
+          required: false
+          schema:
+            type: string
+          description: Quoted ETag (same as digest) previously returned for this bundle.
+      responses:
+        '200':
+          description: Bundle archive (immutable)
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: New ETag for the returned manifest
+            Cache-Control:
+              schema:
+                type: string
+              description: public, max-age=31536000, immutable
+          content:
+            application/vnd.margo.bundle.v1+tar+gzip:
+              schema:
+                type: string
+                format: binary
+                description: Gzip-compressed tar containing one YAML file per deployment.
+        '304':
+          description: Representation not modified
+        '404':
+          description: Bundle not found for the given digest
+        '400':
+           description: Invalid request.
+        # TBD
+        # '500':
+        #   $ref: '#/components/responses/ErrorResponse'
+
+  /api/v1/clients/{clientId}/deployments:
+    get:
+      summary: Retrieve the complete desired state for all workloads assigned to a device
+      security:
+        - PayloadSignature: []      
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the Edge Compute Device making the request
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            ETag value of the last successfully synced manifest. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+        - name: Accept
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Indicates which manifest formats the client supports.
+            Supported values: application/vnd.margo.manifest.v1+json.
+      responses:
+        '200':
+          description: Manifest returned in the negotiated format
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: Format of the returned manifest
+            ETag:
+              schema:
+                type: string
+              description: New ETag for the returned manifest
+          content:
+            application/vnd.margo.manifest.v1+json:
+              schema:
+                $ref: '#/components/schemas/UnsignedAppStateManifest'
+        '304':
+          description: Not Modified - Manifest has not changed
+        '406':
+          description: Not Acceptable - Server cannot generate a response matching the Accept header
+
+
+  /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}:
+    get:
+      summary: Retrieve an individual ApplicationDeployment YAML file
+      security:
+        - PayloadSignature: []        
+      description: >
+        This endpoint is used by the client to fetch the YAML for a single ApplicationDeployment after it has processed a new State Manifest and identified a small number of new or updated deployments. This allows for highly efficient, incremental updates without needing to download the full bundle.
+        To make individual workload retrievals race-free and cache-friendly, this endpoint is content-addressable: the digest of the expected YAML is part of the URL. This guarantees immutability of the fetched resource and prevents a time-of-check / time-of-use race where a deployment changes between manifest retrieval and content fetch.
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the Edge Compute Device
+        - name: deploymentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier for the application deployment
+        - name: digest
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >
+            Content-addressable digest of the ApplicationDeployment YAML file. MUST conform to the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Optional ETag for caching. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+        - name: Accept-Encoding
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Indicates supported compression formats (e.g., gzip, br)
+      responses:
+        '200':
+          description: >
+            The response body is the raw ApplicationDeployment YAML file (Content-Type: application/yaml). The content MUST match the {digest} path segment; the server MUST return 404 if it does not have the exact digest referenced.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: application/yaml
+            ETag:
+              schema:
+                type: string
+              description: > 
+                The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+            Cache-Control:
+              schema:
+                type: string
+              description: public, max-age=31536000, immutable
+            Vary:
+              schema:
+                type: string
+              description: Accept-Encoding
+          content:
+            application/yaml:
+              schema:
+                type: string
+                description: Raw YAML content of the ApplicationDeployment
+        '404':
+          description: Deployment not found for the given digest
+
+  /api/v1/clients/{clientId}/deployments/{deploymentId}/status:
+    post:
+      summary: Report deployment status
+      security:
+        - PayloadSignature: []
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: deploymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentStatusManifest'
+      responses:
+        '200':
+          description: The deployment status was added, or updated, successfully.
+        '400':
+          description: Missing or invalid content-digest header. Ensure the SHA256 hash of the base64-encoded payload is included.
+        '401':
+          description: Signature verification failed. Ensure you are signing with the correct X.509 private key.
+        '403':
+          description: Client certificate is not trusted or has been revoked.
+        '422':
+          description: Request body includes a semantic error.
+
+components:
+  securitySchemes:
+    # TODO: fix this as we are following RFC 9421, instead of a custom signature header field
+    PayloadSignature:
+      type: apiKey
+      in: header
+      name: X-Payload-Signature
+      description: >
+        Base64-encoded payload signature using SHA-256 and device certificate.
+        Format: public_key;digital_signature
+
+  # Modifications compared to pre-data-model stage:
+  # - ManifestVersion INLINED into UnsignedAppStateManifest(OpenAPI)/DesiredStateManifest(LinkML)
+  # - appDeploymentParams INLINED into appDeploymentSpec(OpenAPI)/Spec(LinkML)
+  schemas:
+    appDeploymentProfile:
+      type: object
+      description: Represents a deployment configuration for the application.
+      properties:
+        type:
+          type: string
+          description: Defines the type of this deployment configuration for the application.  The
+            allowed values are `helm.v3`, to indicate the deployment profile's format
+            is Helm version 3,  and `compose` to indicate the deployment profile's format
+            is a Compose file.  When installing the application on a device supporting
+            the Kubernetes platform, all `helm.v3` components,  and only `helm.v3` components,
+            will be provided to the device in same order they are listed in the application
+            description file.  When installing the application on a device supporting
+            Compose, all `compose` components,  and only `compose` components, will be
+            provided to the device in the same order they are listed in the application
+            description file.  The device will install the components in the same order
+            they are listed in the application description file.
+          pattern: ^(helm\.v3|compose)$
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+          description: Component element indicating the components to deploy when installing
+            the application.  See the [Component](#component-attributes) section below.
+      required:
+      - type
+      - components
+    Component:
+      type: object
+      description: A class representing a component of a deployment profile.
+      properties:
+        name:
+          type: string
+          description: A unique name used to identify the component package. For helm
+            installations the name will be used as the chart name. The name must be lower
+            case letters and numbers and MAY contain dashes.  Uppercase letters, underscores
+            and periods MUST NOT be used.
+        properties:
+          $ref: '#/components/schemas/ComponentProperties'
+          description: A dictionary element specifying the component packages's deployment
+            details.  See the [Component Properties](#componentproperties-attributes)
+            section below.
+      required:
+      - name
+      - properties
+    helmApplicationDeploymentProfileComponent:
+      type: object
+      description: ''
+      properties:
+        name:
+          type: string
+          description: A unique name used to identify the component package. For helm
+            installations the name will be used as the chart name. The name must be lower
+            case letters and numbers and MAY contain dashes.  Uppercase letters, underscores
+            and periods MUST NOT be used.
+        properties:
+          $ref: '#/components/schemas/ComponentProperties'
+          description: A dictionary element specifying the component packages's deployment
+            details.  See the [Component Properties](#componentproperties-attributes)
+            section below.
+      required:
+      - name
+      - properties
+    composeApplicationDeploymentProfileComponent:
+      type: object
+      description: ''
+      properties:
+        name:
+          type: string
+          description: A unique name used to identify the component package. For helm
+            installations the name will be used as the chart name. The name must be lower
+            case letters and numbers and MAY contain dashes.  Uppercase letters, underscores
+            and periods MUST NOT be used.
+        properties:
+          $ref: '#/components/schemas/ComponentProperties'
+          description: A dictionary element specifying the component packages's deployment
+            details.  See the [Component Properties](#componentproperties-attributes)
+            section below.
+      required:
+      - name
+      - properties
+    ComponentProperties:
+      type: object
+      description: Properties dictionary for component deployment details.
+      properties:
+        repository:
+          type: string
+          description: Repository location for the component.
+        revision:
+          type: string
+          description: Revision version for the component.
+        wait:
+          type: boolean
+          description: If True, indicates the device waits for the component installation
+            to complete.
+        timeout:
+          type: string
+          description: Time to wait for component installation to complete, formatted
+            as "##m##s".
+        packageLocation:
+          type: string
+          description: URL indicating the Compose package's location.
+        keyLocation:
+          type: string
+          description: URL for the public key used to validate a digitally signed package.
+    appParameterTarget:
+      type: object
+      description: Specifies where the parameter applies in the deployment.
+      properties:
+        pointer:
+          type: string
+          description: The name of the parameter in the deployment configuration.  For
+            Helm deployments, this is the dot notation for the matching element in the
+            `values.yaml` file. This follows the same naming convention you would use
+            with the `--set` command line argument with the `helm install` command.  For
+            compose deployments, this is the name of the environment variable to set.
+        components:
+          type: array
+          items:
+            type: string
+          description: Indicates which deployment profile [component](#component-attributes
+            the parameter target applies to.  The component name specified here MUST match
+            a component name in the [deployment profiles](#deploymentprofile-attributes)
+            section.
+      required:
+      - pointer
+      - components
+    appDeploymentManifest:
+      type: object
+      description: A class representing the desired state of an entity.
+      properties:
+        apiVersion:
+          type: string
+          description: Identifier of the version of the API the object definition follows.
+        kind:
+          type: string
+          description: Must be `ApplicationDeployment`.
+          enum:
+          - ApplicationDeployment
+        metadata:
+          $ref: '#/components/schemas/appDeploymentMetadata'
+          description: Metadata element specifying characteristics about the application
+            deployment. See the [Metadata Attributes](#metadata-attributes) section below.
+        spec:
+          $ref: '#/components/schemas/appDeploymentSpec'
+          description: Spec element that defines deployment profile and parameters associated
+            with the application deployment. See the [Spec Attributes](#spec-attributes)
+            section below.
+      required:
+      - apiVersion
+      - kind
+      - metadata
+      - spec
+    appDeploymentMetadata:
+      type: object
+      description: Metadata associated with the desired state.
+      properties:
+        annotations:
+          $ref: '#/components/schemas/DeploymentAnnotations'
+          description: Defines the application ID and unique identifier associated to
+            the deployment specification. Needs to be assigned by the Workload Orchestration
+            Software. See the [Annotation Attributes](#annotations-attributes) section
+            below.
+        name:
+          type: string
+          description: When deploying to Kubernetes, the manifests name. The name is chosen
+            by the workload orchestration vendor and is not displayed anywhere.
+        namespace:
+          type: string
+          description: When deploying to Kubernetes, the namespace the manifest is added
+            under. The namespace is chosen by the workload orchestration solution vendor.
+        deviceId:
+          type: string
+          pattern: ^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$
+      required:
+      - annotations
+      - name
+      - namespace
+      - deviceId
+    DeploymentAnnotations:
+      type: object
+      description: A class representing annotations.
+      properties:
+        applicationId:
+          type: string
+          description: An identifier for the application. The id is used to help create
+            unique identifiers where required, such as namespaces. The id must be lower
+            case letters and numbers and MAY contain dashes. Uppercase letters, underscores
+            and periods MUST NOT be used. The id MUST NOT be more than 200 characters.
+            The applicationId MUST match the associated application package Metadata "id"
+            attribute.
+          pattern: ^[-a-z0-9]{1,200}$
+        id:
+          type: string
+          description: The unique identifier UUID of the deployment specification. Needs
+            to be assigned by the Workload Orchestration Software.
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+      required:
+      - applicationId
+      - id
+    appParameterValue:
+      type: object
+      description: Defines a configurable parameter for the application.
+      properties:
+        name:
+          type: string
+          description: Name of the parameter.
+        value:
+          description: The parameter's default value.  Accepted data types are string,
+            integer, double, boolean, array[string], array[integer], array[double], array[boolean].
+          anyOf:
+          - type: boolean
+          - type: integer
+          - type: number
+          - type: string
+        targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/appParameterTarget'
+          description: Used to indicate which component the value should be applied to
+            when installing, or updating, the application.  See the [Target](#target-attributes)
+            section below.
+      required:
+      - targets
+    appDeploymentSpec:
+      type: object
+      description: Specification details of the desired state.
+      properties:
+        deploymentProfile:
+          $ref: '#/components/schemas/appDeploymentProfile'
+          description: Section that defines deployment details including type and components.
+        parameters:
+          type: object
+          description: Describes the configured parameters applied via the end-user.
+      required:
+      - deploymentProfile
+      - parameters
+    Resources:
+      type: object
+      description: Required resources element specifying the resources required to install
+        the application.
+      properties:
+        cpu:
+          $ref: '#/components/schemas/CPU'
+          description: CPU element specifying the CPU requirements for the application.
+            See the [CPU](#cpu-attributes) section below.
+        memory:
+          type: string
+          description: The minimum amount of memory required. The value is given in binary
+            units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes). This is defined
+            by the application developer. After deployment of the application, the device
+            MUST provide this amount of memory for the application.
+          pattern: ^[0-9]+(Mi|Gi|Ki)$
+        storage:
+          type: string
+          description: The amount of storage required for the application to run. This
+            encompasses the installed application and the data it needs to store. The
+            value is given in binary units (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` =
+            Gibibytes, `Ti` Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes). This is defined
+            by the application developer. After deployment of the application, the device
+            MUST provide this amount of storage for the application
+          pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
+        peripherals:
+          type: array
+          items:
+            $ref: '#/components/schemas/DevicePeripheral'
+          description: Peripherals element specifying the peripherals required to run
+            the application. See the [Peripheral](#peripheral-attributes) section below.
+        interfaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceCommunicationInterface'
+          description: Interfaces element specifying the communication interfaces required
+            to run the application. See the [Communication Interfaces](#communicationinterface-attributes)
+            section below.
+    CPU:
+      type: object
+      description: CPU element specifying the CPU requirements for the application.
+      properties:
+        cores:
+          type: number
+          description: The required amount of CPU cores the application must use to run
+            in its full functionality. Specified as decimal units of CPU cores (e.g.,
+            `0.5` is half a core). This is defined by the application developer. After
+            deployment of the application, the device MUST provide this number of CPU
+            cores for the application.
+        architectures:
+          type: array
+          items:
+            type: string
+            description: Permissible CPU architecture values.
+            enum:
+            - amd64
+            - x86_64
+            - arm64
+            - arm
+            - riscv64
+            - other
+          description: The CPU architectures supported by the application. This can be
+            e.g. amd64, x86_64, arm64, arm. See the [CpuArchitectureType](#cpuarchitecturetype)
+            definition for all permissible values. Multiple arcitecture types can be specified,
+            as the deployment profile may support multiple CPU architectures.
+      required:
+      - cores
+    DevicePeripheral:
+      type: object
+      description: Peripheral hardware of a device.
+      properties:
+        type:
+          type: string
+          description: Permissible peripheral types.
+          enum:
+          - gpu
+          - display
+          - camera
+          - microphone
+          - speaker
+          - other
+        manufacturer:
+          type: string
+          description: The name of the manufacturer. If `manufacturer` is specified as
+            a requirement here, it may be difficult to find devices that can host the  application.
+            Please use these requirements with caution.
+        model:
+          type: string
+          description: The model of the peripheral. If `model` is specified as a requirement
+            here, it may be difficult to find devices that can host the application. Please
+            use these requirements with caution.
+      required:
+      - type
+    DeviceCommunicationInterface:
+      type: object
+      description: Communication interface of a device.
+      properties:
+        type:
+          type: string
+          description: Permissible communication interface types.
+          enum:
+          - ethernet
+          - wifi
+          - cellular
+          - bluetooth
+          - usb
+          - canbus
+          - rs232
+          - other
+      required:
+      - type
+    UnsignedAppStateManifest:
+      type: object
+      description: Manifest from the Workload Fleet Manager, representing the complete
+        desired workload configuration assigned to the device.
+      properties:
+        manifestVersion:
+          type: integer
+          description: Monotonically increasing unsigned 64-bit integer in the inclusive
+            range [1, 2^64-1]. Prevents rollback attacks.
+          minimum: 1
+          maximum: 18446744073709551615
+        bundle:
+          $ref: '#/components/schemas/DeploymentBundleRef'
+          description: Package optimization containing multiple ApplicationDeployment
+            YAMLs.
+        deployments:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeploymentManifestRef'
+          description: List of deployment objects describing each workload.
+      required:
+      - manifestVersion
+      - bundle
+      - deployments
+    DeploymentBundleRef:
+      type: object
+      description: Describes an archive containing all referenced ApplicationDeployment
+        YAMLs. If there are zero deployments (i.e., the deployments array is empty), this
+        field MUST be present with the value null. An empty archive MUST NOT be served.
+      properties:
+        mediaType:
+          type: string
+          description: MUST be application/vnd.margo.bundle.v1+tar+gzip, which denotes
+            a gzip-compressed tar archive (commonly delivered as a .tar.gz) whose root
+            contains one or more ApplicationDeployment YAML files. Servers MUST set the
+            HTTP Content-Type to this media type. The archive MUST contain exactly the
+            set of YAML files referenced by deployments.
+          enum:
+          - application/vnd.margo.bundle.v1+tar+gzip
+        digest:
+          type: string
+          description: Digest of the bundle archive. MUST equal the digest computed over
+            the exact sequence of bytes in the bundle endpoint's HTTP 200 OK response
+            body. See Protocol - Digest for further details.
+          pattern: ^[a-zA-Z0-9_-]+:[0-9a-fA-F]+$
+        sizeBytes:
+          type: integer
+          description: Optional unsigned 64-bit advisory estimate of the decoded payload
+            length in bytes for the bundle archive. Provided for bandwidth estimation
+            and update planning. MUST NOT be used for integrity verification.
+          minimum: 0
+        url:
+          type: string
+          format: uri
+          description: Content-addressable retrieval endpoint for the bundle of the form
+            /api/v1/clients/{clientId}/bundles/{digest} where {digest} equals bundle.digest.
+          pattern: ^/[a-zA-Z0-9-._~:/?#\[\]@!$&'()*+,;=]+$
+      required:
+      - mediaType
+      - digest
+      - url
+    DeploymentManifestRef:
+      type: object
+      description: Reference to an individual ApplicationDeployment within the desired
+        state manifest.
+      properties:
+        deploymentId:
+          type: string
+          description: The UUID of the deployment. MUST equal metadata.annotations.id
+            in the ApplicationDeployment.
+        digest:
+          type: string
+          description: "Digest of the corresponding ApplicationDeployment YAML file.\n\
+            \ MUST equal the digest computed over the exact sequence of bytes in the individual\
+            \ deployment endpoint's HTTP 200 OK response body.\n See Protocol - Digest\
+            \ for further details."
+          pattern: ^[a-zA-Z0-9_-]+:[0-9a-fA-F]+$
+        sizeBytes:
+          type: integer
+          description: Optional unsigned 64-bit advisory estimate of the decoded payload
+            length in bytes for the ApplicationDeployment YAML. Provided for bandwidth
+            estimation and update planning. MUST NOT be used for integrity verification.
+          minimum: 0
+        url:
+          type: string
+          format: uri
+          description: Content-addressable retrieval endpoint for the ApplicationDeployment
+            YAML of the form /api/v1/clients/{clientId}/deployments/{deploymentId}/{digest}
+            where {digest} equals deployments[].digest.
+          pattern: ^/[a-zA-Z0-9-._~:/?#\[\]@!$&'()*+,;=]+$
+      required:
+      - deploymentId
+      - digest
+      - url
+    DeviceCapabilitiesManifest:
+      type: object
+      description: Capabilities of a device on which applications can be deployed.
+      properties:
+        apiVersion:
+          type: string
+          description: Identifier of the version the API resource follows.
+        kind:
+          type: string
+          description: Must be `DeviceCapabilitiesManifest`.
+          enum:
+          - DeviceCapabilitiesManifest
+        properties:
+          $ref: '#/components/schemas/Properties'
+          description: Element that defines characteristics about the device. See the
+            [Properties Attributes](#properties-attributes) section below.
+      required:
+      - apiVersion
+      - kind
+      - properties
+    Properties:
+      type: object
+      description: Device properties reported to the WFM.
+      properties:
+        id:
+          type: string
+          description: Unique deviceID assigned to the device via the Device Owner.
+        vendor:
+          type: string
+          description: Defines the device vendor.
+        modelNumber:
+          type: string
+          description: Defines the model number of the device.
+        serialNumber:
+          type: string
+          description: Defines the serial number of the device.
+        roles:
+          type: array
+          items:
+            type: string
+            description: Role a device can provide to the Margo environment.
+            enum:
+            - Standalone Cluster
+            - Standalone Device
+            - Cluster Leader
+            - Gateway
+          description: 'Element that defines the device role it can provide to the Margo
+            environment. MUST be one of the following: Standalone Cluster, Cluster Leader,
+            Standalone Device, or Gateway.'
+        resources:
+          $ref: '#/components/schemas/Resources'
+          description: Element that defines the device's resources available to the application
+            deployed on the device. See the [Resources Attributes](#resources-attributes)
+            section below.
+      required:
+      - id
+      - vendor
+      - modelNumber
+      - serialNumber
+      - roles
+      - resources
+    DeploymentStatusManifest:
+      type: object
+      description: Manifest sent by the device client to report the deployment status
+        of a workload.
+      properties:
+        apiVersion:
+          type: string
+        kind:
+          type: string
+          enum:
+          - DeploymentStatusManifest
+        deploymentId:
+          type: string
+          description: The unique identifier of the deployment whose status is being reported.
+        deviceId:
+          type: string
+          description: Id of the device hosting the deployment. Includes the full device
+            hierarchy if applicable. This attribute is required when reporting on behalf
+            of a child-device.
+          pattern: ^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$
+        status:
+          $ref: '#/components/schemas/Status'
+          description: Overall status of the deployment.
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentStatus'
+          description: Per-component status list.
+      required:
+      - apiVersion
+      - kind
+      - deploymentId
+      - status
+      - components
+    Status:
+      type: object
+      description: Overall deployment state and optional error details.
+      properties:
+        state: &id001
+          type: string
+          description: Permissible deployment states.
+          enum:
+          - pending
+          - installing
+          - installed
+          - failed
+          - removing
+          - removed
+        error:
+          $ref: '#/components/schemas/Error'
+          description: Optional error details when the state is `failed`.
+      required:
+      - state
+    Error:
+      type: object
+      description: Error details associated with a failed deployment state.
+      properties:
+        code:
+          type: string
+        source:
+          type: string
+          description: Identifies the source of the error. It is set to the device id,
+            with its full hierarchy if applicable, of the device generating the error,
+            or to the component name of the component generating the error.
+        message:
+          type: string
+    ComponentStatus:
+      type: object
+      description: Status of a component deployment.
+      properties:
+        name:
+          type: string
+        state: *id001
+        error:
+          $ref: '#/components/schemas/Error'
+          description: Optional error details when the state is `failed`.
+      required:
+      - name
+      - state
+    DeviceId:
+      type: string
+      pattern: ^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$
+      description: 'Unique identifier of a device or device hierarchy. Format: "{id}[/{id}[/{id}...]]".
+        The top-level id is required and must include only unreserved characters as specified
+        in RFC3986. Subsequent ids indicate child devices in a gateway hierarchy and must
+        also use only unreserved characters.'
+    DeviceId_with_asterisk:
+      type: string
+      pattern: ^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$

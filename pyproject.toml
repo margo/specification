@@ -10,14 +10,16 @@ description = "Margo Specification"
 authors = []
 license = "Open Web Foundation - CLA Copyright Grant 0.9"
 readme = "README.md"
-requires-python = ">=3.12,<4.0"
+requires-python = ">=3.12,<3.14"
 dependencies = [
   'mkdocs>=1.6.1',
   'mkdocs-markdownextradata-plugin>=0.2.6',
   'mkdocs-material>=9.5.44',
   'linkml @ git+https://github.com/linkml/linkml.git#subdirectory=packages/linkml',
-  'linkml-runtime @ git+https://github.com/linkml/linkml.git#subdirectory=packages/linkml_runtime'
+  'linkml-runtime @ git+https://github.com/linkml/linkml.git#subdirectory=packages/linkml_runtime',
+  "openapi-spec-validator (>=0.9.0,<0.10.0)",
 ]
+# 'linkml>=1.11.1',
 
 [tool.poetry]
 requires-poetry = ">=2.0"

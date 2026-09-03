@@ -1,0 +1,10 @@
+type: https://docs.margo.org/specification/problem-types#invalid-request
+title: Invalid Request
+status: 400
+detail: Malformed request body.
+instance: /api/v1/capabilities/device-1
+retryable: false
+backoffStrategy: none
+errors:
+  - field: properties.roles
+    message: must contain at least one valid role

@@ -138,13 +138,13 @@ Once the required tools have been installed as documented in the [Preparation](#
 As mentioned in a previous section, as of now only some of the resources are being specified in LinkML and are being used to generate the MarkDown documents.
 Steps 1. and 2. only apply to those documents.
 
-Currently two Bash scripts are being provided the directory `doc-generation` to simplify steps 1. and 2.
+Currently several Bash scripts are being provided in the directory `tools` to simplify steps 1. and 2.
 
-The input for the generation of the MarkDown documents is provided in the directory `[src](./src/)`.
+The input for the generation of the MarkDown documents is provided in the directory [model](./model/).
 
 #### Validate input for MarkDown Generation
 
-The script [check-examples.bash](./doc-generation/check-examples.bash) checks:
+The script [check-examples.bash](./tools/check-examples.bash) checks:
 
 - the validity of the LinkML resource definitions (AKA schemas), and
 - the validity of provided examples and counter-examples according the resource definitions
@@ -153,9 +153,25 @@ The script [check-examples.bash](./doc-generation/check-examples.bash) checks:
 
 #### Generate MarkDown Documents
 
-The script [generate-documentation.bash](./doc-generation/generate-documentation.bash) generates MarkDown documents for the resources specified in LinkML format.
+The script [generate-docs.bash](./tools/generate-docs.bash) generates MarkDown documents for the resources specified in LinkML format.
 
-The LinkML specification documents can be found in the directory [src](./src/) and the resulting MarkDown documents are integrated with the other MarkDown documents in the directory [system-design](./system-design/).
+The LinkML specification documents can be found in the directory [model](./model/) and the resulting MarkDown documents are integrated with the other MarkDown documents in the directory [docs](./docs/).
+
+#### Generate OpenAPI YAML Documents
+
+The script [generate-openapi.bash](./tools/generate-openapi.bash) generates the OpenAPI v3.0.3 specification YAML file for the Workload Management API.
+
+It uses the custom generator [openapigen.py](./tools/openapigen.py) which composes a user-provided OpenAPI template (containing API header, paths/endpoints, and security schemes) with JSON Schema components generated from the LinkML data model. Only schemas referenced by the template's endpoints (and their transitive dependencies) are included.
+
+The generation:
+
+1. Reads the aggregate data model [`model/margo-data-model.linkml.yaml`](./model/margo-data-model.linkml.yaml) as the LinkML source.
+2. Reads the OpenAPI template [`tools/templates/openapi/workload-management-api-1.0.0.openapi.yaml`](./tools/templates/openapi/workload-management-api-1.0.0.openapi.yaml) which defines the API endpoints, request/response structures, and security schemes.
+3. Generates JSON Schema definitions for all referenced classes and injects them under `components/schemas` in the template.
+4. Writes the output to `build/artifacts/openapi/workload-management-api-1.0.0.openapi.yaml`.
+5. Copies the result into the tracked location `system-design/specification/margo-management-interface/workload-management-api-1.0.0.yaml` for version control. `generate-docs.bash` copies it from there into `build/site/` for MkDocs.
+
+When adding new API endpoints, edit the OpenAPI template to add the corresponding `paths` entries referencing the relevant `$ref: "#/components/schemas/<ClassName>"` schemas.
 
 #### Generate HTML Documents
 

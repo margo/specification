@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/problem-details
+name: ProblemDetails
+title: Problem Details
+description: >-
+  Schema for the RFC 9457 Problem Details for HTTP APIs error responses.
+  Returned with Content-Type: application/problem+json.
+  See https://www.rfc-editor.org/rfc/rfc9457.
+version: 1.0.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+
+default_prefix: margo
+
+classes:
+  ProblemDetail:
+    description: >-
+      RFC 9457 Problem Details for HTTP APIs. Returned with Content-Type:
+      application/problem+json.
+      See https://www.rfc-editor.org/rfc/rfc9457.
+      Extension members (RFC 9457 §3.2) are permitted.
+      Vendors MAY add custom fields alongside standard margo fields.
+      Vendor-specific problem types MUST use their own URI namespace.
+      The https://docs.margo.org/specification/problem-types namespace is reserved for Margo.
+    attributes:
+      type:
+        description: >-
+          URI reference identifying the problem type.
+          Implementations MUST use the registered Margo type URI for any error
+          condition defined in the Margo specification.
+          For error conditions not defined in this specification, implementations
+          MAY define their own type URIs under their own namespace.
+          Clients MUST use this field for programmatic error handling, NOT the status code or title.
+          Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
+          for display and handling.
+        required: true
+        range: uri
+      title:
+        description: Short human-readable summary of the problem type.
+        required: true
+        range: string
+      status:
+        description: HTTP status code.
+        required: true
+        range: integer
+      detail:
+        description: Human-readable explanation specific to this occurrence of the problem.
+        range: string
+      instance:
+        description: URI reference identifying the specific occurrence of the problem.
+        range: string
+        pattern: "^[a-zA-Z0-9-._~:/?#\\[\\]@!$&'()*+,;=%]+$"
+      retryable:
+        description: >-
+          Whether the client MAY retry the request. If true, client SHOULD respect
+          the Retry-After response header when present.
+        range: boolean
+      retryAfterSeconds:
+        description: >-
+          Advisory retry delay in seconds. The authoritative value is the Retry-After
+          response header when present. This field is advisory only.
+        range: integer
+      backoffStrategy:
+        description: >-
+          Recommended backoff strategy for retrying.
+        range: BackoffStrategy
+      errors:
+        description: >-
+          Optional list of field-level validation errors.
+          SHOULD be present on 422 Unprocessable Entity responses.
+        range: FieldError
+        multivalued: true
+        inlined_as_list: true
+
+  FieldError:
+    description: >-
+      A field-level validation error, as used in the `errors` member of a
+      ProblemDetail.
+    attributes:
+      field:
+        description: Field path that caused the validation error.
+        range: string
+      message:
+        description: Human-readable validation error message.
+        range: string
+
+enums:
+  BackoffStrategy:
+    description: >-
+      Recommended backoff strategy for retrying.
+    permissible_values:
+      none:
+        description: do not retry.
+      fixed:
+        description: retry after retryAfterSeconds.
+      exponential:
+        description: use exponential backoff starting at retryAfterSeconds.

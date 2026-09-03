@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/device-capabilities
+name: DeviceCapabilities
+title: Device Capabilities
+description: >-
+  Schema for defining device capabilities.
+  The purpose of the Device Capabilities is that WFMs can match application deployments with the capabilities of the target devices.
+version: 1.0.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+  - margo-resources.linkml
+
+default_prefix: margo
+# default_range: string  # https://github.com/linkml/linkml/issues/1483
+
+# Class Definitions
+classes:
+  DeviceCapabilitiesManifest:
+    description: >-
+      Capabilities of a device on which applications can be deployed.
+    attributes:
+      apiVersion:
+        description: Identifier of the version the API resource follows.
+        range: string
+        required: true
+      kind:
+        description: Must be `DeviceCapabilitiesManifest`.
+        range: string
+        required: true
+        equals_string: "DeviceCapabilitiesManifest"
+        designates_type: true
+      properties:
+        description: >-
+          Element that defines characteristics about the device.
+          See the [Properties Attributes](#properties-attributes) section below.
+        required: true
+        range: Properties
+
+  Properties:
+    description: >-
+      Device properties reported to the WFM.
+    attributes:
+      id:
+        description: Unique deviceID assigned to the device via the Device Owner.
+        range: string
+        required: true
+      vendor:
+        description: Defines the device vendor.
+        range: string
+        required: true
+      modelNumber:
+        description: Defines the model number of the device.
+        range: string
+        required: true
+      serialNumber:
+        description: Defines the serial number of the device.
+        range: string
+        required: true
+      roles:
+        description: >-
+          Element that defines the device role it can provide to the Margo environment.
+          MUST be one of the following: Standalone Cluster, Cluster Leader, Standalone Device, or Gateway.
+        required: true
+        multivalued: true
+        inlined: false
+        range: DeviceRole
+      resources:
+        description: >-
+          Element that defines the device's resources available to the application deployed on the device.
+          See the [Resources Attributes](#resources-attributes) section below.
+        required: true
+        range: Resources
+
+  # Override Resources for device capabilities (availability offering):
+  # all fields are required here, whereas in application descriptions (resource claiming)
+  # they are optional. Include the slots list so the OpenAPI generator emits the full schema.
+  DeviceResources:
+    slots:
+      - cpu
+      - memory
+      - storage
+      - peripherals
+      - interfaces
+    slot_usage:
+      cpu:
+        required: true
+      memory:
+        required: true
+      storage:
+        required: true
+      peripherals:
+        required: true
+      interfaces:
+        required: true
+
+# Enumeration Definitions
+enums:
+  DeviceRole:
+    description: >-
+      Role a device can provide to the Margo environment.
+    permissible_values:
+      Standalone Cluster:
+        description: >-
+          Select this role to run Helm applications.
+          See [Edge compute devices](../../concepts/edge-compute-devices/devices#standalone-cluster-role-details) for more information.
+      Standalone Device:
+        description: >-
+          Select this role to run Compose applications.
+          See [Edge compute devices](../../concepts/edge-compute-devices/devices#standalone-device-role-details) for more information.
+      Cluster Leader:
+        description: >-
+          Select this role for the leader node of a multi-node Helm cluster.
+          See [Edge compute devices](../../concepts/edge-compute-devices/devices#cluster-leader-role-details) for more information.
+      Gateway:
+        description: >-
+          Select this role for a see-thru gateway that connects one or more child-devices to the WFM,
+          exposing each child-device individually with its own capabilities.
+          See [Gateways](../../concepts/gateways/gateways.md) for more information.

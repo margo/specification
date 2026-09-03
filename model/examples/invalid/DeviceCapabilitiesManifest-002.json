@@ -1,0 +1,36 @@
+{
+    "apiVersion": "device.margo.org/v1alpha1",
+    "kind": "DeviceCapabilitiesManifest",
+    "properties": {
+        "id": "northstarida.xtapro.k8s.edge",
+        "modelNumber": "332ANZE1-N1",
+        "serialNumber": "PF45343-AA",
+        "roles": [
+            "Standalone Device"
+        ],
+        "resources": {
+            "cpu": {
+                "cores": 24,
+                "architectures": [
+                    "x86_64"
+                ]
+            },
+            "memory": "59Gi",
+            "storage": "1862Gi",
+            "peripherals": [
+                {
+                    "type": "gpu",
+                    "manufacturer": "NVIDIA"
+                }
+            ],
+            "interfaces": [
+                {
+                    "type": "ethernet"
+                },
+                {
+                    "type": "wifi"
+                }
+            ]
+        }
+    }
+}

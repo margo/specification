@@ -1,0 +1,3 @@
+type: https://docs.margo.org/specification/problem-types#invalid-request
+title: Invalid Request
+detail: Malformed request body.

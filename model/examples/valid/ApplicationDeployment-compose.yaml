@@ -1,0 +1,65 @@
+apiVersion: application.margo.org/v1alpha1
+kind: ApplicationDeployment
+metadata:
+    annotations:
+        applicationId: com-northstartida-digitron-orchestrator
+        id: ad9b614e-8912-45f4-a523-372358765def
+    name: com-northstartida-digitron-orchestrator-deployment
+    namespace: margo-poc
+spec:
+    deploymentProfile:
+        type: compose
+        components:
+            - name: digitron-orchestrator-docker
+              properties:
+                keyLocation: https://northsitarida.com/digitron/docker/public-key.asc
+                packageLocation: https://northsitarida.com/digitron/docker/digitron-orchestrator.tar.gz
+    parameters:
+        adminName:
+            value: Some One
+            targets:
+                - pointer: ENV.ADMIN_NAME
+                  components:
+                    - digitron-orchestrator-docker
+        adminPrincipalName:
+            value: someone@somewhere.com
+            targets:
+                - pointer: ENV.ADMIN_PRINCIPALNAME
+                  components:
+                    - digitron-orchestrator-docker
+        idpClientId:
+            value: 123-ABC
+            targets:
+                - pointer: ENV.IDP_CLIENT_ID
+                  components:
+                    - digitron-orchestrator-docker
+        idpName:
+            value: Azure AD
+            targets:
+                - pointer: ENV.IDP_NAME
+                  components:
+                    - digitron-orchestrator-docker
+        idpProvider:
+            value: aad
+            targets:
+                - pointer: ENV.IDP_PROVIDER
+                  components:
+                    - digitron-orchestrator-docker
+        idpUrl:
+            value: https://123-abc.com
+            targets:
+                - pointer: ENV.IDP_URL
+                  components:
+                    - digitron-orchestrator-docker
+        pollFrequency:
+            value: "120"
+            targets:
+                - pointer: ENV.POLL_FREQUENCY
+                  components:
+                    - digitron-orchestrator-docker
+        siteId:
+            value: SID-123-ABC
+            targets:
+                - pointer: ENV.SITE_ID
+                  components:
+                    - digitron-orchestrator-docker

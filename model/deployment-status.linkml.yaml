@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=https://linkml.io/linkml-model/linkml_model/jsonschema/meta.schema.json
+id: https://specification.margo.org/deployment-status
+name: DeploymentStatus
+description: >-
+  Schema for reporting the deployment status of workloads from a device to the WFM.
+version: 1.0.0
+prefixes:
+  linkml: https://w3id.org/linkml/
+  margo: https://specification.margo.org/
+imports:
+  - linkml:types
+
+default_prefix: margo
+default_range: string
+
+classes:
+  DeploymentStatusManifest:
+    description: >-
+      Manifest sent by the device client to report the deployment status of a workload.
+    attributes:
+      apiVersion:
+        range: string
+        required: true
+      kind:
+        range: string
+        required: true
+        equals_string: "DeploymentStatusManifest"
+        designates_type: true
+      deploymentId:
+        description: >-
+          The unique identifier of the deployment whose status is being reported.
+        range: string
+        required: true
+      deviceId:
+        description: >-
+          Id of the device hosting the deployment. Includes the full device hierarchy if applicable.
+          This attribute is required when reporting on behalf of a child-device.
+        range: HierarchicalDeviceId
+      status:
+        description: >-
+          Overall status of the deployment.
+        range: Status
+        required: true
+      components:
+        description: >-
+          Per-component status list.
+        range: ComponentStatus
+        required: true
+        multivalued: true
+
+  Status:
+    description: >-
+      Overall deployment state and optional error details.
+    slots:
+      - state
+      - error
+
+  Error:
+    description: >-
+      Error details associated with a failed deployment state.
+    attributes:
+      code:
+        range: string
+      source:
+        description: >-
+          Identifies the source of the error. It is set to the device id, with its full hierarchy
+          if applicable, of the device generating the error, or to the component name of the
+          component generating the error.
+        range: string
+      message:
+        range: string
+
+  ComponentStatus:
+    is_a: Status
+    description: >-
+      Status of a component deployment.
+    attributes:
+      name:
+        range: string
+        required: true
+
+slots:
+  state:
+    description: >-
+      Current deployment state.
+    range: State
+    required: true
+
+  error:
+    description: >-
+      Optional error details when the state is `failed`.
+    range: Error
+
+enums:
+  State:
+    description: >-
+      Permissible deployment states.
+    permissible_values:
+      pending:
+      installing:
+      installed:
+      failed:
+      removing:
+      removed:

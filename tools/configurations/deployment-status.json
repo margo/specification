@@ -1,0 +1,6 @@
+{
+    "root": "model",
+    "targetclass": "DeploymentStatusManifest",
+    "schemafile": "deployment-status.linkml.yaml",
+    "markdowndoc": "deployment-status.md"
+}

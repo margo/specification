@@ -5,8 +5,7 @@ myenv
 .python-version
 
 # Ignore the generated files:
-system-design/specification/margo-management-interface/desired-state.md
-system-design/specification/applications/application-description.md
-src/specification/applications/docs
-src/specification/margo-management-interface/docs
+build
+docs/specification/margo-management-interface/desired-state.md
+docs/specification/applications/application-description.md
 *.code-workspace
