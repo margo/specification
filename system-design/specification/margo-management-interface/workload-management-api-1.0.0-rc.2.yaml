@@ -598,12 +598,14 @@ components:
 
     DeploymentStatusManifest:
       type: object
-      required: [deploymentId, status, components]
+      required: [deploymentId, adoptedManifestVersion, status, components]
       properties:
         deploymentId:
           type: string
         deviceId:
           $ref: '#/components/schemas/DeviceId'
+        adoptedManifestVersion:
+          $ref: '#/components/schemas/ManifestVersion'
         status:
           type: object
           required: [state]
