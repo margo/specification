@@ -1,0 +1,903 @@
+openapi: 3.1.0
+info:
+  title: Margo Workload Management API
+  version: 1.0.0-rc.2
+  description: >
+    API for managing workloads on Margo-conformant edge devices.
+    Includes the APIs for exchanging desired state and current state.
+    Communication is secured with mutual TLS, defaulting to TLS 1.3 per the MIAF
+    TLS requirements: the WFM Client
+    and the WFM each present an X.509-SVID, validated against the Trust Domain's
+    Trust Bundle per the Margo Identity and Authorization Framework (MIAF) and
+    the WFM Identity Profile. The caller identity for every request is the
+    authenticated WFM Client SPIFFE ID. Trust anchors are distributed via the
+    MIAF Trust Bundle.
+
+servers:
+  - url: https://wfm.margo.org
+    description: Workload Fleet Manager APIs
+
+security:
+  - mTLS: []
+
+paths:
+  /api/v1/capabilities/{deviceId}:
+    put:
+      summary: Report or update device capabilities
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCapabilitiesManifest'
+      responses:
+        '200':
+          description: Device capabilities updated successfully
+        '201':
+          description: Device capabilities created successfully
+        '400':
+          description: Malformed request body.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '404':
+          description: No gateway was found for the given child-device deviceId.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '422':
+          description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    delete:
+      summary: Remove device (Unregister)
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      responses:
+        '204':
+          description: Device capabilities removed successfully
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '404':
+          description: No device with the given deviceId was found for the client.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /api/v1/bundles/{digest}:
+    get:
+      summary: Retrieve a deployment bundle by its content digest
+      parameters:
+        - name: digest
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Content-addressable digest of the bundle archive. MUST conform to the 'digest' attribute in the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
+        - in: header
+          name: If-None-Match
+          required: false
+          schema:
+            type: string
+          description: Quoted ETag (same as digest) previously returned for this bundle.
+      responses:
+        '200':
+          description: Bundle archive (immutable)
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: Quoted digest of the returned bundle archive
+            Cache-Control:
+              schema:
+                type: string
+              description: private, max-age=31536000, immutable
+          content:
+            application/vnd.margo.bundle.v1+tar+gzip:
+              schema:
+                type: string
+                format: binary
+                description: Gzip-compressed tar containing one YAML file per deployment.
+        '304':
+          description: Representation not modified
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '404':
+          description: Bundle not found for the given digest
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+  /api/v1/deployments:
+    get:
+      summary: Retrieve the complete desired state for all workloads assigned to a device
+      parameters:
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            ETag value of the last successfully synced manifest. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+        - name: Accept
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Indicates which manifest formats the client supports.
+            Supported values: application/vnd.margo.manifest.v1+json.
+      responses:
+        '200':
+          description: Manifest returned in the negotiated format
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: Format of the returned manifest
+            ETag:
+              schema:
+                type: string
+              description: New ETag for the returned manifest
+            Cache-Control:
+              schema:
+                type: string
+              description: private
+          content:
+            application/vnd.margo.manifest.v1+json:
+              schema:
+                $ref: '#/components/schemas/UnsignedAppStateManifest'
+        '304':
+          description: Not Modified - Manifest has not changed
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'  
+        '406':
+          description: Not Acceptable - Server cannot generate a response matching the Accept header
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+  /api/v1/deployments/{deploymentId}/{digest}:
+    get:
+      summary: Retrieve an individual ApplicationDeployment YAML file
+      description: >
+        This endpoint is used by the client to fetch the YAML for a single ApplicationDeployment after it has processed a new State Manifest and identified a small number of new or updated deployments. This allows for highly efficient, incremental updates without needing to download the full bundle.
+        To make individual workload retrievals race-free and cache-friendly, this endpoint is content-addressable: the digest of the expected YAML is part of the URL. This guarantees immutability of the fetched resource and prevents a time-of-check / time-of-use race where a deployment changes between manifest retrieval and content fetch.
+      parameters:
+        - name: deploymentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier for the application deployment
+        - name: digest
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >
+            Content-addressable digest of the ApplicationDeployment YAML file. MUST conform to the Digest Specification and MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the HTTP 200 OK response body. If the server cannot produce content whose digest matches this value it MUST return 404 Not Found.
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: >
+            Optional ETag for caching. The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+        - name: Accept-Encoding
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Indicates supported compression formats (e.g., gzip, br)
+      responses:
+        '200':
+          description: >
+            The response body is the raw ApplicationDeployment YAML file (Content-Type: application/yaml). The content MUST match the {digest} path segment; the server MUST return 404 if it does not have the exact digest referenced.
+          headers:
+            Content-Type:
+              schema:
+                type: string
+              description: application/yaml
+            ETag:
+              schema:
+                type: string
+              description: >
+                The ETag is returned to the client from the /deployments endpoint, it is the digest of the state manifest.
+            Cache-Control:
+              schema:
+                type: string
+              description: private, max-age=31536000, immutable
+            Vary:
+              schema:
+                type: string
+              description: Accept-Encoding
+          content:
+            application/yaml:
+              schema:
+                type: string
+                description: Raw YAML content of the ApplicationDeployment
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '404':
+          description: Deployment not found for the given digest
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        
+  /api/v1/deployments/{deploymentId}/status:
+    post:
+      summary: Report deployment status
+      parameters:
+        - name: deploymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentStatusManifest'
+      responses:
+        '200':
+          description: The deployment status was updated successfully.
+        '201':
+          description: The deployment status was created successfully.
+        '400':
+          description: Malformed request body.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '422':
+          description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+components:
+  securitySchemes:
+    mTLS:
+      type: mutualTLS
+      description: >
+        Mutual TLS, defaulting to TLS 1.3 (TLS 1.2 permitted only as a
+        non-default fallback). The WFM Client and the WFM each
+        present an X.509-SVID, validated against the Trust Domain's Trust
+        Bundle per the Margo Identity and Authorization Framework (MIAF)
+        and the WFM Identity Profile.
+
+  schemas:
+    ProblemDetail:
+      type: object
+      description: >
+        RFC 9457 Problem Details for HTTP APIs. Returned with Content-Type:
+        application/problem+json.
+        See https://www.rfc-editor.org/rfc/rfc9457.
+        Extension members (RFC 9457 §3.2) are permitted via additionalProperties.
+        Vendors MAY add custom fields alongside standard margo fields.
+        Vendor-specific problem types MUST use their own URI namespace.
+        The https://docs.margo.org/specification/problem-types namespace is reserved for Margo.
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: >
+            URI reference identifying the problem type.
+            Implementations MUST use the registered Margo type URI for any error
+            condition defined in the Margo specification.
+            For error conditions not defined in this specification, implementations
+            MAY define their own type URIs under their own namespace.
+            Clients MUST use this field for programmatic error handling, NOT the status code or title.
+            Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
+            for display and handling.
+          example: https://docs.margo.org/specification/problem-types#invalid-request
+        title:
+          type: string
+          description: Short human-readable summary of the problem type.
+          example: Gateway not found
+        status:
+          type: integer
+          description: HTTP status code.
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: No gateway was found for the given child-device deviceId.
+        instance:
+          type: string
+          format: uri-reference
+          description: URI reference identifying the specific occurrence of the problem.
+          example: /api/v1/capabilities/gateway-1/child-device-2
+        retryable:
+          type: boolean
+          description: >
+            Whether the client MAY retry the request. If true, client SHOULD respect
+            the Retry-After response header when present.
+          example: false
+        retryAfterSeconds:
+          type: integer
+          description: >
+            Advisory retry delay in seconds. The authoritative value is the Retry-After
+            response header when present. This field is advisory only.
+          example: 30
+        backoffStrategy:
+          type: string
+          enum: [none, fixed, exponential]
+          description: >
+            Recommended backoff strategy for retrying.
+            none: do not retry.
+            fixed: retry after retryAfterSeconds.
+            exponential: use exponential backoff starting at retryAfterSeconds.
+          example: exponential
+        errors:
+          type: array
+          description: >
+            Optional list of field-level validation errors.
+            SHOULD be present on 422 Unprocessable Entity responses.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Field path that caused the validation error.
+                example: properties.roles
+              message:
+                type: string
+                description: Human-readable validation error message.
+                example: must contain at least one valid role
+      additionalProperties: true
+      # additionalProperties: true permits RFC 9457 §4 extension members.
+      # Margo extension fields: retryable, retryAfterSeconds, backoffStrategy, errors
+      #
+      # Vendor extension fields SHOULD follow RFC 9457 naming rules:
+      #   - Start with a letter (A-Z, a-z)
+      #   - Use only letters, digits, and underscores
+      #   - Be three characters or longer
+      #
+      # Vendor extension examples:
+      #   vendor_component: "sensor-subsystem"
+      #   vendor_error_code: "ERR_4291"
+    ManifestVersion:
+      type: number
+      description: >
+        Monotonically increasing unsigned 64-bit integer in the inclusive range [1, 2^64-1].
+        Prevents rollback attacks. The first manifest MUST use 1.
+    DeploymentBundleRef:
+      type: [object, 'null']
+      description: >
+        Describes a single archive containing all ApplicationDeployment documents. If there are zero deployments (deployments array is empty) the property MUST be present with the value null (it MUST NOT be omitted).
+      properties:
+        mediaType:
+          type: string
+          description: >
+            MUST be application/vnd.margo.bundle.v1+tar+gzip; a gzip-compressed tar whose root contains one or more ApplicationDeployment YAML files. If there are zero deployments then bundle MUST be null (an empty archive MUST NOT be served). The archive MUST contain exactly the set of YAML files referenced by deployments.
+        digest:
+          type: string
+          description: >
+            The digest of the bundle archive. MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in the bundle endpoint's HTTP 200 OK response body.
+        sizeBytes:
+          type: number
+          description: >
+            Unsigned 64-bit advisory estimate of the decoded payload length in bytes for the bundle archive. Provided for bandwidth estimation and update planning. MUST NOT be used for integrity; digest verification remains mandatory.
+        url:
+          type: string
+          description: >
+            Content-addressable retrieval endpoint of the form /api/v1/bundles/{digest} where {digest} equals bundle.digest.
+    DeploymentManifestRef:
+      type: object
+      description: >
+        Reference to a deployment manifest with content addressing and integrity verification.
+      required:
+        - deploymentId
+        - digest
+        - url
+      properties:
+        deploymentId:
+          type: string
+          description: >
+            Unique identifier for the application deployment.
+        digest:
+          type: string
+          description: >
+            The digest of the individual ApplicationDeployment YAML file. MUST equal the digest computed over the exact sequence of bytes (per Exact Bytes Rule) in that deployment endpoint's HTTP 200 OK response body.
+        sizeBytes:
+          type: number
+          description: >
+            Unsigned 64-bit advisory estimate of the decoded payload length in bytes for the deployment YAML. Provided for planning or progress display. MUST NOT be used for integrity; digest verification remains mandatory.
+        url:
+          type: string
+          description: >
+            Content-addressable endpoint of the form /api/v1/deployments/{deploymentId}/{digest}. The {digest} MUST equal deployments[].digest; the referenced resource is immutable
+    UnsignedAppStateManifest:
+      type: object
+      required:
+        - manifestVersion
+        - bundle
+        - bundle.mediaType
+        - bundle.digest
+        - bundle.url
+        - deployments
+      properties:
+        manifestVersion:
+          $ref: '#/components/schemas/ManifestVersion'
+        bundle:
+          $ref: '#/components/schemas/DeploymentBundleRef'
+        deployments:
+          type: array
+          description: A list of deployment object references for the device. The reference contains some meta info and reference to the url where the deployment is available.
+          items:
+            $ref: '#/components/schemas/DeploymentManifestRef'
+    DeviceCapabilitiesManifest:
+      type: object
+      required: [properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
+      properties:
+        properties:
+          type: object
+          required: [id, vendor, modelNumber, serialNumber]
+          # Only identity fields are required. A device that hosts workloads reports cpus, memory,
+          # storage, peripherals, interfaces, otelCollector (true), supportedRuntimes (>=1), and
+          # supportedDeploymentTypes (>=1). A device that does not host workloads (e.g. a see-thru
+          # gateway that only relays the devices behind it) omits those fields.
+          # The WFM infers it is non-hosting from their absence and infers a
+          # gateway from the parent/child deviceId hierarchy.
+          properties:
+            id:
+              $ref: '#/components/schemas/DeviceId'
+            vendor:
+              type: string
+            modelNumber:
+              type: string
+            serialNumber:
+              type: string
+            cpus:
+              type: array
+              items:
+                type: object
+                required: [cores]
+                properties:
+                  cores:
+                    type: number
+                  architecture:
+                    type: string
+                    enum: [amd64, arm64, arm]
+            memory:
+              type: string
+            storage:
+              type: string
+            peripherals:
+              type: array
+              items:
+                $ref: '#/components/schemas/DevicePeripheral'
+            interfaces:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceCommunicationInterface'
+            otelCollector:
+              type: boolean
+            supportedRuntimes:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                enum: [oci, custom]
+            supportedDeploymentTypes:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                enum: [helm, compose, custom]
+        labels:
+          type: object
+          description: >-
+            Optional supplier-defined key/value pair metadata used for device matching via eligibilityRules
+            label selectors. Values MUST be a string, number, boolean, or an array of strings or numbers.
+            Margo does not assign semantics to any particular label key or value. Label keys are case-sensitive.
+            Implementations SHOULD use stable, collision-resistant label names, prefixing with an organization
+            domain is recommended.
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: number
+              - type: boolean
+              - type: array
+                items:
+                  type: string
+              - type: array
+                items:
+                  type: number
+    DeviceId:
+      # format: "{id}[/{id}[/{id}...]]"
+      # Top-level id is required and must include only unreserved characters as specified in RFC3986.
+      # Subsequent ids are only used when referencing child devices, and must include only unreserved characters as specified in RFC3986 when present.
+      type: string
+      pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$'
+    DeviceId_with_asterisk:
+      # format: "{id}[/{id}[/{id}...]/*]"
+      # Top-level id is required and must include only unreserved characters as specified in RFC3986.
+      # Subsequent ids are only used when referencing child devices, and must include only unreserved characters as specified in RFC3986 when present.
+      type: string
+      pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
+
+    ComponentStatus:
+      type: object
+      required: [name, state]
+      properties:
+        name:
+          type: string
+        state:
+          type: string
+          enum: [pending, installing, installed, failed, removing, removed]
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            source:
+              type: string
+            message:
+              type: string
+
+    DeploymentStatusManifest:
+      type: object
+      required: [deploymentId, adoptedManifestVersion, status, components]
+      properties:
+        deploymentId:
+          type: string
+        deviceId:
+          $ref: '#/components/schemas/DeviceId'
+        adoptedManifestVersion:
+          $ref: '#/components/schemas/ManifestVersion'
+        status:
+          type: object
+          required: [state]
+          properties:
+            state:
+              type: string
+              enum: [pending, installing, installed, failed, removing, removed]
+            error:
+              type: object
+              properties:
+                code:
+                  type: string
+                source:
+                  type: string
+                message:
+                  type: string
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentStatus'
+
+    DevicePeripheral:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [gpu, display, camera, microphone, speaker]
+        manufacturer:
+          type: string
+        model:
+          type: string
+
+    DeviceCommunicationInterface:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [ethernet, wifi, cellular, bluetooth, usb, canbus, rs232]
+
+    # app deployment struct added here for ease of programming, the code generators will generate the structs
+    # for the actual app deployment yaml and parsing would be easy to do
+    appDeploymentManifest:
+      type: object
+      description: Application Deployment manifest
+      required: [metadata, spec]
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the application deployment
+        metadata:
+          $ref: '#/components/schemas/appDeploymentMetadata'
+        spec:
+          $ref: '#/components/schemas/appDeploymentSpec'
+    appDeploymentMetadata:
+      type: object
+      required: [annotations, name, namespace, deviceId]
+      properties:
+        name:
+          type: string
+          description: Name of the resource
+        namespace:
+          type: string
+          description: Namespace of the resource
+        deviceId:
+          $ref: '#/components/schemas/DeviceId_with_asterisk'
+          description: Device ID of the target device for the deployment
+        labels:
+          type: object
+          additionalProperties: { type: string }
+          description: Labels for the resource
+    applicationDeploymentProfileComponent:
+      type: object
+      description: >-
+        A component within a deployment profile. Uses the unified ComponentProperties
+        shape — both Helm and Compose components share the same OCI coordinate structure.
+      required: [name, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the component
+        properties:
+          type: object
+          required: [repository, revision]
+          properties:
+            repository:
+              type: string
+              pattern: '^oci://.+'
+              description: >-
+                OCI repository URI for the component package
+                (e.g., oci://registry.example.com/org/component-name).
+                MUST be a valid OCI reference using the oci:// scheme.
+            revision:
+              type: string
+              pattern: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+              description: >-
+                OCI tag identifying the component version. MUST be a valid SemVer 2.0
+                string without leading v. Build metadata uses _ as separator instead of +.
+            wait:
+              type: boolean
+              description: >-
+                Whether to wait for component installation to complete before proceeding.
+                Default is true. Only applies when multiple components are provided.
+            timeout:
+              type: string
+              pattern: '^\d+m\d+s$'
+              description: >-
+                Maximum time to wait for component installation to complete.
+                Format is ##m##s (e.g., 5m0s, 8m30s).
+    appDeploymentProfile:
+      type: object
+      description: Application Deployment Profile
+      required: [type, components]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          enum: ["helm", "compose"]
+          description: Type of deployment profile
+        components:
+          type: array
+          items: 
+            $ref: '#/components/schemas/applicationDeploymentProfileComponent'
+          description: Components of the deployment profile
+        deviceConstraints:
+          $ref: '#/components/schemas/DeviceConstraints'
+          description: Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+    DeviceConstraints:
+      type: object
+      description: >-
+        Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+      properties:
+        capacityRequirements:
+          $ref: '#/components/schemas/CapacityRequirements'
+          description: Minimum CPU, memory, and storage requirements for the deployment profile.
+        eligibilityRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/EligibilityRule'
+          description: >-
+            Optional rules used to match the deployment with device properties and supplier-defined labels
+            reported in the device capabilities.
+    CapacityRequirements:
+      type: object
+      description: Minimum device capacity required by the deployment profile.
+      properties:
+        cpu:
+          $ref: '#/components/schemas/DeploymentCpuRequirement'
+          description: CPU element specifying the CPU requirements for the deployment.
+        memory:
+          type: string
+          description: >-
+            The minimum amount of memory required. The value is given in binary units
+            (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
+          pattern: ^[0-9]+(Mi|Gi|Ki)$
+        storage:
+          type: string
+          description: >-
+            The minimum amount of storage required. The value is given in binary units
+            (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
+          pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
+    DeploymentCpuRequirement:
+      type: object
+      description: CPU element specifying the CPU requirements for the deployment.
+      required: [cores]
+      properties:
+        cores:
+          type: number
+          description: >-
+            The required amount of CPU cores. Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
+        architectures:
+          type: array
+          items:
+            type: string
+            enum: [amd64, arm64, arm, riscv64, other]
+          description: The CPU architectures supported by the deployment.
+    EligibilityRule:
+      type: object
+      description: A rule matching properties and supplier-defined labels reported through the device capabilities.
+      properties:
+        propertySelector:
+          $ref: '#/components/schemas/Selector'
+          description: Selector evaluated against the properties reported in the device capabilities.
+        labelSelector:
+          $ref: '#/components/schemas/Selector'
+          description: Selector evaluated against the labels reported in the device capabilities.
+    Selector:
+      type: object
+      description: A set of match expressions evaluated with AND semantics.
+      required: [matchExpressions]
+      properties:
+        matchExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchExpression'
+          description: Match expressions evaluated against the device's reported capabilities.
+    MatchExpression:
+      type: object
+      description: An expression used to match a device's reported capabilities properties or labels.
+      required: [key, operator]
+      properties:
+        key:
+          type: string
+          description: >-
+            The key used to match the device's reported capabilities. For property selectors, this MUST be a JSON
+            Pointer, as defined by RFC 6901, mapping to a specific property. For label selectors, this MUST be the
+            exact label key.
+        operator:
+          type: string
+          enum: [In, NotIn, Exists, DoesNotExist, Gt, Lt, ContainsAll, ContainsAny]
+          description: Operator used to evaluate the referenced value.
+        values:
+          type: array
+          items: {}
+          description: >-
+            Values used by the operator when required for matching expressions. Required for the `In`, `NotIn`,
+            `Gt`, or `Lt` operator.
+        itemSelector:
+          $ref: '#/components/schemas/Selector'
+          description: Selector evaluated against array elements. Required for the `ContainsAll` or `ContainsAny` operator.
+    appParameterTarget:
+      type: object
+      description: Application Parameter Target
+      required: [pointer, components]
+      properties:
+        pointer:
+          type: string
+          description: Pointer to the parameter
+        components:
+          type: array
+          items:
+            type: string
+          description: Components of the parameter
+    appParameterValue:
+      type: object
+      description: Application Parameter Value
+      required: [value, targets]
+      properties:
+        value:
+          # type: object
+          description: Value of the parameter
+          additionalProperties: true
+          x-go-type: interface{}
+        targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/appParameterTarget'
+          description: Targets of the parameter
+    appDeploymentParams:
+      type: object
+      description: Application Parameters
+      additionalProperties:
+        $ref: '#/components/schemas/appParameterValue'
+    appDeploymentSpec:
+      type: object
+      description: Application Deployment specification
+      required: [applicationId, deploymentProfile]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
+      properties:
+        applicationId:
+          type: string
+          description: >-
+            An identifier for the application.
+            The id is used to help create unique identifiers where required, such as namespaces.
+            The id must be lower case letters and numbers and MAY contain dashes.
+            Uppercase letters, underscores and periods MUST NOT be used.
+            The id MUST NOT be more than 200 characters.
+            The applicationId MUST match the associated application description's top-level "id" attribute.
+          pattern: "^[-a-z0-9]{1,200}$"
+        deploymentProfile:
+          $ref: '#/components/schemas/appDeploymentProfile'
+          description: Deployment profile
+        parameters:
+          $ref: '#/components/schemas/appDeploymentParams'
+          description: Parameters for the deployment

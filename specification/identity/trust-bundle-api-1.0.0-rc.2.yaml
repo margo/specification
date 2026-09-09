@@ -1,0 +1,238 @@
+openapi: 3.1.0
+info:
+  title: Margo Trust Bundle API
+  version: 1.0.0-rc.2
+  description: >
+    Read-only HTTPS endpoints served by the Margo Identity Service (MIS) role:
+    an optional discovery document that points a client to the Trust Bundle,
+    and the SPIFFE bundle retrieval endpoint.
+
+
+    Both endpoints are served over HTTPS. Because a client cannot yet validate
+    MIAF-issued SVIDs when it first retrieves trust material, these connections
+    are authenticated by an initial trust mechanism established outside MIAF
+    (PKI-anchored validation or operator-provisioned pins), not by a MIAF SVID.
+    There is therefore no application-layer security scheme on these endpoints.
+
+
+    A client MUST tolerate unknown response fields so that future revisions can
+    add fields without breaking existing implementations.
+
+servers:
+  - url: https://mis.example.com
+    description: Margo Identity Service (illustrative origin)
+
+security: []
+
+paths:
+  /.well-known/margo:
+    get:
+      summary: Retrieve the Trust Domain discovery document
+      description: >
+        Optional entry point to a Trust Domain that points a client to the
+        Trust Bundle URI. Each document describes exactly one Trust Domain.
+        An origin serving exactly one Trust Domain SHOULD expose the document
+        at this well-known path; an origin serving several Trust Domains MAY
+        use other absolute HTTPS URLs. When discovery is not used, the Trust
+        Bundle URI is supplied by operator-provided configuration.
+      parameters:
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Previously returned ETag; used to revalidate a cached copy.
+      responses:
+        '200':
+          description: Discovery document
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: Entity tag for cache revalidation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryDocument'
+        '304':
+          description: Cached copy still valid
+        '404':
+          description: Discovery document not available
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'       
+
+  /.well-known/spiffe/bundle.json:
+    get:
+      summary: Retrieve the SPIFFE bundle
+      description: >
+        Returns the Trust Domain's SPIFFE bundle, holding the authoritative
+        set of public trust anchors for that Trust Domain. The
+        path shown here is illustrative; the authoritative location is the
+        trustBundleUri value from the discovery document (or operator
+        configuration). The endpoint follows the SPIFFE Federation bundle
+        endpoint model (one URL per Trust Domain). The response MUST conform to
+        the SPIFFE bundle format
+        (https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Trust_Domain_and_Bundle.md#4-spiffe-bundle-format).
+      parameters:
+        - name: If-None-Match
+          in: header
+          required: false
+          schema:
+            type: string
+          description: Previously returned ETag; used to revalidate a cached copy.
+      responses:
+        '200':
+          description: SPIFFE bundle
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: Entity tag for cache revalidation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpiffeBundle'
+        '304':
+          description: Cached copy still valid
+        '404':
+          description: Bundle unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+
+components:
+  schemas:
+    ProblemDetail:
+      type: object
+      description: >
+        RFC 9457 Problem Details for HTTP APIs. Returned with Content-Type:
+        application/problem+json.
+        See https://www.rfc-editor.org/rfc/rfc9457.
+        Extension members (RFC 9457 §3.2) are permitted via additionalProperties.
+        Vendors MAY add custom fields alongside standard margo fields.
+        Vendor-specific problem types MUST use their own URI namespace.
+        The https://docs.margo.org/specification/problem-types namespace is reserved for Margo.
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: >
+            URI reference identifying the problem type.
+            Implementations MUST use the registered Margo type URI for any error
+            condition defined in the Margo specification.
+            For error conditions not defined in this specification, implementations
+            MAY define their own type URIs under their own namespace.
+            Clients MUST use this field for programmatic error handling, NOT the status code or title.
+            Clients encountering an unknown type URI SHOULD fall back to title, detail, and status
+            for display and handling.
+          example: https://docs.margo.org/specification/problem-types#spiffe-bundle-not-found
+        title:
+          type: string
+          description: Short human-readable summary of the problem type.
+          example: Bundle not found
+        status:
+          type: integer
+          description: HTTP status code.
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence of the problem.
+          example: No SPIFFE bundle was found for the given Trust Domain.
+        instance:
+          type: string
+          format: uri-reference
+          description: URI reference identifying the specific occurrence of the problem.
+          example: /.well-known/spiffe/bundle.json
+        retryable:
+          type: boolean
+          description: >
+            Whether the client MAY retry the request. If true, client SHOULD respect
+            the Retry-After response header when present.
+          example: false
+        retryAfterSeconds:
+          type: integer
+          description: >
+            Advisory retry delay in seconds. The authoritative value is the Retry-After
+            response header when present. This field is advisory only.
+          example: 30
+        backoffStrategy:
+          type: string
+          enum: [none, fixed, exponential]
+          description: >
+            Recommended backoff strategy for retrying.
+            none: do not retry.
+            fixed: retry after retryAfterSeconds.
+            exponential: use exponential backoff starting at retryAfterSeconds.
+          example: exponential
+        errors:
+          type: array
+          description: >
+            Optional list of field-level validation errors.
+            SHOULD be present on 422 Unprocessable Entity responses.
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Field path that caused the validation error.
+                example: trustBundleUri
+              message:
+                type: string
+                description: Human-readable validation error message.
+                example: must be an absolute HTTPS URL
+      additionalProperties: true
+      # additionalProperties: true permits RFC 9457 §4 extension members.
+      # Margo extension fields: retryable, retryAfterSeconds, backoffStrategy, errors
+
+    DiscoveryDocument:
+      type: object
+      required: [trustDomain, trustBundleUri]
+      additionalProperties: true
+      description: >
+        Describes exactly one Trust Domain. Clients MUST ignore unknown fields.
+      properties:
+        trustDomain:
+          type: string
+          description: >
+            Identifier of the Trust Domain (for example, factory.example).
+            Every SPIFFE ID issued by the MIS MUST belong to this Trust Domain.
+          examples:
+            - factory.example
+        trustBundleUri:
+          type: string
+          format: uri
+          description: >
+            Absolute HTTPS URL to the SPIFFE bundle for this Trust Domain. A
+            client MUST reject a value whose scheme is not https. The
+            bundle holds the authoritative trust anchors for the Trust Domain.
+          examples:
+            - https://mis.factory.example/.well-known/spiffe/bundle.json
+
+    SpiffeBundle:
+      type: object
+      description: >
+        SPIFFE bundle for one Trust Domain. The concrete schema is defined by
+        the SPIFFE Trust Domain and Bundle specification (a JWK Set). A client
+        MUST reject the bundle, and MUST NOT validate SVIDs against it, if it
+        carries no X.509 trust anchors (fail closed). The JWK Set MAY also carry
+        jwt-svid signing keys; MIAF uses only x509-svid entries and MUST ignore
+        any other key material on retrieval.
+      additionalProperties: true
+      examples:
+        - spiffe_sequence: 12
+          spiffe_refresh_hint: 86400
+          keys:
+            - kty: EC
+              crv: P-256
+              x: <base64url-encoded EC public key x coordinate>
+              y: <base64url-encoded EC public key y coordinate>
+              use: x509-svid
+              x5c:
+                - <base64 DER of the Trust Domain's X.509 authority certificate>

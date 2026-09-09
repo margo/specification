@@ -1,0 +1,3028 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../margo-management-interface/management-interface-swagger/">
+      
+      
+        <link rel="next" href="../application-registry/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Application Description - Specification (pre-draft)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../../assets/external/fonts.googleapis.com/css.804a7bde.css">
+        <style>:root{--md-text-font:"IBM Plex Sans";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/margo.css">
+    
+      <link rel="stylesheet" href="../../../assets/swagger-ui.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="margo" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#application-description" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://margo.org" title="Specification (pre-draft)" class="md-header__button md-logo" aria-label="Specification (pre-draft)" data-md-component="logo">
+      
+  <img src="../../../assets/margo_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Specification (pre-draft)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Application Description
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://margo.org" title="Specification (pre-draft)" class="md-nav__button md-logo" aria-label="Specification (pre-draft)" data-md-component="logo">
+      
+  <img src="../../../assets/margo_white.svg" alt="logo">
+
+    </a>
+    Specification (pre-draft)
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Margo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity and Authorization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Identity and Authorization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/identity-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Margo Identity and Authorization Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/svids/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SVIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/tls-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transport Layer Security Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/trust-bundle-and-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust Bundle and Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/identity-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity Lifecycle and Operator Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/wfm-identity-profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WFM Identity Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/identity-security-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity Security Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../identity/trust-bundle-api-swagger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust Bundle API - Swagger UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Margo Management Interface
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Margo Management Interface
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/api-requirements-and-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Requirements and Security Details
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/device-capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/desired-state/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desired State
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/deployment-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/management-interface-swagger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Management Interface - Swagger UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Applications
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Applications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Description
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#defining-configurable-application-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defining configurable application parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enumerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enumerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-description-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Description Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-runtimes-and-deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom runtimes and deployments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specification-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specification extensions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../application-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Margo Devices
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Margo Devices
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-devices/device-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/publishing-workload-observability-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Workload Observability Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/collecting-workload-observability-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collecting Workload Observability Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/consuming-workload-observability-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consuming Workload Observability Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem Types
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../problem-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specification Version Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specification Version Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specification-version-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version Management Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="application-description">Application Description</h1>
+<p>The purpose of the Application Description is to enable an application's discovery, configuration, and deployment on edge devices.
+To deploy an application the end user specifies values for the <a href="#defining-configurable-application-parameters">parameters</a> given in 
+an Application Description (e.g., through a UI of the WFM) to instantiate an <code>ApplicationDeployment</code>, 
+which defines the <a href="../../margo-management-interface/desired-state/">desired state</a> for an application.</p>
+<h3 id="top-level-attributes">Top-level Attributes</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apiVersion</td>
+<td>string</td>
+<td>Y</td>
+<td>Identifier of the version of the API the object definition follows. Must be "v1".</td>
+</tr>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>Y</td>
+<td>An identifier for the application. The id is used to help create unique identifiers where required,  such as namespaces. The id must be lower case letters and numbers and MAY contain dashes.  Uppercase letters, underscores and periods MUST NOT be used. The id MUST NOT be more than 200 characters.</td>
+</tr>
+<tr>
+<td>metadata</td>
+<td>Metadata</td>
+<td>Y</td>
+<td>Metadata element specifying characteristics about the application deployment. See the <a href="#metadata-attributes">Metadata Attributes</a> section below.</td>
+</tr>
+<tr>
+<td>deploymentProfiles</td>
+<td>[]DeploymentProfile</td>
+<td>Y</td>
+<td>Deployment profiles element specifying the types of deployments the application supports.  See the <a href="#deploymentprofile-attributes">Deployment</a> section below.</td>
+</tr>
+<tr>
+<td>parameters</td>
+<td>map[string][Parameter]</td>
+<td>N</td>
+<td>Parameters element specifying the configurable parameters to use when installing, or updating, the application. Defined as a map where each key is the user-defined parameter name (e.g. <code>mysqlDatabase:</code>, <code>greeting:</code>, <code>idpName:</code>, <code>myAppEndpoint:</code>), and value would be Parameter object, i.e. map[string]Parameter. See the <a href="#parameter-attributes">Parameter</a> section below.</td>
+</tr>
+<tr>
+<td>configuration</td>
+<td>Configuration</td>
+<td>N</td>
+<td>Configuration element specifying how parameters should be displayed to the user for setting the value  as well as the rules to use to validate the user's input.  See the <a href="#configuration-attributes">Configuration</a> section below.</td>
+</tr>
+<tr>
+<td>x-&lt;unique-name&gt;-extensions</td>
+<td>map[string]interface{}</td>
+<td>N</td>
+<td>Allows addition of arbitrary object (mapping) whose contents  suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the <a href="#specification-extensions">Specification Extensions</a> section below for more details.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="metadata-attributes">Metadata Attributes  <br><br></h3>
+<p>Metadata about the application. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The application's official name.  This name is for display purposes only and can container whitespace and special characters.</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>N</td>
+<td>None</td>
+</tr>
+<tr>
+<td>version</td>
+<td>string</td>
+<td>Y</td>
+<td>The application's version.</td>
+</tr>
+<tr>
+<td>catalog</td>
+<td>Catalog</td>
+<td>Y</td>
+<td>Catalog element specifying the application's metadata for enabling its discovery. See the <a href="#catalog-attributes">Catalog</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="catalog-attributes">Catalog Attributes  <br><br></h3>
+<p>Catalog metadata for displaying the application. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>application</td>
+<td>ApplicationMetadata</td>
+<td>N</td>
+<td>Application element specifying the application specific metadata.  See the <a href="#applicationmetadata-attributes">Application Metadata</a> section below.</td>
+</tr>
+<tr>
+<td>author</td>
+<td>[]Author</td>
+<td>N</td>
+<td>Author element specifying metadata about the application's author.  See the <a href="#author-attributes">Author Metadata</a> section below.</td>
+</tr>
+<tr>
+<td>organization</td>
+<td>[]Organization</td>
+<td>Y</td>
+<td>Organization element specifying metadata about the organization/company providing the application.  See the <a href="#organization-attributes">Organization Metadata</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="applicationmetadata-attributes">ApplicationMetadata Attributes  <br><br></h3>
+<p>Metadata specific to the application. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>descriptionFile</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the file containing the application's full description. The file should be a markdown file.</td>
+</tr>
+<tr>
+<td>icon</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the icon file (e.g., in PNG format).</td>
+</tr>
+<tr>
+<td>licenseFile</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the file that details the application's license. The file should either be a plain text, markdown or PDF file.</td>
+</tr>
+<tr>
+<td>releaseNotes</td>
+<td>string</td>
+<td>N</td>
+<td>Statement about the changes for this application's release. The file should either be a markdown or PDF file.</td>
+</tr>
+<tr>
+<td>site</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the application's website.</td>
+</tr>
+<tr>
+<td>tagline</td>
+<td>string</td>
+<td>N</td>
+<td>The application's slogan.</td>
+</tr>
+<tr>
+<td>tags</td>
+<td>[]string</td>
+<td>N</td>
+<td>An array of strings that can be used to provide additional context for the application in a user interface to assist with task such as categorizing, searching, etc.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="author-attributes">Author Attributes  <br><br></h3>
+<p>Information about the application's author. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>N</td>
+<td>The name of the application's creator.</td>
+</tr>
+<tr>
+<td>email</td>
+<td>string</td>
+<td>N</td>
+<td>Email address of the application's creator.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="organization-attributes">Organization Attributes  <br><br></h3>
+<p>Information about the providing organization. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>Organization responsible for the application's development and distribution.</td>
+</tr>
+<tr>
+<td>site</td>
+<td>string</td>
+<td>N</td>
+<td>Link to the organization's website.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="deploymentprofile-attributes">DeploymentProfile Attributes  <br><br></h3>
+<p>Represents a deployment configuration for the application. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>Y</td>
+<td>Defines the type of this deployment configuration for the application.  The allowed values are <code>helm</code>, to indicate the deployment profile's format is Helm version 3 or Version 4 using Chart APIVersion v2 (see <a href="#helm-exceptions">special exceptions below</a>),  <code>compose</code> to indicate the deployment profile's format is a Compose file, and <code>custom</code> to indicate the deployment profile's format is custom and not defined in the Margo specification.  When installing the application on a device supporting the Kubernetes platform, all <code>helm</code> components,  and only <code>helm</code> components, will be provided to the device in same order they are listed in the application description file.  When installing the application on a device supporting Compose, all <code>compose</code> components,  and only <code>compose</code> components, will be provided to the device in the same order they are listed in the application description file.  The device will install the components in the same order they are listed in the application description file. When installing the application on a device supporting a matched custom deployment format, all <code>custom</code> components, and only <code>custom</code> components, will be provided to the device in the same order they are listed in the application description file.  Since custom deployment types are beyond the scope of the Margo specification, application and device suppliers should collaborate to understand how the application will be deployed. See the <a href="#custom-runtimes-and-deployments">custom runtimes and deployments</a> section below for more details.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>Y</td>
+<td>An identifier for the deployment profile, given by the application developer, used to uniquely identify this deployment profile from others within this application description's scope.</td>
+</tr>
+<tr>
+<td>components</td>
+<td>[]Component</td>
+<td>Y</td>
+<td>Component element indicating the components to deploy when installing the application.  See the <a href="#component-attributes">Component</a> section below.</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>N</td>
+<td>This human-readable description of a deployment profile allows for providing additional context about the deployment profile. E.g., the application developer can use this to describe the deployment profile's purpose, such as the intended use case. Additionally, the application developer can use this to provide further details about the resources, peripherals, and interfaces required to run the application.</td>
+</tr>
+<tr>
+<td>deviceConstraints</td>
+<td>DeviceConstraints</td>
+<td>N</td>
+<td>Device constraints specifying the minimum device capabilities and eligibility rules required for the application. See the <a href="#deviceconstraints-attributes">Device Constraints</a> section below.</td>
+</tr>
+<tr>
+<td>x-&lt;unique-name&gt;-extensions</td>
+<td>map[string]interface{}</td>
+<td>N</td>
+<td>Allows addition of arbitrary object (mapping) whose contents  suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the <a href="#specification-extensions">Specification Extensions</a> section below for more details.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="helm-exceptions">Helm Exceptions</h4>
+<p>Applications can be deployed as Helm charts using either Helm <a href="https://helm.sh/docs/v3/topics/charts">version 3</a> or <a href="https://helm.sh/docs/topics/charts">version 4</a> using Chart APIVersion v2 only.</p>
+<p>In order to facilitate the required deployment options for Helm charts, Margo does not support Helm functions requiring direct communication with the Kubernetes API.</p>
+<p>Your Helm based application MUST NOT rely on the following Helm functions:
+- <a href="https://helm.sh/docs/chart_template_guide/functions_and_pipelines#using-the-lookup-function">Lookup</a>: The <code>lookup</code> template function queries live resources in the target Kubernetes cluster at render time, for example to fetch ConfigMaps, Secrets, or other objects. This requires direct API access and cluster credentials during rendering.
+- <a href="https://helm.sh/docs/topics/charts_hooks/">Hooks</a>: Hooks (pre/post install, upgrade, delete, rollback, test, etc.) execute additional Kubernetes resources or jobs at specific points in the release lifecycle. Helm waits for these resources to reach a ready state by monitoring them via the Kubernetes API, and the hooks themselves may perform privileged or arbitrary operations in the cluster.
+- <a href="https://helm.sh/docs/chart_best_practices/custom_resource_definitions/">CRD management via Helm</a>: Installing or managing Custom Resource Definitions (CRDs) with Helm requires checking for the presence of CRDs and registering new APIs with the cluster, which involves API calls and may require elevated permissions.</p>
+<p><strong>Note:</strong> This function list is based on the current Helm v3 and v4 implementations. Additional functions may be added later if Helm introduces new functions requiring communication with the Kubernetes API to work.</p>
+<h3 id="deviceconstraints-attributes">DeviceConstraints Attributes  <br><br></h3>
+<p>Device constraints specifying the minimum device capabilities and eligibility rules required for the application. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>capacityRequirements</td>
+<td>CapacityRequirements</td>
+<td>N</td>
+<td>Minimum CPU, memory, and storage requirements for the deployment profile. See the <a href="#capacityrequirements-attributes">Capacity Requirements</a> section below.</td>
+</tr>
+<tr>
+<td>eligibilityRules</td>
+<td>[]EligibilityRule</td>
+<td>N</td>
+<td>Optional rules used to match the application with device properties and supplier-defined labels reported in the device capabilities. See the <a href="#eligibilityrule-attributes">Eligibility Rules</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<p>Workload fleet manager implementations are not required to guarantee a workload can be deployed to a selected device. Ultimately, this responsibility falls to the device to determine if a workload can be deployed or not. </p>
+<p>Workload fleet manager implementations MAY choose to implement device eligibility matching in order to reduce the risk of deployment failures because of incompatibility between what a workload requires and what a device provides. </p>
+<p>If a workload fleet manager chooses to implement device eligibility matching they MUST follow the matching rules define below to match the application description's device constraint requirements with device's reported capabilities.</p>
+<ul>
+<li>A workload fleet manager MUST evaluate <code>deviceConstraints</code> before selecting a target device for a deployment profile.</li>
+<li>A device that does not satisfy the minimum required CPU, memory, and storage defined in the <code>capacityRequirements</code> MUST NOT be selected for that profile.</li>
+<li>If <code>eligibilityRules</code> are present, a device that does not satisfy the required rule evaluation MUST NOT be selected for that profile.</li>
+<li>If no available device satisfies the profile's required constraints, the deployment MUST be reported as not placeable according to the implementation's existing status model.</li>
+</ul>
+<p>If a workload fleet manager chooses to implement device eligibility matching they MAY choose to find only the first suitable device or all suitable devices.</p>
+<h3 id="capacityrequirements-attributes">CapacityRequirements Attributes  <br><br></h3>
+<p>Minimum device capacity required by the deployment profile. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu</td>
+<td>CPU</td>
+<td>N</td>
+<td>CPU element specifying the CPU requirements for the application.  See the <a href="#cpu-attributes">CPU</a> section below.</td>
+</tr>
+<tr>
+<td>memory</td>
+<td>string</td>
+<td>N</td>
+<td>The minimum amount of memory required. The value is given in binary units (<code>Ki</code> = Kibibytes, <code>Mi</code> = Mebibytes, <code>Gi</code> = Gibibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of memory for the application.</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>string</td>
+<td>N</td>
+<td>The amount of storage required for the application to run. This encompasses the installed application and the data it needs to store. The value is given in binary units (<code>Ki</code> = Kibibytes, <code>Mi</code> = Mebibytes, <code>Gi</code> = Gibibytes, <code>Ti</code> Tebibytes, <code>Pi</code> = Pebibytes, <code>Ei</code> = Exbibytes). This is defined by the application developer. After deployment of the application, the device MUST provide this amount of storage for the application</td>
+</tr>
+</tbody>
+</table>
+<p>The following rules MUST be applied when performing capacity requirements matching:</p>
+<ul>
+<li><code>cpu.cores</code> is the minimum number of CPU cores required on the target device.</li>
+<li><code>cpu.architectures</code>, when present, restricts acceptable CPU architectures.</li>
+<li><code>memory</code> is the minimum memory required by the deployment profile.</li>
+<li><code>storage</code> is the minimum storage required by the deployment profile.</li>
+<li>A device MUST satisfy all specified <code>capacityRequirements</code> to remain eligible for further evaluation.</li>
+</ul>
+<p>The capacity requirements device constraint is intended to make it easier for application suppliers to indicate the most common workload constraints. Application suppliers MAY use either the <code>capacityRequirements</code> or a <code>propertySelector</code> eligibility rule to describe their capacity constraints. Application suppliers SHOULD avoid using both simultaneously. If both are used, validation logic MUST treat them as independent rule definitions and not try to correlate what is defined in the <code>capacityRequirements</code> with what is defined in the <code>properSelector</code>.</p>
+<h3 id="cpu-attributes">CPU Attributes  <br><br></h3>
+<p>CPU element specifying the CPU requirements for the application. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cores</td>
+<td>double</td>
+<td>Y</td>
+<td>The required amount of CPU cores the application must use to run in its full functionality. Specified as decimal units of CPU cores (e.g., <code>0.5</code> is half a core). This is defined by the application developer. After deployment of the application, the device MUST provide this number of CPU cores for the application.</td>
+</tr>
+<tr>
+<td>architectures</td>
+<td>[]CpuArchitectureType</td>
+<td>N</td>
+<td>The CPU architectures supported by the application. This can be e.g. amd64, arm64, arm. See the <a href="#cpuarchitecturetype">CpuArchitectureType</a> definition for all permissible values. Multiple architecture types can be specified, as the deployment profile may support multiple CPU architectures.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="eligibilityrule-attributes">EligibilityRule Attributes  <br><br></h3>
+<p>A rule matching properties and supplier-defined labels reported through the device capabilities. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>propertySelector</td>
+<td>Selector</td>
+<td>N</td>
+<td>Selector evaluated against the properties reported in the <a href="../margo-management-interface/device-capabilities#properties-attributes">device capabilities properties</a> object.</td>
+</tr>
+<tr>
+<td>labelSelector</td>
+<td>Selector</td>
+<td>N</td>
+<td>Selector evaluated against the labels reported in the <a href="../margo-management-interface/device-capabilities#request-body-attributes">device capabilities labels</a> dictionary.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="eligibility-rules">Eligibility rules</h4>
+<p>The following rules MUST be applied when performing eligibility rule matching:</p>
+<div class="highlight"><pre><span></span><code>eligible devices =
+    OR over each rule in eligibilityRules:
+        AND(
+            propertySelector matches   (TRUE if propertySelector is omitted),
+            labelSelector matches      (TRUE if labelSelector is omitted)
+        )
+</code></pre></div>
+<ul>
+<li>Each eligibility rule is evaluated using a logical OR. </li>
+<li>A least one eligibility rule MUST evaluate to true to be considered a match.</li>
+<li>If <code>eligibilityRules</code> is omitted, the deployment profile has no additional selector-based constraint beyond <code>capacityRequirements</code>, if present.</li>
+<li>The <code>propertySelector</code> and <code>labelSelector</code> expressions are combined using a logical AND. </li>
+<li>An eligibility rule MAY contain a <code>propertySelector</code>, <code>labelSelector</code> or both.</li>
+<li>All property selector and all label selectors expressions MUST evaluate to true to be considered a match.</li>
+<li>All <code>matchExpressions</code> within a single property or label selector are combined using logical AND.</li>
+<li>All match expressions MUST evaluate to true to be considered a match.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>You want...</th>
+<th>Do this</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Condition A AND condition B must both be true within the same selector type</td>
+<td>One <code>matchExpressions</code> list with both expressions in the same <code>propertySelector</code> or <code>labelSelector</code></td>
+</tr>
+<tr>
+<td>Condition A AND condition B must both be true but one condition is a property and the other a label</td>
+<td>One <code>eligibilityRules</code> entry with both <code>propertySelector</code> and <code>labelSelector</code> set</td>
+</tr>
+<tr>
+<td>Condition A OR condition B must be true</td>
+<td>Two separate <code>eligibilityRules</code> entries</td>
+</tr>
+</tbody>
+</table>
+<h4 id="property-selector-key-format">Property selector key format</h4>
+<p><code>propertySelector.matchExpressions[].key</code> MUST be a JSON Pointer as defined by <a href="https://datatracker.ietf.org/doc/html/rfc6901">RFC 6901</a>, evaluated relative to the device capabilities <code>properties</code> object.</p>
+<p>Examples:</p>
+<ul>
+<li><code>/vendor</code></li>
+<li><code>/id</code></li>
+<li><code>/modelNumber</code></li>
+</ul>
+<p>Property selectors MUST resolve to a device capability property whose value is either:</p>
+<ul>
+<li>a string, number, or boolean</li>
+<li>an array of strings, or numbers</li>
+<li>an array of objects</li>
+</ul>
+<p>If a property selector resolves to any other JSON type, the expression MUST evaluate to <code>false</code>.</p>
+<p>If a property selector resolves to an array of objects, <code>ContainsAll</code> or <code>ContainsAny</code> must be used, or else the expression MUST evaluate to <code>false</code>.</p>
+<h4 id="label-selector-key-format">Label selector key format</h4>
+<p><code>labelSelector.matchExpressions[].key</code> MUST be the exact label key to evaluate within the device capabilities <code>labels</code> dictionary.</p>
+<p>This label selector MUST resolve to a device capability label whose value is either:</p>
+<ul>
+<li>a string, number, or boolean</li>
+<li>an array of strings, or numbers</li>
+</ul>
+<p>If a label selector resolves to any other JSON type, the expression MUST evaluate to <code>false</code>.</p>
+<h3 id="selector-attributes">Selector Attributes  <br><br></h3>
+<p>A set of match expressions evaluated with AND semantics. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>matchExpressions</td>
+<td>[]MatchExpression</td>
+<td>Y</td>
+<td>Match expressions evaluated against the device's reported capabilities.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="matchexpression-attributes">MatchExpression Attributes  <br><br></h3>
+<p>An expression used to match a device's reported capabilities properties or labels. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td>string</td>
+<td>Y</td>
+<td>The key used to match the device's reported capabilities. For property selectors, this MUST be a JSON Pointer, as defined by <a href="https://datatracker.ietf.org/doc/html/rfc6901">RFC 6901</a>, mapping to a specific property. For label selectors, this MUST be the exact label key.</td>
+</tr>
+<tr>
+<td>operator</td>
+<td>SelectorOperator</td>
+<td>Y</td>
+<td>Operator used to evaluate the referenced value. See <a href="#selectoroperator">SelectorOperator</a> for all permissible values.</td>
+</tr>
+<tr>
+<td>values</td>
+<td>[]Any</td>
+<td>N</td>
+<td>Values used by the operator when required for matching expressions. Required for the <code>In</code>, <code>NotIn</code>, <code>Gt</code>, or <code>Lt</code> operator.</td>
+</tr>
+<tr>
+<td>itemSelector</td>
+<td>Selector</td>
+<td>N</td>
+<td>Selector evaluated against array elements. Required for the <code>ContainsAll</code> or <code>ContainsAny</code> operator.</td>
+</tr>
+</tbody>
+</table>
+<p>The following rules MUST be followed when evaluating match expressions:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Evaluation Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>In</code></td>
+<td>True when the referenced device capabilities value equals one of <code>values</code>, or when the referenced array contains at least one element that equals one of <code>values</code></td>
+</tr>
+<tr>
+<td><code>NotIn</code></td>
+<td>True when the referenced device capabilities key exists and none of its values match any entry in <code>values</code></td>
+</tr>
+<tr>
+<td><code>Exists</code></td>
+<td>True when the referenced device capabilities key is present</td>
+</tr>
+<tr>
+<td><code>DoesNotExist</code></td>
+<td>True when the referenced device capabilities key is absent</td>
+</tr>
+<tr>
+<td><code>Gt</code></td>
+<td>True when the referenced device capabilities value is greater than <code>values</code></td>
+</tr>
+<tr>
+<td><code>Lt</code></td>
+<td>True when the referenced device capabilities value is less than <code>values</code></td>
+</tr>
+<tr>
+<td><code>ContainsAll</code></td>
+<td>True when the referenced device capabilities value is an array of objects, and at least one array element satisfies all <code>itemSelector.matchExpressions</code> (AND logic)</td>
+</tr>
+<tr>
+<td><code>ContainsAny</code></td>
+<td>True when the referenced device capabilities value is an array of objects, and at least one array element satisfies any <code>itemSelector.matchExpression</code> (OR logic)</td>
+</tr>
+</tbody>
+</table>
+<p>String comparisons MUST be exact and case-sensitive.</p>
+<p>For the <code>In</code> and <code>NotIn</code> operator:</p>
+<ul>
+<li><code>values</code> MUST be present</li>
+<li><code>values</code> MUST contain one or more strings or numbers, or one boolean</li>
+<li><code>values</code> MUST be the same data type when indicating more than one.</li>
+</ul>
+<p>For the <code>Exists</code> and <code>DoesNotExist</code> operator:</p>
+<ul>
+<li><code>values</code> MUST be omitted</li>
+</ul>
+<p>For the <code>Gt</code> and <code>Lt</code> operator:</p>
+<ul>
+<li><code>values</code> MUST be present</li>
+<li><code>values</code> MUST be parsable as numbers</li>
+<li><code>values</code> MUST only contain a single number</li>
+</ul>
+<p>For the <code>ContainsAll</code> and <code>ContainsAny</code> operator:</p>
+<ul>
+<li><code>itemSelector</code> MUST be present</li>
+<li><code>itemSelector.matchExpressions</code> MUST contain one or more expressions</li>
+<li><code>values</code> MUST be omitted</li>
+<li>Keys within <code>itemSelector.matchExpressions</code> are JSON Pointers relative to each array element (not absolute)</li>
+<li>Expressions within <code>itemSelector.matchExpressions</code> are combined using <code>AND</code> logic for <code>ContainsAll</code> and <code>OR</code> logic for <code>ContainsAny</code></li>
+</ul>
+<h4 id="object-array-item-matching">Object Array Item Matching</h4>
+<p><code>ContainsAll</code> and <code>ContainsAny</code> operators enable matching on properties of objects within an array. These operators are used when the device capability property referenced by <code>key</code> resolves to an array of objects.</p>
+<h5 id="containsall-array-element-with-all-conditions"><code>ContainsAll</code> (array element with all conditions):</h5>
+<p>Evaluates to true when at least one array element satisfies all conditions specified in <code>itemSelector.matchExpressions</code>. All expressions within the <code>itemSelector</code> are combined using AND logic.</p>
+<p>Example: Match a device that has at least one GPU peripheral manufactured by NVIDIA:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">propertySelector</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/peripherals</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ContainsAll</span>
+<span class="w">      </span><span class="nt">itemSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/type</span>
+<span class="w">            </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">            </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"gpu"</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/manufacturer</span>
+<span class="w">            </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">            </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"NVIDIA"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h5 id="containsany-array-element-with-any-condition"><code>ContainsAny</code> (array element with any condition):</h5>
+<p>Evaluates to true when at least one array element satisfies any condition specified in <code>itemSelector.matchExpressions</code>. Expressions within the <code>itemSelector</code> are combined using OR logic.</p>
+<p>Example: Match a device that has at least one peripheral that is either a GPU or a high-speed NIC:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">propertySelector</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/peripherals</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ContainsAny</span>
+<span class="w">      </span><span class="nt">itemSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/type</span>
+<span class="w">            </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">            </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"gpu"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"nic"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<h5 id="interaction-with-other-expressions">Interaction with other expressions:</h5>
+<p>Multiple <code>matchExpressions</code> within the same <code>propertySelector</code> remain AND'd together. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">propertySelector</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/vendor</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">      </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"Vendor</span><span class="nv"> </span><span class="s">Name"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/peripherals</span>
+<span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ContainsAll</span>
+<span class="w">      </span><span class="nt">itemSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/type</span>
+<span class="w">            </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">            </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"gpu"</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<p>This evaluates to true only when the device vendor matches <strong>AND</strong> the device has at least one GPU peripheral.</p>
+<h3 id="component-attributes">Component Attributes  <br><br></h3>
+<p>A class representing a component of a deployment profile. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>A unique name used to identify the component package. For helm installations the name will be used as the chart name. The name must be lower case letters and numbers and MAY contain dashes.  Uppercase letters, underscores and periods MUST NOT be used.</td>
+</tr>
+<tr>
+<td>properties</td>
+<td>ComponentProperties</td>
+<td>Y</td>
+<td>A dictionary element specifying the component packages's deployment details.  See the <a href="#componentproperties-attributes">Component Properties</a> section below.</td>
+</tr>
+<tr>
+<td>x-&lt;unique-name&gt;-extensions</td>
+<td>map[string]interface{}</td>
+<td>N</td>
+<td>Allows addition of arbitrary object (mapping) whose contents  suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the <a href="#specification-extensions">Specification Extensions</a> section below for more details.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="componentproperties-attributes">ComponentProperties Attributes</h3>
+<p>The expected properties for all OCI-based deployment types (Helm and Compose) are indicated below.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>repository</td>
+<td>string</td>
+<td>Y</td>
+<td>OCI repository URI for the component package (e.g., <code>oci://registry.example.com/org/component-name</code>). MUST be a valid OCI reference using the <code>oci://</code> scheme. See <a href="../application-registry/#compose-component-registry">Compose Component Registry</a> for details.</td>
+</tr>
+<tr>
+<td>revision</td>
+<td>string</td>
+<td>Y</td>
+<td>OCI tag identifying the component version. MUST be a valid SemVer 2.0 string without a leading <code>v</code>. Build metadata separator <code>+</code> MUST be stored as <code>_</code> because <code>+</code> is not a valid OCI tag character.</td>
+</tr>
+<tr>
+<td>wait</td>
+<td>bool</td>
+<td>N</td>
+<td>If <code>True</code>, indicates the device MUST wait until the component installation completes before installing the next component. For Helm: waits until the release is deployed. For Compose: waits until all containers reach running state. The default is <code>True</code>. The Workload Fleet Management Client MUST support <code>True</code> and MAY support <code>False</code>. Only applies if multiple components are provided.</td>
+</tr>
+<tr>
+<td>timeout</td>
+<td>string</td>
+<td>N</td>
+<td>The time to wait for the component's installation to complete. If the installation does not complete before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="defining-configurable-application-parameters">Defining configurable application parameters</h2>
+<p>To allow customizable configuration values when installing an application, the <em>application description</em>  defines the parameters and configuration sections giving the application vendor control over what can be configured when installing, or updating, an application. The <a href="#configuration-attributes">configuration</a> section describes how the workload orchestration software vendor must display parameters to the user to allow them to specify the values. The <a href="#schema-attributes">schema</a> section describes how the workload orchestration software vendor must validate the values provided by the user before the application is installed or updated.</p>
+<blockquote>
+<p><strong>Note:</strong> At this point the specification only deals with parameter values provided by the user as part of installing, or updating, the application. We anticipate parameter values to come from other sources, such as the device, in the future and not only from the user.</p>
+</blockquote>
+<h3 id="parameter-attributes">Parameter Attributes  <br><br></h3>
+<p>Defines a configurable parameter for the application. This object is used to build a property bag, i.e. <code>parameters</code>, defined in application description. See <code>parameters</code> attribute under <a href="#top-level-attributes">ApplicationDescription Attributes</a> section for better understanding. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>value</td>
+<td>&lt;<em>see description</em>&gt;</td>
+<td>N</td>
+<td>The parameter's default value.  Accepted data types are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].</td>
+</tr>
+<tr>
+<td>targets</td>
+<td>[]Target</td>
+<td>Y</td>
+<td>Used to indicate which component the value should be applied to when installing, or updating, the application.  See the <a href="#target-attributes">Target</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="target-attributes">Target Attributes  <br><br></h3>
+<p>Specifies where the parameter applies in the deployment. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pointer</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the parameter in the deployment configuration.  For Helm deployments, this is the dot notation for the matching element in the <code>values.yaml</code> file. This follows the same naming convention you would use with the <code>--set</code> command line argument with the <code>helm install</code> command.  For compose deployments, this is the name of the environment variable to set.</td>
+</tr>
+<tr>
+<td>components</td>
+<td>[]string</td>
+<td>Y</td>
+<td>Indicates which deployment profile [component](#component-attributes the parameter target applies to.  The component name specified here MUST match a component name in the <a href="#deploymentprofile-attributes">deployment profiles</a> section.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configuration-attributes">Configuration Attributes  <br><br></h3>
+<p>Configuration layout and validation rules. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sections</td>
+<td>[]Section</td>
+<td>Y</td>
+<td>Sections are used to group related parameters together,  so it is possible to present a user interface with a logical grouping of the parameters in each section.  See the <a href="#section-attributes">Section</a> section below.</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>[]Schema</td>
+<td>Y</td>
+<td>Schema is used to provide details about how to validate each parameter value.  At a minimum, the parameter value must be validated to match the schema's data type.  The schema indicates additional rules the provided value must satisfy to be considered valid input.  See the <a href="#schema-attributes">Schema</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-attributes">Section Attributes  <br><br></h3>
+<p>Named sections within the configuration layout. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the section. This may be used in the user interface to show the grouping of the associated parameters within the section.</td>
+</tr>
+<tr>
+<td>settings</td>
+<td>[]Setting</td>
+<td>Y</td>
+<td>Settings are used to provide instructions to the workload orchestration software vendor for displaying parameters to the user.  A user MUST be able to provide values for all settings.  See the <a href="#setting-attributes">Setting</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setting-attributes">Setting Attributes  <br><br></h3>
+<p>Individual configuration settings. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parameter</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the <a href="#parameter-attributes">parameter</a> the setting is associated with.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The parameter's display name to show in the user interface.</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>N</td>
+<td>The parameters's short description to provide additional context to the user in the user interface about what the parameter is for.</td>
+</tr>
+<tr>
+<td>immutable</td>
+<td>boolean</td>
+<td>N</td>
+<td>If true, indicates the parameter value MUST not be changed once it has been set and used to install the application. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>schema</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the schema definition to use to validate the parameter's value. See the <a href="#schema-attributes">Schema</a> section below.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="schema-attributes">Schema Attributes  <br><br></h3>
+<p>Defines data type and rules for validating user provided parameter values. Subclasses (see below) define for each data type their own set of validation rules that can be used. The value MUST be validated against all rules defined in the schema. <br> </p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>Y</td>
+<td>The name of the schema rule. This used in the <a href="#setting-attributes">setting</a> to link the setting to the schema rule.</td>
+</tr>
+<tr>
+<td>dataType</td>
+<td>string</td>
+<td>Y</td>
+<td>Indicates the expected data type for the user provided value.  Accepted values are string, integer, double, boolean, array[string], array[integer], array[double], array[boolean].  At a minimum, the provided parameter value MUST match the schema's data type if no other validation rules are provided.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<h4 id="textvalidationschema-attributes">TextValidationSchema Attributes  <br></h4>
+(Subclass of Schema)  <br><br>
+Extends schema to define a string/text-specific set of validation rules that can be used. <br> </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>boolean</td>
+<td>N</td>
+<td>If true, an empty value is permitted. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>minLength</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the minimum number of characters the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>maxLength</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the maximum number of characters the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>regexMatch</td>
+<td>string</td>
+<td>N</td>
+<td>If set, indicates a regular expression to use to validate the value.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<h4 id="booleanvalidationschema-attributes">BooleanValidationSchema Attributes  <br></h4>
+(Subclass of Schema)  <br><br>
+Extends schema to define a boolean-specific set of validation rules that can be used. <br> </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>boolean</td>
+<td>N</td>
+<td>If true, an empty value is permitted. Default is false if not provided.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<h4 id="numericintegervalidationschema-attributes">NumericIntegerValidationSchema Attributes  <br></h4>
+(Subclass of Schema)  <br><br>
+Extends schema to define a integer-specific set of validation rules that can be used. <br> </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>boolean</td>
+<td>N</td>
+<td>If true, an empty value is permitted. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>minValue</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the minimum allowed integer value the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>maxValue</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the maximum allowed integer value the value must have to be considered valid.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<h4 id="numericdoublevalidationschema-attributes">NumericDoubleValidationSchema Attributes  <br></h4>
+(Subclass of Schema)  <br><br>
+Extends schema to define a double-specific set of validation rules that can be used. <br> </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>boolean</td>
+<td>N</td>
+<td>If true, an empty value is permitted. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>minValue</td>
+<td>float</td>
+<td>N</td>
+<td>If set, indicates the minimum value to be considered valid.</td>
+</tr>
+<tr>
+<td>maxValue</td>
+<td>float</td>
+<td>N</td>
+<td>If set, indicates the maximum value to be considered valid.</td>
+</tr>
+<tr>
+<td>minPrecision</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the minimum level of precision the value must have to be considered valid.</td>
+</tr>
+<tr>
+<td>maxPrecision</td>
+<td>integer</td>
+<td>N</td>
+<td>If set, indicates the maximum level of precision the value must have to be considered valid.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<h4 id="selectvalidationschema-attributes">SelectValidationSchema Attributes  <br></h4>
+(Subclass of Schema)  <br><br>
+Extends schema to define a specific set of validation rules that can be used for select options. <br> </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowEmpty</td>
+<td>boolean</td>
+<td>N</td>
+<td>If true, an empty value is permitted. Default is false if not provided.</td>
+</tr>
+<tr>
+<td>multiselect</td>
+<td>boolean</td>
+<td>N</td>
+<td>If true, indicates multiple values can be selected. If multiple values can be selected the resulting value is an array of the selected values. The default is false if not provided.</td>
+</tr>
+<tr>
+<td>options</td>
+<td>[]string</td>
+<td>Y</td>
+<td>This provides the list of acceptable options the user can select from. The data type for each option must match the parameter setting’s data type.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="enumerations">Enumerations</h2>
+<p>These enumerations are used as vocabularies for attribute values of the <code>ApplicationDescription</code>.</p>
+<h3 id="cpuarchitecturetype">CpuArchitectureType</h3>
+<table>
+<thead>
+<tr>
+<th>Permissible Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>amd64</td>
+<td>AMD 64-bit architecture.</td>
+</tr>
+<tr>
+<td>arm64</td>
+<td>ARM 64-bit architecture.</td>
+</tr>
+<tr>
+<td>arm</td>
+<td>ARM 32-bit architecture.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="selectoroperator">SelectorOperator</h3>
+<table>
+<thead>
+<tr>
+<th>Permissible Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>In</td>
+<td>Indicates matching should find a match with at least one specified value.</td>
+</tr>
+<tr>
+<td>NotIn</td>
+<td>Indicates matching should not find a match with any specified values.</td>
+</tr>
+<tr>
+<td>Exists</td>
+<td>Indicates matching should find a match on the specified key.</td>
+</tr>
+<tr>
+<td>DoesNotExist</td>
+<td>Indicates matching should not find a match on the specified key.</td>
+</tr>
+<tr>
+<td>Gt</td>
+<td>Indicates matching should find a match if the target value is greater than the specified value.</td>
+</tr>
+<tr>
+<td>Lt</td>
+<td>Indicates matching should find a match if the target value is less than the specified value.</td>
+</tr>
+<tr>
+<td>ContainsAll</td>
+<td>Indicates matching should find a match against all itemSelectors.</td>
+</tr>
+<tr>
+<td>ContainersAny</td>
+<td>Indicates matching should find a match against at least one itemSelector.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="application-description-examples">Application Description Examples</h2>
+<h3 id="example-1-simple-application-description">Example 1: Simple Application Description</h3>
+<p>A simple hello-world example of an <code>ApplicationDescription</code> is shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">com-northstartida-hello-world</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello World</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A basic hello world application</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.0"</span>
+<span class="w">  </span><span class="nt">catalog</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">application</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/hw-logo.png</span>
+<span class="w">      </span><span class="nt">tagline</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Northstar Industrial Application's hello world application.</span>
+<span class="w">      </span><span class="nt">descriptionFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/description.md</span>
+<span class="w">      </span><span class="nt">releaseNotes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/release-notes.md</span>
+<span class="w">      </span><span class="nt">licenseFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/license.pdf</span>
+<span class="w">      </span><span class="nt">site</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://www.northstar-ida.com</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"monitoring"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">author</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Roger Wilkershank</span>
+<span class="w">        </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rpwilkershank@northstar-ida.com</span>
+<span class="w">    </span><span class="nt">organization</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Northstar Industrial Applications</span>
+<span class="w">        </span><span class="nt">site</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://northstar-ida.com</span>
+<span class="nt">deploymentProfiles</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helm</span>
+<span class="w">    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">com-northstartida-hello-world-helm-a</span>
+<span class="w">    </span><span class="nt">components</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello-world</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span><span class="w">  </span>
+<span class="w">          </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oci://northstarida.azurecr.io/charts/hello-world</span>
+<span class="w">          </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.1</span>
+<span class="w">          </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">parameters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">greeting</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Maps to deployment configuration param,</span>
+<span class="w">    </span><span class="c1"># e.g., helm install ... --set global.config.appGreeting="Hello"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">global.config.appGreeting</span>
+<span class="w">      </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hello-world"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">greetingAddressee</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">World</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">global.config.appGreetingAddressee</span>
+<span class="w">      </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"hello-world"</span><span class="p p-Indicator">]</span>
+<span class="nt">configuration</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sections</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">General Settings</span>
+<span class="w">      </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">greeting</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Greeting</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The greeting to use.</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requireText</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">greetingAddressee</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Greeting Addressee</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The person, or group, the greeting addresses.</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requireText</span>
+<span class="w">  </span><span class="nt">schema</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requireText</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">maxLength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<h3 id="example-2-application-description-with-deployment-profiles-for-helm-and-compose">Example 2: Application Description with Deployment Profiles for Helm and Compose</h3>
+<p>An example of an <code>ApplicationDescription</code> defining <a href="#deploymentprofile-attributes">deployment profiles</a> for both cases, Helm chart as well as Compose, is shown below.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">com-northstartida-digitron-orchestrator</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digitron orchestrator</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The Digitron orchestrator application</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2.1</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">catalog</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">application</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/ndo-logo.png</span>
+<span class="w">      </span><span class="nt">tagline</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Northstar Industrial Application's next-gen, AI driven, Digitron instrument orchestrator.</span>
+<span class="w">      </span><span class="nt">descriptionFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/description.md</span>
+<span class="w">      </span><span class="nt">releaseNotes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/release-notes.md</span>
+<span class="w">      </span><span class="nt">licenseFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./resources/license.pdf</span>
+<span class="w">      </span><span class="nt">site</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://www.northstar-ida.com</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"optimization"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"instrumentation"</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">author</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Roger Wilkershank</span>
+<span class="w">        </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rpwilkershank@northstar-ida.com</span>
+<span class="w">    </span><span class="nt">organization</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Northstar Industrial Applications</span>
+<span class="w">        </span><span class="nt">site</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://northstar-ida.com</span>
+<span class="nt">deploymentProfiles</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helm</span>
+<span class="w">    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">com-northstartida-digitron-orchestrator-helm-a</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This allows to install / run the application as a Helm chart deployment.</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">The device where this application is installed needs to have a screen and a keyboard (as indicated in the required peripherals).</span>
+<span class="w">    </span><span class="nt">components</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-services</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span>
+<span class="w">          </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oci://quay.io/charts/realtime-database-services</span>
+<span class="w">          </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.3.7</span>
+<span class="w">          </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8m30s</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">digitron-orchestrator</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator</span>
+<span class="w">          </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.9</span>
+<span class="w">          </span><span class="nt">wait</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">deviceConstraints</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">capacityRequirements</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">cpu</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">cores</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
+<span class="w">          </span><span class="nt">architectures</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amd64</span>
+<span class="w">        </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024Mi</span>
+<span class="w">        </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
+<span class="w">      </span><span class="nt">eligibilityRules</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">propertySelector</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/peripherals</span>
+<span class="w">                </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ContainsAll</span>
+<span class="w">                </span><span class="nt">itemSelector</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/type</span>
+<span class="w">                      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">                      </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"gpu"</span><span class="p p-Indicator">]</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/manufacturer</span>
+<span class="w">                      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">                      </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"NVIDIA"</span><span class="p p-Indicator">]</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/interfaces</span>
+<span class="w">                </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ContainsAll</span>
+<span class="w">                </span><span class="nt">itemSelector</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">matchExpressions</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/type</span>
+<span class="w">                      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">In</span>
+<span class="w">                      </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"ethernet"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"bluetooth"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">compose</span>
+<span class="w">    </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">com-northstartida-digitron-orchestrator-compose-a</span>
+<span class="w">    </span><span class="nt">components</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">digitron-orchestrator-docker</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oci://northstarida.azurecr.io/compose/digitron-orchestrator</span>
+<span class="w">          </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.9</span>
+<span class="nt">parameters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">idpName</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"test"</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Maps to deployment configuration param,</span>
+<span class="w">      </span><span class="c1"># e.g., helm install ... --set idp.name="test"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idp.name</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="c1"># Maps to environment variables, e.g., IDP_NAME=test docker compose ...</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IDP_NAME</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">idpProvider</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idp.provider</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IDP_PROVIDER</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">idpClientId</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idp.clientId</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IDP_CLIENT_ID</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">idpUrl</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idp.providerUrl</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idp.providerMetadata</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IDP_URL</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">adminName</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">administrator.name</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ADMIN_NAME</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">adminPrincipalName</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">administrator.userPrincipalName</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ADMIN_PRINCIPALNAME</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">pollFrequency</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">settings.pollFrequency</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"database-services"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POLL_FREQUENCY</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">siteId</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">settings.siteId</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"database-services"</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SITE_ID</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator-docker"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">cpuLimit</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"> </span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">settings.limits.cpu</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">memoryLimit</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16384</span>
+<span class="w">    </span><span class="nt">targets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pointer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">settings.limits.memory</span>
+<span class="w">        </span><span class="nt">components</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"digitron-orchestrator"</span><span class="p p-Indicator">]</span>
+<span class="nt">configuration</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sections</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">General</span>
+<span class="w">      </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pollFrequency</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Poll Frequency</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">How often the service polls for updated data in seconds</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pollRange</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">siteId</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Site Id</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Special identifier for the site (optional)</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optionalText</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Identity Provider</span>
+<span class="w">      </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idpName</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Name</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The name of the Identity Provider to use</span>
+<span class="w">          </span><span class="nt">immutable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requiredText</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idpProvider</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provider</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provider something something</span>
+<span class="w">          </span><span class="nt">immutable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requiredText</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idpClientId</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Client ID</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The client id</span>
+<span class="w">          </span><span class="nt">immutable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requiredText</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">idpUrl</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provider URL</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The url of the Identity Provider</span>
+<span class="w">          </span><span class="nt">immutable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Administrator</span>
+<span class="w">      </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adminName</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Presentation Name</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The presentation name of the administrator</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requiredText</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adminPrincipalName</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Principal Name</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The principal name of the administrator</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">email</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Resource Limits</span>
+<span class="w">      </span><span class="nt">settings</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpuLimit</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CPU Limit</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Maximum number of CPU cores to allow the application to consume</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpuRange</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memoryLimit</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Memory Limit</span>
+<span class="w">          </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Maximum number of memory to allow the application to consume</span>
+<span class="w">          </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memoryRange</span>
+<span class="w">  </span><span class="nt">schema</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requiredText</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">maxLength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">email</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">regexMatch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*@[a-z0-9.-]*</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">url</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">regexMatch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&amp;//=]*)$</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pollRange</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">      </span><span class="nt">minValue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">      </span><span class="nt">maxValue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">360</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optionalText</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span><span class="w">  </span>
+<span class="w">      </span><span class="nt">minLength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cpuRange</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">double</span>
+<span class="w">      </span><span class="nt">minValue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="nt">maxPrecision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memoryRange</span>
+<span class="w">      </span><span class="nt">dataType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">      </span><span class="nt">minValue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16384</span>
+<span class="w">      </span><span class="nt">allowEmpty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<h2 id="custom-runtimes-and-deployments">Custom runtimes and deployments</h2>
+<blockquote>
+<p><strong>Note:</strong> See the <a href="../../extensibility/custom-runtimes-and-deployments/">Custom Runtimes and Deployments</a> page for additional details.</p>
+</blockquote>
+<p>An application and device supplier MAY collaborate to enable deploying workloads using a format other than Margo's specified deployment types. </p>
+<p>If suppliers choose this option, they MUST follow these rules:</p>
+<ul>
+<li>The deployment profile type MUST be set to <code>custom</code>.</li>
+<li>Device constraint eligibility rules MUST be defined with label selectors matching the supplier's agreed-upon key/value label pairs reported in the device's capabilities document. </li>
+<li>The workload artifacts MUST be packaged in an OCI blob. The specific details for how this OCI blob is created are the responsibility of the suppliers to agree upon.</li>
+</ul>
+<h2 id="specification-extensions">Specification extensions</h2>
+<blockquote>
+<p><strong>Note:</strong> See the <a href="../../extensibility/specification-extensions/">specification extensions</a> page for additional details.</p>
+</blockquote>
+<p>The Application Description document supports the following specification extension scenarios:</p>
+<h3 id="collaboration-between-application-and-workload-fleet-manager-suppliers">Collaboration between application and workload fleet manager suppliers</h3>
+<p>To make use of specification extensions defined by a workload fleet manager supplier, the extension property MUST be added to the Application Description YAML document's <a href="#top-level-attributes">root</a>.</p>
+<p>The workload fleet manager MUST ignore any unknown specification extensions targeting a workload fleet manager supplier. Importing an application description with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.</p>
+<p>The workload fleet manager MUST NOT propagate these specification extension properties to the device via the <a href="../margo-management-interface/desired-state#specification-extensions">Application Deployment yaml</a> document. </p>
+<h3 id="collaboration-between-application-and-device-suppliers">Collaboration between application and device suppliers</h3>
+<p>To make use of specification extensions defined by a device supplier, the extension property MUST be added to the root of either the <a href="#deploymentprofile-attributes">deploymentProfile</a> or <a href="#component-attributes">component</a> objects. </p>
+<p>The workload fleet manager MUST import an application description with specification extensions targeting a device supplier without resulting in a failure because of the included specification extensions.</p>
+<p>The workload fleet manager MUST propagate these extension properties to the device via the <a href="../margo-management-interface/desired-state#specification-extensions">Application Deployment yaml</a> document.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../margo-management-interface/management-interface-swagger/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Management Interface - Swagger UI">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Management Interface - Swagger UI
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../application-registry/" class="md-footer__link md-footer__link--next" aria-label="Next: Application Registry">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Application Registry
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/margo" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/margo_project" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/margoproject/about/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.youtube.com/@Margoinitiative" target="_blank" rel="noopener" title="www.youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="http://chat.margo.org/" target="_blank" rel="noopener" title="chat.margo.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tracking", "navigation.footer", "toc.integrate", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotations", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/swagger-ui-bundle.js"></script>
+      
+        <script src="../../../assets/swagger-ui-standalone-preset.js"></script>
+      
+        <script src="../../../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
