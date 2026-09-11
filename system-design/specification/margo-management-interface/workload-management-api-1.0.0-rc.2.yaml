@@ -21,15 +21,15 @@ security:
   - mTLS: []
 
 paths:
-  /api/v1/capabilities/{deviceId}:
+  /api/v1/capabilities/{targetName}:
     put:
       summary: Report or update device capabilities
       parameters:
-        - name: deviceId
+        - name: targetName
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/DeviceId'
+            $ref: '#/components/schemas/TargetName'
       requestBody:
         required: true
         content:
@@ -54,7 +54,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '404':
-          description: No gateway was found for the given child-device deviceId.
+          description: No gateway was found for the given child-device targetName.
           content:
             application/problem+json:
               schema:
@@ -68,11 +68,11 @@ paths:
     delete:
       summary: Remove device (Unregister)
       parameters:
-        - name: deviceId
+        - name: targetName
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/DeviceId'
+            $ref: '#/components/schemas/TargetName'
       responses:
         '204':
           description: Device capabilities removed successfully
@@ -83,7 +83,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         '404':
-          description: No device with the given deviceId was found for the client.
+          description: No device with the given targetName was found for the client.
           content:
             application/problem+json:
               schema:
@@ -354,7 +354,7 @@ components:
         detail:
           type: string
           description: Human-readable explanation specific to this occurrence of the problem.
-          example: No gateway was found for the given child-device deviceId.
+          example: No gateway was found for the given child-device targetName.
         instance:
           type: string
           format: uri-reference
@@ -492,16 +492,16 @@ components:
       properties:
         properties:
           type: object
-          required: [id, vendor, modelNumber, serialNumber]
+          required: [targetName, vendor, modelNumber, serialNumber]
           # Only identity fields are required. A device that hosts workloads reports cpus, memory,
           # storage, peripherals, interfaces, otelCollector (true), supportedRuntimes (>=1), and
           # supportedDeploymentTypes (>=1). A device that does not host workloads (e.g. a see-thru
           # gateway that only relays the devices behind it) omits those fields.
           # The WFM infers it is non-hosting from their absence and infers a
-          # gateway from the parent/child deviceId hierarchy.
+          # gateway from the parent/child targetName hierarchy.
           properties:
-            id:
-              $ref: '#/components/schemas/DeviceId'
+            targetName:
+              $ref: '#/components/schemas/TargetName'
             vendor:
               type: string
             modelNumber:
@@ -564,16 +564,16 @@ components:
               - type: array
                 items:
                   type: number
-    DeviceId:
-      # format: "{id}[/{id}[/{id}...]]"
-      # Top-level id is required and must include only unreserved characters as specified in RFC3986.
-      # Subsequent ids are only used when referencing child devices, and must include only unreserved characters as specified in RFC3986 when present.
+    TargetName:
+      # format: "{name}[/{name}[/{name}...]]"
+      # Top-level name is required and must include only unreserved characters as specified in RFC3986.
+      # Subsequent names are only used when referencing child devices behind a see-thru gateway, and must include only unreserved characters as specified in RFC3986 when present.
       type: string
       pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*$'
-    DeviceId_with_asterisk:
-      # format: "{id}[/{id}[/{id}...]/*]"
-      # Top-level id is required and must include only unreserved characters as specified in RFC3986.
-      # Subsequent ids are only used when referencing child devices, and must include only unreserved characters as specified in RFC3986 when present.
+    TargetName_with_asterisk:
+      # format: "{name}[/{name}[/{name}...]/*]"
+      # Top-level name is required and must include only unreserved characters as specified in RFC3986.
+      # Subsequent names are only used when referencing child devices behind a see-thru gateway, and must include only unreserved characters as specified in RFC3986 when present.
       type: string
       pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
 
@@ -598,12 +598,12 @@ components:
 
     DeploymentStatusManifest:
       type: object
-      required: [deploymentId, adoptedManifestVersion, status, components]
+      required: [deploymentId, targetName, adoptedManifestVersion, status, components]
       properties:
         deploymentId:
           type: string
-        deviceId:
-          $ref: '#/components/schemas/DeviceId'
+        targetName:
+          $ref: '#/components/schemas/TargetName'
         adoptedManifestVersion:
           $ref: '#/components/schemas/ManifestVersion'
         status:
@@ -663,7 +663,7 @@ components:
           $ref: '#/components/schemas/appDeploymentSpec'
     appDeploymentMetadata:
       type: object
-      required: [annotations, name, namespace, deviceId]
+      required: [annotations, name, namespace, targetName]
       properties:
         name:
           type: string
@@ -671,9 +671,9 @@ components:
         namespace:
           type: string
           description: Namespace of the resource
-        deviceId:
-          $ref: '#/components/schemas/DeviceId_with_asterisk'
-          description: Device ID of the target device for the deployment
+        targetName:
+          $ref: '#/components/schemas/TargetName_with_asterisk'
+          description: Name of the target the deployment is assigned to
         labels:
           type: object
           additionalProperties: { type: string }

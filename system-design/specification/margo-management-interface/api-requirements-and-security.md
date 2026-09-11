@@ -13,6 +13,19 @@ Below is a breakdown of the two major categories these requirements fall under:
 	
 Identity and authentication for the Management Interface are provided by the [Margo Identity and Authorization Framework](../identity/identity-framework.md) and the [WFM Identity Profile](../identity/wfm-identity-profile.md). A WFM Client and a WFM are each provisioned with an X.509-SVID before any Management Interface call is made.
 
+## Target Names
+
+`targetName` is the WFM Client-reported name of a deployment target. It identifies the device, gateway, or child device path a WFM uses for capability reporting, desired state assignment, and deployment status correlation. Every Management Interface surface that names a deployment target uses `targetName`.
+
+A `targetName`:
+
+* MUST be stable for the lifetime of the target relationship.
+* MUST consist only of unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) in each path segment.
+* MAY contain `/` separators to represent a see-thru [gateway](../../concepts/gateways/gateways.md) hierarchy, in the form `{name}[/{name}[/{name}...]]`.
+* MAY use `*` as the final path segment only where this specification explicitly allows gateway-selected placement.
+* MUST be treated as opaque by the WFM except where this specification defines gateway path interpretation.
+
+A `targetName` is a name, not a universally unique device identifier. Margo reserves the term `deviceId` for a universally unique device identifier assigned by a Device Fleet Manager or another authoritative inventory system, and does not use it on the Management Interface targeting surface.
 
 ## API Definition
 The REST API is defined via the OpenAPI Specification:
@@ -30,9 +43,9 @@ Authentication is mutual TLS per the MIAF [TLS requirements](../identity/tls-req
 
 The caller identity for every request is the authenticated WFM Client SPIFFE ID; the request itself does not carry it. A WFM derives the caller from the SPIFFE ID, not from any identifier in the request path or body.
 
-Every Management Interface endpoint is scoped to the authenticated caller. A WFM determines from the caller's identity which devices that client is responsible for and which deployments are assigned to them. Where a request path carries a resource identifier, for example `{deviceId}` or `{digest}`, the WFM looks that identifier up only among the resources in the caller's scope. A WFM MUST NOT expose or mutate a resource outside the caller's scope.
+Every Management Interface endpoint is scoped to the authenticated caller. A WFM determines from the caller's identity which deployment targets that client is responsible for and which deployments are assigned to them. Where a request path carries a resource identifier, for example `{targetName}` or `{digest}`, the WFM looks that identifier up only among the resources in the caller's scope. A WFM MUST NOT expose or mutate a resource outside the caller's scope.
 
-A `deviceId` is not a global name: it identifies a device only within the scope of one WFM Client. The binding between a `deviceId` and the caller's identity is established by the client itself, when it first reports capabilities for that device (see [Device Capabilities](../margo-management-interface/device-capabilities.md)), and every later reference to that `deviceId` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a device in another client's scope: two clients reporting the same `deviceId` string address two unrelated device records. A WFM MAY additionally constrain, by local policy, which `deviceId`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
+A `targetName` is not a global name: it identifies a deployment target only within the scope of one WFM Client. The binding between a `targetName` and the caller's identity is established by the client itself, when it first reports capabilities for that target (see [Device Capabilities](../margo-management-interface/device-capabilities.md)), and every later reference to that `targetName` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a target in another client's scope: two clients reporting the same `targetName` string address two unrelated target records. A WFM MAY additionally constrain, by local policy, which `targetName`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
 
 The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`) using the `wfm-client-relationship-retired` type:
 

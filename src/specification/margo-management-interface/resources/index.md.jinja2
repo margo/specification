@@ -5,7 +5,7 @@ In order for the Workload Fleet Manager (WFM) to manage workloads on an Edge Com
 The Desired State defines *what* workloads (applications) should run on the device and *how* they should be configured.
 It is distributed using a lightweight, pull-based HTTP API that allows devices to stay synchronized with the WFM.
 
-At the center of this process is the State Manifest, a JSON document that lists all workloads assigned to the authenticated client. The manifest is scoped to the client, not to a single device: a client that fronts several devices, such as a see-thru gateway with child devices, retrieves one manifest covering all of them. Each workload is represented by an [`ApplicationDeployment`](#applicationdeployment-yaml-definition) YAML - a self-contained object defining configuration, components, and parameters for that workload - and names its target device in its `metadata.deviceId` attribute.
+At the center of this process is the State Manifest, a JSON document that lists all workloads assigned to the authenticated client. The manifest is scoped to the client, not to a single device: a client that fronts several devices, such as a see-thru gateway with child devices, retrieves one manifest covering all of them. Each workload is represented by an [`ApplicationDeployment`](#applicationdeployment-yaml-definition) YAML - a self-contained object defining configuration, components, and parameters for that workload - and names its deployment target in its `metadata.targetName` attribute.
 
 The manifest includes two complementary ways for the client to obtain the same `ApplicationDeployment` YAMLs:
 
@@ -269,7 +269,7 @@ id:
 metadata: 
   name: 
   namespace: 
-  deviceId: 
+  targetName: 
 spec:
     applicationId:
     deploymentProfile:
@@ -406,7 +406,7 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 
 ### Example: Gateway Directed Deployment Specification
 
-In this example, an application is deployed to a specific child device through a see-thru gateway. The gateway determines the target device for deployment from the value of the `deviceId` attribute of the `ApplicationDeployment` specification.
+In this example, an application is deployed to a specific child device through a see-thru gateway. The gateway determines the target device for deployment from the value of the `targetName` attribute of the `ApplicationDeployment` specification.
 
 ```yaml
 {% include 'examples/valid/gateway-directed.yaml' %}
@@ -414,7 +414,7 @@ In this example, an application is deployed to a specific child device through a
 
 ### Example: Gateway Autonomous Deployment Specification
 
-In this example, an application is deployed to a child device with the see-thru gateway deciding which device to use. The gateway is told to choose the device by using `*` in the `deviceId` attribute of the `ApplicationDeployment` specification. 
+In this example, an application is deployed to a child device with the see-thru gateway deciding which device to use. The gateway is told to choose the device by using `*` in the `targetName` attribute of the `ApplicationDeployment` specification. 
 
 ```yaml
 {% include 'examples/valid/gateway-autonomous.yaml' %}
