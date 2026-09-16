@@ -6,7 +6,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        Before requesting: search [existing issues](https://github.com/margo/spefification/labels/bug).
+        **🛑 STOP! SECURITY VULNERABILITY? 🛑**
+        If you believe you have found a security vulnerability, **DO NOT** open a public issue. 
+        Please review our [Security Policy](https://github.com/margo/specification/security/policy) and report the issue privately using GitHub Private Vulnerability Reporting or by emailing **security@margo.org**. Publicly disclosing a vulnerability puts downstream users at risk.
+
+        ---
+
+        Before requesting: search [existing issues](https://github.com/margo/specification/labels/bug).
 
   - type: textarea
     attributes:
