@@ -265,11 +265,11 @@ This section defines the structure and YAML schema of an `ApplicationDeployment`
 {% if schema.description %}{{ schema.description }}{% endif %}
 
 ```yaml
-id: 
-metadata: 
-  name: 
-  namespace: 
-  targetName: 
+id:
+metadata:
+  name:
+  namespace:
+  targetName:
 spec:
     applicationId:
     deploymentProfile:
@@ -414,7 +414,7 @@ In this example, an application is deployed to a specific child device through a
 
 ### Example: Gateway Autonomous Deployment Specification
 
-In this example, an application is deployed to a child device with the see-thru gateway deciding which device to use. The gateway is told to choose the device by using `*` in the `targetName` attribute of the `ApplicationDeployment` specification. 
+In this example, an application is deployed to a child device with the see-thru gateway deciding which device to use. The gateway is told to choose the device by using `*` in the `targetName` attribute of the `ApplicationDeployment` specification.
 
 ```yaml
 {% include 'examples/valid/gateway-autonomous.yaml' %}
