@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Margo Workload Management API
-  version: 1.0.0-rc.2
+  version: 1.0.0-rc.3
   description: >
     API for managing workloads on Margo-conformant edge devices.
     Includes the APIs for exchanging desired state and current state.
