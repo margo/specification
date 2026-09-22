@@ -61,12 +61,12 @@ classes:
         rank: 20
       targetName:
         description: >-
-          The name of the target, with hierarchy if applicable, to which the deployment is assigned.
-          To reference a child device behind a see-thru gateway the format is `{target-name}[/{target-name}[/...]]`. <br/>
-          To request the gateway to choose the child device, use `*` for the last segment in the hierarchy (i.e. `{target-name}[/{target-name}/...]/*`).
+          The name of the target to which the deployment is assigned.
+          To reference a child device behind a see-thru gateway the format is `{gatewayName}/{childName}`. <br/>
+          To request the gateway to choose the child device, use `*` in place of the child name (i.e. `{gatewayName}/*`).
           If the gateway is not capable of autonomously selecting a child device, it MUST send back a deployment status with error `103 - Autonomous placement not supported` when `*` is used.
         required: true
-        pattern: '^[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*(\/\*)?$'
+        pattern: '^[A-Za-z0-9._~-]+(\/([A-Za-z0-9._~-]+|\*))?$'
         rank: 30
   Spec:
     description: Specification details of the desired state.

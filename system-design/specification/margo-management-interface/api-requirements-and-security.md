@@ -15,17 +15,20 @@ Identity and authentication for the Management Interface are provided by the [Ma
 
 ## Target Names
 
-`targetName` is the WFM Client-reported name of a deployment target. It identifies the device, gateway, or child device path a WFM uses for capability reporting, desired state assignment, and deployment status correlation. Every Management Interface surface that names a deployment target uses `targetName`.
+`targetName` is the WFM Client-reported name of a target: the identifier a WFM uses for capability reporting, desired state assignment, and deployment status correlation. Every Management Interface surface that names a target uses `targetName`. A **compute target** is a target that hosts workloads. A see-thru gateway is a target that relays others, and may be a compute target as well.
+
+A `targetName` takes one of two forms: a single name for a target the WFM Client connects directly, or `{gatewayName}/{childName}` for a target behind a see-thru gateway.
 
 A `targetName`:
 
 * MUST be stable for the lifetime of the target relationship.
-* MUST consist only of unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) in each path segment.
-* MAY contain `/` separators to represent a see-thru [gateway](../../concepts/gateways/gateways.md) hierarchy, in the form `{name}[/{name}[/{name}...]]`.
-* MAY use `*` as the final path segment only where this specification explicitly allows gateway-selected placement.
-* MUST be treated as opaque by the WFM except where this specification defines gateway path interpretation.
+* MUST consist only of unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) in each name.
+* MUST NOT contain more than one `/` separator.
+* MAY use `*` in place of `{childName}` only where this specification explicitly allows gateway-selected placement.
+* MUST be treated as opaque by the WFM apart from the split into `{gatewayName}` and `{childName}`.
 
-A `targetName` is a name, not a universally unique device identifier. Margo reserves the term `deviceId` for a universally unique device identifier assigned by a Device Fleet Manager or another authoritative inventory system, and does not use it on the Management Interface targeting surface.
+A see-thru gateway that reaches its targets through further internal tiers MUST present each one to the WFM as a single `{childName}` directly under its own name. The internal topology is private to the gateway: the WFM never observes it, and the gateway is responsible for keeping each `{childName}` unique within its own scope. See [See-thru gateways](./device-capabilities.md#see-thru-gateways).
+
 
 ## API Definition
 The REST API is defined via the OpenAPI Specification:
@@ -43,9 +46,9 @@ Authentication is mutual TLS per the MIAF [TLS requirements](../identity/tls-req
 
 The caller identity for every request is the authenticated WFM Client SPIFFE ID; the request itself does not carry it. A WFM derives the caller from the SPIFFE ID, not from any identifier in the request path or body.
 
-Every Management Interface endpoint is scoped to the authenticated caller. A WFM determines from the caller's identity which deployment targets that client is responsible for and which deployments are assigned to them. Where a request path carries a resource identifier, for example `{targetName}` or `{digest}`, the WFM looks that identifier up only among the resources in the caller's scope. A WFM MUST NOT expose or mutate a resource outside the caller's scope.
+Every Management Interface endpoint is scoped to the authenticated caller. A WFM determines from the caller's identity which targets that client is responsible for and which deployments are assigned to them. Where a request path carries a resource identifier, for example `{targetName}` or `{digest}`, the WFM looks that identifier up only among the resources in the caller's scope. A WFM MUST NOT expose or mutate a resource outside the caller's scope.
 
-A `targetName` is not a global name: it identifies a deployment target only within the scope of one WFM Client. The binding between a `targetName` and the caller's identity is established by the client itself, when it first reports capabilities for that target (see [Device Capabilities](../margo-management-interface/device-capabilities.md)), and every later reference to that `targetName` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a target in another client's scope: two clients reporting the same `targetName` string address two unrelated target records. A WFM MAY additionally constrain, by local policy, which `targetName`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
+A `targetName` is not a global name: it identifies a target only within the scope of one WFM Client. The binding between a `targetName` and the caller's identity is established by the client itself, when it first reports capabilities for that target (see [Device Capabilities](../margo-management-interface/device-capabilities.md)), and every later reference to that `targetName` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a target in another client's scope: two clients reporting the same `targetName` string address two unrelated target records. A WFM MAY additionally constrain, by local policy, which `targetName`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
 
 The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`) using the `wfm-client-relationship-retired` type:
 
@@ -74,7 +77,7 @@ The standard error response structure is:
   "title": "Invalid Request",
   "status": 400,
   "detail": "Malformed request body.",
-  "instance": "/api/v1/capabilities/device-1"
+  "instance": "/api/v1/capabilities/target-1"
 }
 ```
 
