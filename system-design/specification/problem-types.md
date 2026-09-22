@@ -13,8 +13,8 @@ These values are used in the `type` field of RFC 9457 `application/problem+json`
 | [#invalid-request](#invalid-request) | 400 | Malformed request body. |
 | [#semantic-error](#semantic-error) | 422 | Request body includes a semantic error. |
 | [#not-authorized](#not-authorized) | 403 | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired). |
-| [#gateway-not-found](#gateway-not-found) | 404 | No gateway was found for the given child-device deviceId. |
-| [#device-not-found](#device-not-found) | 404 | No device with the given deviceId was found for the client. |
+| [#gateway-not-found](#gateway-not-found) | 404 | No gateway was found for the given child targetName. |
+| [#target-not-found](#target-not-found) | 404 | No target with the given targetName was found for the client. |
 | [#invalid-bundle](#invalid-bundle) | 404 | Bundle not found for the given digest. |
 | [#deployment-not-found](#deployment-not-found) | 404 | Deployment not found for the given digest. |
 | [#discovery-document-not-found](#discovery-document-not-found) | 404 | Trust domain discovery document not available. |
@@ -93,7 +93,7 @@ This problem type indicates that the server rejected the request because the req
   "title": "Invalid Request",
   "status": 400,
   "detail": "Malformed request body.",
-  "instance": "/api/v1/capabilities/device-1"
+  "instance": "/api/v1/capabilities/target-1"
 }
 ```
 
@@ -113,7 +113,7 @@ This problem type is returned when the request body is syntactically valid but c
   "title": "Semantic Error",
   "status": 422,
   "detail": "Request body includes a semantic error.",
-  "instance": "/api/v1/capabilities/device-1",
+  "instance": "/api/v1/capabilities/target-1",
   "errors": [
     {
       "field": "properties.supportedRuntimes",
@@ -149,37 +149,37 @@ This problem type identifies requests that are denied by the WFM's local authori
 
 - **Type URI:** `https://docs.margo.org/specification/problem-types#gateway-not-found`
 - **HTTP status:** 404 Not Found
-- **Summary:** No gateway was found for the given child-device deviceId.
+- **Summary:** No gateway was found for the given child targetName.
 
-This problem type indicates that the server cannot find a gateway for the child-device identified by the `deviceId` path parameter. This applies when a child `deviceId` is used and no parent gateway is registered for it.
+This problem type indicates that the server cannot find a gateway for the child target identified by the `targetName` path parameter. This applies when a child `targetName` is used and no parent gateway is registered for it.
 
 ```json
 {
   "type": "https://docs.margo.org/specification/problem-types#gateway-not-found",
   "title": "Gateway not found",
   "status": 404,
-  "detail": "No gateway was found for the given child-device deviceId.",
-  "instance": "/api/v1/capabilities/gateway-1/child-device-2"
+  "detail": "No gateway was found for the given child targetName.",
+  "instance": "/api/v1/capabilities/gateway-1/child-2"
 }
 ```
 
 ---
 
-## device-not-found
+## target-not-found
 
-- **Type URI:** `https://docs.margo.org/specification/problem-types#device-not-found`
+- **Type URI:** `https://docs.margo.org/specification/problem-types#target-not-found`
 - **HTTP status:** 404 Not Found
-- **Summary:** No device with the given deviceId was found for the client.
+- **Summary:** No target with the given targetName was found for the client.
 
-This problem type is returned when a DELETE request references a device that does not exist for the authenticated client.
+This problem type is returned when a DELETE request references a target that does not exist for the authenticated client.
 
 ```json
 {
-  "type": "https://docs.margo.org/specification/problem-types#device-not-found",
-  "title": "Device Not Found",
+  "type": "https://docs.margo.org/specification/problem-types#target-not-found",
+  "title": "Target Not Found",
   "status": 404,
-  "detail": "No device with the given deviceId was found for the client.",
-  "instance": "/api/v1/capabilities/device-1"
+  "detail": "No target with the given targetName was found for the client.",
+  "instance": "/api/v1/capabilities/target-1"
 }
 ```
 

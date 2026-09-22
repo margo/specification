@@ -9,15 +9,15 @@ To ensure the WFM is kept up to date, the device's client MUST send updated capa
 ## Route and HTTP Methods
 
 ```https
-PUT /api/v1/capabilities/{deviceId}
-DELETE /api/v1/capabilities/{deviceId}
+PUT /api/v1/capabilities/{targetName}
+DELETE /api/v1/capabilities/{targetName}
 ```
 
 ### Route Parameters
 
 |Parameter | Type | Required? | Description|
 |----------|------|-----------|------------|
-| {deviceId} | string | Y | The unique identifier of the device reporting the capabilities. <br/>It must have the following format: "{id}[/{id}[/{id}...]]". The top-level `id` is required and must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). If reporting capabilties for a child device, the subsequent `id`s are required and must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). <br/>Using multiple ids in the endpoint does not register multiple devices in a single request, but indicates a hierarchy of devices, with a parent/child relationship. |
+| {targetName} | string | Y | The name of the target whose capabilities are being reported or deleted. See [Target Names](./api-requirements-and-security.md#target-names). <br/>It must be a single name for a target the client connects directly, or "{gatewayName}/{childName}" for a target behind a see-thru gateway. Each name is required and must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3). <br/>A `targetName` has at most two names. Using two names in the endpoint does not register two targets in a single request, but indicates a parent/child relationship between a see-thru gateway and one target behind it. |
 
 ### Response Codes
 
@@ -28,8 +28,8 @@ DELETE /api/v1/capabilities/{deviceId}
 | 204 No Content | The device capabilities document was deleted successfully. |
 | 400 Bad Request | PUT: Malformed request body. |
 | 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
-| 404 Not Found | PUT: No gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No device with the given `deviceId` was found for the client. |
-| 422 Unprocessable Content | Request body includes a semantic error.  |
+| 404 Not Found | PUT: No gateway was registered under the `{gatewayName}` of the given child `targetName` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No target with the given `targetName` was found for the client. |
+| 422 Unprocessable Content | Request body includes a semantic error, for example `properties.targetName` does not match the `{targetName}` route parameter. |
 
 ## Request Body Attributes
 
@@ -43,7 +43,7 @@ DELETE /api/v1/capabilities/{deviceId}
 
 | Field       | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| id     | string    | Y    | Unique deviceID assigned to the device via the Device Owner. It must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a device behind a gateway, the id field takes the form of a path with the id of the parent gateway, the id of the child device, and the ids of any intermediate devices, i.e., "{gatewayId}/[{intermediateDeviceId/.../]{deviceId}". |
+| targetName     | string    | Y    | The name of the target whose capabilities are described. It MUST match the `{targetName}` route parameter exactly, comparing case-sensitively; a WFM MUST reject a mismatch with `422 Unprocessable Content` and MUST NOT create or update a target from either value. It must include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) plus the path separator (i.e. '/'). In case of a target behind a see-thru gateway, the value takes the form of the name of the parent gateway followed by the name of the child target, i.e., "{gatewayName}/{childName}". See [Target Names](./api-requirements-and-security.md#target-names). |
 | vendor        | string    | Y    | Defines the device vendor.|
 | modelNumber        | string    | Y    | Defines the model number of the device.|
 | serialNumber       | string    | Y    | Defines the serial number of the device.|
@@ -56,7 +56,7 @@ DELETE /api/v1/capabilities/{deviceId}
 | supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
 | supportedDeploymentTypes | []SupportedDeploymentType | Y* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
 
-> Note:  \* A see-thru gateway not hosting workloads itself MUST omit these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy.
+> Note:  \* A see-thru gateway not hosting workloads itself MUST omit these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `targetName`.
 
 ### CPU Attributes
 CPU element defining the device's CPU characteristics.
@@ -140,7 +140,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 ```json
 {
     "properties": {
-        "id": "northstarida.xtapro.k8s.edge",
+        "targetName": "northstarida.xtapro.k8s.edge",
         "vendor": "Northstar Industrial Devices",
         "modelNumber": "332ANZE1-N1",
         "serialNumber": "PF45343-AA",
@@ -184,22 +184,22 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 ### Opaque gateways
 
-A device may represent, and aggregate the capabilities of, multiple child-devices behind it and report itself as a single Margo device to the WFM. This type of device is referred to as an opaque gateway. Opaque gateways report the combined capabilities of all the devices they connect to the WFM as a single `DeviceCapabilitiesManifest`. Because the child-devices are not individually visible to the WFM, an opaque gateway is seen as a single device and reports the aggregated resource fields, `supportedRuntimes`, and `supportedDeploymentTypes` of the devices behind it.
+A target may represent, and aggregate the capabilities of, multiple compute resources behind it and report itself to the WFM as a single target. This type of target is referred to as an opaque gateway. Opaque gateways report the combined capabilities of everything they connect to the WFM as a single `DeviceCapabilitiesManifest`. Because the resources behind them are not individually visible to the WFM, an opaque gateway is seen as a single target and reports the aggregated resource fields, `supportedRuntimes`, and `supportedDeploymentTypes` of the resources behind it.
 
-> Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. Since the gateway can deploy compose applications on its child-devices it will report `supportedDeploymentTypes: ["compose"]`.
+> Example: An opaque gateway has two compute resources behind it. Each has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. Since the gateway can deploy compose applications on the resources behind it, it will report `supportedDeploymentTypes: ["compose"]`.
 
 ### See-thru gateways
 
-WFM clients may connect one or more child-devices to the WFM while allowing the WFM to see each device behind it as an individual device with its own capabilities. This type of client is referred to as a **see-thru gateway**.
+WFM clients may connect one or more child targets to the WFM while allowing the WFM to see each one behind it as an individual target with its own capabilities. This type of client is referred to as a **see-thru gateway**.
 
-A see-thru gateway uses the same `DeviceCapabilitiesManifest` schema as any other device — from a payload perspective it is an ordinary device that also reports the devices behind it. Its conformance rules are relaxed, though: unlike non-gateway device, a see-thru gateway is not required to host workloads and need not report workload-hosting capabilities. The WFM infers the gateway relationship from the parent/child `deviceId` hierarchy, which is typically most evident when the gateway reports no workload-hosting capabilities.
+A see-thru gateway uses the same `DeviceCapabilitiesManifest` schema as any other target — from a payload perspective it is an ordinary target that also reports the targets behind it. Its conformance rules are relaxed, though: unlike a non-gateway target, a see-thru gateway is not required to host workloads and need not report workload-hosting capabilities. The WFM infers the gateway relationship from the parent/child `targetName`, which is typically most evident when the gateway reports no workload-hosting capabilities.
 
 **How a see-thru gateway reports capabilities**
 
-A see-thru gateway MUST report its own capabilities and the capabilities of each device it connects to the WFM:
+A see-thru gateway MUST report its own capabilities and the capabilities of each target it connects to the WFM:
 
-1. Call the `device capabilities` endpoint once for the gateway itself, then once for each device behind it.
-2. Encode the hierarchy in the `deviceId` as a parent/child path. For example, a gateway `gateway1` with two child-devices calls the endpoint three times, with `deviceId`s `gateway1`, `gateway1/deviceA`, and `gateway1/deviceB`.
+1. Call the `device capabilities` endpoint once for the gateway itself, then once for each target behind it.
+2. Encode the relationship in the `targetName` as `{gatewayName}/{childName}`. For example, a gateway `gateway1` with two child targets calls the endpoint three times, with `targetName`s `gateway1`, `gateway1/deviceA`, and `gateway1/deviceB`.
 3. Report the gateway's own manifest **before** any child manifest. If the WFM receives a child manifest first, it MUST reject the request with a `404 Not Found` response code.
 
 **What the gateway reports about itself**
@@ -207,7 +207,7 @@ A see-thru gateway MUST report its own capabilities and the capabilities of each
 | If the gateway... | Then its own manifest MUST... |
 | --- | --- |
 | does **not** host workloads | contain only the required identity fields — omit the workload-hosting fields (`cpus`, `memory`, `storage`, `peripherals`, `interfaces`, `supportedRuntimes`, `supportedDeploymentTypes`), and omit `otelCollector` |
-| **also** hosts workloads | report the workload-hosting fields like any hosting device, including at least one entry in both `supportedRuntimes` and `supportedDeploymentTypes` |
+| **also** hosts workloads | report the workload-hosting fields like any hosting target, including at least one entry in both `supportedRuntimes` and `supportedDeploymentTypes` |
 
 Hosting is neither required of nor forbidden for a see-thru gateway: it reports the workload-hosting fields when it hosts workloads, and omits them when it does not.
 
@@ -221,7 +221,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
     ```json
     {
         "properties": {
-            "id": "gateway1",
+            "targetName": "gateway1",
             "vendor": "Gateway Vendor",
             "modelNumber": "GW-1000",
             "serialNumber": "GW12345678"
@@ -237,7 +237,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
     ```json
     {
         "properties": {
-            "id": "gateway1",
+            "targetName": "gateway1",
             "vendor": "Gateway Vendor",
             "modelNumber": "GW-1000",
             "serialNumber": "GW12345678",
@@ -274,7 +274,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
     ```json
     {
         "properties": {
-            "id": "gateway1/deviceA",
+            "targetName": "gateway1/deviceA",
             "vendor": "Device A Vendor",
             "modelNumber": "DA-2000",
             "serialNumber": "DA12345678",
@@ -303,43 +303,6 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
             ],
             "supportedDeploymentTypes": [
                 "helm"
-            ]
-        }
-    }
-    ```
-
-* See-thru gateway reporting the capabilities of a child device with deeper hierarchy to the WFM:
-
-    ```
-    PUT /api/v1/capabilities/gateway1/path1/deviceA
-    ```
-    ```json
-    {
-        "properties": {
-            "id": "gateway1/path1/deviceA",
-            "vendor": "Device A Vendor",
-            "modelNumber": "DA-1000",
-            "serialNumber": "DA12345678",
-            "cpus": [
-                {
-                    "cores": 2,
-                    "architecture": "arm64"
-                }
-            ],
-            "memory": "6 Gi",
-            "storage": "30 Gi",
-            "peripherals": [],
-            "interfaces": [
-                {
-                    "type": "ethernet"
-                }
-            ],
-            "otelCollector": true,
-            "supportedRuntimes": [
-                "oci"
-            ],
-            "supportedDeploymentTypes": [
-                "compose"
             ]
         }
     }

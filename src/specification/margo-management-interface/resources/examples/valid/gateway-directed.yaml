@@ -2,7 +2,7 @@ id: ad9b614e-8912-45f4-a523-372358765def
 metadata:
     name: com-northstartida-digitron-orchestrator-deployment
     namespace: margo-poc
-    deviceId: gateway-01/edge-01
+    targetName: gateway-01/edge-01
 spec:
     applicationId: com-northstartida-digitron-orchestrator
     deploymentProfile:
