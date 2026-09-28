@@ -25,6 +25,8 @@ The `wfm-id` segment:
 
 An operator MAY assign one shared `wfm-id` across several WFM instances to present a single logical identity, or distinct `wfm-id`s for each instance for finer-grained lifecycle management.
 
+The two options have different security costs. A WFM Client takes its expected `wfm-id` from its own SVID (see [Recognition by the WFM Client](#recognition-by-the-wfm-client)), so it can fail over only to instances that share that `wfm-id`. A shared `wfm-id` is therefore the usual choice for high availability. All instances then present one SPIFFE ID, so no verifier can tell them apart, and the operator cannot revoke one instance alone. Trust Bundle rotation or expiry are then the only ways to withdraw a compromised instance (see [no precise revocation of a compromised WFM](./identity-security-considerations.md#wfm-identity-profile-threats)). Where the instances share one private key, each instance holds a copy of the key that can leak (see the theft and key-custody rows of the [framework threats](./identity-security-considerations.md#framework-threats)). SPIFFE permits several key pairs under one SPIFFE ID. Whether an MIS issues them depends on the MIS, and a stock CA does not prevent it.
+
 A WFM participating in this profile:
 
 - MUST hold a valid WFM X.509-SVID; and
@@ -102,10 +104,16 @@ WFM revocation is heavier-handed than WFM Client revocation because there is no 
 
 Removing a `wfm-client-id` withdraws one client only where the accepted-client policy lists clients individually. Where a WFM instead accepts any client within its namespace (see [Authorization](#authorization)), there is no individual entry to remove, so withdrawing a single client requires narrowing the policy to explicit entries or rotating the Trust Bundle.
 
+### Identity Failure and Deployed Workloads
+
+A WFM Client can lose the ability to authenticate: its SVID expires, it holds no usable Trust Bundle, or it cannot validate the WFM's SVID (for example, because its clock is wrong). The mTLS rules then stop its Management Interface calls, so the management plane fails closed. The WFM Client MUST NOT stop, remove, or change workloads already deployed because of such a failure. It SHOULD raise an operator-visible signal while the failure lasts.
+
+In industrial deployments, availability often has priority over other security objectives (see also IEC 62443, FR 7, resource availability). After an identity failure, the last applied desired state therefore stays in effect, and the workloads keep running.
+
 ## Authorization
 
 A WFM MUST authorize each request using local policy keyed on the authenticated WFM Client identity. Recognizing the SPIFFE ID (see [Recognition by the WFM](#recognition-by-the-wfm)) establishes only that the caller is a validly issued client within this WFM's namespace; it does not by itself grant access.
 
-A WFM MUST maintain an accepted-client policy and admit a caller only when its identity is accepted by that policy; a matching `wfm-id` namespace is necessary but not sufficient. The policy MAY accept named `wfm-client-id`s (or full SPIFFE IDs) individually, and MAY accept any client within this WFM's namespace where the operator trusts the [MIS](./identity-framework.md#the-mis-role) to issue identities under `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/` only to authorized clients. How the policy is expressed is implementation-specific; the requirement is that acceptance is an explicit local decision, not an automatic consequence of holding a valid SVID. Policy MAY further consider deployment-specific `wfm-client-id` metadata, and a WFM MAY deny a request from a still-valid credential; for example, once a client relationship has been retired.
+A WFM MUST maintain an accepted-client policy and admit a caller only when its identity is accepted by that policy; a matching `wfm-id` namespace is necessary but not sufficient. The policy MAY accept named `wfm-client-id`s (or full SPIFFE IDs) individually, and MAY accept any client within this WFM's namespace where the operator trusts the [MIS](./identity-framework.md#the-mis-role) to issue identities under `spiffe://<trust-domain>/margo/wfm/<wfm-id>/client/` only to authorized clients. An operator SHOULD constrain the MIS to issue SVIDs under a WFM's namespace only to that WFM's authorized clients. How the policy is expressed is implementation-specific; the requirement is that acceptance is an explicit local decision, not an automatic consequence of holding a valid SVID. Policy MAY further consider deployment-specific `wfm-client-id` metadata, and a WFM MAY deny a request from a still-valid credential; for example, once a client relationship has been retired.
 
 How this profile applies to the Margo Management Interface is specified in [API Requirements and Security](../margo-management-interface/api-requirements-and-security.md#identity-and-authentication): the endpoints served, the mTLS authentication of each call, the handling of caller identity, and how an authorization denial is surfaced (HTTP status and response body).
