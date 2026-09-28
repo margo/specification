@@ -13,7 +13,7 @@ These values are used in the `type` field of RFC 9457 `application/problem+json`
 | [#invalid-request](#invalid-request) | 400 | Malformed request body. |
 | [#semantic-error](#semantic-error) | 422 | Request body includes a semantic error. |
 | [#not-authorized](#not-authorized) | 403 | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired). |
-| [#gateway-not-found](#gateway-not-found) | 404 | No gateway was found for the given child-device deviceId. |
+| [#gateway-not-found](#gateway-not-found) | 404 | No gateway was found for the client for the given child-device deviceId. |
 | [#device-not-found](#device-not-found) | 404 | No device with the given deviceId was found for the client. |
 | [#invalid-bundle](#invalid-bundle) | 404 | Bundle not found for the given digest. |
 | [#deployment-not-found](#deployment-not-found) | 404 | Deployment not found for the given digest. |
@@ -149,7 +149,7 @@ This problem type identifies requests that are denied by the WFM's local authori
 
 - **Type URI:** `https://docs.margo.org/specification/problem-types#gateway-not-found`
 - **HTTP status:** 404 Not Found
-- **Summary:** No gateway was found for the given child-device deviceId.
+- **Summary:** No gateway was found for the client for the given child-device deviceId.
 
 This problem type indicates that the server cannot find a gateway for the child-device identified by the `deviceId` path parameter. This applies when a child `deviceId` is used and no parent gateway is registered for it.
 
@@ -158,7 +158,7 @@ This problem type indicates that the server cannot find a gateway for the child-
   "type": "https://docs.margo.org/specification/problem-types#gateway-not-found",
   "title": "Gateway not found",
   "status": 404,
-  "detail": "No gateway was found for the given child-device deviceId.",
+  "detail": "No gateway was found for the client for the given child-device deviceId.",
   "instance": "/api/v1/capabilities/gateway-1/child-device-2"
 }
 ```
@@ -271,7 +271,7 @@ This problem type is returned when the Trust Domain discovery document is not av
 - **HTTP status:** 404 Not Found
 - **Summary:** SPIFFE bundle unavailable.
 
-This problem type is returned when the SPIFFE Trust Bundle cannot be retrieved from the Margo Identity Service (MIS). Clients MUST NOT validate SVIDs when the Trust Bundle is unavailable and SHOULD retry using the backoff strategy indicated in the response.
+This problem type is returned when the SPIFFE Trust Bundle cannot be retrieved from the Margo Identity Service (MIS). A client keeps validating SVIDs against its cached bundle, and retries per the [refresh rules](./identity/trust-bundle-and-discovery.md#selecting-and-refreshing-the-bundle). A client that holds no bundle cannot validate SVIDs.
 
 ```json
 {
