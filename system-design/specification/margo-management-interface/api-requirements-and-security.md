@@ -34,14 +34,14 @@ Every Management Interface endpoint is scoped to the authenticated caller. A WFM
 
 A `deviceId` is not a global name: it identifies a device only within the scope of one WFM Client. The binding between a `deviceId` and the caller's identity is established by the client itself, when it first reports capabilities for that device (see [Device Capabilities](../margo-management-interface/device-capabilities.md)), and every later reference to that `deviceId` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a device in another client's scope: two clients reporting the same `deviceId` string address two unrelated device records. A WFM MAY additionally constrain, by local policy, which `deviceId`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
 
-The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`) using the `wfm-client-relationship-retired` type:
+The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`) using the [`not-authorized`](../problem-types.md#not-authorized) type:
 
 ```json
 {
   "type": "https://docs.margo.org/specification/problem-types#not-authorized",
-  "title": "Client Relationship Retired",
+  "title": "Not Authorized",
   "status": 403,
-  "detail": "The WFM Client relationship has been retired by local policy."											 
+  "detail": "The WFM Client relationship has been retired by local policy."
 }
 ```
 
@@ -73,6 +73,7 @@ The standard error response structure is:
 | `detail` | No | Optional. Human-readable explanation specific to this occurrence. |
 | `instance` | No | Optional. URI reference identifying the specific occurrence of the problem. |
 | `retryable` | No | Extension field. Whether the client MAY retry the request. |
+| `retryAfterSeconds` | No | Extension field. Advisory retry delay in seconds. The `Retry-After` response header is authoritative when present. |
 | `backoffStrategy` | No | Extension field. Recommended retry strategy: `none`, `fixed`, or `exponential`. |
 | `errors` | No | Extension field. Field-level validation errors. Common industry practice for validation failures (often 400 or 422). |
 

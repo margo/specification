@@ -110,24 +110,22 @@ Response:
 {
   "name": "northstar-industrial-applications/app1",
   "tags": [
-    "v1.0.0",
-    "v1.1.0",
-    "latest"
+    "1.0.0",
+    "1.1.0"
   ]
 }
 ```
 
-#### Example B (filtering to hide versions below v1.0.0):
+#### Example B (filtering to show versions after 1.0.0):
 
-Request: GET ``http://famous-app-registry/v2/northstar-industrial-applications/app1/tags/list?n=2&last=v1.0.0``
+Request: GET ``http://famous-app-registry/v2/northstar-industrial-applications/app1/tags/list?n=2&last=1.0.0``
 
 Response: 
 ```json
 {
   "name": "northstar-industrial-applications/app1",
   "tags": [
-    "v1.1.0",
-    "latest"
+    "1.1.0"
   ]
 }
 ```
