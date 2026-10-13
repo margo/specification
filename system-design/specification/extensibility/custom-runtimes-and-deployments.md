@@ -31,13 +31,12 @@ It should be possible for these three vendors to collaborate and deploy these vi
 ##### Application Description
 
 ```yaml
-apiVersion: margo.org/v1-alpha1
-kind: ApplicationDescription
+apiVersion: v1
+id: com-appforge-dynamics-sys-sec-mon
 metadata:
-  id: com.appforge-dynamics.sys-sec-mon
   name: System and Security Monitoring
   description: System and Security Monitoring Application for Windows
-  version: "1.0"
+  version: "1.0.0"
   catalog:
     application:
       icon: ./resources/logo.png
@@ -52,7 +51,7 @@ metadata:
         site: http://appforge-dynamics.com
 deploymentProfiles:
   - type: custom
-    id: com.appforge-dynamics.sys-sec-mon.hyperv
+    id: com-appforge-dynamics-sys-sec-mon-hyperv
     components:
       - name: sys-sec-mon
         properties:  
@@ -86,15 +85,19 @@ configuration: ...
 
 ```json
 {
-    "apiVersion": "device.margo.org/v1alpha1",
-    "kind": "DeviceCapabilitiesManifest",
     "properties": {
         "id": "com.edge-circuit-systems.hardware.G12",
         "vendor": "EdgeCircuit Systems",
         "modelNumber": "EF1.234.32",
         "serialNumber": "SN12928342125",
-        "memory": "64 Gi",
-        "storage": "1862 Gi",
+        "cpus": [
+            {
+                "cores": 16,
+                "architecture": "amd64"
+            }
+        ],
+        "memory": "64Gi",
+        "storage": "1862Gi",
         "peripherals": [],
         "interfaces": [],
         "otelCollector": true,
