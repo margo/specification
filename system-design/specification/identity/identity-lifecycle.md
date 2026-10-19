@@ -14,7 +14,10 @@ The **Active** phase has a fully normative protocol surface. The other phases ar
 
 > **Future work (informative)**
 >
-> Automated mechanisms for the non-active phases (enrollment, renewal, revocation, and re-issuance protocols) are not yet specified. Operator provisioning as described here is the current path and remains valid once automation is added.
+> Automated mechanisms for the non-active phases (enrollment, renewal, revocation, and re-issuance protocols) are not yet specified. Operator provisioning as described here is the current path and remains valid once automation is added. The expected additions are:
+>
+> - **An enrollment profile.** It automates the round-trip of the [enrolled mode](./credential-provisioning.md#acquisition-modes) for first issuance and renewal, and adds revocation status that verifiers can check. It is expected to require automated enrollment for every principal that can generate its own key pair. A vendor can prepare for it by implementing the enrolled mode.
+> - **A device identity profile.** It defines a WFM-independent device identity. It is expected to add local SVID delivery over the [SPIFFE Workload API](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Workload_API.md) as a third acquisition mode, and automated bootstrap mechanisms rooted in the supply chain (FDO or BRSKI, for example) that fill the [out-of-band channel](./credential-provisioning.md#precondition) for the initial bootstrap inputs.
 
 ## Operator Provisioning Playbook
 
@@ -22,16 +25,16 @@ The Trust Bundle and discovery document are the only runtime endpoints MIAF defi
 
 For **enrollment**, the operator:
 
-1. accepts a CSR from the principal (the preferred path, since it keeps the private key on the principal and supports hardware-bound keys such as a TPM, secure element, or HSM). Where the principal cannot generate its own key pair, the operator generates one centrally and accepts the resulting concentration of key custody;
-2. mints an X.509-SVID for the chosen SPIFFE ID under the Trust Domain's issuing authority. The issuance is authoritative for the SPIFFE ID: any subject or SAN content the CSR carries is advisory and is overridden;
-3. installs the SVID on the principal over a channel that protects its integrity and authenticity, and that additionally protects confidentiality on the path where it also carries the centrally generated private key; and
+1. obtains the public key for the new SVID according to the principal's [acquisition mode](./credential-provisioning.md#acquisition-modes). In the enrolled mode, the operator accepts the CSR that the principal exports. In the installed mode, the operator generates the key pair centrally and accepts the resulting concentration of key custody (see [key handling](./credential-provisioning.md#key-handling));
+2. mints an X.509-SVID for the chosen SPIFFE ID under the Trust Domain's issuing authority. The issuance is authoritative for the SPIFFE ID (see [issuance by CSR](./credential-provisioning.md#issuance-by-csr));
+3. installs the SVID on the principal through its [provisioning interface](./credential-provisioning.md#provisioning-input-contract), over a channel that protects its integrity and authenticity. For an operator-generated key, see [key handling](./credential-provisioning.md#key-handling); and
 4. ensures every verifier the principal will authenticate to has the Trust Bundle and any local-policy entries needed to recognize the new SPIFFE ID.
 
 For **renewal**, the operator repeats steps 1-3 before the current SVID expires, replacing the prior SVID in place.
 
 For **re-issuance** after a principal is replaced, the operator follows the same workflow on the replacement principal. Reusing the original SPIFFE ID keeps the retired principal's SVID valid under the same identity until it expires, and no allowlist removal can withdraw the old credential without also withdrawing the replacement's access. An operator SHOULD assign a fresh SPIFFE ID unless the retired principal's private key is known to be destroyed, or its SVID is close enough to expiry that the operator accepts the overlap.
 
-The provisioning channel itself is deployment-specific and out of scope. Typical options include device-management tooling, configuration management, HSM workflows, and out-of-band installer media.
+The [provisioning channel](./identity-framework.md#terminology) itself is deployment-specific and out of scope. The inputs a principal accepts, and their formats, are defined in the [provisioning input contract](./credential-provisioning.md#provisioning-input-contract).
 
 ## Operator Revocation Playbook
 

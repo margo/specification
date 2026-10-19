@@ -9,6 +9,7 @@ nav:
           - specification/identity/svids.md
           - specification/identity/tls-requirements.md
           - specification/identity/trust-bundle-and-discovery.md
+          - specification/identity/credential-provisioning.md
           - specification/identity/identity-lifecycle.md
           - specification/identity/wfm-identity-profile.md
           - specification/identity/identity-security-considerations.md

@@ -5,6 +5,7 @@
     "svids",
     "tls-requirements",
     "trust-bundle-and-discovery",
+    "credential-provisioning",
     "identity-lifecycle",
     "wfm-identity-profile",
     "identity-security-considerations",
