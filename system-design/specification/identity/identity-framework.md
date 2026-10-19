@@ -75,10 +75,18 @@ MIAF references the current published text of each SPIFFE specification instead 
 | Bundle endpoint | [SPIFFE Federation](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Federation.md), bundle-endpoint model adopted by reference | The Trust Bundle retrieval endpoint follows the bundle-endpoint model (one URL per Trust Domain). The `https_web` and `https_spiffe` endpoint profiles are candidates for future adoption; this release authenticates retrieval per [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap). |
 | Discovery document | Margo | Not part of SPIFFE; defined in [Trust Bundle and Discovery Endpoints](./trust-bundle-and-discovery.md#discovery-document-endpoint). |
 
+MIAF does not adopt the SPIFFE Workload API, and it does not adopt the node and workload attestation of SPIFFE implementations such as SPIRE. In SPIRE, attestation authenticates each issuance, and automatic issuance makes lifetimes of a few hours practical. Under MIAF, the operator authorizes each issuance through the provisioning channel (see [operator provisioning playbook](./identity-lifecycle.md#operator-provisioning-playbook)). Unlike in a SPIRE deployment, under MIAF:
+
+- MIAF does not require the MIS to authenticate the device or the process that holds a key. The only required check at issuance is the operator's approval.
+- SVID lifetimes are not short by default, so expiry alone is not always an adequate revocation mechanism (see [SVID lifetime guidance](./identity-lifecycle.md#svid-lifetime-guidance)).
+- MIAF requires no attestation that binds a key to the hardware of a device.
+
+SPIFFE itself specifies no attestation: the SPIFFE Workload API leaves the authentication of the caller to the implementation. MIAF also does not claim SPIFFE Federation conformance. SPIFFE Federation requires a client to support the `https_web` and `https_spiffe` endpoint profiles. MIAF uses neither and authenticates retrieval by its own [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap), so a SPIFFE Federation client does not necessarily work against an MIS.
+
 ## Identity Model
 
 - **Identity representation.** An identity is named by a **SPIFFE ID** and represented by an **SVID** issued under the Trust Domain's MIS.
-- **Path namespace.** A SPIFFE ID issued under a MIAF identity profile MUST have a path beginning with `/margo/`. Each identity profile claims a non-conflicting sub-prefix and defines its structure (the path conventions for WFMs and WFM Clients are in the [WFM Identity Profile](./wfm-identity-profile.md)). So that `/margo/` remains a reliable signal of MIAF provenance, a non-MIAF SVID in the same Trust Domain MUST NOT use it.
+- **Path namespace.** A SPIFFE ID issued under a MIAF identity profile MUST have a path beginning with `/margo/`. Each identity profile claims a non-conflicting sub-prefix and defines its structure (the path conventions for WFMs and WFM Clients are in the [WFM Identity Profile](./wfm-identity-profile.md)). So that `/margo/` remains a reliable signal of MIAF provenance, a non-MIAF SVID in the same Trust Domain MUST NOT use it. The MIS MUST NOT issue an SVID whose path begins with `/margo/` unless the path conforms to a MIAF identity profile. An MIS built on a stock CA can apply this check in the operator's workflow, when the operator chooses the SPIFFE ID, before issuance.
 - **Uniqueness.** Each SPIFFE ID names a single identity within its Trust Domain.
 - **Lifecycle.** All identities follow the [lifecycle vocabulary](./identity-lifecycle.md#lifecycle-vocabulary).
 - **Extensibility.** The MIS, Trust Domain, SVID, and Trust Bundle concepts are generic; further profiles may be added for new principal classes without redefining the framework.
@@ -92,6 +100,12 @@ The **Margo Identity Service (MIS)** is a role, not a specific service. Within a
 - enforcing MIAF's cryptographic and SVID-profile requirements.
 
 Anything that meets these responsibilities can fill the role: [SPIRE](https://spiffe.io/docs/latest/spire-about/), a CA configured for a MIAF profile, an operator's provisioning workflow, or something else. The only wire contract MIAF fixes for the MIS is the two HTTPS trust endpoints above; it does not standardize how the MIS issues SVIDs, and beyond those endpoints conformance is judged by behavior rather than by API surface.
+
+A conformance test can check that behavior on the SVIDs an MIS issues, without an issuance API (informative). The test can check that each issued SVID:
+
+- conforms to the [X.509-SVID profile](./svids.md#x509-svid-profile), including its leaf constraints;
+- conforms to the [cryptographic requirements](./svids.md#cryptographic-requirements); and
+- carries a SPIFFE ID in the Trust Domain that conforms to the [path namespace](#identity-model) rules and to the path rules of its identity profile.
 
 ### Deployment Patterns (informative)
 

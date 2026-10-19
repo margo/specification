@@ -28,7 +28,7 @@ DELETE /api/v1/capabilities/{deviceId}
 | 204 No Content | The device capabilities document was deleted successfully. |
 | 400 Bad Request | PUT: Malformed request body. |
 | 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
-| 404 Not Found | PUT: No gateway was found for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No device with the given `deviceId` was found for the client. |
+| 404 Not Found | PUT: No gateway was found for the client for the given child-device `deviceId` (see [Gateways considerations](#gateways-considerations) for more details). <br/> DELETE: No device with the given `deviceId` was found for the client. |
 | 422 Unprocessable Content | Request body includes a semantic error.  |
 
 ## Request Body Attributes
