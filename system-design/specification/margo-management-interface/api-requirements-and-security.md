@@ -73,7 +73,6 @@ The standard error response structure is:
 | `detail` | No | Optional. Human-readable explanation specific to this occurrence. |
 | `instance` | No | Optional. URI reference identifying the specific occurrence of the problem. |
 | `retryable` | No | Extension field. Whether the client MAY retry the request. |
-| `retryAfterSeconds` | No | Extension field. Advisory retry delay in seconds. The `Retry-After` response header is authoritative when present. |
 | `backoffStrategy` | No | Extension field. Recommended retry strategy: `none`, `fixed`, or `exponential`. |
 | `errors` | No | Extension field. Field-level validation errors. Common industry practice for validation failures (often 400 or 422). |
 
