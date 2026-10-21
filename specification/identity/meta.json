@@ -1,0 +1,13 @@
+{
+  "title": "Identity and Authorization",
+  "pages": [
+    "identity-framework",
+    "svids",
+    "tls-requirements",
+    "trust-bundle-and-discovery",
+    "identity-lifecycle",
+    "wfm-identity-profile",
+    "identity-security-considerations",
+    "trust-bundle-api-swagger"
+  ]
+}
