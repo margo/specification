@@ -34,7 +34,7 @@ Every Management Interface endpoint is scoped to the authenticated caller. A WFM
 
 A `deviceId` is not a global name: it identifies a device only within the scope of one WFM Client. The binding between a `deviceId` and the caller's identity is established by the client itself, when it first reports capabilities for that device (see [Device Capabilities](../margo-management-interface/device-capabilities.md)), and every later reference to that `deviceId` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a device in another client's scope: two clients reporting the same `deviceId` string address two unrelated device records. A WFM MAY additionally constrain, by local policy, which `deviceId`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
 
-The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`) using the [`not-authorized`](../problem-types.md#not-authorized) type:
+The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`). The body uses the [`not-authorized`](../problem-types.md#not-authorized) problem type:
 
 ```json
 {
@@ -48,8 +48,6 @@ The WFM authorizes each request using local policy keyed on the authenticated WF
 Both parties represent themselves with an X.509-SVID, an X.509 certificate carrying a SPIFFE ID in its URI SAN. SVID structure, key and signature algorithms, and validation follow the MIAF [X.509-SVID profile](../identity/svids.md#x509-svid-profile) and [cryptographic requirements](../identity/svids.md#cryptographic-requirements).
 
 The Management Interface follows the MIAF [traffic-inspecting proxies](../identity/tls-requirements.md#traffic-inspecting-proxies) rules: a TLS-offloading proxy that forwards the validated client identity to the backend is supported, and an operator MUST exempt Margo mTLS endpoints from inline traffic inspection.
-
- 
 
 ## Error Responses
 All API error responses conform to [RFC 9457 Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc9457). Error responses are returned with `Content-Type: application/problem+json` and include a stable `type` URI that clients MUST use for programmatic error handling.

@@ -116,7 +116,7 @@ GET /api/v1/deployments/{deploymentId}/{digest}
 | ---- | ----------- |
 | 200 OK | The response body contains the raw `ApplicationDeployment` YAML (`Content-Type: application/yaml`). Server MUST set `ETag` to the quoted digest and MUST return `Cache-Control: private, max-age=31536000, immutable` (see [Protocol: ETag and Caching](#protocol-etag-and-caching)). |
 | 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
-| 404 Not Found | The referenced digest does not exist on the server. `404 Not Found` indicates only that this specific digest is unavailable. It MUST NOT be interpreted as a deletion signal by a client; deletion of workloads is determined solely by absence from the state manifest. |
+| 404 Not Found | The referenced digest is not available to this client. The WFM MUST return the same response for a digest that does not exist and for a digest that exists outside the caller's scope (see [caller scoping](../margo-management-interface/api-requirements-and-security.md#identity-and-authentication)). `404 Not Found` indicates only that this specific digest is unavailable. It MUST NOT be interpreted as a deletion signal by a client; deletion of workloads is determined solely by absence from the state manifest. |
 
 > **Note:** Servers MAY apply HTTP `Content-Encoding` (e.g., gzip, br). The client advertises support via `Accept-Encoding`. Digests and ETags always refer to the decoded representation (i.e., the exact bytes of the response body after decompressing any HTTP `Content-Encoding` such as gzip). Servers SHOULD include `Vary: Accept-Encoding` if compression is used.
 
@@ -142,7 +142,7 @@ GET /api/v1/bundles/{digest}
 | ---- | ----------- |
 | 200 OK | The bundle was successfully retrieved. The server MUST set `Content-Type` to the manifest-declared `bundle.mediaType`, `ETag` to the quoted digest, and MUST return `Cache-Control: private, max-age=31536000, immutable` (see [Protocol: ETag and Caching](#protocol-etag-and-caching)). |
 | 403 Forbidden | The request is not authorized by the WFM's local policy (for example, the client relationship has been retired; see [Authorization](../identity/wfm-identity-profile.md#authorization)). |
-| 404 Not Found | The referenced digest does not exist on the server. `404 Not Found` indicates only that this specific digest is unavailable. It MUST NOT be interpreted as a deletion signal by a client; deletion of workloads is determined solely by absence from the state manifest. |
+| 404 Not Found | The referenced digest is not available to this client. The WFM MUST return the same response for a digest that does not exist and for a digest that exists outside the caller's scope (see [caller scoping](../margo-management-interface/api-requirements-and-security.md#identity-and-authentication)). `404 Not Found` indicates only that this specific digest is unavailable. It MUST NOT be interpreted as a deletion signal by a client; deletion of workloads is determined solely by absence from the state manifest. |
 
 > **Note:** Servers MAY apply `Content-Encoding` (e.g., gzip, br) and SHOULD include `Vary: Accept-Encoding` if they do.
 
@@ -183,7 +183,7 @@ sha256:a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef
 
 All Desired State endpoints implement standard HTTP caching semantics to optimize synchronization between the Workload Fleet Manager (WFM) and the Workload Fleet Management Client. ETags are used to detect content changes and avoid redundant data transfers. Two caching models are defined: one for the mutable State Manifest, and one for immutable, content-addressable resources such as individual deployments and bundles.
 
-Every response is scoped to the authenticated client, so all Desired State responses are marked `Cache-Control: private`, which keeps a response in that client's own cache rather than a shared one. Because mTLS carries no `Authorization` header (whose presence would normally keep a response out of shared caches per [RFC 9111 §3.5](https://datatracker.ietf.org/doc/html/rfc9111#section-3.5)), servers set this explicitly rather than rely on default cache behavior. Under end-to-end mTLS no shared cache sees these responses at all; the marking matters only where an operator terminates mTLS at a TLS-offloading proxy and cleartext reaches an internal hop (see the MIAF [traffic-inspecting proxies](../identity/tls-requirements.md#traffic-inspecting-proxies) rules), where `private` keeps a cache on that hop from serving one client's response to another.
+Every response is scoped to the authenticated client, so all Desired State responses are marked `Cache-Control: private`, which keeps a response in that client's own cache rather than a shared one. Because mTLS carries no `Authorization` header (whose presence would normally keep a response out of shared caches per [RFC 9111 §3.5](https://datatracker.ietf.org/doc/html/rfc9111#section-3.5)), servers set this explicitly rather than rely on default cache behavior. Under end-to-end mTLS no shared cache sees these responses at all; the marking matters only where an operator terminates mTLS at a TLS-offloading proxy and an HTTP cache runs behind it (see the MIAF [traffic-inspecting proxies](../identity/tls-requirements.md#traffic-inspecting-proxies) rules), where `private` keeps a cache on that hop from serving one client's response to another.
 
 ### State Manifest Endpoint
 
@@ -219,7 +219,7 @@ This section defines the end-to-end workflow followed by a client to retrieve, v
 
   - If the manifest is unchanged, the WFM responds with `304 Not Modified`.
   - If the manifest has changed (`200 OK`), the client:
-    - Verifies the `manifestVersion` is strictly greater than the stored version. If not, the update MUST be rejected and SHOULD be logged as a security event. The specific requirements for logging security events are not currently defined and will be addressed in a future version of the specification.
+    - Verifies the `manifestVersion` is strictly greater than the stored version. If not, the update MUST be rejected and SHOULD be logged as a security event. The MIAF [security event logging](../identity/identity-security-considerations.md#security-event-logging) rules define the content of such a log entry.
     - Parses the manifest and decides whether to fetch the bundle or individual deployments.
     - Downloads and verifies digests for all referenced `ApplicationDeployment` YAMLs.
   - The client reconciles its local workloads:

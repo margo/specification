@@ -58,4 +58,6 @@ Where the MIS operates as an intermediate CA beneath an enterprise or offline ro
 
 MIAF favours short SVID lifetimes: short lifetimes keep the blast radius low and let expiry double as revocation. The right value depends on the principal. A workload identity in a connected service can renew hourly; a device with intermittent or air-gapped connectivity needs enough margin to renew before a realistic offline window ends. As a rough orientation, automated SPIRE-style workload SVIDs are commonly 1-24 hours, while long-lived device SVIDs are often weeks to a few months.
 
+Validity-period evaluation depends on the verifier's clock (see [certificate validation](./tls-requirements.md#certificate-validation)). Operators SHOULD account for devices with weak clocks when choosing SVID lifetimes. A deployment that cannot assure clock integrity SHOULD NOT rely on expiry alone for revocation.
+
 Manual provisioning makes short lifetimes operationally expensive, so an operator relying on it MAY use longer lifetimes than automated renewal would allow. Treat any such extension as a bridge: once automated renewal is available, an operator SHOULD reduce lifetimes to the shortest value compatible with their principals' connectivity.
