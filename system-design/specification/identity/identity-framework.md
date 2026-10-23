@@ -32,6 +32,10 @@ Terms introduced by MIAF:
 - **Principal**: a non-human Margo component that holds, or is being provisioned with, a SPIFFE identity in a Trust Domain. WFMs and WFM Clients are the principals for which an identity profile exists today. An Edge Compute Device participates through the WFM Client it hosts; the device itself becomes a principal only under a future identity profile (for example, one for device fleet management).
 - **Verifier**: a Margo component that validates a peer's SVID and then authorizes the call locally, using the SPIFFE ID that SVID carries.
 - **Margo Identity Service (MIS)**: the identity-authority **role** within a Trust Domain. The MIS issues SVIDs, publishes the discovery document and Trust Bundle, and enforces MIAF's cryptographic and SVID-profile rules. The MIS is defined by its responsibilities, not by a specific API (see [The MIS role](#the-mis-role)).
+- **Acquisition mode**: how a principal's SVID is acquired, keyed on who generates and first holds the private key. Two modes are defined: **installed** and **enrolled** (see [acquisition modes](./credential-provisioning.md#acquisition-modes)). The enrolled mode is distinct from the Enrollment lifecycle phase, which every principal passes through in either mode.
+- **Provisioning input**: a named item a principal must accept to participate in a Trust Domain: its SVID, its private key when the operator supplies one, its trust material, and the identifiers its identity profile defines (see [provisioning input contract](./credential-provisioning.md#provisioning-input-contract)).
+- **Provisioning channel**: the operator's existing means of placing material onto a principal (device-management tooling, configuration management, or installer media, for example). The channel is deployment-specific and out of scope. MIAF standardizes what the channel carries (the provisioning inputs) and what takes them in (the provisioning interface), not the channel itself.
+- **Provisioning interface**: how a principal accepts its provisioning inputs (a file, a mounted secret, an environment variable, or a configuration API, for example). The provisioning channel delivers the inputs, and the provisioning interface takes them in.
 - **Policy-based authorization**: each verifier makes authorization decisions locally, based on the peer's verified SPIFFE ID. MIAF does not use OAuth-style token scopes or a central authorization server.
 
 ## Framework Overview
@@ -44,7 +48,7 @@ Once a component holds an SVID:
 2. **Authenticate to peers.** The component and peer complete an mTLS handshake: the component presents its X.509-SVID, and the peer validates the chain against the Trust Bundle.
 3. **Authorize the call.** The peer applies its local policy to the now-verified SPIFFE ID.
 
-A component obtains its SVID through the [operator provisioning playbook](./identity-lifecycle.md#operator-provisioning-playbook).
+A component obtains its SVID through one of the [acquisition modes](./credential-provisioning.md#acquisition-modes).
 
 ## Scope and Applicability
 
@@ -75,7 +79,7 @@ MIAF references the current published text of each SPIFFE specification instead 
 | Bundle endpoint | [SPIFFE Federation](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Federation.md), bundle-endpoint model adopted by reference | The Trust Bundle retrieval endpoint follows the bundle-endpoint model (one URL per Trust Domain). The `https_web` and `https_spiffe` endpoint profiles are candidates for future adoption; this release authenticates retrieval per [initial trust bootstrap](./tls-requirements.md#initial-trust-bootstrap). |
 | Discovery document | Margo | Not part of SPIFFE; defined in [Trust Bundle and Discovery Endpoints](./trust-bundle-and-discovery.md#discovery-document-endpoint). |
 
-MIAF does not adopt the SPIFFE Workload API, and it does not adopt the node and workload attestation of SPIFFE implementations such as SPIRE. In SPIRE, attestation authenticates each issuance, and automatic issuance makes lifetimes of a few hours practical. Under MIAF, the operator authorizes each issuance through the provisioning channel (see [operator provisioning playbook](./identity-lifecycle.md#operator-provisioning-playbook)). Unlike in a SPIRE deployment, under MIAF:
+MIAF does not adopt the SPIFFE Workload API, and it does not adopt the node and workload attestation of SPIFFE implementations such as SPIRE. In SPIRE, attestation authenticates each issuance, and automatic issuance makes lifetimes of a few hours practical. Under MIAF, the operator authorizes each issuance through the provisioning channel (see [credential provisioning and acquisition](./credential-provisioning.md)). Unlike in a SPIRE deployment, under MIAF:
 
 - MIAF does not require the MIS to authenticate the device or the process that holds a key. The only required check at issuance is the operator's approval.
 - SVID lifetimes are not short by default, so expiry alone is not always an adequate revocation mechanism (see [SVID lifetime guidance](./identity-lifecycle.md#svid-lifetime-guidance)).
@@ -99,7 +103,7 @@ The **Margo Identity Service (MIS)** is a role, not a specific service. Within a
 - serving the [Trust Bundle retrieval endpoint](./trust-bundle-and-discovery.md#trust-bundle-retrieval-endpoint) and, when used, the [discovery document endpoint](./trust-bundle-and-discovery.md#discovery-document-endpoint) over HTTPS; and
 - enforcing MIAF's cryptographic and SVID-profile requirements.
 
-Anything that meets these responsibilities can fill the role: [SPIRE](https://spiffe.io/docs/latest/spire-about/), a CA configured for a MIAF profile, an operator's provisioning workflow, or something else. The only wire contract MIAF fixes for the MIS is the two HTTPS trust endpoints above; it does not standardize how the MIS issues SVIDs, and beyond those endpoints conformance is judged by behavior rather than by API surface.
+Anything that meets these responsibilities can fill the role: [SPIRE](https://spiffe.io/docs/latest/spire-about/), a CA configured for a MIAF profile, an operator's provisioning workflow, or something else. The only wire contract MIAF fixes for the MIS is the two HTTPS trust endpoints above; it does not standardize how the MIS issues SVIDs, and beyond those endpoints conformance is judged by behavior rather than by API surface. A principal does not depend on a specific MIS implementation (see [MIS independence](./credential-provisioning.md#mis-independence)).
 
 A conformance test can check that behavior on the SVIDs an MIS issues, without an issuance API (informative). The test can check that each issued SVID:
 
