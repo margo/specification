@@ -71,9 +71,9 @@ The rules below follow the provisioning sequence: a product declares its modes, 
 
 ### Declaring Acquisition Modes
 
-A principal MUST implement at least one acquisition mode and MUST declare, in its conformance documentation, which of the two modes it implements. It MAY implement both. This framework mandates neither mode. A profile that builds on it can mandate one. A principal SHOULD prefer the enrolled mode over the installed mode where its hardware allows (see [key handling](#key-handling) for the reasons).
+A principal MUST implement at least one acquisition mode and MUST declare, in its product documentation, which of the two modes it implements. It MAY implement both. This framework mandates neither mode. A profile that builds on it can mandate one. A principal SHOULD prefer the enrolled mode over the installed mode where its hardware allows (see [key handling](#key-handling) for the reasons).
 
-The conformance documentation MUST also state how the principal stores and protects its private key, for example in a TPM, in a secure element, or in software storage with named file permissions. MIAF sets no minimum key protection. The statement lets an operator or an integrator compare products and assess the result against their own security requirements.
+The product documentation MUST also state how the principal stores and protects its private key, for example in a TPM, in a secure element, or in software storage with named file permissions. MIAF sets no minimum key protection. The statement lets an operator or an integrator compare products and assess the result against their own security requirements.
 
 ### Trust Material
 
