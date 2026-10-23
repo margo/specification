@@ -91,7 +91,7 @@ The CSR carries the principal's public key and proof of possession. Any subject 
 
 ### Chain Ingestion
 
-On ingesting the returned chain, the principal MUST verify that the leaf certifies its own key pair, and that the leaf carries a well-formed SPIFFE ID whose structure matches an identity profile the principal implements. When it holds a Trust Bundle, it MUST additionally perform [RFC 5280](https://datatracker.ietf.org/doc/html/rfc5280) certification path validation of the chain to a trust anchor in that bundle. Failures surface as the [validation rule](#provisioning-input-contract) for provisioning inputs requires.
+On ingesting the returned chain, the principal MUST verify that the leaf certifies its own key pair, and that the leaf carries a well-formed SPIFFE ID whose structure matches an identity profile the principal implements. When it holds a Trust Bundle, it MUST additionally perform [RFC 5280](https://datatracker.ietf.org/doc/html/rfc5280) certification path validation of the chain to a trust anchor in that bundle. Failures surface as the validation rule for provisioning inputs requires.
 
 ## Provisioning Input Contract
 
