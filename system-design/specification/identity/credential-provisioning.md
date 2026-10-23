@@ -119,7 +119,7 @@ Each class of artifact has one interchange format:
 
 ### Inputs and Output for All Principals
 
-The first table below states, for each input, when a conformant product must accept it. The second table states when a product must produce its only output, the PKCS#10 CSR.
+The table below states, for each input, when a conformant product must accept it.
 
 | Input | Required | Notes |
 | :---- | :------- | :---- |
@@ -130,6 +130,8 @@ The first table below states, for each input, when a conformant product must acc
 | Trust Bundle, static | always ([trust material](#trust-material)) | the anchors of the principal's own Trust Domain, as a SPIFFE bundle |
 | `trustBundleUri` | where refresh is implemented ([trust material](#trust-material)) | the URL the principal refreshes the Trust Bundle from |
 | Discovery document URL | where the principal fetches MIS-hosted material ([trust material](#trust-material)) | resolves `trustBundleUri`, and the fields a later profile adds |
+
+The table below states when a product must produce its only output, the PKCS#10 CSR.
 
 | Output | Required | Notes |
 | :----- | :------- | :---- |
