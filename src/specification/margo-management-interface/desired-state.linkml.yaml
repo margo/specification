@@ -137,6 +137,17 @@ classes:
         range: ComposeComponent
         rank: 20
 
+  NativeDeploymentProfile:
+    is_a: DeploymentProfile
+    rank: 40
+    slot_usage:
+      type:
+        equals_string: "native"
+        rank: 10
+      components:
+        range: NativeComponent
+        rank: 20
+
   DeviceConstraints:
     description: >-
       Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
@@ -345,6 +356,16 @@ classes:
     is_a: Component
     rank: 50
 
+  NativeComponent:
+    is_a: Component
+    rank: 50
+    slot_usage:
+      properties:
+        range: NativeComponentProperties
+        required: true
+        inlined: true
+        rank: 20
+
   ComponentProperties:
     rank: 82
     description: >-
@@ -386,6 +407,56 @@ classes:
       timeout:
         description: >-
           Maximum time to wait for component installation to complete.
+          Format is "##m##s" (e.g., "5m0s", "8m30s").
+          If installation does not complete before timeout, deployment fails.
+        range: string
+        required: false
+        pattern: "^\\d+m\\d+s$"
+        rank: 40
+
+  NativeComponentProperties:
+    rank: 83
+    description: >-
+      Component deployment properties for native deployments.
+      Native components may be obtained from HTTPS package repositories,
+      SFTP sources, or OCI registries.
+    attributes:
+      repository:
+        description: >-
+          Repository URI from which the component can be obtained.
+          Supported sources include HTTPS package repositories, SFTP sources,
+          and OCI registries
+          (e.g., https://mirror.example.com/org/component-name,
+          sftp://packages.example.com/org/component-name,
+          oci://registry.example.com/org/component-name).
+          MUST use the https://, sftp://, or oci:// scheme.
+        range: string
+        required: true
+        pattern: "^(https://|sftp://|oci://).+"
+        rank: 10
+      revision:
+        description: >-
+          Version identifying the component within the repository
+          (e.g., "1.0.0", "2.3.1", "3.0.15-1~deb12u1").
+          The value is interpreted according to the repository and package
+          management mechanism used by the device.
+          The Fleet Manager MUST treat this value as an opaque string and
+          MUST NOT assume a specific versioning scheme.
+        range: string
+        required: true
+        pattern: "^[A-Za-z0-9][A-Za-z0-9._+~:-]*$"
+        rank: 20
+      wait:
+        description: >-
+          Whether to wait for the native component installation to complete
+          before proceeding.
+          Default is true. Only applies when multiple components are provided.
+        range: boolean
+        required: false
+        rank: 30
+      timeout:
+        description: >-
+          Maximum time to wait for the native component installation to complete.
           Format is "##m##s" (e.g., "5m0s", "8m30s").
           If installation does not complete before timeout, deployment fails.
         range: string

@@ -53,7 +53,7 @@ DELETE /api/v1/capabilities/{deviceId}
 | peripherals | []Peripheral | Y* | Peripherals available for applications to utilize on the device. See the [Peripheral](#peripheral-attributes) section below.|
 | interfaces | []CommunicationInterface | Y* | Communication interfaces available for applications to utilize on the device. See the [Communication Interfaces](#communicationinterface-attributes) section below.|
 | otelCollector | boolean | Y* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. A device that is capable of hosting workloads MUST report `true`. |
-| supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
+| supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that supports deployment types requiring a workload runtime MUST report at least one entry. A device that supports only native deployments MAY omit supportedRuntimes.|
 | supportedDeploymentTypes | []SupportedDeploymentType | Y* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
 
 > Note:  \* A see-thru gateway not hosting workloads itself MUST omit these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy.
@@ -133,6 +133,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | --- | --- |
 | helm | Device can receive and process Kubernetes Helm chart deployments locally. |
 | compose | Device can receive and process Compose service deployments locally. |
+| native | Device can receive and process native deployments locally. |
 | custom | Device can receive and process custom deployments locally that are not defined by the Margo specification. Workload fleet manager implementations MUST default to custom if the provided deployment type does not match a known deployment type. See [Custom Runtimes and Deployments](#custom-runtimes-and-deployments) below for more details. |
 
 ## Example Device Capabilities Payload
@@ -172,7 +173,8 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
         ],
         "supportedDeploymentTypes": [
             "helm",
-            "compose"
+            "compose",
+            "native"
         ]
     }
 }
@@ -207,7 +209,7 @@ A see-thru gateway MUST report its own capabilities and the capabilities of each
 | If the gateway... | Then its own manifest MUST... |
 | --- | --- |
 | does **not** host workloads | contain only the required identity fields — omit the workload-hosting fields (`cpus`, `memory`, `storage`, `peripherals`, `interfaces`, `supportedRuntimes`, `supportedDeploymentTypes`), and omit `otelCollector` |
-| **also** hosts workloads | report the workload-hosting fields like any hosting device, including at least one entry in both `supportedRuntimes` and `supportedDeploymentTypes` |
+| **also** hosts workloads | report the workload-hosting fields like any hosting device, including at least one entry in `supportedDeploymentTypes`. If the device supports deployment types requiring a workload runtime, it MUST also report at least one entry in `supportedRuntimes`. |
 
 Hosting is neither required of nor forbidden for a see-thru gateway: it reports the workload-hosting fields when it hosts workloads, and omits them when it does not.
 

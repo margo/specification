@@ -544,7 +544,7 @@ components:
               minItems: 1
               items:
                 type: string
-                enum: [helm, compose, custom]
+                enum: [helm, compose, native, custom]
         labels:
           type: object
           description: >-
@@ -723,6 +723,47 @@ components:
               description: >-
                 Maximum time to wait for component installation to complete.
                 Format is ##m##s (e.g., 5m0s, 8m30s).
+    nativeDeploymentProfileComponent:
+      type: object
+      description: >-
+        A component within a native deployment profile.
+      required: [name, properties]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions.
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the native component
+        properties:
+          type: object
+          required: [repository, revision]
+          properties:
+            repository:
+              type: string
+              pattern: '^(https://|sftp://|oci://).+'
+              description: >-
+                Repository URI from which the native component can be obtained.
+                MUST use the https://, sftp://, or oci:// scheme.
+            revision:
+              type: string
+              pattern: '^[A-Za-z0-9][A-Za-z0-9._+~:-]*$'
+              description: >-
+                Version identifying the component within the repository.
+                The Fleet Manager MUST treat this value as an opaque string and
+                MUST NOT assume a specific versioning scheme.
+            wait:
+              type: boolean
+              description: >-
+                Whether to wait for the native component installation to complete.
+            timeout:
+              type: string
+              pattern: '^\d+m\d+s$'
+              description: >-
+                Maximum time to wait for the native component installation to complete.
     appDeploymentProfile:
       type: object
       description: Application Deployment Profile
@@ -744,6 +785,30 @@ components:
           items: 
             $ref: '#/components/schemas/applicationDeploymentProfileComponent'
           description: Components of the deployment profile
+        deviceConstraints:
+          $ref: '#/components/schemas/DeviceConstraints'
+          description: Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+    nativeDeploymentProfile:
+      type: object
+      description: Native Application Deployment Profile
+      required: [type, components]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          const: native
+          description: Type of deployment profile
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/nativeDeploymentProfileComponent'
+          description: Components of the native deployment profile
         deviceConstraints:
           $ref: '#/components/schemas/DeviceConstraints'
           description: Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
@@ -896,7 +961,9 @@ components:
             The applicationId MUST match the associated application description's top-level "id" attribute.
           pattern: "^[-a-z0-9]{1,200}$"
         deploymentProfile:
-          $ref: '#/components/schemas/appDeploymentProfile'
+          oneOf:
+            - $ref: '#/components/schemas/appDeploymentProfile'
+            - $ref: '#/components/schemas/nativeDeploymentProfile'
           description: Deployment profile
         parameters:
           $ref: '#/components/schemas/appDeploymentParams'
