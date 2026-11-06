@@ -2,6 +2,8 @@
   "title": "Margo Management Interface",
   "pages": [
     "api-requirements-and-security",
+    "profiles",
+    "profile-mapping",
     "device-capabilities",
     "desired-state",
     "deployment-status",

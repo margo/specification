@@ -12,13 +12,13 @@ While specification extensions are not interoperable by nature, a standardized e
 
 Specification extensions add functionality that is not part of the Margo specification. It is expected suppliers collaborate with each other in order to know what is available. Margo does not maintain a listing of these specification extensions.
 
-Workload fleet management server and client implementations MUST NOT fail when encountering unknown specification extensions in the Application Description, Application Deployment or Device Capabilities documents. Unknown specification extension properties targeting a workload fleet manager or device supplier MUST be ignored.
+Workload fleet management server and client implementations MUST NOT fail when encountering unknown specification extensions in the Application Description, Application Deployment or Profile documents. Unknown specification extension properties targeting a workload fleet manager or device supplier MUST be ignored.
 
 For specifics, see the specification extension documentation for each of the following documents:
 
 - [Application Description](../applications/application-description.md#specification-extensions)
 - [Application Deployment](./desired-state#specification-extensions)
-- [Device Capabilities](./device-capabilities.md#specification-extensions)
+- [Profiles](./profiles#specification-extensions)
 
 The property naming conventions for adding specification extension is `x-<unique name>-extensions`. 
 
