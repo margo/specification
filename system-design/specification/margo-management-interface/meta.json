@@ -4,7 +4,6 @@
     "api-requirements-and-security",
     "profiles",
     "profile-mapping",
-    "device-capabilities",
     "desired-state",
     "deployment-status",
     "management-interface-swagger"

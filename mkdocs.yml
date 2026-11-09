@@ -17,7 +17,6 @@ nav:
           - specification/margo-management-interface/api-requirements-and-security.md
           - specification/margo-management-interface/profiles.md
           - specification/margo-management-interface/profile-mapping.md
-          - specification/margo-management-interface/device-capabilities.md
           - specification/margo-management-interface/desired-state.md
           - specification/margo-management-interface/deployment-status.md
           - specification/margo-management-interface/management-interface-swagger.md
