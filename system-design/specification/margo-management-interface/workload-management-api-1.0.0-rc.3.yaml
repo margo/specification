@@ -21,6 +21,76 @@ security:
   - mTLS: []
 
 paths:
+  /api/v1/profile/{workloadTargetId}:
+    put:
+      summary: Create or replace a workload target profile
+      description: Profile updates MUST be applied atomically.
+      parameters:
+        - name: workloadTargetId
+          in: path
+          required: true
+          description: Unique identifier of the workload target reporting the profile. Child workload targets use a slash-separated identifier.
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+      responses:
+        '200':
+          description: The profile document was updated successfully.
+        '201':
+          description: The profile document was created successfully.
+        '400':
+          description: Malformed request body.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '404':
+          description: No gateway was found for the client for the given child workloadTargetId.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '422':
+          description: Request body includes a semantic error.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+    delete:
+      summary: Delete a workload target profile
+      parameters:
+        - name: workloadTargetId
+          in: path
+          required: true
+          description: Unique identifier of the workload target whose profile is being deleted.
+          schema:
+            $ref: '#/components/schemas/DeviceId'
+      responses:
+        '204':
+          description: The profile document was deleted successfully.
+        '403':
+          description: The request is not authorized by the WFM's local policy (for example, the client relationship has been retired).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        '404':
+          description: No workload target with the given workloadTargetId was found for the client.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
   /api/v1/bundles/{digest}:
     get:
       summary: Retrieve a deployment bundle by its content digest
@@ -248,6 +318,35 @@ components:
         and the WFM Identity Profile.
 
   schemas:
+    Profile:
+      type: object
+      required: [characteristics]
+      patternProperties:
+        '^x-[a-z][a-z0-9-]*-extensions$':
+          type: object
+          description: >-
+            Vendor-specific extension. Keys MUST match x-<unique-name>-extensions
+            where <unique-name> matches [a-z][a-z0-9-]*.
+      additionalProperties: false
+      properties:
+        characteristics:
+          type: array
+          description: List of characteristic entries composing the workload target's profile.
+          items:
+            $ref: '#/components/schemas/Characteristic'
+    Characteristic:
+      type: object
+      required: [key, properties]
+      additionalProperties: false
+      properties:
+        key:
+          type: string
+          description: Unique key assigned to the characteristic and used in an ApplicationDescription match expression.
+        properties:
+          description: >-
+            JSON property bag containing the characteristic's properties. This
+            value may be any valid JSON value, including nested objects, arrays,
+            lists, complex types, and all JSON data types.
     ProblemDetail:
       type: object
       description: >
@@ -287,12 +386,12 @@ components:
         detail:
           type: string
           description: Human-readable explanation specific to this occurrence of the problem.
-          example: No gateway was found for the given child-device deviceId.
+          example: No gateway was found for the given child workloadTargetId.
         instance:
           type: string
           format: uri-reference
           description: URI reference identifying the specific occurrence of the problem.
-          example: /api/v1/capabilities/gateway-1/child-device-2
+          example: /api/v1/profile/gateway-1/child-device-2
         retryable:
           type: boolean
           description: >
