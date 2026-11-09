@@ -1,6 +1,6 @@
 # Profile Mapping
 
-> **Note:** This page only documents the intent and is not official part of the specification yet. Once we have identified real-world uses cases where this mapping is required we will define the official mapping schema and language.
+> **Important:** This page only documents the intent and is not official part of the specification yet. Once we have identified real-world uses cases where this mapping is required we will define the official mapping schema and language.
 
 Under certain use cases, it may be necessary for the workload fleet manager to understand what a [profile](./profiles.md) characteristic property means. Profile characteristics are defined in such a way as to allow for deployment technology specifications to be added or updated without requiring changes to the workload fleet manager implementation. This means we don't want to require workload fleet manager to have to understand the characteristic schemas in order to use them for matching workloads to workload targets.
 

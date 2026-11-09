@@ -8,7 +8,7 @@ spec:
     # id contains invalid characters: upper-case letters ('A' and 'Z'), special characters ('.' and '_')
     applicationId: com_northstartida.Digitron-Orchestrator
     deploymentProfile:
-        type: helm
+        key: margo.org/deployment/helm
         components:
             - name: database-services
               properties:

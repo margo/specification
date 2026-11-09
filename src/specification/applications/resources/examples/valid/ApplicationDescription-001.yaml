@@ -20,7 +20,7 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  - type: helm
+  - key: margo.org/deployment/helm
     id: com-northstartida-hello-world-helm-a
     components:
       - name: hello-world

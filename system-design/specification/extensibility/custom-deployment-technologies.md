@@ -1,6 +1,6 @@
 # Custom Deployment Technology Support
 
-> **Note:** Need to update with links to the deployment technology specification guidelines documentation when it is available
+> **Note:** Need to update with links to the deployment technology specification guidelines documentation when it is available. While we are working on splitting out the core specification from the deployment technology specifications and creating this new documentation custom deployments technologies can be supported by creating a vendor specific profile deployment characteristic.
 
 Application suppliers may require a way to package and deploy applications using a deployment technology not defined by the Margo community.
 

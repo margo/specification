@@ -273,28 +273,16 @@ metadata:
 spec:
     applicationId:
     deploymentProfile:
-        type: 
+        key: 
         components:
             - name: 
               properties:
-        deviceConstraints:
-          capacityRequirements:
-            cpu:
-              cores:
-              architectures:
-            memory:
-            storage:
-          eligibilityRules:
-          - propertySelector:
-            matchExpressions:
+        characteristics:
+          - matchExpressions:
             - key: 
+              property: 
               operator:
-              value:
-          - labelSelector:
-            matchExpression:
-            - key:
-              operator:
-              value:  
+              values:
     parameters:
         param:
             value: 
@@ -355,29 +343,19 @@ spec:
 {%- endfor %}
 {%- endif %}
 
-{%- if c.name.startswith("DeviceConstraints") %}
+{%- if c.name.startswith("Characteristics") %}
 
-> **Note:** Please see the [device constraints](../applications/application-description#deviceconstraints-attributes) section on the Application Description page for details about how to apply device constraint rules.
+Workload fleet manager implementations MAY evaluate the characteristic matching rules defined in the deployment profile before attempting to deploy a workload. If implemented, the workload fleet manager MUST evaluate the deployment profile's characteristics before selecting a workload target using the match expression rules defined below.
 
-Device constraints contain a set of rules application suppliers can use to describe device compatibility requirements for their workloads. The device constraints are taken directly from the Application Description and MUST be provided without modification in the Application Deployment if defined in the Application Description.
+Device suppliers MUST evaluate the characteristic matching rules defined in the deployment profile before attempting to deploy a workload.
 
-Device suppliers MAY choose to evaluate the capacity constraints before deploying the workload as a preliminary check or leave it up to their chosen runtime to determine if the device has the required capacity.
-
-Device suppliers MUST evaluate the eligibility rules before deploying the workload.
+> **Note:** Please see the [characteristics](../applications/application-description#characteristics-attributes) and [match expression](../applications/application-description#matchexpression-attributes) sections on the Application Description page for details about how to apply characteristic match expression rules. The `characteristics` block MUST be copied unchanged from the selected Application Description deployment profile into the Application Deployment's deployment profile.
 
 {%- endif %}
 {%- endfor %}
 
 ### Enumerations
 These enumerations are used as vocabularies for attribute values of the `ApplicationDeployment`.
-
-#### CpuArchitectureType
-
-| Permissible Values | Description |
-| --- | --- |
-| amd64 | AMD 64-bit architecture.|
-| arm64 | ARM 64-bit architecture.|
-| arm | ARM 32-bit architecture. |  
 
 #### SelectorOperator
 
@@ -388,7 +366,9 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 | Exists | Indicates matching should find a match on the specified key. |
 | DoesNotExist | Indicates matching should not find a match on the specified key. |
 | Gt | Indicates matching should find a match if the target value is greater than the specified value. |
+| GtEq | Indicates matching should find a match if the target value is greater than or equal to the specified value. |
 | Lt | Indicates matching should find a match if the target value is less than the specified value. |
+| LtEq | Indicates matching should find a match if the target value is less than or equal to the specified value. |
 | ContainsAll | Indicates matching should find a match against all itemSelectors. |
 | ContainsAny | Indicates matching should find a match against at least one itemSelector. |
 

@@ -6,7 +6,7 @@ metadata:
 spec:
     applicationId: com-northstartida-digitron-orchestrator
     deploymentProfile:
-        type: compose
+        key: margo.org/deployment/compose
         components:
             - name: digitron-orchestrator-docker
               properties:

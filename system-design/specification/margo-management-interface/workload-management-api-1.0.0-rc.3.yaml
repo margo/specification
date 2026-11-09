@@ -673,7 +673,7 @@ components:
     appDeploymentProfile:
       type: object
       description: Application Deployment Profile
-      required: [type, components]
+      required: [key, components]
       patternProperties:
         '^x-[a-z][a-z0-9-]*-extensions$':
           type: object
@@ -682,111 +682,87 @@ components:
             where <unique-name> matches [a-z][a-z0-9-]*.
       additionalProperties: false
       properties:
-        type:
+        key:
           type: string
-          enum: ["helm", "compose"]
-          description: Type of deployment profile
+          description: >-
+            Defines the deployment technology key for this deployment profile, e.g. `margo.org/deployment/helm`
+            or `margo.org/deployment/compose`.
         components:
           type: array
           items: 
             $ref: '#/components/schemas/applicationDeploymentProfileComponent'
           description: Components of the deployment profile
-        deviceConstraints:
-          $ref: '#/components/schemas/DeviceConstraints'
-          description: Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
-    DeviceConstraints:
-      type: object
-      description: >-
-        Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
-      properties:
-        capacityRequirements:
-          $ref: '#/components/schemas/CapacityRequirements'
-          description: Minimum CPU, memory, and storage requirements for the deployment profile.
-        eligibilityRules:
+        characteristics:
           type: array
           items:
-            $ref: '#/components/schemas/EligibilityRule'
+            $ref: '#/components/schemas/Characteristics'
           description: >-
-            Optional rules used to match the deployment with device properties and supplier-defined labels
-            reported in the device capabilities.
-    CapacityRequirements:
+            Characteristic match expressions, copied unchanged from the selected application description
+            deployment profile, required for the application to be placed on a workload target.
+    Characteristics:
       type: object
-      description: Minimum device capacity required by the deployment profile.
-      properties:
-        cpu:
-          $ref: '#/components/schemas/DeploymentCpuRequirement'
-          description: CPU element specifying the CPU requirements for the deployment.
-        memory:
-          type: string
-          description: >-
-            The minimum amount of memory required. The value is given in binary units
-            (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
-          pattern: ^[0-9]+(Mi|Gi|Ki)$
-        storage:
-          type: string
-          description: >-
-            The minimum amount of storage required. The value is given in binary units
-            (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes, `Ti` = Tebibytes, `Pi` = Pebibytes, `Ei` = Exbibytes).
-          pattern: ^[0-9]+(Mi|Gi|Ki|Ti|Pi|Ei)$
-    DeploymentCpuRequirement:
-      type: object
-      description: CPU element specifying the CPU requirements for the deployment.
-      required: [cores]
-      properties:
-        cores:
-          type: number
-          description: >-
-            The required amount of CPU cores. Specified as decimal units of CPU cores (e.g., `0.5` is half a core).
-        architectures:
-          type: array
-          items:
-            type: string
-            enum: [amd64, arm64, arm, riscv64, other]
-          description: The CPU architectures supported by the deployment.
-    EligibilityRule:
-      type: object
-      description: A rule matching properties and supplier-defined labels reported through the device capabilities.
-      properties:
-        propertySelector:
-          $ref: '#/components/schemas/Selector'
-          description: Selector evaluated against the properties reported in the device capabilities.
-        labelSelector:
-          $ref: '#/components/schemas/Selector'
-          description: Selector evaluated against the labels reported in the device capabilities.
-    Selector:
-      type: object
-      description: A set of match expressions evaluated with AND semantics.
+      description: Characteristic match expressions required for the application to be placed on a workload target.
       required: [matchExpressions]
       properties:
         matchExpressions:
           type: array
           items:
             $ref: '#/components/schemas/MatchExpression'
-          description: Match expressions evaluated against the device's reported capabilities.
+          description: Match expressions evaluated against the workload target's reported characteristics.
     MatchExpression:
       type: object
-      description: An expression used to match a device's reported capabilities properties or labels.
+      description: An expression used to match a workload target characteristic or one of its properties.
       required: [key, operator]
       properties:
         key:
           type: string
+          description: The characteristic key to match.
+        property:
+          type: string
           description: >-
-            The key used to match the device's reported capabilities. For property selectors, this MUST be a JSON
-            Pointer, as defined by RFC 6901, mapping to a specific property. For label selectors, this MUST be the
-            exact label key.
+            An RFC 6901 JSON Pointer evaluated relative to the characteristic's properties object. When omitted,
+            the expression tests whether the characteristic identified by key exists.
         operator:
           type: string
-          enum: [In, NotIn, Exists, DoesNotExist, Gt, Lt, ContainsAll, ContainsAny]
+          enum: [In, NotIn, Exists, DoesNotExist, Gt, Lt, GtEq, LtEq, ContainsAll, ContainsAny]
           description: Operator used to evaluate the referenced value.
         values:
           type: array
           items: {}
           description: >-
             Values used by the operator when required for matching expressions. Required for the `In`, `NotIn`,
-            `Gt`, or `Lt` operator.
+            `Gt`, `GtEq`, `Lt`, or `LtEq` operator.
         itemSelector:
-          $ref: '#/components/schemas/Selector'
+          $ref: '#/components/schemas/ItemSelector'
           description: Selector evaluated against array elements. Required for the `ContainsAll` or `ContainsAny` operator.
+    ItemSelector:
+      type: object
+      description: A set of item match expressions evaluated against array elements.
+      required: [matchExpressions]
+      properties:
+        matchExpressions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemMatchExpression'
+          description: Match expressions evaluated against an array element.
+    ItemMatchExpression:
+      type: object
+      description: An expression used to match a property within an array element.
+      required: [property, operator]
+      properties:
+        property:
+          type: string
+          description: An RFC 6901 JSON Pointer evaluated relative to the array element.
+        operator:
+          type: string
+          enum: [In, NotIn, Exists, DoesNotExist, Gt, Lt, GtEq, LtEq, ContainsAll, ContainsAny]
+          description: Operator used to evaluate the referenced value.
+        values:
+          type: array
+          items: {}
+          description: >-
+            Values used by the operator when required for matching expressions. Required for the `In`, `NotIn`,
+            `Gt`, `GtEq`, `Lt`, or `LtEq` operator.
     appParameterTarget:
       type: object
       description: Application Parameter Target
