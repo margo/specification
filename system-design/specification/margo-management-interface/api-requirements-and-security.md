@@ -8,7 +8,7 @@ Below is a breakdown of the two major categories these requirements fall under:
 1. Workload management functions
     - Set Desired State(s) assigned to particular device clients
 2. Device client specific functions
-    - Device Capability Reporting
+    - Profile Reporting
     - Workload Status deployment reporting
 	
 Identity and authentication for the Management Interface are provided by the [Margo Identity and Authorization Framework](../identity/identity-framework.md) and the [WFM Identity Profile](../identity/wfm-identity-profile.md). A WFM Client and a WFM are each provisioned with an X.509-SVID before any Management Interface call is made.
