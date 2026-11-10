@@ -1,6 +1,6 @@
 # Profiles
 
-Workload targets MUST provide the workload fleet management service with their characteristics in order for workloads to be matched with appropriate workload targets. This is done by calling the `profile` endpoint. Reporting the workload target's profile is the first exchange a workload fleet manager client makes after provisioning and connecting to the workload fleet manager service.
+Workload targets MUST provide the workload fleet management service with their characteristics in order for workloads to be [matched](../applications/application-description#characteristics-attributes) with appropriate workload targets. This is done by calling the `profile` endpoint. Reporting the workload target's profile is the first exchange a workload fleet manager client makes after provisioning and connecting to the workload fleet manager service.
 
 The reported profile represent the characteristics delegated exclusively to Margo for workload placement and reconciliation, and may not reflect a workload target's total physical capacity or characteristics. The mechanisms used to isolate, reserve, and preserve these resources for exclusive Margo use are implementation-specific and outside the scope of this specification.
 
@@ -17,9 +17,6 @@ PUT /api/v1/profile/{workloadTargetId}
 DELETE /api/v1/profile/{workloadTargetId}
 ```
 
-- PUT creates or replaces. Profile updates MUST be atomic.
-- DELETE removes the complete profile for the workload target.
-
 ### Route Parameters
 
 |Parameter | Type | Required? | Description|
@@ -29,14 +26,14 @@ DELETE /api/v1/profile/{workloadTargetId}
 Requests MUST use the following format: `{workloadTargetId}[/{workloadTargetId}]`
 
 - The top-level `workloadTargetId` is required.
-- The subsequent `workloadTargetId` is required when reporting profiles for a child workload targets.
+- The subsequent `workloadTargetId` is required when reporting profiles for a child workload target.
 - `workloadTargetId` MUST include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3).
 
 Using multiple `workloadTargetId` in the endpoint does not register multiple workload target in a single request. The parent workload target's profile MUST be registered prior to registering child workload targets.
 
 The workload fleet manger client reporting the profile(s) is responsible for assigning and maintaining the workload target IDs used for each reported workload target profile.
 
-Workload fleet managers MUST use the exact `workloadTargetId` or `workloadTargetId/workloadTargetId` route used to report the profile as the `metadata.deviceId` in the [ApplicationDeployment manifest](desired-state.md#applicationdeployment-yaml-definition).
+Workload fleet managers MUST use the exact `workloadTargetId` or `workloadTargetId/workloadTargetId` route used to report the profile as the `metadata.deviceId` in the [ApplicationDeployment manifest](./desired-state#applicationdeployment-yaml-definition).
 
 ### Response Codes
 
@@ -54,7 +51,7 @@ Workload fleet managers MUST use the exact `workloadTargetId` or `workloadTarget
 
 | Field      | Type            | Required?       | Description     |
 |------------|-----------------|-----------------|-----------------|
-| characteristics | characteristic[] | Y | List of characteristic entries composing the workload target's profile.|
+| characteristics | characteristic[] | Y | List of characteristic entries composing the workload target's profile. Each key MUST occur at most once in the array. |
 | x-&lt;unique-name&gt;-extensions | map[string]interface{} | N | Allows addition of an arbitrary JSON object whose contents suppliers use to provide vendor-specific functionality beyond what is defined in the Margo specification. See the [Specification Extensions](#specification-extensions) section below for more details. |
 
 > **Note:** The individual deployment technology specifications will define which characteristics should be reported. For now, report whatever characteristics are applicable from the temporary [Common Characteristics](#common-characteristics) described below.
@@ -510,8 +507,6 @@ Key: `margo.org/deployment/helm`
 > **Note:** See the [Custom Deployment Technologies](../extensibility/custom-deployment-technologies.md) page for additional details.
 
 A workload target MAY support custom deployment technologies by defining a vendor-specific deployment technology specification which details the deployment characteristics required to support the deployment technology that has not been defined by the Margo community.
-
-> **Note:** Need to reference the guidelines for deployment technology spec writers onces it is available.
 
 ## Specification Extensions
 

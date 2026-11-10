@@ -113,7 +113,7 @@ eligible workload targets =
 
 * Each `matchExpressions` rule set is evaluated using a logical OR. 
   * A least one `matchExpressions` rule set MUST evaluate to true to be considered a match.
-  * If `characteristics` is omitted, the deployment profile has no additional matching criteria beyond the deployment profile `type`.
+  * If `characteristics` is omitted, the deployment profile has no additional matching criteria beyond the deployment profile `key`.
 * All expressions within a single match expression rule set are combined using logical AND.
   * All match expressions in the rule set MUST evaluate to true to be considered a match.
 
@@ -234,9 +234,9 @@ characteristics:
             values: ["gpu", "camera"]
 ```
 
-##### Interaction with other expressions:
+#### Interaction with multiple expressions:
 
-- Multiple rule sets within the same `matchExpression` remain AND'd together. For example:
+- Multiple rule sets within the same `matchExpression` are AND'd together. For example:
 
 ```yaml
 characteristics:
@@ -290,7 +290,7 @@ Item match expressions are evaluated relative to each object in the array select
 {%- if c.name.startswith("ComponentProperties") %}
 
 ### ComponentProperties Attributes
-The expected properties for all OCI-based deployment types (Helm and Compose) are indicated below.
+The expected properties for all OCI-based deployment technologies (Helm and Compose) are indicated below.
 
 | Attribute      | Type  | Required?     | Description    |
 | --- | --- | --- | --- |
@@ -318,8 +318,8 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 |--------------------|-------------|
 | In | Indicates matching should find a match with at least one specified value. |
 | NotIn | Indicates matching should not find a match with any specified values. |
-| Exists | Indicates matching should find a match on the specified key. |
-| DoesNotExist | Indicates matching should not find a match on the specified key. |
+| Exists | Indicates matching should find a match on the specified key or property if `property` is present. |
+| DoesNotExist | Indicates matching should not find a match on the specified key or property if `property` is present. |
 | Gt | Indicates matching should find a match if the target value is greater than the specified value. |
 | GtEq | Indicates matching should find a match if the target value is greater than or equal to the specified value. |
 | Lt | Indicates matching should find a match if the target value is less than the specified value. |

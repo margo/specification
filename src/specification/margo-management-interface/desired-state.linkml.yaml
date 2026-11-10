@@ -404,7 +404,7 @@ classes:
     description: >-
       Typed component properties providing OCI coordinates
       and optional deployment behavior settings.
-      Used by both Helm and Compose deployment types.
+      Used by both Helm and Compose deployment technologies.
     attributes:
       repository:
         description: >-

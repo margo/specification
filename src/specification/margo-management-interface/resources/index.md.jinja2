@@ -345,11 +345,9 @@ spec:
 
 {%- if c.name.startswith("Characteristics") %}
 
-Workload fleet manager implementations MAY evaluate the characteristic matching rules defined in the deployment profile before attempting to deploy a workload. If implemented, the workload fleet manager MUST evaluate the deployment profile's characteristics before selecting a workload target using the match expression rules defined below.
+Workload fleet manager implementations MAY evaluate the characteristic matching rules defined in the deployment profile before attempting to deploy a workload. If implemented, the workload fleet manager MUST evaluate the deployment profile's characteristics before selecting a workload target using the match expression rules defined in the [characteristics](../applications/application-description#characteristics-attributes) and [match expression](../applications/application-description#matchexpression-attributes) sections on the Application Description page.
 
 Device suppliers MUST evaluate the characteristic matching rules defined in the deployment profile before attempting to deploy a workload.
-
-> **Note:** Please see the [characteristics](../applications/application-description#characteristics-attributes) and [match expression](../applications/application-description#matchexpression-attributes) sections on the Application Description page for details about how to apply characteristic match expression rules. The `characteristics` block MUST be copied unchanged from the selected Application Description deployment profile into the Application Deployment's deployment profile.
 
 {%- endif %}
 {%- endfor %}
@@ -363,8 +361,8 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 |--------------------|-------------|
 | In | Indicates matching should find a match with at least one specified value. |
 | NotIn | Indicates matching should not find a match with any specified values. |
-| Exists | Indicates matching should find a match on the specified key. |
-| DoesNotExist | Indicates matching should not find a match on the specified key. |
+| Exists | Indicates matching should find a match on the specified key or property if `property` is present. |
+| DoesNotExist | Indicates matching should not find a match on the specified key or property if `property` is present. |
 | Gt | Indicates matching should find a match if the target value is greater than the specified value. |
 | GtEq | Indicates matching should find a match if the target value is greater than or equal to the specified value. |
 | Lt | Indicates matching should find a match if the target value is less than the specified value. |

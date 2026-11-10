@@ -11,9 +11,6 @@ PUT    /api/v1/profile/mapping/{targetName}
 DELETE /api/v1/profile/mapping/{targetName}
 ```
 
-- PUT creates or replaces. Mapping updates MUST be atomic.
-- DELETE removes the complete mapping for the workload target.
-
 ### Route Parameters
 
 |Parameter | Type | Required? | Description|
@@ -23,7 +20,7 @@ DELETE /api/v1/profile/mapping/{targetName}
 Requests MUST use the following format: `{workloadTargetId}[/{workloadTargetId}]`
 
 - The top-level `workloadTargetId` is required.
-- The subsequent `workloadTargetId` is required when reporting mappings for a child workload targets profile.
+- The subsequent `workloadTargetId` is required when reporting mappings for a child workload target profile.
 - `workloadTargetId` MUST include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3).
 
 The workload target profile must be registered before reporting the profile mapping.
@@ -44,11 +41,11 @@ The workload target profile must be registered before reporting the profile mapp
 
 | Field      | Type            | Required?       | Description     |
 |------------|-----------------|-----------------|-----------------|
-| `{terms}` | TermMap | Y | List of term map entries. |
+| `{terms}` | []TermMap | Y | List of term map entries. |
 
 The mapping is an open object. The workload fleet manager MUST treat it as a dynamic set and MUST NOT assume a particular entry exists. The WFM MAY use a mapping entry only when it knows the corresponding vocabulary and has the necessary information to interpret the resolved value.
 
-> **Note:** Properties will be defined to handled additional information that may be needed such as an indication of unites or data types when the actual uses cases are identified.
+> **Note:** Properties will be defined to handle additional information that may be needed such as an indication of unites or data types when the actual uses cases are identified.
 
 ## Term Map Attributes
 
