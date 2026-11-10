@@ -1,12 +1,12 @@
 # Profiles
 
-Workload targets MUST provide the workload fleet management service with their characteristics in order for workloads to be [matched](../applications/application-description#characteristics-attributes) with appropriate workload targets. This is done by calling the `profile` endpoint. Reporting the workload target's profile is the first exchange a workload fleet manager client makes after provisioning and connecting to the workload fleet manager service.
+Workload targets MUST provide the workload fleet management service with their characteristics for workloads to be [matched](../applications/application-description#characteristics-attributes) with appropriate workload targets. This is done by calling the `profile` endpoint. Reporting the workload target's profile is the first exchange a workload fleet manager client makes after provisioning and connecting to the workload fleet manager service.
 
-The reported profile represent the characteristics delegated exclusively to Margo for workload placement and reconciliation, and may not reflect a workload target's total physical capacity or characteristics. The mechanisms used to isolate, reserve, and preserve these resources for exclusive Margo use are implementation-specific and outside the scope of this specification.
+The reported profile represents the characteristics delegated exclusively to Margo for workload placement and reconciliation, and may not reflect a workload target's total physical capacity or characteristics. The mechanisms used to isolate, reserve, and preserve these resources for exclusive Margo use are implementation-specific and outside the scope of this specification.
 
 To ensure the workload fleet manager has the latest profile information, the workload fleet manager client MUST send updated profile information if any changes occur to the information originally provided (i.e., additional memory is added, GPU becomes allocated, etc.).
 
-In order to decouple the core specification from the individual deployment technology specifications, the workload fleet manager services it not expected to understand the reported profile characteristic schemas. Workload fleet manager services are only required to use the profile information to evaluate matching criteria defined in the `ApplicationDescription`. This decoupling allows deployment technology specifications to be update or added without requiring workload fleet manager implementations to change.
+In order to decouple the core specification from the individual deployment technology specifications, the workload fleet manager services are not expected to understand the reported profile characteristic schemas. Workload fleet manager services are only required to use the profile information to evaluate matching criteria defined in the `ApplicationDescription`. This decoupling allows deployment technology specifications to be updated or added without requiring workload fleet manager implementations to change.
 
 > **Note:** Margo cannot prevent workload fleet manager suppliers from tightly coupling their implementation to these schemas, but suppliers assume the risk introduced by tight coupling.
 
@@ -29,9 +29,9 @@ Requests MUST use the following format: `{workloadTargetId}[/{workloadTargetId}]
 - The subsequent `workloadTargetId` is required when reporting profiles for a child workload target.
 - `workloadTargetId` MUST include only unreserved characters as specified in [RFC3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3).
 
-Using multiple `workloadTargetId` in the endpoint does not register multiple workload target in a single request. The parent workload target's profile MUST be registered prior to registering child workload targets.
+Using multiple `workloadTargetId` values in the endpoint does not register multiple workload targets in a single request. The parent workload target's profile MUST be registered before registering child workload targets.
 
-The workload fleet manger client reporting the profile(s) is responsible for assigning and maintaining the workload target IDs used for each reported workload target profile.
+The workload fleet manager client reporting the profile(s) is responsible for assigning and maintaining the workload target IDs used for each reported workload target profile.
 
 Workload fleet managers MUST use the exact `workloadTargetId` or `workloadTargetId/workloadTargetId` route used to report the profile as the `metadata.deviceId` in the [ApplicationDeployment manifest](./desired-state#applicationdeployment-yaml-definition).
 
@@ -132,17 +132,17 @@ Workload fleet managers MUST use the exact `workloadTargetId` or `workloadTarget
 
 A workload fleet manager client may represent multiple child-workload targets by reporting a single aggregate profile to the workload fleet manager. This type of profile is referred to as an opaque gateway. Opaque gateways report the combined characteristics of all the workload targets to the WFM as a single `profile`. Because the child-workload targets are not individually visible to the WFM, an opaque gateway is seen as a single workload target and reports the aggregated characteristics for all child-workload targets the gateway represents.
 
-> Example: An opaque gateway has two child-workload targets. Each child-workload target has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report a profile for 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. Since the gateway supports the compose deploy technology on its child-workload target it will report support for the `margo.org/deployment/compose` characteristic.
+> Example: An opaque gateway has two child-workload targets. Each child-workload target has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 Ethernet interface. The gateway will report a profile for 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 Ethernet interfaces. Since the gateway supports the compose deploy technology on its child-workload target, it will report support for the `margo.org/deployment/compose` characteristic.
 
 ### See-thru gateways
 
 A workload fleet manager client may connect one or more child-workload targets to the workload fleet manager while allowing the workload fleet manager to see each workload target behind individually with its own `profile`. This type of representation is referred to as a **see-thru gateway**.
 
-A see-thru gateway uses the same `profile` schema as any other workload target — from a payload perspective it is an ordinary workload target that also reports the workload targets behind it. Its conformance rules are relaxed, though: a see-thru gateway is not required to host workloads. The workload fleet manager infers the gateway relationship from the parent/child `workloadTargetId` hierarchy, which is typically most evident when the gateway reports no workload-hosting characteristics.
+A see-thru gateway uses the same `profile` schema as any other workload target — from a payload perspective, it is an ordinary workload target that also reports the workload targets behind it. Its conformance rules are relaxed, though: a see-thru gateway is not required to host workloads. The workload fleet manager infers the gateway relationship from the parent/child `workloadTargetId` hierarchy, which is typically most evident when the gateway reports no workload-hosting characteristics.
 
 #### How a see-thru gateway reports profiles
 
-A see-thru gateway MUST report its own profile and the profiles of each workload targets it connects to the workload fleet manager:
+A see-thru gateway MUST report its own profile and the profiles of each workload target it connects to the workload fleet manager:
 
 1. Call the `profile` endpoint once for the gateway itself, then once for each workload target behind it.
 2. Encode the hierarchy in the `workloadTargetId` as a parent/child path in the route. For example, a gateway `gateway1` with two child-workload targets calls the endpoint three times, with `workloadTargetId`s of `profile/gateway1`, `profile/gateway1/targetA`, and `profile/gateway1/targetB`.
@@ -151,7 +151,7 @@ A see-thru gateway MUST report its own profile and the profiles of each workload
 #### What the gateway reports about itself
 
 - If the Gateway hosts workloads, it should report all applicable characteristics to enable `ApplicationDefinition` match expressions to be matched with the workload target.
-- If the Gateway does not host workloads, it reports a profile with an empty characteristics array since workloads will not need be matched with the Gateway.
+- If the Gateway does not host workloads, it reports a profile with an empty characteristics array since workloads will not need to be matched with the Gateway.
 
 #### Examples
 
@@ -167,7 +167,7 @@ A see-thru gateway MUST report its own profile and the profiles of each workload
     }
     ```
 
-- A See-thru gateway capable of hosting workloads reporting its profile to the workload fleet manager:
+- A See-thru gateway capable of hosting workloads, reporting its profile to the workload fleet manager:
 
     ```http
     PUT /api/v1/profile/gateway1
@@ -472,7 +472,7 @@ Key: `margo.org/deployment/compose`
 
 #### Compose Deployment Technology Properties Attributes
 
-> **Note:** The properties for the compose deployment technology will be defined once the deployment technology specifications are separated from the core specification.
+> **Note:** The properties for the Compose deployment technology will be defined once the deployment technology specifications are separated from the core specification.
 
 #### Compose Deployment Technology Example
 
@@ -491,7 +491,7 @@ Key: `margo.org/deployment/helm`
 
 #### Helm Deployment Technology Properties Attributes
 
-> **Note:** The properties for the helm deployment technology will be defined once the deployment technology specifications are separated from the core specification.
+> **Note:** The properties for the Helm deployment technology will be defined once the deployment technology specifications are separated from the core specification.
 
 #### Helm Deployment Technology Example
 
@@ -516,6 +516,6 @@ The `profile` payload supports the following specification extension scenarios:
 
 ### Collaboration between device and workload fleet manager suppliers
 
-For the device workload fleet manager clients to make use of specification extensions defined by a workload fleet manager supplier, the extension property MUST be added to the profiles JSON document's [root](#request-body-attributes).
+For the device workload fleet manager clients to make use of specification extensions defined by a workload fleet manager supplier, the extension property MUST be added to the profile JSON document's [root](#request-body-attributes).
 
-Workload fleet manager service implementations MUST ignore any unknown specification extensions. Importing a profile with unknown specification extensions MUST NOT result in a failure because of the included specification extensions.
+Workload fleet manager service implementations MUST ignore any unknown specification extensions. Importing a profile with unknown specification extensions MUST NOT fail because of the included specification extensions.
