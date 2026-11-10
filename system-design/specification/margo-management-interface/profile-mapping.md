@@ -1,6 +1,6 @@
 # Profile Mapping
 
-> **Important:** This page only documents the intent and is not official part of the specification yet. Once we have identified real-world uses cases where this mapping is required we will define the official mapping schema and language.
+> **Important:** This page only documents the intent and is not an official part of the specification yet. Once we have identified real-world use cases where this mapping is required, we will define the official mapping schema and language.
 
 Under certain use cases, it may be necessary for the workload fleet manager to understand what a [profile](./profiles.md) characteristic property means. Profile characteristics are defined in such a way as to allow for deployment technology specifications to be added or updated without requiring changes to the workload fleet manager implementation. This means we don't want to require workload fleet manager to have to understand the characteristic schemas in order to use them for matching workloads to workload targets.
 
@@ -45,7 +45,7 @@ The workload target profile must be registered before reporting the profile mapp
 
 The mapping is an open object. The workload fleet manager MUST treat it as a dynamic set and MUST NOT assume a particular entry exists. The WFM MAY use a mapping entry only when it knows the corresponding vocabulary and has the necessary information to interpret the resolved value.
 
-> **Note:** Properties will be defined to handle additional information that may be needed such as an indication of unites or data types when the actual uses cases are identified.
+> **Note:** Properties will be defined to handle additional information that may be needed, such as an indication of units or data types when the actual use cases are identified.
 
 ## Term Map Attributes
 
@@ -56,9 +56,9 @@ The mapping is an open object. The workload fleet manager MUST treat it as a dyn
 
 ## Example
 
-> **Note:** This is an example to demonstrate the intent, the `type` and `unit` properties used in the example are not decided on at this point.
+> **Note:** This is an example to demonstrate the intent; the `type` and `unit` properties used in the example are not decided on at this point.
 
-Assume Margo agrees a workload fleet manager must be able to determine the vendor, memory and storage totals and CPU cores. The mapping would be defined as follows:
+Assume Margo agrees that a workload fleet manager must be able to determine the vendor, memory and storage totals, and CPU cores. The mapping would be defined as follows:
 
 ```json
 {
