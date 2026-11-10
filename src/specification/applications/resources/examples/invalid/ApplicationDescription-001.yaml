@@ -22,7 +22,7 @@ metadata:
       - name: Northstar Industrial Applications
         site: http://northstar-ida.com
 deploymentProfiles:
-  - type: helm.v3
+  - key: margo.org/deployment/helm
     id: com-northstartida-digitron-orchestrator-helm.v3-a
     description:
       This allows to install / run the application as a Helm chart deployment.
@@ -39,21 +39,47 @@ deploymentProfiles:
           repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
           revision: 1.0.9
           wait: true
-    requiredResources:
-      cpu:
-        cores: 1.5
-        architectures:
-          - amd64
-      memory: 1024Mi
-      storage: 10Gi
-      peripherals:
-        - type: gpu
-          manufacturer: NVIDIA
-        - type: display
-      interfaces:
-        - type: ethernet
-        - type: bluetooth
-  - type: compose
+    characteristics:
+      - matchExpressions:
+          - key: margo.org/resource/cpu
+            property: /cpus
+            operator: ContainsAny
+            itemSelector:
+              matchExpressions:
+                - property: /cores
+                  operator: GtEq
+                  values: [1.5]
+                - property: /architecture
+                  operator: In
+                  values: ["amd64"]
+          - key: margo.org/resource/memory
+            property: /memory
+            operator: GtEq
+            values: [1]
+          - key: margo.org/resource/storage
+            property: /storage
+            operator: GtEq
+            values: [10]
+          - key: margo.org/peripherals
+            property: /peripherals
+            operator: ContainsAll
+            itemSelector:
+              matchExpressions:
+                - property: /type
+                  operator: In
+                  values: ["gpu"]
+                - property: /manufacturer
+                  operator: In
+                  values: ["NVIDIA"]
+          - key: margo.org/interfaces
+            property: /interfaces
+            operator: ContainsAll
+            itemSelector:
+              matchExpressions:
+                - property: /type
+                  operator: In
+                  values: ["ethernet", "bluetooth"]
+  - key: margo.org/deployment/compose
     id: com-northstartida-digitron-orchestrator-compose-a
     components:
       - name: digitron-orchestrator-docker

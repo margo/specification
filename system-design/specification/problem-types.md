@@ -93,7 +93,7 @@ This problem type indicates that the server rejected the request because the req
   "title": "Invalid Request",
   "status": 400,
   "detail": "Malformed request body.",
-  "instance": "/api/v1/capabilities/device-1"
+  "instance": "/api/v1/profile/device-1"
 }
 ```
 
@@ -113,7 +113,7 @@ This problem type is returned when the request body is syntactically valid but c
   "title": "Semantic Error",
   "status": 422,
   "detail": "Request body includes a semantic error.",
-  "instance": "/api/v1/capabilities/device-1",
+  "instance": "/api/v1/profile/device-1",
   "errors": [
     {
       "field": "properties.supportedRuntimes",
@@ -159,7 +159,7 @@ This problem type indicates that the server cannot find a gateway for the child-
   "title": "Gateway not found",
   "status": 404,
   "detail": "No gateway was found for the client for the given child-device deviceId.",
-  "instance": "/api/v1/capabilities/gateway-1/child-device-2"
+  "instance": "/api/v1/profile/gateway-1/child-device-2"
 }
 ```
 
@@ -179,7 +179,7 @@ This problem type is returned when a DELETE request references a device that doe
   "title": "Device Not Found",
   "status": 404,
   "detail": "No device with the given deviceId was found for the client.",
-  "instance": "/api/v1/capabilities/device-1"
+  "instance": "/api/v1/profile/device-1"
 }
 ```
 

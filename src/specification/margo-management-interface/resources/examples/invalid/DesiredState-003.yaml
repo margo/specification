@@ -8,7 +8,7 @@ metadata:
 spec:
     applicationId: com-northstartida-digitron-orchestrator
     deploymentProfile:
-        type: helm
+        key: margo.org/deployment/helm
         components:
             - name: database-services
               properties:

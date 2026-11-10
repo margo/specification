@@ -1,6 +1,6 @@
 # Device Requirements
 
-A device MUST meet a baseline set of requirements to be considered Margo-conformant. These requirements ensure devices can effectively manage Margo-conformant workload and/or host those workloads. A device MUST be managed by only a single workload fleet manager. A device reports what it can provide to the ecosystem through its [device capabilities](../margo-management-interface/device-capabilities.md).
+A device MUST meet a baseline set of requirements to be considered Margo-conformant. These requirements ensure devices can effectively manage Margo-conformant workload and/or host those workloads. A device MUST be managed by only a single workload fleet manager. A device reports what it can provide to the ecosystem through its [Profile](../margo-management-interface/profiles.md).
 
 All Margo-conformant devices MUST provide the following components:
 
@@ -8,19 +8,19 @@ All Margo-conformant devices MUST provide the following components:
 
 > Note: This is not required for a device behind a see-thru gateway.
 
-All workload hosting devices MUST provide the following capabilities:
-    
-- At least one supported deployment type
+All workload hosting devices MUST provide the following characteristics:
+
+- At least one supported deployment technology
 - At least one supported workload runtime
 - An OTEL collector
 
-> Note: See [device capabilities](../margo-management-interface/device-capabilities.md) for the supported deployment types and runtimes. 
+> Note: See [Profile](../margo-management-interface/profiles.md) for the supported deployment technologies.
 
 ## Helm-enabled Device Requirements
 
-Devices supporting the Helm deployment type, MUST provide the following additional components:
+Devices supporting the Helm deployment technology, MUST provide the following additional components:
 
-- Capabilities for deploying Helm charts
+- Ability to deploy Helm charts
 - Kubernetes orchestration platform
 
 ### Helm deployment approaches
@@ -38,9 +38,9 @@ If a device vendor chooses a deployment approach that does not interact with the
 
 ## Compose-enabled Device Requirements
 
-Devices supporting the Compose deployment type, MUST provide the following additional components:
+Devices supporting the Compose deployment technology, MUST provide the following additional components:
 
-- Capabilities for deploying Compose applications
+- Ability to deploy Compose files
 - An OCI container runtime, for example Docker or Podman
 
 

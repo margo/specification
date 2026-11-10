@@ -8,7 +8,7 @@ Below is a breakdown of the two major categories these requirements fall under:
 1. Workload management functions
     - Set Desired State(s) assigned to particular device clients
 2. Device client specific functions
-    - Device Capability Reporting
+    - Profile Reporting
     - Workload Status deployment reporting
 	
 Identity and authentication for the Management Interface are provided by the [Margo Identity and Authorization Framework](../identity/identity-framework.md) and the [WFM Identity Profile](../identity/wfm-identity-profile.md). A WFM Client and a WFM are each provisioned with an X.509-SVID before any Management Interface call is made.
@@ -32,7 +32,7 @@ The caller identity for every request is the authenticated WFM Client SPIFFE ID;
 
 Every Management Interface endpoint is scoped to the authenticated caller. A WFM determines from the caller's identity which devices that client is responsible for and which deployments are assigned to them. Where a request path carries a resource identifier, for example `{deviceId}` or `{digest}`, the WFM looks that identifier up only among the resources in the caller's scope. A WFM MUST NOT expose or mutate a resource outside the caller's scope.
 
-A `deviceId` is not a global name: it identifies a device only within the scope of one WFM Client. The binding between a `deviceId` and the caller's identity is established by the client itself, when it first reports capabilities for that device (see [Device Capabilities](../margo-management-interface/device-capabilities.md)), and every later reference to that `deviceId` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a device in another client's scope: two clients reporting the same `deviceId` string address two unrelated device records. A WFM MAY additionally constrain, by local policy, which `deviceId`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
+A `deviceId` is not a global name: it identifies a device only within the scope of one WFM Client. The binding between a `deviceId` and the caller's identity is established by the client itself, when it first reports the profile for that device (see [Profile](../margo-management-interface/profiles.md)), and every later reference to that `deviceId` is resolved within the reporting client's scope. Because the scope is derived from the authenticated SPIFFE ID, a client cannot register, read, or mutate a device in another client's scope: two clients reporting the same `deviceId` string address two unrelated device records. A WFM MAY additionally constrain, by local policy, which `deviceId`s a given client is allowed to report; such policy is deployment-specific and out of scope for this specification.
 
 The WFM authorizes each request using local policy keyed on the authenticated WFM Client identity, and MAY deny a request from a still-valid credential, per [Authorization](../identity/wfm-identity-profile.md#authorization). When a WFM denies a request by local policy (for example, a retired client relationship), it SHOULD respond `403 Forbidden` with an [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details body (`Content-Type: application/problem+json`). The body uses the [`not-authorized`](../problem-types.md#not-authorized) problem type:
 
@@ -59,7 +59,7 @@ The standard error response structure is:
   "title": "Invalid Request",
   "status": 400,
   "detail": "Malformed request body.",
-  "instance": "/api/v1/capabilities/device-1"
+  "instance": "/api/v1/profile/device-1"
 }
 ```
 
