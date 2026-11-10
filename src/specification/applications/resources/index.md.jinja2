@@ -112,7 +112,7 @@ eligible workload targets =
 ```
 
 * Each `matchExpressions` rule set is evaluated using a logical OR. 
-  * A least one `matchExpressions` rule set MUST evaluate to true to be considered a match.
+  * At least one `matchExpressions` rule set MUST evaluate to true to be considered a match.
   * If `characteristics` is omitted, the deployment profile has no additional matching criteria beyond the deployment profile `key`.
 * All expressions within a single match expression rule set are combined using logical AND.
   * All match expressions in the rule set MUST evaluate to true to be considered a match.
@@ -139,7 +139,7 @@ Examples:
 The `matchExpressions[].property` MUST resolve to a profile characteristic property whose value is either:
 
 * a string, number, or boolean
-* an array of strings, or numbers
+* an array of strings or numbers
 * an array of objects
 
 If `matchExpressions[].property` resolves to any other JSON type, the expression MUST evaluate to `false`.
@@ -163,25 +163,25 @@ The following rules MUST be followed when evaluating characteristic match expres
 
 String comparisons MUST be exact and case-sensitive.
 
-For the `In` and `NotIn` operator:
+For the `In` and `NotIn` operators:
 
 * `key`, `property`, and `values` MUST be present
 * `values` MUST contain one or more strings or numbers, or one boolean
 * `values` MUST be the same data type when indicating more than one.
 
-For the `Exists` and `DoesNotExist` operator:
+For the `Exists` and `DoesNotExist` operators:
 
 * `key` MUST be present
 * `property` MAY be omitted
 * `values` MUST be omitted
 
-For the `Gt`, `GtEq`, `Lt` and `LtEq` operator:
+For the `Gt`, `GtEq`, `Lt`, and `LtEq` operators:
 
 * `key`, `property`, and `values` MUST be present
 * `values` MUST be parsable as numbers
 * `values` MUST only contain a single number
 
-For the `ContainsAll` and `ContainsAny` operator:
+For the `ContainsAll` and `ContainsAny` operators:
 
 * `key`, `property`, and `itemSelector` MUST be present
 * `values` MUST be omitted
