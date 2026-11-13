@@ -519,8 +519,71 @@ components:
                   architecture:
                     type: string
                     enum: [amd64, arm64, arm]
+                  class:
+                    type: string
+                    enum: [performance, efficiency, low-power]
+                    description: Core class (P-core, E-core, etc.)
+                  frequency:
+                    type: object
+                    description: Frequency characteristics for this core kind
+                    properties:
+                      maxMHz:
+                        type: number
+                        description: Maximum achievable CPU frequency in MHz
+                      baseMHz:
+                        type: number
+                        description: Base CPU frequency in MHz
+                  type:
+                    type: string
+                    enum: [isolated, shared]
+                    description: Whether these cores are kernel-isolated
+            cache:
+              type: array
+              items:
+                type: object
+                required: [level, size, allocationTypes]
+                properties:
+                  level:
+                    type: string
+                    enum: [L3, L2, L1d, L1i]
+                    description: >
+                      Cache level.
+                      L3 = Level 3 Cache, L2 = Level 2 Cache,
+                      L1d = Level 1 Data Cache, L1i = Level 1 Instruction Cache.
+                  size:
+                    type: string
+                    description: >
+                      Minimum required cache amount. Value is given in binary units
+                      (Ki = Kibibytes, Mi = Mebibytes, Gi = Gibibytes), e.g. "9216Ki".
+                  allocationTypes:
+                    type: array
+                    items:
+                      type: string
+                      enum: [exclusive, shared]
+                    description: >
+                      Cache allocation types supported by the device.
+                      exclusive = device supports dedicated cache partitioning,
+                      shared = device supports shared cache access.
+              description: Cache resources available on the device
             memory:
-              type: string
+              type: object
+              description: Memory capability reported by the device
+              required: [size]
+              properties:
+                size:
+                  type: string
+                  description: Total available memory on the device (e.g., "16Gi")
+                bandwidthAllocationTypes:
+                  type: array
+                  minItems: 1
+                  uniqueItems: true
+                  items:
+                    type: string
+                    enum: [percent-throttling, rate-limiting]
+                  description: >
+                    Supported memory bandwidth allocation strategies.
+                    percent-throttling = cap memory bandwidth usage by percentage.
+                    rate-limiting = cap memory bandwidth to a fixed throughput.
             storage:
               type: string
             peripherals:
@@ -545,6 +608,16 @@ components:
               items:
                 type: string
                 enum: [helm, compose, custom]
+            workload:
+              type: object
+              description: Supported workload scheduling types on the device
+              properties:
+                schedulingTypes:
+                  type: array
+                  minItems: 1
+                  uniqueItems: true
+                  items:
+                    $ref: '#/components/schemas/WorkloadSchedulingType'
         labels:
           type: object
           description: >-
@@ -723,6 +796,49 @@ components:
               description: >-
                 Maximum time to wait for component installation to complete.
                 Format is ##m##s (e.g., 5m0s, 8m30s).
+        workload:
+          $ref: '#/components/schemas/Workload'
+          description: Workload scheduling policy and tuning for this component
+        deviceConstraints:
+          $ref: '#/components/schemas/DeviceConstraints'
+          description: Device constraints specifying the minimum device capabilities and eligibility rules required for the deployment.
+    WorkloadSchedulingType:
+      type: string
+      enum: [background, best-effort, deadline, real-time]
+      default: best-effort
+      description: >
+        Workload scheduling class.
+        background covers SCHED_BATCH and SCHED_IDLE,
+        best-effort covers SCHED_NORMAL/SCHED_OTHER,
+        deadline maps to SCHED_DEADLINE,
+        real-time maps to SCHED_FIFO/SCHED_RR.
+    WorkloadDeadline:
+      type: object
+      description: Deadline scheduling configuration
+      properties:
+        deadline:
+          type: integer
+          description: Task finish time
+        period:
+          type: integer
+          description: Task activation frequency
+        runtime:
+          type: integer
+          description: CPU runtime needed per period
+    Workload:
+      type: object
+      description: Workload scheduling configuration for a component
+      properties:
+        scheduling:
+          $ref: '#/components/schemas/WorkloadSchedulingType'
+        priority:
+          type: integer
+          description: Static priority for real-time scheduling
+        nice:
+          type: integer
+          description: Nice value for best-effort/background scheduling
+        deadline:
+          $ref: '#/components/schemas/WorkloadDeadline'
     appDeploymentProfile:
       type: object
       description: Application Deployment Profile
@@ -767,14 +883,18 @@ components:
       description: Minimum device capacity required by the deployment profile.
       properties:
         cpu:
-          $ref: '#/components/schemas/DeploymentCpuRequirement'
-          description: CPU element specifying the CPU requirements for the deployment.
+          type: array
+          items:
+            $ref: '#/components/schemas/DeploymentCpuRequirement'
+          description: CPU elements specifying the CPU requirements for the deployment.
+        cache:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeploymentCacheRequirement'
+          description: Cache resources available on the device
         memory:
-          type: string
-          description: >-
-            The minimum amount of memory required. The value is given in binary units
-            (`Ki` = Kibibytes, `Mi` = Mebibytes, `Gi` = Gibibytes).
-          pattern: ^[0-9]+(Mi|Gi|Ki)$
+          $ref: '#/components/schemas/DeploymentMemoryRequirement'
+          description: Required memory and optional bandwidth allocation for the deployment profile
         storage:
           type: string
           description: >-
@@ -796,6 +916,67 @@ components:
             type: string
             enum: [amd64, arm64, arm, riscv64, other]
           description: The CPU architectures supported by the deployment.
+        name:
+          type: string
+          description: Name of the container this CPU requirement applies to
+        class:
+          type: string
+          enum: [performance, efficiency, low-power]
+          description: Core class required by the workload
+        type:
+          type: string
+          enum: [isolated, shared]
+          description: Whether requested cores must be isolated or can be shared
+    DeploymentCacheRequirement:
+      type: object
+      description: Cache requirement or capability
+      required: [level, allocation]
+      properties:
+        level:
+          type: string
+          enum: [L3, L2, L1d, L1i]
+          description: >
+            Cache level.
+            L3 = Level 3 Cache, L2 = Level 2 Cache,
+            L1d = Level 1 Data Cache, L1i = Level 1 Instruction Cache.
+        allocation:
+          type: string
+          enum: [exclusive, shared]
+          description: >
+            Cache allocation type.
+            exclusive = dedicated cache partition (requires hardware CAT support),
+            shared = shared cache access.
+        size:
+          type: string
+          description: >
+            Minimum required cache amount. Value is given in binary units
+            (Ki = Kibibytes, Mi = Mebibytes, Gi = Gibibytes), e.g. "9216Ki".
+    MemoryBandwidthAllocation:
+      type: object
+      description: Memory bandwidth allocation requested by a workload
+      required: [unit, value]
+      properties:
+        unit:
+          type: string
+          enum: [percent, MBps]
+          description: >
+            Unit used for memory bandwidth capping.
+            percent = percentage-based cap.
+            MBps = throughput cap in megabytes per second.
+        value:
+          type: integer
+          description: Requested bandwidth cap value expressed in the selected unit
+    DeploymentMemoryRequirement:
+      type: object
+      description: Memory requirement for a deployment profile or component
+      required: [size]
+      properties:
+        size:
+          type: string
+          description: Required memory for the deployment profile (e.g., "1Gi")
+        bandwidthAllocation:
+          $ref: '#/components/schemas/MemoryBandwidthAllocation'
+          description: Optional memory bandwidth capping request
     EligibilityRule:
       type: object
       description: A rule matching properties and supplier-defined labels reported through the device capabilities.
