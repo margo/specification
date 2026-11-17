@@ -544,7 +544,7 @@ components:
               minItems: 1
               items:
                 type: string
-                enum: [helm, compose, native, custom]
+                enum: [helm, compose, native-artifact, native-image, native-package, custom]
         labels:
           type: object
           description: >-
@@ -802,8 +802,8 @@ components:
       properties:
         type:
           type: string
-          const: native
-          description: Type of deployment profile
+          enum: ["native-artifact", "native-image", "native-package"]
+          description: Type of native deployment profile
         components:
           type: array
           items:

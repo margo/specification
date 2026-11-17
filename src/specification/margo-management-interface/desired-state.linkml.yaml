@@ -137,12 +137,34 @@ classes:
         range: ComposeComponent
         rank: 20
 
-  NativeDeploymentProfile:
+  NativeArtifactDeploymentProfile:
     is_a: DeploymentProfile
     rank: 40
     slot_usage:
       type:
-        equals_string: "native"
+        equals_string: "native-artifact"
+        rank: 10
+      components:
+        range: NativeComponent
+        rank: 20
+
+  NativeImageDeploymentProfile:
+    is_a: DeploymentProfile
+    rank: 40
+    slot_usage:
+      type:
+        equals_string: "native-image"
+        rank: 10
+      components:
+        range: NativeComponent
+        rank: 20
+
+  NativePackageDeploymentProfile:
+    is_a: DeploymentProfile
+    rank: 40
+    slot_usage:
+      type:
+        equals_string: "native-package"
         rank: 10
       components:
         range: NativeComponent

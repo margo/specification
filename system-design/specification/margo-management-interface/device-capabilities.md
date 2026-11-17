@@ -53,7 +53,7 @@ DELETE /api/v1/capabilities/{deviceId}
 | peripherals | []Peripheral | Y* | Peripherals available for applications to utilize on the device. See the [Peripheral](#peripheral-attributes) section below.|
 | interfaces | []CommunicationInterface | Y* | Communication interfaces available for applications to utilize on the device. See the [Communication Interfaces](#communicationinterface-attributes) section below.|
 | otelCollector | boolean | Y* | Reports whether an OpenTelemetry (OTEL) collector is present on the device. A device that is capable of hosting workloads MUST report `true`. |
-| supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that supports deployment types requiring a workload runtime MUST report at least one entry. A device that supports only native deployments MAY omit supportedRuntimes.|
+| supportedRuntimes | []SupportedRuntime | Y* | Supported workload runtimes present on the device. See the [SupportedRuntime](#supportedruntime) definition for all permissible values. A device that supports deployment types requiring a workload runtime MUST report at least one entry. A device that supports only native deployment types (`native-artifact`, `native-image`, or `native-package`) MAY omit `supportedRuntimes`.|
 | supportedDeploymentTypes | []SupportedDeploymentType | Y* | The deployment profile types the device can receive and process locally. See the [SupportedDeploymentType](#supporteddeploymenttype) definition for all permissible values. A device that is capable of hosting workloads MUST report at least one entry.|
 
 > Note:  \* A see-thru gateway not hosting workloads itself MUST omit these fields. The WFM infers such a device is non-hosting from the absence of these capabilities, and infers a gateway relationship from the parent/child `deviceId` hierarchy.
@@ -133,8 +133,11 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 | --- | --- |
 | helm | Device can receive and process Kubernetes Helm chart deployments locally. |
 | compose | Device can receive and process Compose service deployments locally. |
-| native | Device can receive and process native deployments locally. |
+| native-artifact | Device can receive and process native artifact deployments locally. |
+| native-image | Device can receive and process native image deployments locally. |
+| native-package | Device can receive and process native package deployments locally. |
 | custom | Device can receive and process custom deployments locally that are not defined by the Margo specification. Workload fleet manager implementations MUST default to custom if the provided deployment type does not match a known deployment type. See [Custom Runtimes and Deployments](#custom-runtimes-and-deployments) below for more details. |
+
 
 ## Example Device Capabilities Payload
 
@@ -174,7 +177,9 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
         "supportedDeploymentTypes": [
             "helm",
             "compose",
-            "native"
+            "native-artifact",
+            "native-image",
+            "native-package"
         ]
     }
 }
@@ -186,7 +191,7 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
 
 ### Opaque gateways
 
-A device may represent, and aggregate the capabilities of, multiple child-devices behind it and report itself as a single Margo device to the WFM. This type of device is referred to as an opaque gateway. Opaque gateways report the combined capabilities of all the devices they connect to the WFM as a single `DeviceCapabilitiesManifest`. Because the child-devices are not individually visible to the WFM, an opaque gateway is seen as a single device and reports the aggregated resource fields, `supportedRuntimes`, and `supportedDeploymentTypes` of the devices behind it.
+A device may represent, and aggregate the capabilities of, multiple child-devices behind it and report itself as a single Margo device to the WFM. This type of device is referred to as an opaque gateway. Opaque gateways report the combined capabilities of all the devices they connect to the WFM as a single `DeviceCapabilitiesManifest`. Because the child-devices are not individually visible to the WFM, an opaque gateway is seen as a single device and reports the aggregated resource fields, `supportedRuntimes` and `supportedDeploymentTypes` of the devices behind it.
 
 > Example: An opaque gateway has two child-devices. Each child-device has an ARM64 processor with 2 cores, 5 GB of memory, 32 GB of storage, and 1 ethernet interface. The gateway will report capabilities of 2 CPUs (arm64) with 2 cores each, 10 GB of memory, 64 GB of storage, and 2 ethernet interfaces. Since the gateway can deploy compose applications on its child-devices it will report `supportedDeploymentTypes: ["compose"]`.
 
@@ -305,7 +310,7 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
             ],
             "supportedDeploymentTypes": [
                 "helm"
-            ]
+            ],
         }
     }
     ```
