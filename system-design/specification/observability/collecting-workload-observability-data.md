@@ -70,9 +70,9 @@ For devices with runtimes supporting compose deployment types, such as Docker or
 
 ### General
 
-- The collector MUST receive data using the [OLTP](https://opentelemetry.io/docs/specs/otlp/) format.
-  - It is recommended the Device Owner use the [OLTP Receiver](https://github.com/open-telemetry/opentelemetry-collector/blob/main/receiver/otlpreceiver/README.md) to allow workloads to send observability data to the collector.
-  - If the Device Owner chooses not to use the OLTP Receiver they MUST provide the same functionality as the OLTP receiver.
+- The collector MUST receive data using the [OTLP](https://opentelemetry.io/docs/specs/otlp/) format.
+  - It is recommended the Device Owner use the [OTLP Receiver](https://github.com/open-telemetry/opentelemetry-collector/blob/main/receiver/otlpreceiver/README.md) to allow workloads to send observability data to the collector.
+  - If the Device Owner chooses not to use the OTLP Receiver they MUST provide the same functionality as the OTLP receiver.
 
 > **Action:** We will need to determine if there is additional information the device owner needs to include as attributes for each message to ensure the source can be identified. For example, we may require a device device Id attribute.
 

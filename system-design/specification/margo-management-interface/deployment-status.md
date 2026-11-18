@@ -33,15 +33,15 @@ POST /api/v1/deployments/{deploymentId}/status
 |-----------------|-----------------|-----------------|-----------------|
 | deploymentId    | string    | Y    | The unique identifier UUID of the deployment specification. Needs to be assigned by the Workload Fleet Management Software. |
 | deviceId        | string    | N*    | Id of the device hosting the deployment. Includes the full device hierarchy if applicable. <br/> * This attribute is required when reporting on behalf of a child-device. |
-| adoptedManifestVersion | number    | Y    | The [manifestVersion](./desired-state.md#endpoints---state-manifest) of the most recent state manifest the WFM client has adopted for this deployment. See the [Adopted Manifest Version](#adopted-manifest-version) section below.|
-| status          | []status    | Y    | Element that defines overall deployment status. See the [Status Attributes](#status-attributes) section below.|
+| adoptedManifestVersion | number    | Y    | The [manifestVersion](./desired-state.md#endpoints-state-manifest) of the most recent state manifest the WFM client has adopted for this deployment. See the [Adopted Manifest Version](#adopted-manifest-version) section below.|
+| status          | Status    | Y    | Element that defines overall deployment status. See the [Status Attributes](#status-attributes) section below.|
 | components      | []components    | Y    | Element that defines the individual component's deployment status. See the [Component Attributes](#component-attributes) section below.|
 
 #### Status Attributes
 
 | Fields      | Type            | Required?       | Description     |
 |-----------------|-----------------|-----------------|-----------------|
-| state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: pending, installing, installed, removing, removed, failed. The overall deployment status MUST reflect the most severe of the components states, following this precedence: failed > removing > installing > pending > removing > installed.|
+| state      | string    | Y    | Current state of the overall deployment. The state value MUST be one the following options: pending, installing, installed, removing, removed, failed. The overall deployment status MUST reflect the most severe of the components states, following this precedence: failed > removing > installing > pending > removed > installed.|
 | error      | Error    | N    | Element that defines the overall installation error if one occurred. See the [Error Attributes](#error-attributes) section below.|
 
 #### Component Attributes

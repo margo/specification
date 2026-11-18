@@ -150,8 +150,8 @@ These enumerations are used as vocabularies for attribute values of the `DeviceC
                 "architecture": "amd64"
             }
         ],
-        "memory": "59 Gi",
-        "storage": "1862 Gi",
+        "memory": "59Gi",
+        "storage": "1862Gi",
         "peripherals": [
             {
                 "type": "gpu",
@@ -247,8 +247,8 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
                     "architecture": "amd64"
                 }
             ],
-            "memory": "12 Gi",
-            "storage": "200 Gi",
+            "memory": "12Gi",
+            "storage": "200Gi",
             "peripherals": [],
             "interfaces": [
                 {
@@ -284,8 +284,8 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
                     "architecture": "amd64"
                 }
             ],
-            "memory": "59 Gi",
-            "storage": "1862 Gi",
+            "memory": "59Gi",
+            "storage": "1862Gi",
             "peripherals": [
                 {
                     "type": "gpu",
@@ -326,8 +326,8 @@ Hosting is neither required of nor forbidden for a see-thru gateway: it reports 
                     "architecture": "arm64"
                 }
             ],
-            "memory": "6 Gi",
-            "storage": "30 Gi",
+            "memory": "6Gi",
+            "storage": "30Gi",
             "peripherals": [],
             "interfaces": [
                 {

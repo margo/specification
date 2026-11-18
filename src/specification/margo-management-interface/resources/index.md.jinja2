@@ -340,7 +340,7 @@ spec:
 {% endfor -%}
 
 {% for c in gen.all_class_objects()|sort(attribute='rank') %}
-{%- if c.name != "DesiredState" and not c.name.startswith("Helm") and not c.name.startswith("DockerCompose") and not c.name == "Property" %}
+{%- if c.name != "DesiredState" and not c.name.startswith("Helm") and not c.name.startswith("Compose") and not c.name == "Property" %}
 
 #### {{ c.name }} Attributes
 
@@ -390,7 +390,7 @@ These enumerations are used as vocabularies for attribute values of the `Applica
 | Gt | Indicates matching should find a match if the target value is greater than the specified value. |
 | Lt | Indicates matching should find a match if the target value is less than the specified value. |
 | ContainsAll | Indicates matching should find a match against all itemSelectors. |
-| ContainersAny| Indicates matching should find a match against at least one itemSelector. |
+| ContainsAny | Indicates matching should find a match against at least one itemSelector. |
 
 ### Example: Helm Deployment Specification
 
