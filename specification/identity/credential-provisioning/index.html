@@ -1,0 +1,1788 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../trust-bundle-and-discovery/">
+      
+      
+        <link rel="next" href="../identity-lifecycle/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Credential Provisioning and Acquisition - Specification (pre-draft)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="../../../assets/external/fonts.googleapis.com/css.804a7bde.css">
+        <style>:root{--md-text-font:"IBM Plex Sans";--md-code-font:"IBM Plex Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../css/margo.css">
+    
+      <link rel="stylesheet" href="../../../assets/swagger-ui.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="margo" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#credential-provisioning-and-acquisition" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://margo.org" title="Specification (pre-draft)" class="md-header__button md-logo" aria-label="Specification (pre-draft)" data-md-component="logo">
+      
+  <img src="../../../assets/margo_white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Specification (pre-draft)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Credential Provisioning and Acquisition
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://margo.org" title="Specification (pre-draft)" class="md-nav__button md-logo" aria-label="Specification (pre-draft)" data-md-component="logo">
+      
+  <img src="../../../assets/margo_white.svg" alt="logo">
+
+    </a>
+    Specification (pre-draft)
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is Margo?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity and Authorization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Identity and Authorization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../identity-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Margo Identity and Authorization Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../svids/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SVIDs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tls-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transport Layer Security Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../trust-bundle-and-discovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust Bundle and Discovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Provisioning and Acquisition
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Provisioning and Acquisition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acquisition-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acquisition Modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provisioning-input-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provisioning Input Contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#initial-trust-anchors-and-pins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Initial-Trust Anchors and Pins
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mis-independence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MIS Independence
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../identity-lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity Lifecycle and Operator Playbooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wfm-identity-profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WFM Identity Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../identity-security-considerations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identity Security Considerations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../trust-bundle-api-swagger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trust Bundle API - Swagger UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Margo Management Interface
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Margo Management Interface
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/api-requirements-and-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Requirements and Security Details
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/device-capabilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device Capabilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/desired-state/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Desired State
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/deployment-status/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Status
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-management-interface/management-interface-swagger/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Management Interface - Swagger UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Applications
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Applications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../applications/application-description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Description
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../applications/application-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Margo Devices
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Margo Devices
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../margo-devices/device-requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/publishing-workload-observability-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publishing Workload Observability Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/collecting-workload-observability-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collecting Workload Observability Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/consuming-workload-observability-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Consuming Workload Observability Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Problem Types
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../problem-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specification Version Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specification Version Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specification-version-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version Management Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="credential-provisioning-and-acquisition">Credential Provisioning and Acquisition</h1>
+<p>This section defines how a <a href="../identity-framework/#terminology">principal</a> obtains its X.509-SVID and trust material, and which provisioning inputs it must accept. It does not depend on an enrollment protocol.</p>
+<p>It defines two things:</p>
+<ul>
+<li><strong>Two acquisition modes</strong> (<a href="#acquisition-modes">Acquisition modes</a>): <strong>installed</strong> (the operator generates the key and installs key and SVID) and <strong>enrolled</strong> (the principal generates its own key and is issued a certificate through a PKCS#10 round-trip). Each mode has a minimum that every implementation supports, so provisioning stays portable across vendors.</li>
+<li><strong>A provisioning input contract</strong> (<a href="#provisioning-input-contract">Provisioning input contract</a>): the inputs a principal must accept, with one interchange format for each, so any operator's PKI toolchain can provision any conformant product. How the inputs reach the principal is out of scope. That is the job of the operator's existing provisioning channel.</li>
+</ul>
+<p>Two rules complete the contract: the <a href="#initial-trust-anchors-and-pins">initial-trust anchors or pins</a>, the only input that cannot itself be fetched, and <a href="#mis-independence">MIS independence</a>, which forbids a principal from requiring a specific <a href="../identity-framework/#the-mis-role">MIS</a> implementation.</p>
+<p>The terms <em>acquisition mode</em>, <em>provisioning input</em>, <em>provisioning channel</em>, and <em>provisioning interface</em> are defined in the <a href="../identity-framework/#terminology">MIAF terminology</a>.</p>
+<h2 id="scope">Scope</h2>
+<p>These rules apply to every MIAF principal that acquires an SVID and trust material. The <a href="#acquisition-modes">acquisition modes</a>, the <a href="#initial-trust-anchors-and-pins">initial-trust anchors or pins</a>, and <a href="#mis-independence">MIS independence</a> apply to all principals alike. The <a href="#provisioning-input-contract">provisioning input contract</a> lists the inputs common to all principals. Each identity profile adds the inputs specific to its <em>principal classes</em> (the kinds of principal the profile defines). For WFMs and WFM Clients, these are in the <a href="../wfm-identity-profile/#provisioning">WFM Identity Profile</a>. The contract does not depend on which kind of Margo component a principal is. A principal class that a later profile introduces is provisioned under the same rules.</p>
+<h3 id="identity-layers-informative">Identity Layers (informative)</h3>
+<p>A Margo principal acquires and uses its identity across three layers. Different mechanisms can fill each layer, and the layer above does not depend on which one is chosen.</p>
+<ul>
+<li><strong>Consumption.</strong> How the principal obtains its current SVID and Trust Bundle: the <a href="#acquisition-modes">acquisition modes</a>. This section defines this layer.</li>
+<li><strong>Enrollment.</strong> What automates the round-trip of the enrolled mode over the wire. No enrollment profile is specified yet (see <a href="../identity-lifecycle/#lifecycle-vocabulary">lifecycle vocabulary (future work)</a>).</li>
+<li><strong>Bootstrap.</strong> How the principal receives the inputs that the upper layers depend on: the <a href="#initial-trust-anchors-and-pins">initial-trust anchors or pins</a> and, once an enrollment profile exists, its <a href="#initial-trust-anchors-and-pins">enrollment authorization</a>. The baseline is direct placement: the operator delivers the inputs through its provisioning channel, or they are pre-installed when the device or its software image is built. Protocols that produce these inputs at onboarding time from a manufacturer-installed credential (FDO, BRSKI, and similar) are not specified yet.</li>
+</ul>
+<p>A deployment can pre-provision statically with neither enrollment nor automated bootstrap, add either, or combine all three layers. Only the consumption layer is normative in this release.</p>
+<p>In the figure below, dotted edges are inputs delivered out of band. Blue marks what this section specifies, yellow the assumed baseline, and gray dashed boxes what is not specified yet.</p>
+<pre class="mermaid"><code>flowchart BT
+    subgraph L3["Bootstrap layer"]
+        b1["direct placement: operator-delivered&lt;br/&gt;or pre-installed (baseline)"]
+        b2["FDO, BRSKI, and similar&lt;br/&gt;(not specified yet)"]
+    end
+    subgraph L2["Enrollment layer"]
+        e1["enrollment protocol&lt;br/&gt;(not specified yet)"]
+    end
+    subgraph L1["Consumption layer"]
+        c1["installed"]
+        c2["enrolled&lt;br/&gt;(PKCS#10 round-trip)"]
+    end
+    L3 -.-&gt;|"initial-trust anchors or pins&lt;br/&gt;+ enrollment authorization"| e1
+    L3 -.-&gt;|"initial-trust anchors or pins"| c1
+    L3 -.-&gt;|"initial-trust anchors or pins"| c2
+    e1 --&gt;|"runs the PKCS#10 round-trip"| c2
+    c1 --&gt;|"SVID + Trust Bundle"| V["peer validation: SVID against the Trust Bundle"]
+    c2 --&gt;|"SVID + Trust Bundle"| V
+
+    classDef specified fill:#e8f1ff,stroke:#3f6fd1,stroke-width:2px,color:#0b3b8c;
+    classDef assumed fill:#fdf6e3,stroke:#8a6d1f,stroke-width:2px,color:#5c4813;
+    classDef future fill:#f2f2f2,stroke:#6e6e6e,stroke-width:2px,stroke-dasharray:6 4,color:#333333;
+    classDef unchanged fill:#ffffff,stroke:#555555,stroke-width:2px,color:#222222;
+
+    class L1,c1,c2 specified;
+    class L3,b1 assumed;
+    class L2,e1,b2 future;
+    class V unchanged;</code></pre>
+<h2 id="acquisition-modes">Acquisition Modes</h2>
+<p>A principal acquires two kinds of artifact: its own <strong>SVID</strong> (with private key) and the <strong>Trust Bundle</strong> it validates peers against. The acquisition modes differ in who generates and first holds the private key of the SVID. This determines what the operator supplies and how renewal works. The result is the same in both modes: the principal holds its current SVID and Trust Bundle, and peer validation consumes both without depending on which mode supplied them. Two acquisition modes are defined:</p>
+<ul>
+<li><strong>Installed.</strong> The operator generates the key pair, mints the SVID, and places both into the principal through its provisioning channel. The principal does not renew on its own. Renewal happens by re-provisioning. This mode exists for principals that cannot generate keys safely (without an adequate entropy source, for example). Its cost is key custody concentrated in the operator (see <a href="#key-handling">key handling</a>).</li>
+<li><strong>Enrolled.</strong> The principal generates its own key pair, which never leaves it. Issuance is a CSR round-trip: the principal exports a PKCS#10 CSR, a CA in the Trust Domain signs it, and the principal ingests the returned chain. How the CSR travels is deliberately not fixed. An operator moving files by hand and an automated enrollment profile are the same mode at different levels of automation, because PKCS#10 is the interchange object that enrollment protocols carry natively.</li>
+</ul>
+<p>These are the only conformant modes. A product cannot declare an acquisition path of its own: two individually conformant products could otherwise share no provisioning path at all. Only a later revision of this specification can add a mode.</p>
+<p>The rules below follow the provisioning sequence: a product declares its modes, acquires its trust material, and runs the issuance round-trip.</p>
+<h3 id="declaring-acquisition-modes">Declaring Acquisition Modes</h3>
+<p>A principal MUST implement at least one acquisition mode and MUST declare, in its product documentation, which of the two modes it implements. It MAY implement both. This framework mandates neither mode. A profile that builds on it can mandate one. A principal SHOULD prefer the enrolled mode over the installed mode where its hardware allows (see <a href="#key-handling">key handling</a> for the reasons).</p>
+<p>The product documentation MUST also state how the principal stores and protects its private key, for example in a TPM, in a secure element, or in software storage with named file permissions. MIAF sets no minimum key protection. The statement lets an operator or an integrator compare products and assess the result against their own security requirements.</p>
+<h3 id="trust-material">Trust Material</h3>
+<p>Every principal MUST accept a statically supplied Trust Bundle (in the <a href="#interchange-formats">interchange format</a> for trust material). Every principal SHOULD also refresh it from <code>trustBundleUri</code>, over the <a href="../trust-bundle-and-discovery/#trust-bundle-retrieval-endpoint">Trust Bundle retrieval endpoint</a>, per <a href="../trust-bundle-and-discovery/#selecting-and-refreshing-the-bundle">selecting and refreshing the bundle</a>.</p>
+<p>A principal that refreshes its Trust Bundle from <code>trustBundleUri</code> MUST accept <code>trustBundleUri</code> as a provisioning input, so that an operator can configure it without a discovery document. A principal that fetches MIS-hosted material MUST accept a discovery document URL, and MUST resolve from the retrieved <a href="../trust-bundle-and-discovery/#discovery-document-endpoint">discovery document</a> the fields it needs. The discovery document is the extension point of this framework. A later profile can add fields to it, and a principal that already accepts the URL needs no new provisioning input to reach them.</p>
+<p>After an offline period, a principal SHOULD refresh promptly on reconnection, within the randomized delay in <a href="../trust-bundle-and-discovery/#selecting-and-refreshing-the-bundle">selecting and refreshing the bundle</a>, so that a trust anchor rotation completed during its absence takes effect.</p>
+<h3 id="issuance-by-csr">Issuance by CSR</h3>
+<p>A principal that declares the enrolled mode MUST be able to export a PKCS#10 CSR for its generated key, and to ingest the certificate chain issued for it, both through the provisioning interface (see <a href="#provisioning-input-contract">provisioning input contract</a>). This requirement also applies to a principal that automates enrollment, because the manual round-trip works with any operator's PKI toolchain.</p>
+<p>The CSR carries the principal's public key and proof of possession. Any subject or SAN content in it is advisory. The issuer is authoritative for the SPIFFE ID: the operator mints the SVID for the chosen identity and overrides name content in the CSR. A principal is therefore issued its identity and does not request it (see <a href="#identifiers-and-trust-domain">identifiers</a>). A renewal CSR MAY carry the principal's current SPIFFE ID. That content is advisory too.</p>
+<h3 id="chain-ingestion">Chain Ingestion</h3>
+<p>On ingesting the returned chain, the principal MUST verify that the leaf certifies its own key pair, and that the leaf carries a well-formed SPIFFE ID whose structure matches an identity profile the principal implements. When it holds a Trust Bundle, it MUST additionally perform <a href="https://datatracker.ietf.org/doc/html/rfc5280">RFC 5280</a> certification path validation of the chain to a trust anchor in that bundle. Failures surface as the validation rule for provisioning inputs requires.</p>
+<h2 id="provisioning-input-contract">Provisioning Input Contract</h2>
+<p>A principal MUST accept the inputs below in the stated interchange formats, and MUST expose at least one <strong>non-interactive, documented</strong> provisioning interface for supplying them. The specific mechanism (file, mounted secret, environment, configuration API, or installer media) remains the vendor's choice. An operator can then check the requirement against the product's documentation. The specification does not dictate a deployment model.</p>
+<p>A principal MUST validate provisioning inputs on ingestion and fail with a clear, distinguishable error on malformed material. An unrecognized local input SHOULD be surfaced as an error or warning, and not silently ignored. A mistyped input can otherwise disable or weaken the principal.</p>
+<p>A principal SHOULD support replacing its SVID and trust material without a restart. A principal that must restart to replace its SVID remains conformant. <a href="../tls-requirements/#session-lifetime-and-re-validation">Session lifetime and re-validation</a> covers re-establishing connections after a client renews its SVID.</p>
+<p>The provisioning interface can replace a principal's key, SVID, and trust anchors, so anyone who can use it can replace the principal's identity. The contract assumes that the provisioning interface is reachable only through the operator's provisioning channel. Access control on that channel is a deployment responsibility, and product hardening guidance SHOULD cover it.</p>
+<h3 id="interchange-formats">Interchange Formats</h3>
+<p>Each class of artifact has one interchange format:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Artifact</th>
+<th style="text-align: left;">Interchange format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Certificates</td>
+<td style="text-align: left;">PEM (<a href="https://datatracker.ietf.org/doc/html/rfc7468">RFC 7468</a>)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Private keys</td>
+<td style="text-align: left;">unencrypted PKCS#8 (<a href="https://datatracker.ietf.org/doc/html/rfc5958">RFC 5958</a>), PEM-encoded</td>
+</tr>
+<tr>
+<td style="text-align: left;">CSRs</td>
+<td style="text-align: left;">PKCS#10 (<a href="https://datatracker.ietf.org/doc/html/rfc2986">RFC 2986</a>)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Trust material</td>
+<td style="text-align: left;">SPIFFE bundle: a JWK Set per <a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517</a>, the container for the Trust Domain's X.509 trust anchors per <a href="../trust-bundle-and-discovery/#bundle-contents-and-distribution">bundle contents and distribution</a> (MIAF uses only <code>x509-svid</code> entries)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Identifiers that an identity profile defines</td>
+<td style="text-align: left;">the format that the profile defines. For the <a href="../wfm-identity-profile/#identity-model">WFM Identity Profile</a> (<code>wfm-id</code>, <code>wfm-client-id</code>): <a href="https://datatracker.ietf.org/doc/html/rfc3986">RFC 3986</a> unreserved strings, excluding <code>.</code> and <code>..</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Endpoints</td>
+<td style="text-align: left;">absolute HTTPS URLs</td>
+</tr>
+<tr>
+<td style="text-align: left;">Certificate pins</td>
+<td style="text-align: left;">SPKI SHA-256 pins, in the form that <a href="../tls-requirements/#initial-trust-bootstrap">initial trust bootstrap</a> defines (<a href="https://datatracker.ietf.org/doc/html/rfc7469#section-2.4">RFC 7469, Section 2.4</a>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="inputs-and-output-for-all-principals">Inputs and Output for All Principals</h3>
+<p>The table below states, for each input, when a conformant product must accept it.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Input</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">X.509-SVID + intermediate chain</td>
+<td style="text-align: left;">always</td>
+<td style="text-align: left;">the principal's own SVID with its chain, per the <a href="../svids/#x509-svid-profile">X.509-SVID profile</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Private key (only when operator-supplied)</td>
+<td style="text-align: left;">installed mode only</td>
+<td style="text-align: left;">see <a href="#key-handling">key handling</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Initial-trust anchors</td>
+<td style="text-align: left;">where the principal fetches MIS-hosted material (<a href="#initial-trust-anchors-and-pins">initial-trust anchors or pins</a>)</td>
+<td style="text-align: left;">one or more certificates. The principal validates the MIS server chain to these anchors, with <a href="https://datatracker.ietf.org/doc/html/rfc9525">RFC 9525</a> name checks</td>
+</tr>
+<tr>
+<td style="text-align: left;">Initial-trust pins</td>
+<td style="text-align: left;">where the principal fetches MIS-hosted material (<a href="#initial-trust-anchors-and-pins">initial-trust anchors or pins</a>)</td>
+<td style="text-align: left;">a pin set. The pin itself establishes server identity, with no DNS name required, so it also fits MIS endpoints reached by IP address</td>
+</tr>
+<tr>
+<td style="text-align: left;">Trust Bundle, static</td>
+<td style="text-align: left;">always (<a href="#trust-material">trust material</a>)</td>
+<td style="text-align: left;">the anchors of the principal's own Trust Domain, as a SPIFFE bundle</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trustBundleUri</code></td>
+<td style="text-align: left;">where refresh is implemented (<a href="#trust-material">trust material</a>)</td>
+<td style="text-align: left;">the URL the principal refreshes the Trust Bundle from</td>
+</tr>
+<tr>
+<td style="text-align: left;">Discovery document URL</td>
+<td style="text-align: left;">where the principal fetches MIS-hosted material (<a href="#trust-material">trust material</a>)</td>
+<td style="text-align: left;">resolves <code>trustBundleUri</code>, and the fields a later profile adds</td>
+</tr>
+</tbody>
+</table>
+<p>The table below states when a product must produce its only output, the PKCS#10 CSR.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Output</th>
+<th style="text-align: left;">Required</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">PKCS#10 CSR</td>
+<td style="text-align: left;">enrolled mode only (<a href="#issuance-by-csr">issuance by CSR</a>)</td>
+<td style="text-align: left;">the principal exports it for signing through the provisioning interface</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-handling">Key Handling</h3>
+<p>The operator-supplied key uses the interchange format unencrypted PKCS#8 PEM. Confidentiality on the key path is the job of the provisioning channel, and passphrase handling would otherwise become a provisioning input of its own.</p>
+<p>The enrolled mode is recommended (see <a href="#declaring-acquisition-modes">declaring acquisition modes</a>) for two reasons:</p>
+<ul>
+<li>The key is generated on the principal and never leaves it. Hardware-backed storage (TPM, secure element, HSM) can make it non-exportable.</li>
+<li>The enrollment profile planned in <a href="../identity-lifecycle/#lifecycle-vocabulary">lifecycle vocabulary (future work)</a> is expected to automate only this mode, so renewal at fleet scale depends on it.</li>
+</ul>
+<p>Key generation and CSR signatures follow the <a href="../svids/#cryptographic-requirements">cryptographic requirements</a>. An operator SHOULD deliver an operator-generated key over a channel that authenticates both ends and encrypts in transit, or wrapped for the receiving principal. This is guidance to the operator and adds no conformance requirement on the principal.</p>
+<h3 id="identifiers-and-trust-domain">Identifiers and Trust Domain</h3>
+<p>No provisioning input gives the principal its own identity or Trust Domain. That is deliberate:</p>
+<ul>
+<li><strong>Identifiers come from the SVID.</strong> A principal never needs to be told its own SPIFFE ID in advance. It reads it from the URI SAN of its issued SVID. The Trust Domain is part of that SPIFFE ID. An identity profile can derive further identifiers from the same SVID (see <a href="../wfm-identity-profile/#provisioning">WFM Identity Profile provisioning</a>).</li>
+<li><strong>Trust Domain and bundle.</strong> A single SPIFFE bundle does not name the domain it anchors, so a principal treats the bundle it holds as the authoritative anchors of its own Trust Domain.</li>
+</ul>
+<h2 id="initial-trust-anchors-and-pins">Initial-Trust Anchors and Pins</h2>
+<p>Wherever a principal fetches MIS-hosted material over HTTPS, it authenticates each retrieval with its initial-trust anchors or pins (see <a href="../tls-requirements/#initial-trust-bootstrap">initial trust bootstrap</a>). The first retrieval happens before the principal holds anything MIAF-issued, so this material cannot be acquired through the contract. It is therefore a static input, except in the public PKI case below. A principal provisioned entirely out of band makes no such retrieval and needs no initial-trust anchors or pins. The rules for initial trust bootstrap define the mechanisms and the client-side validation. This section names their material as a provisioning input and adds its lifecycle.</p>
+<p>The initial-trust anchors or pins are server-authentication material: they let the principal trust the MIS it fetches from. They are distinct from an <em>enrollment authorization</em>, which proves that the principal is <em>authorized</em> to receive an SVID. An enrollment profile is expected to add an enrollment authorization as a second static bootstrap input beside them. Both are delivered over the same out-of-band channel, and the precondition below covers both.</p>
+<h3 id="precondition">Precondition</h3>
+<p>This contract assumes that the operator has an out-of-band channel that reaches each principal <em>before its first connection</em>. Without such a channel, no provisioning is possible under this contract. Automated bootstrap mechanisms for that case are not specified yet (see <a href="../identity-lifecycle/#lifecycle-vocabulary">lifecycle vocabulary (future work)</a>). This precondition MUST be stated in any deployment guidance derived from this specification.</p>
+<p>Any mechanism that delivers these inputs before the first connection can fill this channel. This specification fills it with direct operator delivery. Automated mechanisms can fill it later without any change to this contract.</p>
+<h3 id="choosing-anchors-or-pins">Choosing Anchors or Pins</h3>
+<p>A principal that fetches MIS-hosted material MUST accept both interchange forms: an anchor set and a pin set (see <a href="#interchange-formats">interchange formats</a>). The operator chooses between them.</p>
+<p>Where the MIS server certificates validate to the principal's built-in trust store, with a resolvable DNS name for the <a href="https://datatracker.ietf.org/doc/html/rfc9525">RFC 9525</a> name check, that trust store provides the initial-trust anchors, and the operator provisions only the endpoint URL. This specification does not recommend exposing an MIS on public PKI where it would not otherwise be. In every other case (a private or enterprise PKI, for example), the operator MUST provision an anchor set or a pin set out of band.</p>
+<p>Operators SHOULD pin the SubjectPublicKeyInfo of a CA instead of a leaf certificate, and SHOULD pin a CA that certifies only the MIS endpoints. A principal SHOULD validate the endpoint identity per <a href="https://datatracker.ietf.org/doc/html/rfc9525">RFC 9525</a> even when a pin matches. For an endpoint reached by DNS name, <a href="../tls-requirements/#certificate-validation">certificate validation</a> already requires this check. A leaf pin breaks on routine certificate renewal. A broad CA pin lets any holder of certificates from that CA impersonate the MIS.</p>
+<h3 id="replacing-anchors-and-pins">Replacing Anchors and Pins</h3>
+<p>The initial-trust anchors or pins SHOULD be independent of, and longer-lived than, the SVID-issuing authority, so that routine rotation of the issuing CA never forces their re-provisioning. A successor anchor or pin SHOULD be pre-distributed through the channel that the current anchors or pins still authenticate, before the current anchors, or the CA certificates the pins identify, expire.</p>
+<p>Lapsed or compromised initial-trust anchors or pins cannot be recovered in band, because they no longer authenticate the channel that would deliver their replacement. Operators MUST treat that recovery as a planned out-of-band re-provisioning event.</p>
+<h2 id="mis-independence">MIS Independence</h2>
+<p>MIAF defines the MIS as a <a href="../identity-framework/#the-mis-role">role</a>, not a specific service, and lists what can fill it. The rules below keep that true on the product side:</p>
+<ul>
+<li>A principal MUST NOT require a specific MIS implementation. Concretely, it MUST NOT condition validation on a particular issuer or vendor trust root, and it MUST NOT depend on one vendor's issuance or delivery service to obtain its SVID. It MUST be able to acquire and validate SVIDs issued by any conformant MIS, through the modes it declares.</li>
+<li>A principal MUST NOT hardwire its own or its vendor's trust anchor as the sole accepted anchor. Accepted anchors come from the Trust Bundle. The <a href="#initial-trust-anchors-and-pins">initial-trust anchors or pins</a> are not such hardwired anchors: the operator configures them for each deployment, so the same product works with a different MIS in each Trust Domain.</li>
+<li>A vendor MAY bundle an MIS as a convenience, provided it is an optional, swappable component with a documented path to an operator-supplied issuer. A bundled MIS MUST NOT be a precondition for the operation of the principal.</li>
+</ul>
+<p>MIS independence does not require implementing more than one acquisition mode. Declaring a single mode is permitted, because both modes have an MIS-neutral path by construction: the inputs of the installed mode and the CSR round-trip of the enrolled mode work with any operator's PKI toolchain.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../trust-bundle-and-discovery/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Trust Bundle and Discovery">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Trust Bundle and Discovery
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../identity-lifecycle/" class="md-footer__link md-footer__link--next" aria-label="Next: Identity Lifecycle and Operator Playbooks">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Identity Lifecycle and Operator Playbooks
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/margo" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/margo_project" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/margoproject/about/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.youtube.com/@Margoinitiative" target="_blank" rel="noopener" title="www.youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="http://chat.margo.org/" target="_blank" rel="noopener" title="chat.margo.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M492.5 69.8c-.2-.3-.4-.6-.8-.7-38.1-17.5-78.4-30-119.7-37.1-.4-.1-.8 0-1.1.1s-.6.4-.8.8c-5.5 9.9-10.5 20.2-14.9 30.6-44.6-6.8-89.9-6.8-134.4 0-4.5-10.5-9.5-20.7-15.1-30.6-.2-.3-.5-.6-.8-.8s-.7-.2-1.1-.2C162.5 39 122.2 51.5 84.1 69c-.3.1-.6.4-.8.7C7.1 183.5-13.8 294.6-3.6 404.2c0 .3.1.5.2.8s.3.4.5.6c44.4 32.9 94 58 146.8 74.2.4.1.8.1 1.1 0s.7-.4.9-.7c11.3-15.4 21.4-31.8 30-48.8.1-.2.2-.5.2-.8s0-.5-.1-.8-.2-.5-.4-.6-.4-.3-.7-.4c-15.8-6.1-31.2-13.4-45.9-21.9-.3-.2-.5-.4-.7-.6s-.3-.6-.3-.9 0-.6.2-.9.3-.5.6-.7c3.1-2.3 6.2-4.7 9.1-7.1.3-.2.6-.4.9-.4s.7 0 1 .1c96.2 43.9 200.4 43.9 295.5 0 .3-.1.7-.2 1-.2s.7.2.9.4c2.9 2.4 6 4.9 9.1 7.2.2.2.4.4.6.7s.2.6.2.9-.1.6-.3.9-.4.5-.6.6c-14.7 8.6-30 15.9-45.9 21.8-.2.1-.5.2-.7.4s-.3.4-.4.7-.1.5-.1.8.1.5.2.8c8.8 17 18.8 33.3 30 48.8.2.3.6.6.9.7s.8.1 1.1 0c52.9-16.2 102.6-41.3 147.1-74.2.2-.2.4-.4.5-.6s.2-.5.2-.8c12.3-126.8-20.5-236.9-86.9-334.5zm-302 267.7c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.4 59.2-52.8 59.2m195.4 0c-29 0-52.8-26.6-52.8-59.2s23.4-59.2 52.8-59.2c29.7 0 53.3 26.8 52.8 59.2 0 32.7-23.2 59.2-52.8 59.2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tracking", "navigation.footer", "toc.integrate", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotations", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/swagger-ui-bundle.js"></script>
+      
+        <script src="../../../assets/swagger-ui-standalone-preset.js"></script>
+      
+        <script src="../../../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
