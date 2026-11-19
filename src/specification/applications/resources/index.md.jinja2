@@ -80,7 +80,7 @@ which defines the [desired state](../margo-management-interface/desired-state.md
 
 {%- if c.name.startswith("DeploymentProfile") %}
 
-The deployment profile `key` identifies the deployment technology the workload deployment supports. At a minimum, a workload fleet manager MUST evaluate the equivalent of an `Exists` expression of the `key` against the available workload targets [profile](../margo-management-interface/profiles.md) characteristics. A workload fleet manager MUST NOT use white- or black-box deployment technology filtering to restrict eligible workload targets based on the deployment profile's key. Only this `key` property is used to determine the workload's  supported deployment technology. Any keys included in the characteristics match expressions are not used for deployment technology determination.
+The deployment profile `key` identifies the deployment technology the workload deployment supports. At a minimum, a workload fleet manager MUST evaluate the equivalent of an `Exists` expression of the `key` against the available workload targets [profile](../margo-management-interface/profiles.md) characteristics. A workload fleet manager MUST NOT use white- or black-box deployment technology filtering to restrict eligible workload targets based on the deployment profile's key. Only this `key` property is used to determine the workload's  supported deployment technology. Any keys included in the placement constraints match expressions are not used for deployment technology determination.
 
 #### Helm Exceptions
 
@@ -97,9 +97,9 @@ Your Helm based application MUST NOT rely on the following Helm functions:
 
 {%- endif %}
 
-{%- if c.name.startswith("Characteristics") %}
+{%- if c.name.startswith("PlacementConstraints") %}
 
-Workload fleet manager implementations MAY choose to implement additional characteristic matching. If implemented, the workload fleet manager MUST evaluate the deployment profile's characteristics before selecting a workload target using the match expression rules defined below.
+Workload fleet manager implementations MAY choose to implement additional placement constraint matching. If implemented, the workload fleet manager MUST evaluate the deployment profile's placement constraints before selecting a workload target using the match expression rules defined below.
 
 ### Match expression rules
 
@@ -107,13 +107,13 @@ The following rules MUST be applied when performing rule matching:
 
 ```
 eligible workload targets =
-    OR over each matchExpressions rule set in characteristics:
+    OR over each matchExpressions rule set in placementConstraints:
       AND over each match expression in the rule set
 ```
 
 * Each `matchExpressions` rule set is evaluated using a logical OR. 
   * At least one `matchExpressions` rule set MUST evaluate to true to be considered a match.
-  * If `characteristics` is omitted, the deployment profile has no additional matching criteria beyond the deployment profile `key`.
+  * If `placementConstraints` is omitted, the deployment profile has no additional matching criteria beyond the deployment profile `key`.
 * All expressions within a single match expression rule set are combined using logical AND.
   * All match expressions in the rule set MUST evaluate to true to be considered a match.
 
@@ -132,9 +132,9 @@ eligible workload targets =
 
 Examples:
 
-* `/vendor`
-* `/modelNumber`
-* `/serialNumber`
+* `/peripherals`
+* `/interfaces`
+* `/cpus`
 
 The `matchExpressions[].property` MUST resolve to a profile characteristic property whose value is either:
 
@@ -200,7 +200,7 @@ Evaluates to true when at least one array element satisfies all conditions speci
 Example: Match a workload target that has at least one GPU peripheral manufactured by NVIDIA:
 
 ```yaml
-characteristics:
+placementConstraints:
   - matchExpressions:
     - key: margo.org/peripherals
       property: /peripherals
@@ -222,7 +222,7 @@ Evaluates to true when at least one array element satisfies any condition specif
 Example: Match a workload target that has at least one peripheral that is either a GPU or a camera:
 
 ```yaml
-characteristics:
+placementConstraints:
   - matchExpressions:
     - key: margo.org/peripherals
       property: /peripherals
@@ -239,7 +239,7 @@ characteristics:
 - Multiple rule sets within the same `matchExpression` are AND'd together. For example:
 
 ```yaml
-characteristics:
+placementConstraints:
   - matchExpressions:
     - key: margo.org/nameplate
       property: /vendor
@@ -260,7 +260,7 @@ This evaluates to true only when the workload target vendor matches **AND** the 
 - Multiple `matchExpressions` rule sets are OR'd together. For example:
 
 ```yaml
-characteristics:
+placementConstraints:
   - matchExpressions:
     - key: margo.org/nameplate
       property: /vendor

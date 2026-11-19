@@ -277,7 +277,7 @@ spec:
         components:
             - name: 
               properties:
-        characteristics:
+        placementConstraints:
           - matchExpressions:
             - key: 
               property: 
@@ -343,11 +343,11 @@ spec:
 {%- endfor %}
 {%- endif %}
 
-{%- if c.name.startswith("Characteristics") %}
+{%- if c.name.startswith("PlacementConstraints") %}
 
-Workload fleet manager implementations MAY evaluate the characteristic matching rules defined in the deployment profile before attempting to deploy a workload. If implemented, the workload fleet manager MUST evaluate the deployment profile's characteristics before selecting a workload target using the match expression rules defined in the [characteristics](../applications/application-description#characteristics-attributes) and [match expression](../applications/application-description#matchexpression-attributes) sections on the Application Description page.
+Workload fleet manager implementations MAY evaluate the placement constraint matching rules defined in the deployment profile before attempting to deploy a workload. If implemented, the workload fleet manager MUST evaluate the deployment profile's placement constraints before selecting a workload target using the match expression rules defined in the [placementConstraints](../applications/application-description#placementconstraints-attributes) and [match expression](../applications/application-description#matchexpression-attributes) sections on the Application Description page.
 
-Device suppliers MUST evaluate the characteristic matching rules defined in the deployment profile before attempting to deploy a workload.
+Device suppliers MUST evaluate the placement constraint matching rules defined in the deployment profile before attempting to deploy a workload.
 
 {%- endif %}
 {%- endfor %}

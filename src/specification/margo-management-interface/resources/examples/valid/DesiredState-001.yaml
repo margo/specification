@@ -19,7 +19,7 @@ spec:
                 repository: oci://northstarida.azurecr.io/charts/northstarida-digitron-orchestrator
                 revision: 1.0.9
                 wait: true
-        characteristics:
+        placementConstraints:
           - matchExpressions:
               - key: margo.org/resource/cpu
                 property: /cpus

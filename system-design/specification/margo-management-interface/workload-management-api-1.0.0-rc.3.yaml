@@ -692,16 +692,16 @@ components:
           items: 
             $ref: '#/components/schemas/applicationDeploymentProfileComponent'
           description: Components of the deployment profile
-        characteristics:
+        placementConstraints:
           type: array
           items:
-            $ref: '#/components/schemas/Characteristics'
+            $ref: '#/components/schemas/PlacementConstraints'
           description: >-
-            Characteristic match expressions, copied unchanged from the selected application description
+            Placement constraint match expressions, copied unchanged from the selected application description
             deployment profile, required for the application to be placed on a workload target.
-    Characteristics:
+    PlacementConstraints:
       type: object
-      description: Characteristic match expressions required for the application to be placed on a workload target.
+      description: Placement constraint match expressions required for the application to be placed on a workload target.
       required: [matchExpressions]
       properties:
         matchExpressions:

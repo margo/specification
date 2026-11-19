@@ -103,12 +103,12 @@ classes:
     description: A class representing a deployment profile.
     rank: 40
     attributes:
-      characteristics:
+      placementConstraints:
         description: >-
-          Characteristic match expressions, copied unchanged from the selected application description deployment
+          Placement constraint match expressions, copied unchanged from the selected application description deployment
           profile, required for the application to be placed on a workload target.
-          See the [Characteristics](#characteristics-attributes) section below.
-        range: Characteristics
+          See the [PlacementConstraints](#placementconstraints-attributes) section below.
+        range: PlacementConstraints
         multivalued: true
         inlined: true
         inlined_as_list: true
@@ -141,9 +141,9 @@ classes:
         range: ComposeComponent
         rank: 20
 
-  Characteristics:
+  PlacementConstraints:
     description: >-
-      Characteristic match expressions required for the application to be placed on a workload target.
+      Placement constraint match expressions required for the application to be placed on a workload target.
     rank: 41
     attributes:
       matchExpressions:

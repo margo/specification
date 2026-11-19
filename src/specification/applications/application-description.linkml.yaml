@@ -210,12 +210,12 @@ classes:
         rank: 20
         range: string
         required: false
-      characteristics:
+      placementConstraints:
         description: >-
-          Characteristic match expressions required for the application to be placed on a workload target.
-          See the [Characteristics](#characteristics-attributes) section below.
+          Placement constraint match expressions required for the application to be placed on a workload target.
+          See the [PlacementConstraints](#placementconstraints-attributes) section below.
         rank: 30
-        range: Characteristics
+        range: PlacementConstraints
         multivalued: true
         inlined: true
         inlined_as_list: true
@@ -225,9 +225,9 @@ classes:
       - components
       - x-placeholder-extensions
 
-  Characteristics:
+  PlacementConstraints:
     description: >-
-      Characteristic match expressions required for the application to be placed on a workload target.
+      Placement constraint match expressions required for the application to be placed on a workload target.
     rank: 61
     attributes:
       matchExpressions:

@@ -1,6 +1,6 @@
 # Profiles
 
-Workload targets MUST provide the workload fleet management service with their characteristics for workloads to be [matched](../applications/application-description#characteristics-attributes) with appropriate workload targets. This is done by calling the `profile` endpoint. Reporting the workload target's profile is the first exchange a workload fleet manager client makes after provisioning and connecting to the workload fleet manager service.
+Workload targets MUST provide the workload fleet management service with their characteristics for workloads to be [matched](../applications/application-description#placementconstraints-attributes) with appropriate workload targets. This is done by calling the `profile` endpoint. Reporting the workload target's profile is the first exchange a workload fleet manager client makes after provisioning and connecting to the workload fleet manager service.
 
 The reported profile represents the characteristics delegated exclusively to Margo for workload placement and reconciliation, and may not reflect a workload target's total physical capacity or characteristics. The mechanisms used to isolate, reserve, and preserve these resources for exclusive Margo use are implementation-specific and outside the scope of this specification.
 
