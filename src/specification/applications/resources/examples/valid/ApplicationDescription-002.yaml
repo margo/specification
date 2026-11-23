@@ -29,6 +29,7 @@ deploymentProfiles:
         properties: 
           repository: oci://quay.io/charts/realtime-database-services
           revision: 2.3.7
+          digest: "sha256:6c3c624b58dbbcd3c0dd82b4c53f04194d1247c6eebdaab7c610cf7d66709b3b" # Example placeholder; replace with the SHA-256 of the chart root manifest or index bytes
           wait: true
           timeout: 8m30s
       - name: digitron-orchestrator
@@ -71,6 +72,7 @@ deploymentProfiles:
         properties:
           repository: oci://northstarida.azurecr.io/compose/digitron-orchestrator
           revision: 1.0.9
+          digest: "sha512:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" # Example placeholder; replace with the SHA-512 of the Compose root manifest or index bytes
 parameters:
   idpName:
     value: "test"

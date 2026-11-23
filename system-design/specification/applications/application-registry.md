@@ -245,6 +245,28 @@ Retrieving the different files that compose an Application Package MUST be imple
 
 Also for this purpose available tools and libraries can be used for an implementation with low complexity.
 
+## Component Digest Pinning
+
+The `digest` property in `ComponentProperties` MAY specify a digest for a component. The shared schemas treat it as an opaque string: they do not prescribe its meaning, syntax, or algorithm.
+
+Each component type specification MUST define what its `digest` identifies, its value format and algorithms, and how implementations calculate and verify it.
+For the current Helm and Compose OCI digest rules, see [Helm Component Digest](application-description.md#helm-component-digest) and [Compose Component Digest](application-description.md#compose-component-digest).
+When a WFM creates an ApplicationDeployment from an Application Description, it MUST preserve any supplied `digest` unchanged in the corresponding component properties.
+The implementation that resolves and deploys a component with `digest` present SHOULD verify it according to the component type's definition before deployment.
+If an implementation verifies the digest and detects a mismatch, deployment MUST fail and the component MUST NOT be deployed.
+If verification is skipped, no immutability guarantee is provided; implementations SHOULD report that verification was not performed.
+
+When the Application Description is included in an Application Package, its YAML bytes are committed by the package manifest's layer descriptor.
+The component digests recorded in that YAML therefore form an application-level digest chain according to each component type's rules.
+For Helm and Compose, this chain starts with each component's OCI root object.
+Those component root digests commit to the packaged chart or Compose content, but do not necessarily pin images referenced from within it:
+Margo does not require Helm chart or Compose image references to be digest-qualified.
+If all such image references are digest-qualified and the deployment runtime resolves and verifies them, the digest chain can extend to the image manifest or index roots and their descriptor graphs.
+The chain covers all related image content only when all image and other external dependencies are pinned; tag-based or dynamic references leave gaps.
+These component and image references are embedded values rather than OCI descriptor edges, so registries do not automatically traverse them for retention, garbage collection, or mirroring.
+The chain provides content identity, not publisher authentication; consumers must trust the Application Package root (for example, through an applicable signature and trust policy) to trust the expected component and image digests.
+If `digest` is omitted, no guarantee of component immutability is provided.
+
 ## Compose Component Registry
 
 Compose components MUST be stored in an OCI-compliant Component Registry and referenced via `repository` (an `oci://` URI) and `revision` (an OCI tag matching SemVer 2.0) in the ApplicationDescription and ApplicationDeployment manifests.
@@ -331,6 +353,7 @@ components:
     properties:
       repository: oci://registry.example.com/org/myapp
       revision: "1.0.0"
+      digest: "sha256:5b0bcabd1ed22e9fb1310cf6c2dec7cdef19f0ad69efa1f392e94a4333501270" # Example placeholder; replace with the SHA-256 of the Compose OCI manifest bytes
 ```
 
 ### Reconciliation and `wait` Semantics for Compose

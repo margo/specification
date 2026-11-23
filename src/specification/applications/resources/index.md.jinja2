@@ -305,8 +305,32 @@ The expected properties for all OCI-based deployment types (Helm and Compose) ar
 | --- | --- | --- | --- |
 | repository     | string |  Y  | OCI repository URI for the component package (e.g., `oci://registry.example.com/org/component-name`). MUST be a valid OCI reference using the `oci://` scheme. See [Compose Component Registry](./application-registry.md#compose-component-registry) for details.|
 | revision      | string |  Y  | OCI tag identifying the component version. MUST be a valid SemVer 2.0 string without a leading `v`. Build metadata separator `+` MUST be stored as `_` because `+` is not a valid OCI tag character.|
+| digest | string | N | Optional component-type-specific digest pin. The component type defines what the digest identifies and its value format; the shared schema does not prescribe one. If omitted, no immutability guarantee is provided. See [Component Digest Pinning](./application-registry.md#component-digest-pinning) for details.|
 | wait | bool  | N  | If `True`, indicates the device MUST wait until the component installation completes before installing the next component. For Helm: waits until the release is deployed. For Compose: waits until all containers reach running state. The default is `True`. The Workload Fleet Management Client MUST support `True` and MAY support `False`. Only applies if multiple components are provided.|
 | timeout | string      | N   | The time to wait for the component's installation to complete. If the installation does not complete before the timeout occurs the installation process fails. The format is "##m##s" indicating the total number of minutes and seconds to wait. |
+
+#### Helm Component Digest
+
+When supplied for a Helm component, `ComponentProperties.digest` MUST be the digest of the top-level OCI object resolved by `repository` and `revision`.
+OCI reference resolution selects the object, which may be an image manifest or index; digest verification is over that object's exact bytes.
+This is a digest of the root object, not of a chart layer or package blob.
+Its value MUST follow the `algorithm:encoded` syntax defined by the [OCI Image Specification v1.1.0](https://github.com/opencontainers/image-spec/blob/v1.1.0/descriptor.md#digests).
+SHA-256 is RECOMMENDED but not required; other algorithms MAY be used when supported by the producer and consumer.
+Implementations SHOULD resolve the reference and verify the root-object digest before unpacking or installing the chart.
+This does not by itself pin images referenced by the chart.
+If those references are digest-qualified and the deployment runtime resolves and verifies them, the digest chain can extend to the image manifests or indexes.
+
+#### Compose Component Digest
+
+When supplied for a Compose component, `ComponentProperties.digest` MUST be the digest of the top-level OCI object resolved by `repository` and `revision`.
+The current Margo Compose artifact format uses an OCI image manifest with a descriptor for the Compose Archive layer (see [Compose Archive Structure](./application-registry.md#compose-archive-structure)); digest pinning itself applies equally if a component reference resolves to an index.
+This is a digest of the root object, not of the archive layer.
+Its value MUST follow the `algorithm:encoded` syntax defined by the [OCI Image Specification v1.1.0](https://github.com/opencontainers/image-spec/blob/v1.1.0/descriptor.md#digests).
+SHA-256 is RECOMMENDED but not required; other algorithms MAY be used when supported by the producer and consumer.
+Implementations SHOULD resolve the reference and verify the root-object digest before extracting or deploying the archive.
+This does not by itself pin container images referenced by the Compose file.
+If those references are digest-qualified and the deployment runtime resolves and verifies them, the digest chain can extend to the image manifests or indexes.
+The separate mandatory [Compose archive layer-integrity verification](./application-registry.md#integrity-verification) still applies.
 
 ## Defining configurable application parameters
 
