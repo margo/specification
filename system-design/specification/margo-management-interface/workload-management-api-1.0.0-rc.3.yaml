@@ -712,6 +712,12 @@ components:
               description: >-
                 OCI tag identifying the component version. MUST be a valid SemVer 2.0
                 string without leading v. Build metadata uses _ as separator instead of +.
+            digest:
+              type: string
+              description: >-
+                Optional component-type-specific digest pin. The component type
+                defines what the digest identifies and its value format. If
+                omitted, no immutability guarantee is provided.
             wait:
               type: boolean
               description: >-

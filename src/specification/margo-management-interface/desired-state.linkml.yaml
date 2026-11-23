@@ -348,8 +348,8 @@ classes:
   ComponentProperties:
     rank: 82
     description: >-
-      Typed component properties providing OCI coordinates
-      and optional deployment behavior settings.
+      Typed component properties providing OCI coordinates,
+      an optional component-type-specific digest pin, and deployment behavior settings.
       Used by both Helm and Compose deployment types.
     attributes:
       repository:
@@ -374,6 +374,13 @@ classes:
         required: true
         pattern: "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:_([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
         rank: 20
+      digest:
+        description: >-
+          Optional component-type-specific digest pin. The component type
+          defines what this digest identifies and its value format. If omitted,
+          no immutability guarantee is provided.
+        range: string
+        rank: 30
       wait:
         description: >-
           Whether to wait for component installation to complete before proceeding.
