@@ -59,7 +59,7 @@ classes:
           See the [Parameter](#parameter-attributes) section below. When generating a deployment specification, the Workload Fleet Manager (WFM) MUST use a user-provided value when available.
           If no user-provided value exists, the WFM MUST use the parameter's default value when defined.
           If neither a user-provided value nor a default value exists, the WFM MUST omit the parameter from the deployment specification.
-          The WFM SHALL NOT serialize unresolved parameters as `null` or as datatype-specific empty values.
+          The WFM SHOULD NOT serialize unresolved parameters as `null` or as datatype-specific empty values.
         range: Parameter 
         multivalued: true
         inlined: true
