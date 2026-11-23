@@ -55,8 +55,9 @@ classes:
         description: >-
           Parameters element specifying the configurable parameters to use when installing, or updating, the application.
           Defined as a map where each key is the user-defined parameter name (e.g. `mysqlDatabase:`, `greeting:`, `idpName:`, `myAppEndpoint:`),
-          and value would be Parameter object, i.e. map[string]Parameter.
-          See the [Parameter](#parameter-attributes) section below.
+          and value would be Parameter object, i.e. map[string]Parameter. When generating a deployment specification, the Workload Fleet Manager (WFM) MUST use a user-provided value when available.
+          If no user-provided value exists, the WFM MUST use the parameter's default value when defined. If neither a user-provided value nor a default value exists, the WFM MUST omit the parameter from the deployment specification.
+          The WFM SHOULD NOT serialize unresolved parameters as `null` or as datatype-specific empty values. See the [Parameter](#parameter-attributes) section below.
         range: Parameter 
         multivalued: true
         inlined: true
@@ -674,7 +675,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MUST leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -701,7 +704,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MUST leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -713,7 +718,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MUST leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -735,7 +742,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MUST leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -767,7 +776,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MUST leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
