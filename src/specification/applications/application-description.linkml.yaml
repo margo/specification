@@ -677,7 +677,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MAY leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -704,7 +706,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MAY leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -716,7 +720,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MAY leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -738,7 +744,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MAY leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
@@ -770,7 +778,9 @@ classes:
     attributes:
       allowEmpty:
         description: >-
-          If true, an empty value is permitted. Default is false if not provided.
+          If true, a user MAY leave the value unspecified. Default is false if not provided.
+          This attribute controls validation of user input and does not define how values are serialized into a deployment specification.
+          When no user-supplied value and no default value are available, the Workload Fleet Manager (WFM) MUST omit the parameter from the deployment specification and MUST NOT serialize the parameter as null or as a datatype-specific empty value.
         rank: 30
         range: boolean
         required: false
